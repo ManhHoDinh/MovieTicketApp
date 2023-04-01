@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".HomeFragment">
+    tools:context=".UI.HomeFragment">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
@@ -74,70 +74,94 @@
                         />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-                <HorizontalScrollView
-                    android:scrollbars="none"
-                    android:layout_marginTop="30dp"
-                    android:fillViewport="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <Button
-
-                            android:text="All"
-                            style="@style/TypeButtonStyle"/>
-                        <Button
-
-                            android:text="Action"
-                            style="@style/TypeButtonStyle"/>
-                        <Button
-
-                            android:text="Drama"
-                            style="@style/TypeButtonStyle"/>
-                        <Button
-                            style="@style/TypeButtonStyle"
-                            android:text="Honor"
-                            />
-                        <Button
-                            style="@style/TypeButtonStyle"
-                            android:text="War"
-                            />
-                        <Button
-                            android:text="Comedy"
-                            style="@style/TypeButtonStyle"/>
-                        <Button
-                            android:text="Comedy"
-                            style="@style/TypeButtonStyle"/>
-                    </LinearLayout>
-                </HorizontalScrollView>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabViewTypeMove"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
-                    >
-                    <TextView
-                        app:layout_constraintStart_toStartOf="parent"
-                        android:text="Now Playing"
-                        style="@style/titleStyle"/>
-                    <TextView
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:text="View all"
-                        android:textSize="14dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        android:gravity="center"
-                        android:textColor="@color/grey_background_1"
-                        style="@style/titleStyle"/>
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:layout_marginTop="30dp">
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="All"/>
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Action"/>
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
 
+                        android:text="Drama"/>
+
+                </com.google.android.material.tabs.TabLayout>
                 <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/viewPagePosterSlider"
+                    android:id="@+id/typeMovieViewPage"
                     android:layout_width="match_parent"
-                    android:layout_height="225dp"
-                    android:paddingStart="24dp"
-                    android:paddingEnd="24dp" />
+                    android:layout_height="match_parent"/>
+<!--                <HorizontalScrollView-->
+<!--                    android:scrollbars="none"-->
+<!--                    android:layout_marginTop="30dp"-->
+<!--                    android:fillViewport="true"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content">-->
+<!--                    <LinearLayout-->
+<!--                        android:orientation="horizontal"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content">-->
+<!--                        <Button-->
+
+<!--                            android:text="All"-->
+<!--                            style="@style/TypeButtonStyle"/>-->
+<!--                        <Button-->
+
+<!--                            android:text="Action"-->
+<!--                            style="@style/TypeButtonStyle"/>-->
+<!--                        <Button-->
+
+<!--                            android:text="Drama"-->
+<!--                            style="@style/TypeButtonStyle"/>-->
+<!--                        <Button-->
+<!--                            style="@style/TypeButtonStyle"-->
+<!--                            android:text="Honor"-->
+<!--                            />-->
+<!--                        <Button-->
+<!--                            style="@style/TypeButtonStyle"-->
+<!--                            android:text="War"-->
+<!--                            />-->
+<!--                        <Button-->
+<!--                            android:text="Comedy"-->
+<!--                            style="@style/TypeButtonStyle"/>-->
+<!--                        <Button-->
+<!--                            android:text="Comedy"-->
+<!--                            style="@style/TypeButtonStyle"/>-->
+<!--                    </LinearLayout>-->
+<!--                </HorizontalScrollView>-->
+
+<!--                <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="30dp"-->
+<!--                    >-->
+<!--                    <TextView-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        android:text="Now Playing"-->
+<!--                        style="@style/titleStyle"/>-->
+<!--                    <TextView-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        android:text="View all"-->
+<!--                        android:textSize="14dp"-->
+<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                        android:gravity="center"-->
+<!--                        android:textColor="@color/grey_background_1"-->
+<!--                        style="@style/titleStyle"/>-->
+<!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+<!--                <androidx.viewpager2.widget.ViewPager2-->
+<!--                    android:id="@+id/viewPagePosterSlider"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="225dp"-->
+<!--                    android:paddingStart="24dp"-->
+<!--                    android:paddingEnd="24dp" />-->
 
 
 

@@ -12,9 +12,14 @@
         android:theme="@style/Theme.MovieTicketApp"
         tools:targetApi="31">
         <activity
+            android:name=".Activity.HomeActivity"
+            android:exported="false"
+            android:label="@string/title_activity_home"
+            android:theme="@style/Theme.MovieTicketApp.NoActionBar" />
+        <activity
             android:name=".MainActivity"
-            android:theme="@style/Theme.MovieTicketApp.NoActionBar"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.MovieTicketApp.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

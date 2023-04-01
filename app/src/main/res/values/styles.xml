@@ -2,7 +2,8 @@
 <resources>
     <style name="TypeButtonStyle" parent="Widget.AppCompat.Button" >
         <item name="android:textSize">12dp</item>
-        <item name="backgroundTint">@color/background_color</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:backgroundTint">@color/white</item>
         <item name="android:background">@drawable/bg_tabview_button</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">40dp</item>
