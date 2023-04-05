@@ -19,6 +19,9 @@
             android:gravity="center"
             android:text="Create New\nYour Account"
             android:textSize="24dp"
+            android:textStyle="bold"
+            android:fontFamily="@font/montserrat_regular"
+            android:textFontWeight="500"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="24dp"
             style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
@@ -34,68 +37,86 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:src="@drawable/add"
-            android:translationY="-10dp"/>
+            android:translationY="-15dp"/>
+
         <EditText
+            android:id="@+id/fullname"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/edittext_boder"
+            android:fontFamily="@font/montserrat_regular"
             android:hint="Full Name"
-            android:textSize="14dp"
-            android:textColorHint="@color/white_background"
-            android:background="@drawable/edittext_boder"
-            android:textColor="@color/white_background"
+            android:inputType="textPersonName"
             android:paddingLeft="24dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
-            android:id="@+id/fullname"/>
+            android:singleLine="true"
+            android:textColor="@color/white_background"
+            android:textColorHint="@color/white_background"
+            android:textSize="14dp" />
+
         <EditText
+            android:id="@+id/emailaddress"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/edittext_boder"
+            android:fontFamily="@font/montserrat_regular"
             android:hint="Email Address"
-            android:textSize="14dp"
-            android:textColorHint="@color/white_background"
-            android:background="@drawable/edittext_boder"
-            android:textColor="@color/white_background"
+            android:inputType="textEmailSubject"
             android:paddingLeft="24dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
-            android:id="@+id/emailaddress"/>
+            android:singleLine="true"
+            android:textColor="@color/white_background"
+            android:textColorHint="@color/white_background"
+            android:textSize="14dp" />
+
         <EditText
+            android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/edittext_boder"
+            android:fontFamily="@font/montserrat_regular"
             android:hint="Password"
-            android:textSize="14dp"
-            android:textColorHint="@color/white_background"
             android:inputType="textPassword"
-            android:background="@drawable/edittext_boder"
-            android:textColor="@color/white_background"
             android:paddingLeft="24dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
-            android:id="@+id/password"/>
+            android:singleLine="true"
+            android:textColor="@color/white_background"
+            android:textColorHint="@color/white_background"
+            android:textSize="14dp" />
+
         <EditText
+            android:id="@+id/confirmpassword"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="Confirm Password"
-            android:textSize="14dp"
-            android:textColorHint="@color/white_background"
-            android:inputType="textPassword"
-            android:background="@drawable/edittext_boder"
-            android:textColor="@color/white_background"
-            android:paddingLeft="24dp"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
-            android:id="@+id/confirmpassword"/>
+            android:background="@drawable/edittext_boder"
+            android:fontFamily="@font/montserrat_regular"
+            android:hint="Confirm Password"
+            android:inputType="textPassword"
+            android:paddingLeft="24dp"
+            android:singleLine="true"
+            android:textColor="@color/white_background"
+            android:textColorHint="@color/white_background"
+            android:textSize="14dp" />
+
         <Button
+            android:id="@+id/SignUpBtn"
+            style="@android:style/Widget.Button"
             android:layout_width="255dp"
             android:layout_height="50dp"
-            android:gravity="center"
             android:layout_gravity="center"
-            android:text="Sign In"
             android:layout_marginTop="30dp"
             android:background="@drawable/button_background"
+            android:fontFamily="@font/montserrat_regular"
+            android:gravity="center"
+            android:text="Sign In"
             android:textColor="@color/white_background"
+            android:textFontWeight="500"
             android:textSize="18dp"
-            android:id="@+id/SignUpBtn"
-            />
+            android:textStyle="bold" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

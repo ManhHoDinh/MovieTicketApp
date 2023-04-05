@@ -26,56 +26,74 @@
             android:layout_height="wrap_content"
             android:text="Welcome Back,\nMovie Lover!"
             android:textSize="24dp"
+            android:textStyle="bold"
             android:layout_marginBottom="24dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:textFontWeight="500"
             style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
             android:textColor="@color/white_background"/>
+
         <EditText
+            android:id="@+id/UserID"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="User Name"
-            android:textSize="14dp"
-            android:textColorHint="@color/white_background"
-            android:background="@drawable/edittext_boder"
             android:layout_marginTop="2dp"
-            android:textColor="@color/white_background"
-            android:paddingLeft="24dp"
             android:layout_marginBottom="12dp"
-            android:id="@+id/UserID"/>
+            android:background="@drawable/edittext_boder"
+            android:fontFamily="@font/montserrat_regular"
+            android:hint="Email Address"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="24dp"
+            android:singleLine="true"
+            android:textColor="@color/white_background"
+            android:textColorHint="@color/white_background"
+            android:textFontWeight="400"
+            android:textSize="14dp" />
+
         <EditText
+            android:id="@+id/PassID"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="Password"
-            android:textSize="14dp"
-            android:textColorHint="@color/white_background"
-            android:inputType="textPassword"
-            android:background="@drawable/edittext_boder"
             android:layout_marginTop="12dp"
-            android:textColor="@color/white_background"
-            android:paddingLeft="24dp"
             android:layout_marginBottom="10dp"
-            android:id="@+id/PassID"/>
+            android:background="@drawable/edittext_boder"
+            android:fontFamily="@font/montserrat_regular"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:paddingLeft="24dp"
+            android:singleLine="true"
+            android:textColor="@color/white_background"
+            android:textColorHint="@color/white_background"
+            android:textFontWeight="400"
+            android:textSize="14dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
             android:text="Forgot Password?"
+            android:fontFamily="@font/poppins_regular"
             android:layout_marginTop="2dp"
             android:textColor="@color/white_background"
             android:textSize="12dp"
             android:id="@+id/ForgotPassword"
             />
+
         <Button
+            android:id="@+id/LoginBtn"
+            style="@android:style/Widget.Button"
             android:layout_width="255dp"
             android:layout_height="50dp"
-            android:gravity="center"
             android:layout_gravity="center"
-            android:text="Login"
             android:layout_marginTop="30dp"
             android:background="@drawable/button_background"
+            android:fontFamily="@font/montserrat_regular"
+            android:gravity="center"
+            android:text="Login"
             android:textColor="@color/white_background"
+            android:textFontWeight="500"
             android:textSize="18dp"
-            android:id="@+id/LoginBtn"
-            />
+            android:textStyle="bold"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -86,16 +104,20 @@
                 android:layout_height="wrap_content"
                 android:text="Create new account? "
                 android:textSize="14dp"
+                android:fontFamily="@font/montserrat_regular"
                 android:textColor="@color/white_background"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Sign up"
+                android:fontFamily="@font/montserrat_regular"
+                android:textFontWeight="500"
+                android:textStyle="bold"
                 android:textColor="@color/signup_color1"
                 android:textSize="14dp"
                 style="@style/TextAppearance.AppCompat.Large"
-                android:id="@+id/SignUpBtn"
+                android:id="@+id/SignUp"
                 />
         </LinearLayout>
         <LinearLayout
@@ -115,6 +137,7 @@
                 android:src="@drawable/media_facebook"
                 android:layout_marginLeft="50dp"
                 android:id="@+id/facebooklogin"/>
+
         </LinearLayout>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
