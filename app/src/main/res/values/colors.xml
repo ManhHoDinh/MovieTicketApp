@@ -17,5 +17,6 @@
     <color name="dark_background_1">#FF0B0F2F</color>
     <color name="very_dark_background">#FF051138</color>
     <color name="background_color">#FF0B0F2F</color>
+    <color name="sub_text_color">#FF449EFF</color>
 
 </resources>

@@ -2,10 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_marginRight="12dp"
+    android:background="@android:color/transparent"
     android:layout_height="wrap_content">
     <Button
         android:id="@+id/typeItem"
-        style="@style/TypeButtonStyle"
+       style="@style/TypeButtonStyle"
+        android:background="@drawable/bg_tabview_button"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

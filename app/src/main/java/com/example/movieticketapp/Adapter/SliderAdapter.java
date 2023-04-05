@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.movieticketapp.PostItem;
+import com.example.movieticketapp.Model.PostItem;
 import com.example.movieticketapp.R;
 import com.makeramen.roundedimageview.RoundedImageView;
 

@@ -1,16 +1,11 @@
 package com.example.movieticketapp.Adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,9 +13,8 @@ import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.movieticketapp.PostItem;
+import com.example.movieticketapp.Model.PostItem;
 import com.example.movieticketapp.R;
-import com.example.movieticketapp.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +42,8 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                 public void onClick(View view) {
 
                     typeBtn.setBackgroundTintList(ColorStateList.valueOf(R.drawable.second_gradient));
-
+                    //typeBtn.setBackgroundColor(typeBtn.getContext().getResources().getColor(R.color.sub_text_color));
+                   // typeBtn.setBackgroundResource(R.drawable.second_gradient);
                     loadListPost();
                     if(checkedPosition!=getAdapterPosition()){
                         notifyItemChanged(checkedPosition);
@@ -60,10 +55,14 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
         void bind(){
             if(checkedPosition == getAdapterPosition()){
                 loadListPost();
-                typeBtn.setBackgroundTintList(ColorStateList.valueOf(R.drawable.second_gradient));
+                //typeBtn.setBackgroundColor(typeBtn.getContext().getResources().getColor(R.color.sub_text_color));
+
+                 typeBtn.setBackgroundTintList(ColorStateList.valueOf(R.drawable.second_gradient));
             }
             else {
-                typeBtn.setBackgroundTintList(ColorStateList.valueOf(R.color.dark_background_2));
+
+               typeBtn.setBackgroundTintList(ColorStateList.valueOf(R.color.white));
+               // typeBtn.setBackgroundColor(typeBtn.getContext().getResources().getColor(R.color.white));
 
             }
         }

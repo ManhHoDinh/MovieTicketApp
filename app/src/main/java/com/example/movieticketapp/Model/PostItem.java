@@ -1,4 +1,4 @@
-package com.example.movieticketapp;
+package com.example.movieticketapp.Model;
 
 public class PostItem {
     private int image;
