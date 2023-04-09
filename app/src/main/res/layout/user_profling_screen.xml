@@ -198,13 +198,12 @@
                 android:layout_marginTop="25.13454545454545dp"
                 android:layout_toRightOf="@id/btnJapanese"
                 android:background="@drawable/roundstyle14"
-                android:backgroundTint="@color/button_background_coloro"
+                android:backgroundTint="@color/button_background_color"
                 android:fontFamily="@font/montserrat300"
                 android:text="Korean"
                 android:textSize="20.94545454545455sp"
                 android:textAllCaps="false"
                 android:textColor="@color/white" />
-
             <ImageButton
                 android:id="@+id/btnNext"
                 android:layout_width="64.22923636363636dp"
