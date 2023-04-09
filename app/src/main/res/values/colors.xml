@@ -18,4 +18,5 @@
     <color name="very_dark_background">#FF051138</color>
     <color name="login_unable">#FF537DEC</color>
     <color name="signup_color1">#FF449EEF</color>
+    <color name="hint_color">#99FFFFFF</color>
 </resources>
