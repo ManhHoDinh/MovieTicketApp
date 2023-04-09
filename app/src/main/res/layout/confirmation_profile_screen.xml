@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="392.7272727272727dp"
-    android:layout_height="804.3054545454545dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/dark_background_1"
     android:orientation="vertical"
     tools:context=".MainActivity">

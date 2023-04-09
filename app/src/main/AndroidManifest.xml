@@ -12,10 +12,10 @@
         android:theme="@style/Theme.MovieTicketApp"
         tools:targetApi="31">
         <activity
-            android:name=".ConfirmationProfile"
+            android:name=".ConfirmationProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".UserProfling"
+            android:name=".UserProflingActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
