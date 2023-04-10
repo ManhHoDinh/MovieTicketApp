@@ -1,13 +1,14 @@
-package com.example.movieticketapp;
+package com.example.movieticketapp.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
+
 import androidx.appcompat.app.AppCompatActivity;
-import android.util.DisplayMetrics;
-import android.view.ViewGroup;
+
 import android.widget.ImageView;
+
+import com.example.movieticketapp.R;
 
 public class SplashActivity extends AppCompatActivity {
 

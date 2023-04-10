@@ -7,7 +7,7 @@
     android:paddingLeft="24dp"
     android:paddingRight="24dp"
     android:background="@color/dark_background_1"
-    tools:context=".SignUpActivity">
+    tools:context=".Activity.SignUpActivity">
 
     <ScrollView
         android:scrollbars="none"

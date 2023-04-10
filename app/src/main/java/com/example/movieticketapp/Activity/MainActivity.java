@@ -1,11 +1,10 @@
-package com.example.movieticketapp;
+package com.example.movieticketapp.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/dark_background_1"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".Activity.MainActivity">
 
     <ImageView
         android:id="@+id/btnBack"
