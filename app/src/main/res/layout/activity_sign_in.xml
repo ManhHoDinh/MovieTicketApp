@@ -22,7 +22,7 @@
                 android:layout_width="88dp"
                 android:layout_height="88dp"
                 android:src="@drawable/logo"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="116dp"
                 />
             <TextView
                 android:layout_width="wrap_content"
@@ -128,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="28dp"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="71dp"
                 android:gravity="center">
                 <ImageView
                     android:layout_width="64dp"
