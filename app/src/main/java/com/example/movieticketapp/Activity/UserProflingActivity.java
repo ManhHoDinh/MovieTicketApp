@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.example.movieticketapp.R;
 
@@ -205,6 +206,14 @@ public class UserProflingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(),ConfirmationProfileActivity.class);
+                startActivity(i);
+            }
+        });
+        ImageView btnBack= findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(),SignInActivity.class);
                 startActivity(i);
             }
         });
