@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp"
+    android:background="@color/dark_background_1"
+    tools:context=".Activity.SignInActivity">
+    <ScrollView
+        android:scrollbars="none"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="left|center">
+            <ImageView
+                android:layout_width="88dp"
+                android:layout_height="88dp"
+                android:src="@drawable/logo"
+                android:layout_marginTop="116dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Welcome Back,\nMovie Lover!"
+                android:textSize="24dp"
+                android:textStyle="bold"
+                android:layout_marginTop="32dp"
+                 android:textFontWeight="500"
+                style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
+                android:textColor="@color/white_background"/>
+
+            <EditText
+                android:id="@+id/UserID"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="41dp"
+                android:background="@drawable/edittext_boder"
+                android:hint="Email Address"
+                android:defaultFocusHighlightEnabled="true"
+                android:inputType="textEmailAddress"
+                android:paddingLeft="24dp"
+                android:singleLine="true"
+                android:textColor="@color/white_background"
+                android:textColorHint="@color/hint_color"
+                android:textFontWeight="400"
+                android:textSize="14dp" />
+
+            <EditText
+                android:id="@+id/PassID"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="44dp"
+                android:background="@drawable/edittext_boder"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:paddingLeft="24dp"
+                android:singleLine="true"
+                android:textColor="@color/white_background"
+                android:textColorHint="@color/hint_color"
+                android:textFontWeight="400"
+                android:textSize="14dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="Forgot Password?"
+                android:layout_marginTop="12dp"
+                android:textColor="@color/white_background"
+                android:textSize="12dp"
+                android:id="@+id/ForgotPassword"
+                />
+
+            <Button
+                android:id="@+id/LoginBtn"
+                style="@android:style/Widget.Button"
+                android:layout_width="255dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="28dp"
+                android:background="@drawable/button_background"
+                android:gravity="center"
+                android:text="Login"
+                android:textColor="@color/white_background"
+                android:textFontWeight="500"
+                android:textSize="18dp"
+                android:textStyle="bold"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="21dp"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Create new account? "
+                    android:textSize="14dp"
+                    android:textColor="@color/white_background"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Sign up"
+                    android:textFontWeight="500"
+                    android:textStyle="bold"
+                    android:textColor="@color/signup_color1"
+                    android:textSize="14dp"
+                    android:layout_marginLeft="10dp"
+                    style="@style/TextAppearance.AppCompat.Large"
+                    android:id="@+id/SignUp"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="28dp"
+                android:layout_marginBottom="71dp"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/media_google"
+                    android:id="@+id/googlelogin"/>
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/media_facebook"
+                    android:layout_marginLeft="50dp"
+                    android:id="@+id/facebooklogin"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

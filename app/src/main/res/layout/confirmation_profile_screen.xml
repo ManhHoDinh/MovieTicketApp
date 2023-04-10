@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_background_1"
+    android:orientation="vertical"
+    tools:context=".Activity.MainActivity">
+
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="25.94545454545455dp"
+        android:layout_height="25.94545454545455dp"
+        android:layout_marginLeft="21.13454545454545dp"
+        android:layout_marginTop="25.13454545454545dp"
+        android:src="@drawable/ic_back" />
+
+    <TextView
+        android:id="@+id/txtConfirmNewAccount"
+        android:layout_width="208.4072727272727dp"
+        android:layout_height="75.40363636363636dp"
+        android:layout_toRightOf="@id/btnBack"
+        android:layout_marginTop="25.13454545454545dp"
+        android:layout_marginLeft="46.08dp"
+        android:fontFamily="@font/montserrat600"
+        android:text="Confirm New Account"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="24sp" />
+
+    <ImageView
+        android:id="@+id/profilePic"
+        android:layout_width="167.5636363636364dp"
+        android:layout_height="167.5636363636364dp"
+        android:src="@drawable/default_profile"
+        android:layout_marginTop="217.8327272727273dp"
+        android:layout_marginLeft="113.1054545454545dp"/>
+
+    <TextView
+        android:id="@+id/txtWelcome"
+        android:layout_width="125.6727272727273dp"
+        android:layout_height="29.41818181818182dp"
+        android:layout_below="@id/profilePic"
+        android:layout_marginTop="33.51272727272727dp"
+        android:text="Welcome"
+        android:textColor="@color/white"
+        android:textSize="16.75636363636364sp"
+        android:fontFamily="@font/montserrat300"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"/>
+    <TextView
+        android:id="@+id/txtExampleName"
+        android:layout_width="125.6727272727273dp"
+        android:layout_height="31.41818181818182dp"
+        android:layout_below="@id/txtWelcome"
+
+        android:text="Arya Wijaya"
+        android:textColor="@color/white"
+        android:textSize="20.94545454545455sp"
+        android:fontFamily="@font/montserrat500"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"/>
+
+    <Button
+        android:id="@+id/btnCreateAccount"
+        android:layout_width="267.0545454545455dp"
+        android:layout_height="62.83636363636364dp"
+        android:background="@drawable/roundstyle20"
+        android:backgroundTint="@color/main_color"
+        android:layout_below="@id/txtExampleName"
+        android:layout_marginTop="105.7745454545455dp"
+        android:text="Create My Account"
+        android:textAllCaps="false"
+        android:fontFamily="@font/montserrat500"
+        android:textColor="@color/white"
+        android:textSize="18.85090909090909sp"
+        android:layout_centerHorizontal="true"
+        />
+</RelativeLayout>
