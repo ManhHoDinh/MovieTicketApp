@@ -10,19 +10,19 @@
 
     <ImageView
         android:id="@+id/btnBack"
-        android:layout_width="25.94545454545455dp"
-        android:layout_height="25.94545454545455dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:layout_marginLeft="21.13454545454545dp"
-        android:layout_marginTop="25.13454545454545dp"
+        android:layout_marginTop="35dp"
         android:src="@drawable/ic_back" />
 
     <TextView
         android:id="@+id/txtConfirmNewAccount"
         android:layout_width="208.4072727272727dp"
         android:layout_height="75.40363636363636dp"
-        android:layout_toRightOf="@id/btnBack"
-        android:layout_marginTop="25.13454545454545dp"
         android:layout_marginLeft="46.08dp"
+        android:layout_marginTop="35dp"
+        android:layout_toRightOf="@id/btnBack"
         android:fontFamily="@font/montserrat600"
         android:text="Confirm New Account"
         android:textAlignment="center"

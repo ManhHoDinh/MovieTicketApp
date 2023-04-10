@@ -29,8 +29,7 @@ public class ConfirmationProfileActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(),UserProflingActivity.class);
-                startActivity(i);
+                onBackPressed();
             }
         });
     }
