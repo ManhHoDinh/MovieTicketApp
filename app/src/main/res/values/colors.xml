@@ -19,4 +19,7 @@
     <color name="login_unable">#FF537DEC</color>
     <color name="signup_color1">#FF449EEF</color>
     <color name="hint_color">#99FFFFFF</color>
+    <color name="background_color">#FF0B0F2F</color>
+    <color name="sub_text_color">#FF449EFF</color>
+    <color name="white_opacity_70">#B3FFFFFF</color>
 </resources>

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_background_1"
+    android:orientation="vertical"
+    tools:context=".Activity.MainActivity">
+
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="20.94545454545455dp"
+        android:layout_height="20.94545454545455dp"
+        android:layout_marginLeft="25.13454545454545dp"
+        android:layout_marginTop="25.13454545454545dp"
+        android:src="@drawable/ic_back" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25.13454545454545dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="830dp"
+
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtSelectFavGenre"
+                android:layout_width="180.1309090909091dp"
+                android:layout_height="75.40363636363636dp"
+                android:layout_marginLeft="25.13454545454545dp"
+
+                android:fontFamily="@font/montserrat500"
+                android:text="Select Your Favorite Genre"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+
+            <Button
+                android:id="@+id/btnHorror"
+                android:layout_width="159.1854545454545dp"
+                android:layout_height="75.40363636363636dp"
+                android:layout_below="@id/txtSelectFavGenre"
+                android:layout_marginLeft="25.13454545454545dp"
+                android:layout_marginTop="19dp"
+                android:background="@drawable/roundstyle14"
+                android:backgroundTint="@color/button_background_color"
+                android:fontFamily="@font/montserrat300"
+                android:text="Horror"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="20.94545454545455sp" />
+
+            <Button
+                android:id="@+id/btnAction"
+                android:layout_width="159.1854545454545dp"
+                android:layout_height="75.40363636363636dp"
+                android:layout_below="@id/txtSelectFavGenre"
+                android:layout_marginLeft="25.13454545454545dp"
+                android:layout_marginTop="16.75636363636364dp"
+                android:layout_toRightOf="@id/btnHorror"
+                android:background="@drawable/roundstyle14"
+                android:backgroundTint="@color/button_background_color"
+                android:fontFamily="@font/montserrat300"
+                android:text="Action"
+                android:textSize="20.94545454545455sp"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/btnDrama"
+                android:layout_width="159.1854545454545dp"
+                android:layout_height="75.40363636363636dp"
+                android:layout_below="@id/btnHorror"
+                android:layout_marginLeft="25.13454545454545dp"
+                android:layout_marginTop="25.13454545454545dp"
+                android:background="@drawable/roundstyle14"
+                android:backgroundTint="@color/button_background_color"
+                android:fontFamily="@font/montserrat300"
+                android:text="Drama"
+                android:textSize="20.94545454545455sp"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/btnWar"
+                android:layout_width="159.1854545454545dp"
+                android:layout_height="75.40363636363636dp"
+                android:layout_below="@id/btnHorror"
+                android:layout_marginLeft="25.13454545454545dp"
+                android:layout_marginTop="25.13454545454545dp"
+                android:layout_toRightOf="@id/btnDrama"
+                android:background="@drawable/roundstyle14"
+                android:backgroundTint="@color/button_background_color"
+                android:fontFamily="@font/montserrat300"
+                android:text="War"
+                android:textSize="20.94545454545455sp"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/btnComedy"
+                android:layout_width="159.1854545454545dp"
+                android:layout_height="75.40363636363636dp"
+                android:layout_below="@id/btnDrama"
+                android:layout_marginLeft="25.13454545454545dp"
+                android:layout_marginTop="25.13454545454545dp"
+                android:background="@drawable/roundstyle14"
+                android:backgroundTint="@color/button_background_color"
+                android:fontFamily="@font/montserrat300"
+                android:text="Comedy"
+                android:textSize="20.94545454545455sp"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/btnCrime"
+                android:layout_width="159.1854545454545dp"
+                android:layout_height="75.40363636363636dp"
+                android:layout_below="@id/btnDrama"
+                android:layout_marginLeft="25.13454545454545dp"
+                android:layout_marginTop="25.13454545454545dp"
+                android:layout_toRightOf="@id/btnComedy"
+                android:background="@drawable/roundstyle14"
+                android:backgroundTint="@color/button_background_color"
+                android:fontFamily="@font/montserrat300"
+                android:text="Crime"
+                android:textSize="20.94545454545455sp"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/txtSelectFavLanguage"
+                android:layout_width="230.1309090909091dp"
+                android:layout_height="75.40363636363636dp"
+                android:layout_below="@id/btnComedy"
+                android:layout_marginLeft="25.13454545454545dp"
+                android:layout_marginTop="33.51272727272727dp"
+                android:fontFamily="@font/montserrat500"
+                android:text="Select Your Favorite Language"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+
+            <Button
+                android:id="@+id/btnBahasa"
+                android:layout_width="159.1854545454545dp"
+                android:layout_height="75.40363636363636dp"
+                android:layout_below="@id/txtSelectFavLanguage"
+                android:layout_marginLeft="25.13454545454545dp"
+                android:layout_marginTop="16.75636363636364dp"
+                android:background="@drawable/roundstyle14"
+                android:backgroundTint="@color/button_background_color"
+                android:fontFamily="@font/montserrat300"
+                android:text="Bahasa"
+                android:textSize="20.94545454545455sp"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/btnEnglish"
+                android:layout_width="159.1854545454545dp"
+                android:layout_height="75.40363636363636dp"
+                android:layout_below="@id/txtSelectFavLanguage"
+                android:layout_marginLeft="25.13454545454545dp"
+                android:layout_marginTop="16.75636363636364dp"
+                android:layout_toRightOf="@id/btnBahasa"
+                android:background="@drawable/roundstyle14"
+                android:backgroundTint="@color/button_background_color"
+                android:fontFamily="@font/montserrat300"
+                android:text="English"
+                android:textSize="20.94545454545455sp"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/btnJapanese"
+                android:layout_width="159.1854545454545dp"
+                android:layout_height="75.40363636363636dp"
+                android:layout_below="@id/btnBahasa"
+                android:layout_marginLeft="25.13454545454545dp"
+                android:layout_marginTop="25.13454545454545dp"
+                android:background="@drawable/roundstyle14"
+                android:backgroundTint="@color/button_background_color"
+                android:fontFamily="@font/montserrat300"
+                android:text="Japanese"
+                android:textSize="20.94545454545455sp"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/btnKorean"
+                android:layout_width="159.1854545454545dp"
+                android:layout_height="75.40363636363636dp"
+                android:layout_below="@id/btnBahasa"
+                android:layout_marginLeft="25.13454545454545dp"
+                android:layout_marginTop="25.13454545454545dp"
+                android:layout_toRightOf="@id/btnJapanese"
+                android:background="@drawable/roundstyle14"
+                android:backgroundTint="@color/button_background_color"
+                android:fontFamily="@font/montserrat300"
+                android:text="Korean"
+                android:textSize="20.94545454545455sp"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+            <ImageButton
+                android:id="@+id/btnNext"
+                android:layout_width="64.22923636363636dp"
+                android:layout_height="64.22923636363636dp"
+                android:layout_below="@id/btnJapanese"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="41.89090909090909dp"
+                android:background="@drawable/roundstyle50"
+                android:backgroundTint="@color/button_background_color"
+                android:rotationY="180"
+                android:src="@drawable/ic_back" />
+        </RelativeLayout>
+    </ScrollView>
+
+
+</LinearLayout>
