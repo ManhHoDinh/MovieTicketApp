@@ -10,10 +10,10 @@
 
     <ImageView
         android:id="@+id/btnBack"
-        android:layout_width="20.94545454545455dp"
-        android:layout_height="20.94545454545455dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:layout_marginLeft="25.13454545454545dp"
-        android:layout_marginTop="25.13454545454545dp"
+        android:layout_marginTop="35dp"
         android:src="@drawable/ic_back" />
 
     <ScrollView
