@@ -28,6 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Welcome Back,\nMovie Lover!"
+                android:fontFamily="@font/montserrat_regular"
                 android:textSize="24dp"
                 android:textStyle="bold"
                 android:layout_marginTop="32dp"
@@ -48,6 +49,7 @@
                 android:singleLine="true"
                 android:textColor="@color/white_background"
                 android:textColorHint="@color/hint_color"
+                android:fontFamily="@font/montserrat_regular"
                 android:textFontWeight="400"
                 android:textSize="14dp" />
 
@@ -63,6 +65,7 @@
                 android:singleLine="true"
                 android:textColor="@color/white_background"
                 android:textColorHint="@color/hint_color"
+                android:fontFamily="@font/montserrat_regular"
                 android:textFontWeight="400"
                 android:textSize="14dp" />
             <TextView
@@ -70,6 +73,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:text="Forgot Password?"
+                android:fontFamily="@font/poppins_regular"
+                android:textFontWeight="400"
                 android:layout_marginTop="12dp"
                 android:textColor="@color/white_background"
                 android:textSize="12dp"
@@ -87,6 +92,7 @@
                 android:gravity="center"
                 android:text="Login"
                 android:textColor="@color/white_background"
+                android:fontFamily="@font/montserrat_regular"
                 android:textFontWeight="500"
                 android:textSize="18dp"
                 android:textStyle="bold"/>
@@ -101,6 +107,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Create new account? "
+                    android:fontFamily="@font/montserrat_regular"
+                    android:textFontWeight="400"
                     android:textSize="14dp"
                     android:textColor="@color/white_background"/>
                 <TextView
@@ -108,6 +116,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Sign up"
+                    android:fontFamily="@font/montserrat_regular"
                     android:textFontWeight="500"
                     android:textStyle="bold"
                     android:textColor="@color/signup_color1"

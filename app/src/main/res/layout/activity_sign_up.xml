@@ -40,7 +40,8 @@
                     android:layout_centerHorizontal="true"
                     android:text="Create New\nYour Account"
                     android:textColor="@color/white_background"
-                    android:textFontWeight="500"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:textFontWeight="600"
                     android:textSize="24dp"
                     android:textStyle="bold" />
             </RelativeLayout>
@@ -67,6 +68,8 @@
                 android:background="@drawable/edittext_boder"
                 android:hint="Full Name"
                 android:inputType="textPersonName"
+                android:fontFamily="@font/montserrat_regular"
+                android:textFontWeight="400"
                 android:paddingLeft="24dp"
                 android:singleLine="true"
                 android:textColor="@color/white_background"
@@ -85,7 +88,9 @@
                 android:singleLine="true"
                 android:textColor="@color/white_background"
                 android:textColorHint="@color/hint_color"
-                android:textSize="14dp" />
+                android:textSize="14dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:textFontWeight="400"/>
 
             <EditText
                 android:id="@+id/password"
@@ -99,7 +104,9 @@
                 android:singleLine="true"
                 android:textColor="@color/white_background"
                 android:textColorHint="@color/hint_color"
-                android:textSize="14dp" />
+                android:textSize="14dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:textFontWeight="400"/>
 
             <EditText
                 android:id="@+id/confirmpassword"
@@ -113,7 +120,9 @@
                 android:singleLine="true"
                 android:textColor="@color/white_background"
                 android:textColorHint="@color/hint_color"
-                android:textSize="14dp" />
+                android:textSize="14dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:textFontWeight="400"/>
 
             <Button
                 android:id="@+id/SignUpBtn"
@@ -127,6 +136,7 @@
                 android:gravity="center"
                 android:text="Sign Up"
                 android:textColor="@color/white_background"
+                android:fontFamily="@font/montserrat_regular"
                 android:textFontWeight="500"
                 android:textSize="18dp"
                 android:textStyle="bold" />
