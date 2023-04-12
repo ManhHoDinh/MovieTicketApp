@@ -4,7 +4,7 @@
     android:layout_marginRight="12dp"
     android:background="@android:color/transparent"
     android:layout_height="wrap_content">
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/typeItem"
        style="@style/TypeButtonStyle"
         android:background="@drawable/bg_tabview_button"

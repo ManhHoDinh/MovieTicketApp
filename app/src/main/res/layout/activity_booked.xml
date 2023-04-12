@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    tools:context=".Activity.BookedActivity">
+    <ScrollView
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_marginHorizontal="24dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/nameFilmtv"
+                android:layout_marginTop="70dp"
+                android:layout_marginHorizontal="80dp"
+
+                android:textColor="@color/white"
+                android:textSize="24dp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                app:boxBackgroundColor="@color/background_color"
+                app:boxCornerRadiusBottomEnd="20dp"
+                app:boxCornerRadiusBottomStart="20dp"
+                app:boxCornerRadiusTopEnd="20dp"
+                app:boxCornerRadiusTopStart="20dp"
+                app:hintTextColor="@color/white"
+                app:boxStrokeColor="@drawable/border_input"
+                app:boxStrokeWidth="1dp"
+                android:textColorHint="@color/white"
+                app:startIconDrawable="@drawable/location"
+                app:startIconTint="@color/white"
+                app:endIconDrawable="@drawable/down_arrow"
+                app:endIconTint="@color/white"
+                android:hint="@string/selected_item"
+                android:layout_height="wrap_content">
+                <AutoCompleteTextView
+                    android:inputType="none"
+                    android:textColor="@color/white"
+                    android:id="@+id/countryAutoTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:paddingTop="24dp"
+                android:text="Choose date"
+                style="@style/titleStyle"
+                />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/dayRecycleView"
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <ListView
+
+                android:id="@+id/cinemaLv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <ImageButton
+                android:id="@+id/btnNext"
+                android:layout_width="64.22923636363636dp"
+                android:layout_height="64.22923636363636dp"
+                android:layout_below="@id/btnJapanese"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="40dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/roundstyle50"
+                android:backgroundTint="@color/button_background_color"
+                android:rotationY="180"
+                android:src="@drawable/ic_back"/>
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

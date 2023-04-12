@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.BookSeatActivity">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:padding="24dp"
+            android:orientation="vertical"
+
+            android:background="@color/background_color"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <androidx.appcompat.widget.AppCompatButton
+
+                android:layout_marginTop="40dp"
+                android:id="@+id/backbutton"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="left"
+
+                android:background="@drawable/back_icon" />
+            <TextView
+                android:textSize="18dp"
+                android:textColor="@color/white"
+                android:id="@+id/nameFilm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:textSize="12dp"
+                android:textColor="@color/white"
+                android:id="@+id/nameCinema"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_marginTop="16dp"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:background="@drawable/available_state"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginRight="8dp"/>
+                    <TextView
+                        android:textSize="12dp"
+                        android:textColor="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Available"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:background="@drawable/booked_state"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginRight="8dp"/>
+                    <TextView
+                        android:textSize="12dp"
+                        android:textColor="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Booked"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:background="@drawable/your_state"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginRight="8dp"/>
+                    <TextView
+                        android:textSize="12dp"
+                        android:textColor="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Your Seat"/>
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <HorizontalScrollView
+                android:id="@+id/layoutSeat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Screen"
+                android:gravity="center_horizontal"
+                android:textSize="12dp"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/screen"
+                android:layout_gravity="center_horizontal"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/countTicketTv"
+                        android:textSize="12dp"
+                        android:textColor="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Total Price"/>
+                    <TextView
+                        android:textSize="20dp"
+                        android:text="0 VNĐ"
+                        android:textColor="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/priceTv"
+                        />
+
+                </LinearLayout>
+                <androidx.appcompat.widget.AppCompatButton
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:text="Book Ticket"
+                    android:textSize="12dp"
+                    android:textColor="@color/white"
+                    android:paddingHorizontal="14dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_button"
+                    />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

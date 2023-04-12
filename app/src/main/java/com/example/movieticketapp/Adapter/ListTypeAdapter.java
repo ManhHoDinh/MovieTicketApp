@@ -44,7 +44,7 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                     typeBtn.setBackgroundTintList(ColorStateList.valueOf(R.drawable.second_gradient));
                     //typeBtn.setBackgroundColor(typeBtn.getContext().getResources().getColor(R.color.sub_text_color));
                    // typeBtn.setBackgroundResource(R.drawable.second_gradient);
-                    loadListPost();
+                    loadListPost(typeBtn.getText().toString());
                     if(checkedPosition!=getAdapterPosition()){
                         notifyItemChanged(checkedPosition);
                         checkedPosition = getAdapterPosition();
@@ -52,9 +52,9 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                 }
             });
         }
-        void bind(){
+        void bind(String type){
             if(checkedPosition == getAdapterPosition()){
-                loadListPost();
+                loadListPost(type);
                 //typeBtn.setBackgroundColor(typeBtn.getContext().getResources().getColor(R.color.sub_text_color));
 
                  typeBtn.setBackgroundTintList(ColorStateList.valueOf(R.drawable.second_gradient));
@@ -69,7 +69,8 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
 
 
     }
-    void loadListPost(){
+    void loadListPost(String type){
+
         viewPager = activity.findViewById(R.id.typeMovieViewPage);List<PostItem> listPosts = new ArrayList<PostItem>();
         listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhhhh"));
         listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
@@ -106,7 +107,7 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ListTypeAdapter.ViewHolder holder, int position) {
         holder.typeBtn.setText(listType[position]);
-        holder.bind();
+        holder.bind(listType[position]);
     }
 
 

@@ -19,7 +19,17 @@
 
 
     </style>
+    <style name="Theme.MovieProject.Main" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="editTextColor">@color/white</item>
+        <item name="fontFamily">@font/montserrat500</item>
+        <item name="android:fontFamily">@font/montserrat500</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:colorButtonNormal">@color/white</item>
 
+
+
+    </style>
     <style name="Theme.MovieProject.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.MovieProject.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

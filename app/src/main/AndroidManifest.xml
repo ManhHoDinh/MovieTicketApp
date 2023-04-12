@@ -12,24 +12,34 @@
         android:theme="@style/Theme.MovieTicketApp"
         tools:targetApi="31">
         <activity
-            android:name=".Activity.OnboardingActivity"
+            android:name=".Activity.BookSeatActivity"
             android:exported="false"
-            android:noHistory="true"/>
+            android:theme="@style/Theme.MovieProject.Main"/>
         <activity
-            android:name=".Activity.SplashActivity"
-            android:exported="true">
+            android:name=".Activity.BookedActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MovieProject.Main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Activity.OnboardingActivity"
+            android:exported="false"
+            android:noHistory="true" />
+        <activity
+            android:name=".Activity.SplashActivity"
+            android:exported="false"></activity>
         <activity android:name=".Activity.MainActivity" />
         <activity android:name=".Activity.SignUpActivity" />
         <activity android:name=".Activity.SignInActivity" />
-        <activity android:name=".Activity.HomeActivity"/>
-        <activity android:name=".Activity.ConfirmationProfileActivity" android:noHistory="true"/>
-        <activity android:name=".Activity.UserProflingActivity"/>
+        <activity android:name=".Activity.HomeActivity" />
+        <activity
+            android:name=".Activity.ConfirmationProfileActivity"
+            android:noHistory="true" />
+        <activity android:name=".Activity.UserProflingActivity" />
     </application>
 
 </manifest>
