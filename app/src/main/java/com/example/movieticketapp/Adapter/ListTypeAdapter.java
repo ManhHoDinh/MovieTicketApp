@@ -1,5 +1,6 @@
 package com.example.movieticketapp.Adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
@@ -13,7 +14,7 @@ import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.movieticketapp.Model.PostItem;
+import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.R;
 
 import java.util.ArrayList;
@@ -52,6 +53,7 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                 }
             });
         }
+        @SuppressLint("ResourceAsColor")
         void bind(){
             if(checkedPosition == getAdapterPosition()){
                 loadListPost();
@@ -70,10 +72,11 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
 
     }
     void loadListPost(){
-        viewPager = activity.findViewById(R.id.typeMovieViewPage);List<PostItem> listPosts = new ArrayList<PostItem>();
-        listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhhhh"));
-        listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
-        listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
+        viewPager = activity.findViewById(R.id.typeMovieViewPage);
+        List<FilmModel> listPosts = new ArrayList<FilmModel>();
+        listPosts.add(new FilmModel(R.drawable.movie_poster, "Ralph Breaks the Internet", R.drawable.movie_poster, 4.7, "Action & adventure, Comedy", "Wreck-It Ralph wants to be loved by many people like his kind friend, Fix-It Felix. But no one likes evil characters like Ralph.\nRalph's goal was simple, wanting to win and get a medal to be considered a hero. But without realizing Ralph instead paved the way for criminals who can kill all the games in the game complex. Read more"));
+        listPosts.add(new FilmModel(R.drawable.movie_poster, "bìnhhh", R.drawable.background_image,4.7, "Action & adventure, Comedy", "Wreck-It Ralph wants to be loved by many people like his kind friend, Fix-It Felix. But no one likes evil characters like Ralph.\nRalph's goal was simple, wanting to win and get a medal to be considered a hero. But without realizing Ralph instead paved the way for criminals who can kill all the games in the game complex. Read more"));
+        listPosts.add(new FilmModel(R.drawable.movie_poster, "bìnhhh", R.drawable.background_image,4.7, "Action & adventure, Comedy", "Wreck-It Ralph wants to be loved by many people like his kind friend, Fix-It Felix. But no one likes evil characters like Ralph.\nRalph's goal was simple, wanting to win and get a medal to be considered a hero. But without realizing Ralph instead paved the way for criminals who can kill all the games in the game complex. Read more"));
         viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
         viewPager.setClipToPadding(false);
         viewPager.setClipChildren(false);
