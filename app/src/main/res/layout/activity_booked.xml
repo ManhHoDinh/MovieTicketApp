@@ -18,7 +18,7 @@
             <TextView
                 android:id="@+id/nameFilmtv"
                 android:layout_marginTop="70dp"
-                android:layout_marginHorizontal="80dp"
+                android:layout_marginHorizontal="60dp"
 
                 android:textColor="@color/white"
                 android:textSize="24dp"
@@ -39,6 +39,7 @@
                 android:textColorHint="@color/white"
                 app:startIconDrawable="@drawable/location"
                 app:startIconTint="@color/white"
+
                 app:endIconDrawable="@drawable/down_arrow"
                 app:endIconTint="@color/white"
                 android:hint="@string/selected_item"
@@ -69,7 +70,7 @@
                 android:id="@+id/btnNext"
                 android:layout_width="64.22923636363636dp"
                 android:layout_height="64.22923636363636dp"
-                android:layout_below="@id/btnJapanese"
+
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="40dp"
                 android:layout_gravity="center_horizontal"

@@ -2,12 +2,14 @@ package com.example.movieticketapp.Adapter;
 
 import android.app.Activity;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
@@ -41,9 +43,8 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                 @Override
                 public void onClick(View view) {
 
-                    typeBtn.setBackgroundTintList(ColorStateList.valueOf(R.drawable.second_gradient));
-                    //typeBtn.setBackgroundColor(typeBtn.getContext().getResources().getColor(R.color.sub_text_color));
-                   // typeBtn.setBackgroundResource(R.drawable.second_gradient);
+                    typeBtn.setBackgroundColor(Color.TRANSPARENT);
+                    typeBtn.setBackground(ContextCompat.getDrawable(typeBtn.getContext(), R.drawable.background_button));
                     loadListPost(typeBtn.getText().toString());
                     if(checkedPosition!=getAdapterPosition()){
                         notifyItemChanged(checkedPosition);
@@ -55,14 +56,13 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
         void bind(String type){
             if(checkedPosition == getAdapterPosition()){
                 loadListPost(type);
-                //typeBtn.setBackgroundColor(typeBtn.getContext().getResources().getColor(R.color.sub_text_color));
-
-                 typeBtn.setBackgroundTintList(ColorStateList.valueOf(R.drawable.second_gradient));
+                typeBtn.setBackgroundColor(Color.TRANSPARENT);
+                typeBtn.setBackground(ContextCompat.getDrawable(typeBtn.getContext(), R.drawable.background_button));
             }
             else {
 
-               typeBtn.setBackgroundTintList(ColorStateList.valueOf(R.color.white));
-               // typeBtn.setBackgroundColor(typeBtn.getContext().getResources().getColor(R.color.white));
+                typeBtn.setBackgroundColor(Color.TRANSPARENT);
+                typeBtn.setBackground(ContextCompat.getDrawable(typeBtn.getContext(), R.drawable.bg_tabview_button));
 
             }
         }
@@ -70,11 +70,49 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
 
     }
     void loadListPost(String type){
+        viewPager = activity.findViewById(R.id.typeMovieViewPage);
+        List<PostItem> listPosts = new ArrayList<PostItem>();
+        switch(type){
+            case "All":
+                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhhhh"));
+                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
+                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
+                break;
+            case "Action":
+                listPosts.add(new PostItem(R.drawable.back_icon, "bìnhhhhh"));
+                listPosts.add(new PostItem(R.drawable.control, "bìnhhh"));
+                listPosts.add(new PostItem(R.drawable.avatar, "bìnhhh"));
+                break;
+            case "Drama":
+                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhhhh"));
+                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
+                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
+                break;
+            case "Honor":
+                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhhhh"));
+                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
+                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
+                break;
+            case "War":
+                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhhhh"));
+                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
+                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
+                break;
+            case "Comedy":
+                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhhhh"));
+                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
+                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
+                break;
+            case "Crime":
+                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhhhh"));
+                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
+                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
+                break;
 
-        viewPager = activity.findViewById(R.id.typeMovieViewPage);List<PostItem> listPosts = new ArrayList<PostItem>();
-        listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhhhh"));
-        listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
-        listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
+
+
+        }
+
         viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
         viewPager.setClipToPadding(false);
         viewPager.setClipChildren(false);

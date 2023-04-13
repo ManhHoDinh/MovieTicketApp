@@ -10,7 +10,6 @@
         android:fontFamily="@font/montserrat200"
         android:textSize="14dp"
         android:lineHeight="30dp"
-
         android:layout_height="wrap_content">
     </androidx.appcompat.widget.AppCompatButton>
 

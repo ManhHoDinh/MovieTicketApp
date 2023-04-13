@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +29,22 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
     private TextView countTicketTv;
     private TextView priceTv;
     private Button backBtn;
+    ViewGroup layout;
+    ViewGroup layout1;
+
+    String seats =
+            "AAAAAA_AAAAAA_AAAAAA/"
+                    + "AABBAA_AAABBA_AAAAAA/"
+                    + "AAAAAA_AAAAAA_AABBAA/"
+                    + "ABBBAA_AAAAAA_AAAAAA/"
+                    + "__AAAA_AAAAAA_AAAA__/"
+                    + "__AAAA_AAAAAA_ABAA__/"
+                    + "__AAAA_AABBAA_AAAA__/"
+                    + "__AAAA_AAAAAA_AAAA__/"
+                    + "__ABBA_AAAABA_AAAA__/"
+                    + "__BAAA_AABAAA_AAAA__/"
+            ;
+
 
     List<TextView> seatViewList = new ArrayList<>();
     int seatSize = 100;
@@ -50,6 +67,7 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
         priceTv = (TextView) findViewById(R.id.priceTv);
         backBtn = (Button) findViewById(R.id.backbutton);
         layout = findViewById(R.id.layoutSeat);
+        //layout1 = findViewById(R.id.layoutBinh);
 
 
 
@@ -125,22 +143,8 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
                 finish();
             }
         });
+        layout1 = layoutSeat;
     }
-    ViewGroup layout;
-
-    String seats =
-              "AAAAAA_AAAAAA_AAAAAA/"
-            + "AABBAA_AAABBA_AAAAAA/"
-            + "AAAAAA_AAAAAA_AABBAA/"
-            + "ABBBAA_AAAAAA_AAAAAA/"
-            + "__AAAA_AAAAAA_AAAA__/"
-            + "__AAAA_AAAAAA_ABAA__/"
-            + "__AAAA_AABBAA_AAAA__/"
-            + "__AAAA_AAAAAA_AAAA__/"
-            + "__ABBA_AAAABA_AAAA__/"
-            + "__BAAA_AABAAA_AAAA__/"
-           ;
-
 
 
 
