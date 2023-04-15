@@ -71,6 +71,18 @@
             android:dividerHeight="10.0sp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-    </LinearLayout>
 
+    </LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="96dp"
+        app:tint= "@color/white"
+        android:id="@+id/topUpBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:backgroundTint="@color/main_color"
+        app:borderWidth="0dp"
+        android:src="@drawable/top_up"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
