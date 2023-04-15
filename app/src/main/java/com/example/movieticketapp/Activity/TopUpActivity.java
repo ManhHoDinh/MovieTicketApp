@@ -2,6 +2,7 @@ package com.example.movieticketapp.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +21,8 @@ import java.util.List;
 public class TopUpActivity extends AppCompatActivity {
     private GridView listPrice;
     private Button backBtn;
+    private Button topUpBtn;
+
     private TextInputEditText textInputEditText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +30,7 @@ public class TopUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_top_up);
         listPrice = (GridView) findViewById(R.id.priceGridView);
         backBtn = (Button) findViewById(R.id.backbutton);
+        topUpBtn = (Button) findViewById(R.id.topUpBtn);
         List<String> list = new ArrayList<String>();
         list.add("500000");
         list.add("1000000");
@@ -40,6 +44,12 @@ public class TopUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+        topUpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(TopUpActivity.this, SuccessTopUpActivity.class));
             }
         });
 
