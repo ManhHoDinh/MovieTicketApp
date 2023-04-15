@@ -16,20 +16,143 @@
             <ImageView
                 android:id="@+id/backgroundImage"
                 android:layout_width="match_parent"
+                android:scaleType="fitXY"
                 android:layout_height="250dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:adjustViewBounds="true"
                 />
-            <TextView
-                android:id="@+id/filmName"
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/topView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Hello"
-                android:textColor="@color/white"
+                android:layout_height="337dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_gravity="center"
                 />
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/bg_img_shadow"
+                android:layout_width="match_parent"
+                android:layout_height="221dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:background="@drawable/background_image_shadow"
+                />
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="3000dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bg_img_shadow"
+                android:background="@color/main_information_film_screen"
+                />
+            <ImageView
+                android:id="@+id/PosterImage"
+                android:layout_width="120dp"
+                android:layout_height="172dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/topView"
+                android:scaleType="fitXY"
+                android:foreground="@drawable/border_radius"
+                android:background="@drawable/border_radius"
+                android:adjustViewBounds="true"
+                />
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@id/PosterImage"
+                app:layout_constraintTop_toBottomOf="@+id/bg_img_shadow"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginTop="16dp"
+                android:gravity="left|top"
+                android:orientation="vertical"
+
+                >
+                <TextView
+                    android:id="@+id/filmName"
+                    android:gravity="left"
+                    android:layout_height="fill_parent"
+                    android:layout_width="191dp"
+                    android:ellipsize="end"
+                    android:textColor="@color/white"
+                    android:singleLine="false"
+                    android:lines="2"
+                    android:textSize="16dp"
+                    android:lineSpacingExtra="0.4dp"
+                    android:textFontWeight="600"
+               >
+                </TextView>
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="top|left"
+                    >
+                    <RatingBar
+                        android:id="@+id/rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:numStars="5"
+                        android:isIndicator="false"
+                        android:rating="4.7"
+                        style="?android:attr/ratingBarStyleSmall"
+                        android:progressTint="#FFFFAF34"
+                        android:layout_marginTop="0dp"
+                        />
+                    <TextView
+                        android:id="@+id/vote"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <TextView
+                    android:id="@+id/director"
+                    android:textColor="@color/white"
+                    android:gravity="left"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/durationTime"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/white"
+                    android:gravity="left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/PosterImage"
+                >
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="About Movie"
+                    />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Review"
+                    />
+            </com.google.android.material.tabs.TabLayout>
+            <androidx.viewpager2.widget.ViewPager2
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tab_layout"
+                android:id="@+id/pager"
+                />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </LinearLayout>
