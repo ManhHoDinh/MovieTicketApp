@@ -32,12 +32,15 @@ public class TopUpActivity extends AppCompatActivity {
         backBtn = (Button) findViewById(R.id.backbutton);
         topUpBtn = (Button) findViewById(R.id.topUpBtn);
         List<String> list = new ArrayList<String>();
+        list.add("50000");
+        list.add("100000");
+        list.add("150000");
+        list.add("200000");
+        list.add("250000");
         list.add("500000");
+        list.add("750000");
         list.add("1000000");
-        list.add("1500000");
-        list.add("500000");
-        list.add("500000");
-        list.add("500000");
+
         textInputEditText = (TextInputEditText) findViewById(R.id.amountEt);
         PriceGridAdapter a =new PriceGridAdapter( this, list, textInputEditText );
         backBtn.setOnClickListener(new View.OnClickListener() {
