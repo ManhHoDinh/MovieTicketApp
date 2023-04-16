@@ -61,7 +61,7 @@ public class InformationFilmActivity extends FragmentActivity {
         tabLayout=findViewById(R.id.tab_layout);
         pager=findViewById(R.id.pager);
 
-        pager.setAdapter(new FilmDetailPagerAdapter(this));
+        pager.setAdapter(new FilmDetailPagerAdapter(this, f));
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -77,6 +77,12 @@ public class InformationFilmActivity extends FragmentActivity {
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
 
+            }
+        });
+        pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                tabLayout.selectTab(tabLayout.getTabAt(position));
             }
         });
     }

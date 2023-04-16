@@ -8,7 +8,9 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        >
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -37,9 +39,10 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:background="@drawable/background_image_shadow"
                 />
-            <androidx.appcompat.widget.LinearLayoutCompat
+                <!--            Mau layout phia duoi-->
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="3000dp"
+                android:layout_height="800dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/bg_img_shadow"
                 android:background="@color/main_information_film_screen"
@@ -64,7 +67,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/bg_img_shadow"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="24dp"
-                android:layout_marginTop="16dp"
                 android:gravity="left|top"
                 android:orientation="vertical"
 
@@ -132,17 +134,27 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/PosterImage"
+                app:tabIndicatorHeight="2dp"
+                app:tabIndicatorColor="@color/white"
+                app:tabIndicatorFullWidth="false"
+                app:tabIndicator="@color/white"
+                android:outlineAmbientShadowColor="@android:color/transparent"
+                android:outlineSpotShadowColor="@android:color/transparent"
+                app:tabRippleColor="@android:color/transparent"
+                android:textAllCaps="false"
                 >
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="About Movie"
+                    android:textAllCaps="false"
                     />
 
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Review"
+                    android:textAllCaps="false"
                     />
             </com.google.android.material.tabs.TabLayout>
             <androidx.viewpager2.widget.ViewPager2

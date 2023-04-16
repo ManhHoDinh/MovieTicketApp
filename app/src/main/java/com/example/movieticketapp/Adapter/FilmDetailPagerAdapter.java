@@ -7,19 +7,22 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.movieticketapp.Fragment.AboutMovie;
 import com.example.movieticketapp.Fragment.ReviewFragment;
+import com.example.movieticketapp.Model.FilmModel;
 
 public class FilmDetailPagerAdapter extends FragmentStateAdapter {
-    public FilmDetailPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+    FilmModel film;
+    public FilmDetailPagerAdapter(@NonNull FragmentActivity fragmentActivity, FilmModel f) {
         super(fragmentActivity);
+        film = f;
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        if(position==0)
-            return new ReviewFragment();
+        if(position==1)
+            return new ReviewFragment(film);
         else
-            return new AboutMovie();
+            return new AboutMovie(film);
     }
 
     @Override
