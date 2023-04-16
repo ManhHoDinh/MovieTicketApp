@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_background_1"
+    tools:context=".Activity.CheckoutWalletEnoughActivity">
+
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginLeft="25.13454545454545dp"
+        android:layout_marginTop="35dp"
+        android:src="@drawable/ic_back" />
+    
+    <TextView
+        android:id="@+id/txtViewCheckoutMovie"
+        android:layout_width="104.7272727272727dp"
+        android:layout_height="58.64727272727273dp"
+        android:text="Checkout Movie"
+        android:fontFamily="@font/montserrat600"
+        android:textSize="20sp"
+        android:layout_marginLeft="144.5236363636364dp"
+        android:layout_marginTop="35dp" />
+
+    <ImageView
+        android:id="@+id/moviePoster"
+        android:layout_width="90.90327272727273dp"
+        android:layout_height="139.7166545454545dp"
+        android:layout_marginTop="125.6727272727273dp"
+        android:layout_marginLeft="23.66836363636364dp"
+        android:src="@drawable/movie_poster"/>
+
+    <TextView
+        android:id="@+id/movieTitle"
+        android:layout_width="200.0290909090909dp"
+        android:layout_height="41.89090909090909dp"
+        android:text="Ralph Breaks the Internet"
+        android:fontFamily="@font/montserrat500"
+        android:textSize="16sp"
+        android:layout_marginTop="125.6727272727273dp"
+        android:layout_marginLeft="138.24dp"/>
+
+    <ImageView
+        android:id="@+id/rating"
+        android:layout_width="79.81381818181818dp"
+        android:layout_height="12.56727272727273dp"
+        android:src="@drawable/rating"
+        android:layout_marginTop="180.1309090909091dp"
+        android:layout_marginLeft="138.24dp"/>
+
+    <TextView
+        android:id="@+id/ratingPoint"
+        android:layout_width="18.85090909090909dp"
+        android:layout_height="10.47272727272727dp"
+        android:text="(4,7)"
+        android:fontFamily="@font/montserrat500"
+        android:textSize="8sp"
+        android:layout_toRightOf="@id/rating"
+        android:layout_marginLeft="4.189090909090909dp"
+        android:layout_marginTop="180.1309090909091dp"/>
+    
+    <TextView
+        android:id="@+id/genre"
+        android:layout_width="205.2654545454545dp"
+        android:layout_height="15.70909090909091dp"
+        android:text="Action &amp; adventure, Comedy"
+        android:fontFamily="@font/montserrat400"
+        android:textSize="12sp"
+        android:layout_below="@id/rating"
+        android:layout_marginTop="12.56727272727273dp"
+        android:layout_marginLeft="138.24dp"/>
+
+    <TextView
+        android:layout_width="53.36363636363636dp"
+        android:layout_height="15.70909090909091dp"
+        android:text="1h 41min"
+        android:fontFamily="@font/montserrat400"
+        android:textSize="12sp"
+        android:layout_below="@id/genre"
+        android:layout_marginTop="8.378181818181818dp"
+        android:layout_marginLeft="138.24dp"/>
+
+    <View
+        android:id="@+id/devider1"
+        android:layout_width="342.4581818181818dp"
+        android:layout_height="1dp"
+        android:background="@color/horizontal_line"
+        android:layout_marginTop="284.8581818181818dp"
+        android:layout_marginLeft="25.13454545454545dp"/>
+
+    <TextView
+        android:id="@+id/IDOrder"
+        android:layout_width="72.26181818181818dp"
+        android:layout_height="20.94545454545455dp"
+        android:text="ID Order"
+        android:fontFamily="@font/montserrat400"
+        android:textSize="16sp"
+        android:layout_below="@id/devider1"
+        android:layout_marginTop="35.60727272727273dp"
+        android:layout_marginLeft="25.13454545454545dp"
+        android:alpha=".8"/>
+
+    <TextView
+        android:id="@+id/Cinema"
+        android:layout_width="65.97818181818182dp"
+        android:layout_height="20.94545454545455dp"
+        android:text="Cinema"
+        android:fontFamily="@font/montserrat400"
+        android:textSize="16sp"
+        android:layout_below="@id/devider1"
+        android:layout_marginTop="75.40363636363636dp"
+        android:layout_marginLeft="25.13454545454545dp"
+        android:alpha=".8"/>
+
+    <TextView
+        android:id="@+id/DateTime"
+        android:layout_width="102.6327272727273dp"
+        android:layout_height="20.94545454545455dp"
+        android:text="Date &amp; Time"
+        android:fontFamily="@font/montserrat400"
+        android:textSize="16sp"
+        android:layout_below="@id/devider1"
+        android:layout_marginTop="115.2dp"
+        android:layout_marginLeft="25.13454545454545dp"
+        android:alpha=".8"/>
+
+    <TextView
+        android:id="@+id/SeatNumber"
+        android:layout_width="113.1054545454545dp"
+        android:layout_height="20.94545454545455dp"
+        android:text="Seat Number"
+        android:fontFamily="@font/montserrat400"
+        android:textSize="16sp"
+        android:layout_below="@id/devider1"
+        android:layout_marginTop="154.9963636363636dp"
+        android:layout_marginLeft="25.13454545454545dp"
+        android:alpha=".8"/>
+
+    <TextView
+        android:id="@+id/Price"
+        android:layout_width="42.93818181818182dp"
+        android:layout_height="20.94545454545455dp"
+        android:text="Price"
+        android:fontFamily="@font/montserrat400"
+        android:textSize="16sp"
+        android:layout_below="@id/devider1"
+        android:layout_marginTop="194.7927272727273dp"
+        android:layout_marginLeft="25.13454545454545dp"
+        android:alpha=".8"/>
+
+    <TextView
+        android:id="@+id/Total"
+        android:layout_width="40.84363636363636dp"
+        android:layout_height="20.94545454545455dp"
+        android:text="Total"
+        android:fontFamily="@font/montserrat400"
+        android:textSize="16sp"
+        android:layout_below="@id/devider1"
+        android:layout_marginTop="234.5890909090909dp"
+        android:layout_marginLeft="25.13454545454545dp"
+        android:alpha=".8"/>
+
+    <TextView
+        android:id="@+id/IDOrderValue"
+        android:layout_width="77.49818181818182dp"
+        android:layout_height="20.94545454545455dp"
+        android:text="22081996"
+        android:fontFamily="@font/montserrat400"
+        android:textSize="16sp"
+        android:layout_below="@id/devider1"
+        android:layout_marginTop="35.60727272727273dp"
+        android:layout_marginLeft="290.0945454545455dp"/>
+
+    <TextView
+        android:id="@+id/CinemaValue"
+        android:layout_width="140.3345454545455dp"
+        android:layout_height="20.94545454545455dp"
+        android:text="FX Sudirman XXI"
+        android:fontFamily="@font/montserrat400"
+        android:textSize="16sp"
+        android:layout_below="@id/devider1"
+        android:layout_marginTop="75.40363636363636dp"
+        android:layout_marginLeft="227.2581818181818dp"/>
+
+    <TextView
+        android:id="@+id/DateTimeValue"
+        android:layout_width="150.8072727272727dp"
+        android:layout_height="20.94545454545455dp"
+        android:text="Sun May 22,  16:40"
+        android:fontFamily="@font/montserrat400"
+        android:textSize="16sp"
+        android:layout_below="@id/devider1"
+        android:layout_marginTop="115.2dp"
+        android:layout_marginLeft="216.7854545454545dp"/>
+
+    <TextView
+        android:id="@+id/SeatNumberValue"
+        android:layout_width="79.59272727272727dp"
+        android:layout_height="20.94545454545455dp"
+        android:text="D7,D8,D9"
+        android:fontFamily="@font/montserrat400"
+        android:textSize="16sp"
+        android:layout_below="@id/devider1"
+        android:layout_marginTop="154.9963636363636dp"
+        android:layout_marginLeft="288dp"/>
+
+    <TextView
+        android:id="@+id/PriceValue"
+        android:layout_width="113.1054545454545dp"
+        android:layout_height="20.94545454545455dp"
+        android:text="Rp 50.000 x 3"
+        android:fontFamily="@font/montserrat400"
+        android:textSize="16sp"
+        android:layout_below="@id/devider1"
+        android:layout_marginTop="194.7927272727273dp"
+        android:layout_marginLeft="254.4872727272727dp"/>
+
+    <TextView
+        android:id="@+id/TotalValue"
+        android:layout_width="94.25454545454545dp"
+        android:layout_height="20.94545454545455dp"
+        android:text="Rp 150.000"
+        android:fontFamily="@font/montserrat600"
+        android:textSize="16sp"
+        android:layout_below="@id/devider1"
+        android:layout_marginTop="234.5890909090909dp"
+        android:layout_marginLeft="273.3381818181818dp"/>
+
+    <View
+        android:id="@+id/devider2"
+        android:layout_width="342.4581818181818dp"
+        android:layout_height="1dp"
+        android:background="@color/horizontal_line"
+        android:layout_marginTop="573.9054545454545dp"
+        android:layout_marginLeft="25.13454545454545dp"/>
+
+    <TextView
+        android:id="@+id/YourWallet"
+        android:layout_width="100.9780363636364dp"
+        android:layout_height="20.94545454545455dp"
+        android:text="Your Wallet"
+        android:fontFamily="@font/montserrat400"
+        android:textSize="16sp"
+        android:layout_below="@id/devider2"
+        android:layout_marginTop="27.22909090909091dp"
+        android:layout_marginLeft="25.13454545454545dp"
+        android:alpha=".8"/>
+
+    <TextView
+        android:id="@+id/YourWalletValue"
+        android:layout_width="106.8218181818182dp"
+        android:layout_height="20.94545454545455dp"
+        android:text="IDR 200.000"
+        android:fontFamily="@font/montserrat600"
+        android:textColor="@color/main_color"
+        android:textSize="16sp"
+        android:layout_below="@id/devider2"
+        android:layout_marginTop="27.22909090909091dp"
+        android:layout_marginLeft="260.5614545454545dp"/>
+    
+    <Button
+        android:layout_width="267.0545454545455dp"
+        android:layout_height="62.83636363636364dp"
+        android:background="@drawable/roundstyle20"
+        android:backgroundTint="@color/main_color"
+        android:text="Checkout"
+        android:fontFamily="@font/montserrat500"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:layout_marginTop="680.7272727272727dp"
+        android:layout_marginLeft="62.83636363636364dp"/>
+
+</RelativeLayout>

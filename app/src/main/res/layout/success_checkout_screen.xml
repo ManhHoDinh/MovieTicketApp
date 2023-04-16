@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_background_1"
+    tools:context=".Activity.SuccessCheckoutActivity">
+
+    <ImageView
+        android:id="@+id/imgSuccessCheckout"
+        android:layout_width="184.32dp"
+        android:layout_height="142.4290909090909dp"
+        android:layout_marginLeft="103.8580363636364dp"
+        android:layout_marginTop="164.4218181818182dp"
+        android:src="@drawable/success_checkout_logo"/>
+
+    <TextView
+        android:id="@+id/txtHappyWatching"
+        android:layout_width="222.0218181818182dp"
+        android:layout_height="30.37090909090909dp"
+        android:text="Happy Watching!"
+        android:fontFamily="@font/montserrat500"
+        android:textSize="24sp"
+        android:layout_marginTop="382.2545454545455dp"
+        android:layout_marginLeft="84.82909090909091dp"/>
+
+    <TextView
+        android:id="@+id/txtTicketBoughtSuccess"
+        android:layout_width="200.0290909090909dp"
+        android:layout_height="56.55272727272727dp"
+        android:text="You have successfully bought the ticket"
+        android:textSize="18sp"
+        android:fontFamily="@font/montserrat300"
+        android:layout_marginTop="429.3818181818182dp"
+        android:layout_marginLeft="96.34909090909091dp"
+        android:textAlignment="center"/>
+
+    <Button
+        android:id="@+id/btnToMyTicket"
+        android:layout_width="267.0545454545455dp"
+        android:layout_height="63.88363636363636dp"
+        android:background="@drawable/roundstyle20"
+        android:backgroundTint="@color/main_color"
+        android:text="My Ticket"
+        android:textAllCaps="false"
+        android:fontFamily="@font/montserrat500"
+        android:textSize="18sp"
+        android:layout_marginTop="561.3381818181818dp"
+        android:layout_marginLeft="62.83636363636364dp"/>
+
+    <TextView
+        android:id="@+id/txtDiscoverNewMovie"
+        android:layout_width="209.4545454545455dp"
+        android:layout_height="21.99272727272727dp"
+        android:text="Discover new movie?"
+        android:fontFamily="@font/montserrat400"
+        android:textSize="14sp"
+        android:layout_below="@id/btnToMyTicket"
+        android:layout_marginTop="18.85090909090909dp"
+        android:layout_marginLeft="64.93090909090909dp"
+        android:textColor="#ADADAD"/>
+
+    <TextView
+        android:id="@+id/txtToHome"
+        android:layout_width="100dp"
+        android:layout_height="21.99272727272727dp"
+        android:text="Back to home"
+        android:fontFamily="@font/montserrat400"
+        android:textSize="14sp"
+        android:textColor="#449EFF"
+        android:layout_below="@id/btnToMyTicket"
+        android:layout_marginTop="18.85090909090909dp"
+        android:layout_marginLeft="220dp"/>
+</RelativeLayout>

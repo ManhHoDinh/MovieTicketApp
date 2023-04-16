@@ -218,6 +218,4 @@ public class UserProflingActivity extends AppCompatActivity {
             }
         });
     }
-
-
 }
