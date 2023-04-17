@@ -89,13 +89,13 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="28dp"
                 android:background="@drawable/button_background"
+                android:fontFamily="@font/montserrat_regular"
                 android:gravity="center"
                 android:text="Login"
                 android:textColor="@color/white_background"
-                android:fontFamily="@font/montserrat_regular"
                 android:textFontWeight="500"
                 android:textSize="18dp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
