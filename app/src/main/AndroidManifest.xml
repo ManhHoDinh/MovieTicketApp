@@ -17,7 +17,7 @@
             android:exported="false"
             android:noHistory="true" />
         <activity
-            android:name=".Activity.MyTicketExpiredActivity"
+            android:name=".Activity.MyTicketAllActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,8 +29,6 @@
         <activity android:name=".Activity.SignUpActivity" />
         <activity android:name=".Activity.SignInActivity" />
         <activity android:name=".Activity.HomeActivity" />
-        <activity android:name=".Activity.MyTicketAllActivity" />
-        <activity android:name=".Activity.MyTicketNewsActivity" />
         <activity
             android:name=".Activity.ConfirmationProfileActivity"
             android:noHistory="true" />

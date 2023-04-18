@@ -32,9 +32,9 @@
                 android:id="@+id/buttonAllTicket"
                 android:layout_width="98dp"
                 android:layout_height="40dp"
-                android:background="@drawable/selected_button_ticket"
+                android:background="@drawable/button_ticket"
                 android:fontFamily="@font/montserrat_regular"
-                android:text="All"
+                android:hint="All"
                 android:textFontWeight="500"
                 android:textSize="18dp"
                 android:textColor="@color/white_background"
@@ -48,8 +48,9 @@
                 android:background="@drawable/button_ticket"
                 android:fontFamily="@font/montserrat_regular"
                 android:hint="News"
-                android:textFontWeight="400"
+                android:textFontWeight="500"
                 android:textSize="18dp"
+                android:textColor="@color/white_background"
                 android:layout_centerHorizontal="true"/>
             <Button
                 android:id="@+id/buttonExpiredTicket"
@@ -59,8 +60,9 @@
                 android:background="@drawable/button_ticket"
                 android:fontFamily="@font/montserrat_regular"
                 android:hint="Expired"
-                android:textFontWeight="400"
+                android:textFontWeight="500"
                 android:textSize="18dp"
+                android:textColor="@color/white_background"
                 android:layout_alignParentRight="true"/>
         </RelativeLayout>
         <View
