@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark_background_1"
-    tools:context=".Activity.MyTicketAll">
+    tools:context=".Activity.MyTicketAllActivity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -32,11 +32,12 @@
                 android:id="@+id/buttonAllTicket"
                 android:layout_width="98dp"
                 android:layout_height="40dp"
-                android:background="@drawable/button_ticket"
+                android:background="@drawable/selected_button_ticket"
                 android:fontFamily="@font/montserrat_regular"
-                android:hint="All"
-                android:textFontWeight="400"
+                android:text="All"
+                android:textFontWeight="500"
                 android:textSize="18dp"
+                android:textColor="@color/white_background"
                 />
 
             <Button
@@ -44,13 +45,12 @@
                 style="@android:style/Widget.Button"
                 android:layout_width="98dp"
                 android:layout_height="40dp"
-                android:background="@drawable/selected_button_ticket"
+                android:background="@drawable/button_ticket"
                 android:fontFamily="@font/montserrat_regular"
-                android:text="News"
-                android:textFontWeight="500"
+                android:hint="News"
+                android:textFontWeight="400"
                 android:textSize="18dp"
-                android:layout_centerHorizontal="true"
-                android:textColor="@color/white_background"/>
+                android:layout_centerHorizontal="true"/>
             <Button
                 android:id="@+id/buttonExpiredTicket"
                 style="@android:style/Widget.Button"
@@ -73,7 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="none"
-            android:id="@+id/ListViewTicket2"/>
+            android:id="@+id/ListViewTicket"/>
     </LinearLayout>
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
