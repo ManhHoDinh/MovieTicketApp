@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/dateBtn"
+        style="@style/TypeButtonStyle"
+        android:layout_width="70dp"
+        android:paddingVertical="12dp"
+        android:fontFamily="@font/montserrat200"
+        android:textSize="14dp"
+        android:lineHeight="30dp"
+        android:layout_height="wrap_content">
+    </androidx.appcompat.widget.AppCompatButton>
+
+</LinearLayout>

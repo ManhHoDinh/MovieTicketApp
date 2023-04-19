@@ -26,25 +26,16 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.sliderView
         this.listPosts = listPosts;
         this.viewPage = viewPage;
     }
-
+    int i = 0;
     @NonNull
     @Override
     public sliderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView;
         itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.slider_item, parent, false);
-        FilmModel f = listPosts.get(viewType);
-        itemView.findViewById(R.id.sliderItem).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(parent.getContext(), InformationFilmActivity.class);
-                i.putExtra(ExtraIntent.film, f);
-                parent.getContext().startActivity(i);
-            }
-        });
-        return new sliderViewHolder(itemView);
-
-
+        return new sliderViewHolder(itemView, i);
     }
+
+
     @Override
     public void onBindViewHolder(@NonNull sliderViewHolder holder, int position) {
         holder.textView.setText(listPosts.get(position).getName());
@@ -59,12 +50,21 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.sliderView
     class sliderViewHolder extends RecyclerView.ViewHolder {
         private RoundedImageView imageView;
         private TextView textView;
-
-        public sliderViewHolder(@NonNull View itemView) {
+        /////ADD Film TO Film Information
+        public sliderViewHolder(@NonNull View itemView, int postion) {
             super(itemView);
             imageView = (RoundedImageView) itemView.findViewById(R.id.postSlider);
             textView = (TextView) itemView.findViewById(R.id.namePost);
-
+            FilmModel f =listPosts.get(postion);
+            i++;
+            itemView.findViewById(R.id.sliderItem).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(itemView.getContext(), InformationFilmActivity.class);
+                    i.putExtra(ExtraIntent.film, f);
+                    itemView.getContext().startActivity(i);
+                }
+            });
         }
         void SetImage(FilmModel postItem){
             imageView.setImageResource(postItem.getPrimaryImage());

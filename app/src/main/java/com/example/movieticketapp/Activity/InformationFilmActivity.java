@@ -85,5 +85,6 @@ public class InformationFilmActivity extends FragmentActivity {
                 tabLayout.selectTab(tabLayout.getTabAt(position));
             }
         });
+
     }
 }
