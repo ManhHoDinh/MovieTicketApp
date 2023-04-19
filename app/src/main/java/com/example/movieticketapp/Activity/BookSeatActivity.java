@@ -149,7 +149,7 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
         SeatBookBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), BookedActivity.class);
+                Intent i = new Intent(getApplicationContext(), CheckoutWalletEnoughActivity.class);
                 //i.putExtra(ExtraIntent.film, film);
                 startActivity(i);
             }
