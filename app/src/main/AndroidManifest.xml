@@ -11,6 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MovieTicketApp"
         tools:targetApi="31">
+
         <activity
             android:name=".Activity.SuccessTopUpActivity"
             android:exported="false" />
