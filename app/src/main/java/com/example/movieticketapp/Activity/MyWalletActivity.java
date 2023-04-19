@@ -10,6 +10,7 @@ import android.widget.ListView;
 import com.example.movieticketapp.Adapter.MovieBookedAdapter;
 import com.example.movieticketapp.Model.MovieBooked;
 import com.example.movieticketapp.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.List;
 public class MyWalletActivity extends AppCompatActivity {
     private ListView listMovieBooked;
     private FloatingActionButton topUpBtn;
+    private BottomNavigationView bottomNavigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,5 +38,16 @@ public class MyWalletActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
+        bottomNavigationView.getMenu().getItem(1).setChecked(true);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.homePage:
+                    startActivity(new Intent(MyWalletActivity.this, HomeActivity.class));
+                    break;
+            }
+            return true;
+        });
+
     }
 }
