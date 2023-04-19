@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_background_1"
+    tools:context=".Activity.CheckoutWalletEnoughActivity">
+
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_back" />
+    
+    <TextView
+        android:id="@+id/txtViewCheckoutMovie"
+        android:layout_width="110dp"
+        android:layout_height="56dp"
+        android:text="Checkout Movie"
+        android:fontFamily="@font/montserrat600"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp" />
+
+    <RelativeLayout
+        android:id="@+id/checkoutinfo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="120dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+
+        <ImageView
+            android:id="@+id/moviePoster"
+            android:layout_width="86.8dp"
+            android:layout_height="133.41dp"
+            android:src="@drawable/movie_poster"/>
+
+        <TextView
+            android:id="@+id/movieTitle"
+            android:layout_width="201dp"
+            android:layout_height="40dp"
+            android:text="Ralph Breaks the Internet"
+            android:fontFamily="@font/montserrat500"
+            android:textSize="16sp"
+            android:layout_marginLeft="108dp"/>
+
+        <ImageView
+            android:id="@+id/rating"
+            android:layout_width="76dp"
+            android:layout_height="12dp"
+            android:src="@drawable/rating"
+            android:layout_marginTop="52dp"
+            android:layout_marginLeft="108dp"/>
+
+        <TextView
+            android:id="@+id/ratingPoint"
+            android:layout_width="18dp"
+            android:layout_height="10dp"
+            android:text="(4,7)"
+            android:fontFamily="@font/montserrat500"
+            android:textSize="8sp"
+            android:layout_toRightOf="@id/rating"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="53dp"/>
+
+        <TextView
+            android:id="@+id/genre"
+            android:layout_width="206dp"
+            android:layout_height="15dp"
+            android:text="Action &amp; adventure, Comedy"
+            android:fontFamily="@font/montserrat400"
+            android:textSize="12sp"
+            android:layout_below="@id/rating"
+            android:layout_marginTop="12dp"
+            android:layout_marginLeft="108dp"/>
+
+        <TextView
+            android:id="@+id/duration"
+            android:layout_width="60dp"
+            android:layout_height="15dp"
+            android:text="1h 41min"
+            android:fontFamily="@font/montserrat400"
+            android:textSize="12sp"
+            android:layout_below="@id/genre"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="108dp"/>
+
+        <View
+            android:id="@+id/devider1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="152dp"
+            android:background="@color/horizontal_line" />
+
+        <TextView
+            android:id="@+id/IDOrder"
+            android:layout_width="79dp"
+            android:layout_height="20dp"
+            android:text="ID Order"
+            android:fontFamily="@font/montserrat400"
+            android:textSize="16sp"
+            android:layout_below="@id/devider1"
+            android:layout_marginTop="34dp"
+            android:alpha=".8"/>
+
+        <TextView
+            android:id="@+id/Cinema"
+            android:layout_width="73dp"
+            android:layout_height="20dp"
+            android:text="Cinema"
+            android:fontFamily="@font/montserrat400"
+            android:textSize="16sp"
+            android:layout_below="@id/devider1"
+            android:layout_marginTop="72dp"
+            android:alpha=".8"/>
+
+        <TextView
+            android:id="@+id/DateTime"
+            android:layout_width="108dp"
+            android:layout_height="20dp"
+            android:text="Date &amp; Time"
+            android:fontFamily="@font/montserrat400"
+            android:textSize="16sp"
+            android:layout_below="@id/devider1"
+            android:layout_marginTop="110dp"
+            android:alpha=".8"/>
+
+        <TextView
+            android:id="@+id/SeatNumber"
+            android:layout_width="118dp"
+            android:layout_height="20dp"
+            android:text="Seat Number"
+            android:fontFamily="@font/montserrat400"
+            android:textSize="16sp"
+            android:layout_below="@id/devider1"
+            android:layout_marginTop="148dp"
+            android:alpha=".8"/>
+
+        <TextView
+            android:id="@+id/Price"
+            android:layout_width="51dp"
+            android:layout_height="20dp"
+            android:text="Price"
+            android:fontFamily="@font/montserrat400"
+            android:textSize="16sp"
+            android:layout_below="@id/devider1"
+            android:layout_marginTop="186dp"
+            android:alpha=".8"/>
+
+        <TextView
+            android:id="@+id/Total"
+            android:layout_width="49dp"
+            android:layout_height="20dp"
+            android:text="Total"
+            android:fontFamily="@font/montserrat400"
+            android:textSize="16sp"
+            android:layout_below="@id/devider1"
+            android:layout_marginTop="224dp"
+            android:alpha=".8"/>
+
+        <TextView
+            android:textAlignment="viewEnd"
+            android:id="@+id/IDOrderValue"
+            android:layout_width="84dp"
+            android:layout_height="20dp"
+            android:text="22081996"
+            android:fontFamily="@font/montserrat400"
+            android:textSize="16sp"
+            android:layout_below="@id/devider1"
+            android:layout_marginTop="32dp"
+            android:layout_alignParentEnd="true"/>
+
+        <TextView
+            android:textAlignment="viewEnd"
+            android:id="@+id/CinemaValue"
+            android:layout_width="144dp"
+            android:layout_height="20dp"
+            android:text="FX Sudirman XXI"
+            android:fontFamily="@font/montserrat400"
+            android:textSize="16sp"
+            android:layout_below="@id/devider1"
+            android:layout_marginTop="70dp"
+            android:layout_alignParentEnd="true"/>
+
+        <TextView
+            android:textAlignment="viewEnd"
+            android:id="@+id/DateTimeValue"
+            android:layout_width="154dp"
+            android:layout_height="20dp"
+            android:text="Sun May 22,  16:40"
+            android:fontFamily="@font/montserrat400"
+            android:textSize="16sp"
+            android:layout_below="@id/devider1"
+            android:layout_marginTop="108dp"
+            android:layout_alignParentEnd="true"/>
+
+        <TextView
+            android:textAlignment="viewEnd"
+            android:id="@+id/SeatNumberValue"
+            android:layout_width="86dp"
+            android:layout_height="20dp"
+            android:text="D7,D8,D9"
+            android:fontFamily="@font/montserrat400"
+            android:textSize="16sp"
+            android:layout_below="@id/devider1"
+            android:layout_marginTop="146dp"
+            android:layout_alignParentEnd="true"/>
+
+        <TextView
+            android:textAlignment="viewEnd"
+            android:id="@+id/PriceValue"
+            android:layout_width="118dp"
+            android:layout_height="20dp"
+            android:text="Rp 50.000 x 3"
+            android:fontFamily="@font/montserrat400"
+            android:textSize="16sp"
+            android:layout_below="@id/devider1"
+            android:layout_marginTop="184dp"
+            android:layout_alignParentEnd="true"/>
+
+        <TextView
+            android:textAlignment="viewEnd"
+            android:id="@+id/TotalValue"
+            android:layout_width="114dp"
+            android:layout_height="20dp"
+            android:text="Rp 150.000"
+            android:fontFamily="@font/montserrat600"
+            android:textSize="16sp"
+            android:layout_below="@id/devider1"
+            android:layout_marginTop="222dp"
+            android:layout_alignParentEnd="true"/>
+
+        <View
+            android:id="@+id/devider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/horizontal_line"
+            android:layout_marginTop="428dp" />
+
+        <TextView
+            android:id="@+id/YourWallet"
+            android:layout_width="106.42dp"
+            android:layout_height="20dp"
+            android:text="Your Wallet"
+            android:fontFamily="@font/montserrat400"
+            android:textSize="16sp"
+            android:layout_below="@id/devider2"
+            android:layout_marginTop="26dp"
+            android:alpha=".8"/>
+
+        <TextView
+            android:id="@+id/YourWalletValue"
+            android:layout_width="112dp"
+            android:layout_height="20dp"
+            android:text="IDR 200.000"
+            android:fontFamily="@font/montserrat600"
+            android:textColor="@color/main_color"
+            android:textSize="16sp"
+            android:layout_below="@id/devider2"
+            android:layout_marginTop="24dp"
+            android:textAlignment="viewEnd"
+            android:layout_alignParentEnd="true"/>
+
+        <Button
+            android:id="@+id/btnCheckout"
+            android:layout_width="255dp"
+            android:layout_height="60dp"
+            android:background="@drawable/roundstyle20"
+            android:layout_below="@id/devider2"
+            android:backgroundTint="@color/main_color"
+            android:text="Checkout"
+            android:fontFamily="@font/montserrat500"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:layout_marginTop="102dp"
+            android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
+
+
+
+</RelativeLayout>
