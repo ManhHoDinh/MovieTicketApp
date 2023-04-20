@@ -10,9 +10,6 @@ import android.widget.ListView;
 import com.example.movieticketapp.Adapter.MovieBookedAdapter;
 import com.example.movieticketapp.Model.MovieBooked;
 import com.example.movieticketapp.R;
-import com.example.movieticketapp.databinding.ActivityMyWalletBinding;
-import com.example.movieticketapp.databinding.HomeScreenBinding;
-import com.example.movieticketapp.databinding.MyTicketAllScreenBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -23,9 +20,6 @@ public class MyWalletActivity extends AppCompatActivity {
     private ListView listMovieBooked;
     private FloatingActionButton topUpBtn;
     private BottomNavigationView bottomNavigationView;
-    private ActivityMyWalletBinding binding;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +53,6 @@ public class MyWalletActivity extends AppCompatActivity {
             }
             return true;
         });
-
 
     }
 }

@@ -32,7 +32,8 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.home_screen);
+        binding = HomeScreenBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         String[] listType = {"All", "Honor", "Action", "Drama", "War", "Comedy", "Crime"};
         List<Integer> listPoster = new ArrayList<Integer>();
         listPoster.add(R.drawable.poster_1);
@@ -46,10 +47,9 @@ public class HomeActivity extends AppCompatActivity {
         typeListView = (RecyclerView) findViewById(R.id.listTypeMovie);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         typeListView.setLayoutManager(layoutManager);
+        //  typeListView.addItemDecoration(new AddDecoration(10));
         typeListView.setAdapter(new ListTypeAdapter(this, listType));
-        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
-        bottomNavigationView.getMenu().getItem(0).setChecked(true);
-        bottomNavigationView.setOnItemSelectedListener(item -> {
+        binding.bottomNavigation.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.walletPage:
                     startActivity(new Intent(HomeActivity.this, MyWalletActivity.class));
@@ -59,10 +59,10 @@ public class HomeActivity extends AppCompatActivity {
                     startActivity(new Intent(HomeActivity.this, MyTicketAllActivity.class));
                     overridePendingTransition(0,0);
                     break;
-
             }
             return true;
         });
-
     }
+
+
 }

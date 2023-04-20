@@ -24,6 +24,7 @@ public class MyTicketAllActivity extends AppCompatActivity {
     ListView listView;
     ArrayList<Ticket> arrayList = new ArrayList<Ticket>();
     TicketListAdapter adapter;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,14 +99,13 @@ public class MyTicketAllActivity extends AppCompatActivity {
                 listView.setAdapter(adapter);
             }
         });
-        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
         bottomNavigationView.getMenu().getItem(2).setChecked(true);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.homePage:
                     startActivity(new Intent(MyTicketAllActivity.this, HomeActivity.class));
                     overridePendingTransition(0,0);
-
                     break;
                 case R.id.walletPage:
                     startActivity(new Intent(MyTicketAllActivity.this, MyWalletActivity.class));
