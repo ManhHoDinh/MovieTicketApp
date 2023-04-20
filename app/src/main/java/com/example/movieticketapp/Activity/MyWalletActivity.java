@@ -44,22 +44,22 @@ public class MyWalletActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        BottomNavigationView bottomNavigation = findViewById(R.id.bottomNavigation);
-        bottomNavigation.setSelectedItemId(R.id.walletPage);
-        bottomNavigation.setOnItemSelectedListener(item -> {
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
+        bottomNavigationView.getMenu().getItem(1).setChecked(true);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.homePage:
-                    startActivity(new Intent(getApplicationContext(),HomeActivity.class));
+                    startActivity(new Intent(MyWalletActivity.this, HomeActivity.class));
                     overridePendingTransition(0,0);
-                    return true;
-                case R.id.walletPage:
-                    return true;
+                    break;
                 case R.id.ticketPage:
-                    startActivity(new Intent(getApplicationContext(), MyTicketAllActivity.class));
+                    startActivity(new Intent(MyWalletActivity.this, MyTicketAllActivity.class));
                     overridePendingTransition(0,0);
-                    return true;
+                    break;
             }
-            return false;
+            return true;
         });
+
+
     }
 }

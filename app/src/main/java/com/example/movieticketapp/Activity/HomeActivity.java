@@ -47,22 +47,21 @@ public class HomeActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         typeListView.setLayoutManager(layoutManager);
         typeListView.setAdapter(new ListTypeAdapter(this, listType));
-        BottomNavigationView bottomNavigation = findViewById(R.id.bottomNavigation);
-        bottomNavigation.setSelectedItemId(R.id.homePage);
-        bottomNavigation.setOnItemSelectedListener(item -> {
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
+        bottomNavigationView.getMenu().getItem(0).setChecked(true);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
-                case R.id.homePage:
-                    return true;
                 case R.id.walletPage:
-                    startActivity(new Intent(getApplicationContext(),MyWalletActivity.class));
+                    startActivity(new Intent(HomeActivity.this, MyWalletActivity.class));
                     overridePendingTransition(0,0);
-                    return true;
+                    break;
                 case R.id.ticketPage:
                     startActivity(new Intent(HomeActivity.this, MyTicketAllActivity.class));
                     overridePendingTransition(0,0);
-                    return true;
+                    break;
             }
-            return false;
+            return true;
         });
+
     }
 }

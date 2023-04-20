@@ -98,22 +98,22 @@ public class MyTicketAllActivity extends AppCompatActivity {
                 listView.setAdapter(adapter);
             }
         });
-        BottomNavigationView bottomNavigation = findViewById(R.id.bottomNavigation);
-        bottomNavigation.setSelectedItemId(R.id.ticketPage);
-        bottomNavigation.setOnItemSelectedListener(item -> {
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
+        bottomNavigationView.getMenu().getItem(2).setChecked(true);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.homePage:
-                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                    startActivity(new Intent(MyTicketAllActivity.this, HomeActivity.class));
                     overridePendingTransition(0,0);
-                    return true;
+
+                    break;
                 case R.id.walletPage:
-                    startActivity(new Intent(getApplicationContext(),MyWalletActivity.class));
+                    startActivity(new Intent(MyTicketAllActivity.this, MyWalletActivity.class));
                     overridePendingTransition(0,0);
-                    return true;
-                case R.id.ticketPage:
-                    return true;
+                    break;
             }
-            return false;
+            return true;
         });
+
     }
 }
