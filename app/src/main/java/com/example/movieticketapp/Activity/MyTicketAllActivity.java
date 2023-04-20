@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.example.movieticketapp.databinding.ActivityHomeBinding;
+//import com.example.movieticketapp.databinding.ActivityHomeBinding;
 
 import com.example.movieticketapp.Adapter.TicketListAdapter;
 import com.example.movieticketapp.Model.Ticket;
@@ -22,7 +22,7 @@ public class MyTicketAllActivity extends AppCompatActivity {
     ListView listView;
     ArrayList<Ticket> arrayList = new ArrayList<Ticket>();
     TicketListAdapter adapter;
-    ActivityHomeBinding binding;
+    //ActivityHomeBinding binding;
 
 
     @Override
