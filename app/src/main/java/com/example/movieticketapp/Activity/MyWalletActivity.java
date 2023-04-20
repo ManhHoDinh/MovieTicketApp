@@ -10,6 +10,9 @@ import android.widget.ListView;
 import com.example.movieticketapp.Adapter.MovieBookedAdapter;
 import com.example.movieticketapp.Model.MovieBooked;
 import com.example.movieticketapp.R;
+import com.example.movieticketapp.databinding.ActivityMyWalletBinding;
+import com.example.movieticketapp.databinding.HomeScreenBinding;
+import com.example.movieticketapp.databinding.MyTicketAllScreenBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -20,6 +23,9 @@ public class MyWalletActivity extends AppCompatActivity {
     private ListView listMovieBooked;
     private FloatingActionButton topUpBtn;
     private BottomNavigationView bottomNavigationView;
+    private ActivityMyWalletBinding binding;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,16 +44,22 @@ public class MyWalletActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
-        bottomNavigationView.getMenu().getItem(1).setChecked(true);
-        bottomNavigationView.setOnItemSelectedListener(item -> {
+        BottomNavigationView bottomNavigation = findViewById(R.id.bottomNavigation);
+        bottomNavigation.setSelectedItemId(R.id.walletPage);
+        bottomNavigation.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.homePage:
-                    startActivity(new Intent(MyWalletActivity.this, HomeActivity.class));
-                    break;
+                    startActivity(new Intent(getApplicationContext(),HomeActivity.class));
+                    overridePendingTransition(0,0);
+                    return true;
+                case R.id.walletPage:
+                    return true;
+                case R.id.ticketPage:
+                    startActivity(new Intent(getApplicationContext(), MyTicketAllActivity.class));
+                    overridePendingTransition(0,0);
+                    return true;
             }
-            return true;
+            return false;
         });
-
     }
 }

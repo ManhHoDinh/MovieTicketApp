@@ -14,6 +14,8 @@ import android.widget.ListView;
 import com.example.movieticketapp.Adapter.TicketListAdapter;
 import com.example.movieticketapp.Model.Ticket;
 import com.example.movieticketapp.R;
+import com.example.movieticketapp.databinding.HomeScreenBinding;
+import com.example.movieticketapp.databinding.MyTicketAllScreenBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -22,8 +24,6 @@ public class MyTicketAllActivity extends AppCompatActivity {
     ListView listView;
     ArrayList<Ticket> arrayList = new ArrayList<Ticket>();
     TicketListAdapter adapter;
-    //ActivityHomeBinding binding;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +97,23 @@ public class MyTicketAllActivity extends AppCompatActivity {
                 adapter = new TicketListAdapter(getApplicationContext(), R.layout.list_ticket_view, arrayList);
                 listView.setAdapter(adapter);
             }
+        });
+        BottomNavigationView bottomNavigation = findViewById(R.id.bottomNavigation);
+        bottomNavigation.setSelectedItemId(R.id.ticketPage);
+        bottomNavigation.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.homePage:
+                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                    overridePendingTransition(0,0);
+                    return true;
+                case R.id.walletPage:
+                    startActivity(new Intent(getApplicationContext(),MyWalletActivity.class));
+                    overridePendingTransition(0,0);
+                    return true;
+                case R.id.ticketPage:
+                    return true;
+            }
+            return false;
         });
     }
 }

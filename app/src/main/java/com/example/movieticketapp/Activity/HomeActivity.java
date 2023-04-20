@@ -32,8 +32,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = HomeScreenBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        setContentView(R.layout.home_screen);
         String[] listType = {"All", "Honor", "Action", "Drama", "War", "Comedy", "Crime"};
         List<Integer> listPoster = new ArrayList<Integer>();
         listPoster.add(R.drawable.poster_1);
@@ -47,23 +46,23 @@ public class HomeActivity extends AppCompatActivity {
         typeListView = (RecyclerView) findViewById(R.id.listTypeMovie);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         typeListView.setLayoutManager(layoutManager);
-        //  typeListView.addItemDecoration(new AddDecoration(10));
         typeListView.setAdapter(new ListTypeAdapter(this, listType));
-        binding.bottomNavigation.setOnItemSelectedListener(item -> {
+        BottomNavigationView bottomNavigation = findViewById(R.id.bottomNavigation);
+        bottomNavigation.setSelectedItemId(R.id.homePage);
+        bottomNavigation.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
+                case R.id.homePage:
+                    return true;
                 case R.id.walletPage:
-                    startActivity(new Intent(HomeActivity.this, OnboardingActivity.class));
-                    break;
+                    startActivity(new Intent(getApplicationContext(),MyWalletActivity.class));
+                    overridePendingTransition(0,0);
+                    return true;
                 case R.id.ticketPage:
                     startActivity(new Intent(HomeActivity.this, MyTicketAllActivity.class));
-                    break;
-                default:
-                    startActivity(new Intent(HomeActivity.this, MyTicketAllActivity.class));
-                    break;
+                    overridePendingTransition(0,0);
+                    return true;
             }
-            return true;
+            return false;
         });
     }
-
-
 }
