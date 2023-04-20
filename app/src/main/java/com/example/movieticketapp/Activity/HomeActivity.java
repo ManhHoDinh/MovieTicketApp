@@ -59,6 +59,7 @@ public class HomeActivity extends AppCompatActivity {
                     startActivity(new Intent(HomeActivity.this, MyTicketAllActivity.class));
                     overridePendingTransition(0,0);
                     break;
+
             }
             return true;
         });
