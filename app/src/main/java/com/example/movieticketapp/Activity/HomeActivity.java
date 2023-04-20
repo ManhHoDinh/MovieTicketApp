@@ -55,6 +55,7 @@ public class HomeActivity extends AppCompatActivity {
                 case R.id.walletPage:
                     startActivity(new Intent(HomeActivity.this, MyWalletActivity.class));
                     break;
+
             }
             return true;
         });
