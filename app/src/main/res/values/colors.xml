@@ -22,4 +22,7 @@
     <color name="background_color">#FF0B0F2F</color>
     <color name="sub_text_color">#FF449EFF</color>
     <color name="white_opacity_70">#B3FFFFFF</color>
+    <color name="main_information_film_screen">#ff04103A</color>
+    <color name="horizontal_line">#DBDBDB</color>
+    <color name="button_ticket">#FF3E60F9</color>
 </resources>

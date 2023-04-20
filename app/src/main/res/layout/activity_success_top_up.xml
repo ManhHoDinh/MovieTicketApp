@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    tools:context=".Activity.SuccessTopUpActivity">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:layout_marginTop="100dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/illustration"/>
+        <TextView
+            android:layout_marginTop="60dp"
+            android:text="Yummy!"
+            android:gravity="center"
+            android:textSize="24dp"
+            android:fontFamily="@font/montserrat700"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_marginTop="16dp"
+            android:text="You have successfully\ntop up the wallet"
+            android:gravity="center"
+            android:textSize="18dp"
+            android:fontFamily="@font/montserrat300"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <androidx.appcompat.widget.AppCompatButton
+            app:layout_constraintTop_toBottomOf="@+id/priceGridView"
+            android:text="My wallet"
+            android:textSize="14dp"
+            android:id="@+id/backWalletBtn"
+            android:fontFamily="@font/montserrat500"
+            android:gravity="center"
+            android:layout_marginTop="72dp"
+            android:layout_marginHorizontal="60dp"
+            android:textColor="@color/white"
+            android:background="@drawable/state_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:gravity="center"
+                android:layout_marginTop="18dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:textSize="14dp"
+                    android:fontFamily="@font/montserrat400"
+                    android:textColor="@color/white"
+                    android:text="Discover new movie?"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/backHomeTv"
+                    android:textSize="14dp"
+                    android:fontFamily="@font/montserrat400"
+                    android:textColor="@color/main_color"
+                    android:text=" Back to home"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
