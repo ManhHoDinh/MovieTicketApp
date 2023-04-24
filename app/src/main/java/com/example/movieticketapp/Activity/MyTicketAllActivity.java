@@ -57,7 +57,7 @@ public class MyTicketAllActivity extends AppCompatActivity {
                 newTicket.setText(null);
                 expiredTicket.setText(null);
                 arrayList.clear();
-                arrayList.add(new Ticket("Ralph Breaks the Internet 1", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph));
+                arrayList.add(new Ticket("Ralph Breaks the Internet X1", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph));
                 arrayList.add(new Ticket("Ralph Breaks the Internet 2", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph));
                 arrayList.add(new Ticket("Ralph Breaks the Internet 2", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph));
 

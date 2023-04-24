@@ -35,61 +35,12 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp">
 
-        <ImageView
-            android:id="@+id/moviePoster"
-            android:layout_width="86.8dp"
-            android:layout_height="133.41dp"
-            android:src="@drawable/movie_poster"/>
+        <ListView
+            android:id="@+id/movieInfoView"
+            android:layout_width="match_parent"
+            android:layout_height="152dp"
+            android:scrollbars="none"/>
 
-        <TextView
-            android:id="@+id/movieTitle"
-            android:layout_width="201dp"
-            android:layout_height="40dp"
-            android:text="Ralph Breaks the Internet"
-            android:fontFamily="@font/montserrat500"
-            android:textSize="16sp"
-            android:layout_marginLeft="108dp"/>
-
-        <ImageView
-            android:id="@+id/rating"
-            android:layout_width="76dp"
-            android:layout_height="12dp"
-            android:src="@drawable/rating"
-            android:layout_marginTop="52dp"
-            android:layout_marginLeft="108dp"/>
-
-        <TextView
-            android:id="@+id/ratingPoint"
-            android:layout_width="18dp"
-            android:layout_height="10dp"
-            android:text="(4,7)"
-            android:fontFamily="@font/montserrat500"
-            android:textSize="8sp"
-            android:layout_toRightOf="@id/rating"
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="53dp"/>
-
-        <TextView
-            android:id="@+id/genre"
-            android:layout_width="206dp"
-            android:layout_height="15dp"
-            android:text="Action &amp; adventure, Comedy"
-            android:fontFamily="@font/montserrat400"
-            android:textSize="12sp"
-            android:layout_below="@id/rating"
-            android:layout_marginTop="12dp"
-            android:layout_marginLeft="108dp"/>
-
-        <TextView
-            android:id="@+id/duration"
-            android:layout_width="60dp"
-            android:layout_height="15dp"
-            android:text="1h 41min"
-            android:fontFamily="@font/montserrat400"
-            android:textSize="12sp"
-            android:layout_below="@id/genre"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="108dp"/>
 
         <View
             android:id="@+id/devider1"
