@@ -4,13 +4,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
+import com.example.movieticketapp.databinding.ActivityHomeBinding;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.SearchView;
 
 import com.example.movieticketapp.Adapter.ListTypeAdapter;
 import com.example.movieticketapp.Adapter.posterAdapter;
 import com.example.movieticketapp.R;
+import com.example.movieticketapp.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -19,6 +23,7 @@ import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
     //private ViewPager2 viewPager;
+
     private RecyclerView typeListView;
     private RecyclerView posterRecyclerView;
     private SearchView searchView;
@@ -26,10 +31,12 @@ public class HomeActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private TabLayout typeMovieLayout;
     private BottomNavigationView bottomNavigation;
+    private ActivityHomeBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        binding = ActivityHomeBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         String[] listType = {"All","Honor", "Action", "Drama", "War", "Comedy", "Crime"};
         List<Integer> listPoster = new ArrayList<Integer>();
         listPoster.add(R.drawable.poster_1);
@@ -46,6 +53,18 @@ public class HomeActivity extends AppCompatActivity {
       //  typeListView.addItemDecoration(new AddDecoration(10));
         typeListView.setAdapter(new ListTypeAdapter(this, listType));
 
+        binding.bottomNavigation.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()){
+                case R.id.walletPage:
+                    startActivity(new Intent(HomeActivity.this, OnboardingActivity.class));
+                    break;
+                case R.id.ticketPage:
+
+                    startActivity(new Intent(HomeActivity.this, MainActivity.class));
+                    break;
+            }
+            return true;
+        });
 
 
 
