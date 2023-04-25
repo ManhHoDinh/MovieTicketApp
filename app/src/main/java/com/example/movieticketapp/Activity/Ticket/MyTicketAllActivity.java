@@ -1,21 +1,19 @@
-package com.example.movieticketapp.Activity;
+package com.example.movieticketapp.Activity.Ticket;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
 //import com.example.movieticketapp.databinding.ActivityHomeBinding;
 
+import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Adapter.TicketListAdapter;
 import com.example.movieticketapp.Model.Ticket;
 import com.example.movieticketapp.R;
-import com.example.movieticketapp.databinding.HomeScreenBinding;
-import com.example.movieticketapp.databinding.MyTicketAllScreenBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;

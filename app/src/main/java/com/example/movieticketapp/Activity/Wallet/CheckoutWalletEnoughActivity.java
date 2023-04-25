@@ -1,4 +1,4 @@
-package com.example.movieticketapp.Activity;
+package com.example.movieticketapp.Activity.Wallet;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.example.movieticketapp.Activity.Booking.SuccessCheckoutActivity;
 import com.example.movieticketapp.R;
 
 public class CheckoutWalletEnoughActivity extends AppCompatActivity {

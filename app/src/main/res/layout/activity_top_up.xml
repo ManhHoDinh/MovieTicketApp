@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:paddingTop="76dp"
     android:paddingHorizontal="24dp"
-    tools:context=".Activity.TopUpActivity">
+    tools:context=".Activity.Wallet.TopUpActivity">
           <Button
               android:id="@+id/backbutton"
               android:layout_width="20dp"

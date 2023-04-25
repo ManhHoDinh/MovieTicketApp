@@ -13,22 +13,22 @@
         tools:targetApi="31">
 
         <activity
-            android:name=".Activity.SuccessTopUpActivity"
+            android:name=".Activity.Wallet.SuccessTopUpActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.TopUpActivity"
+            android:name=".Activity.Wallet.TopUpActivity"
             android:exported="true"
             android:theme="@style/Theme.MovieProject.Main"></activity>
         <activity
-            android:name=".Activity.CheckoutWalletEnoughActivity"
+            android:name=".Activity.Wallet.CheckoutWalletEnoughActivity"
             android:exported="true"
             ></activity>
         <activity
-            android:name=".Activity.SuccessCheckoutActivity"
+            android:name=".Activity.Booking.SuccessCheckoutActivity"
             android:exported="true"
             ></activity>
         <activity
-            android:name=".Activity.SplashActivity"
+            android:name=".Activity.Account.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.MovieProject.Main">
             <intent-filter>
@@ -38,28 +38,26 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activity.BookSeatActivity"
+            android:name=".Activity.Booking.BookSeatActivity"
             android:exported="false"
             android:theme="@style/Theme.MovieProject.Main" />
         <activity
-            android:name=".Activity.BookedActivity"
+            android:name=".Activity.Booking.BookedActivity"
             android:exported="true"
             android:theme="@style/Theme.MovieProject.Main" />
         <activity
-            android:name=".Activity.OnboardingActivity"
-            android:exported="false"
-            android:noHistory="true" />
-        <activity android:name=".Activity.MainActivity" />
-        <activity android:name=".Activity.SignUpActivity" />
-        <activity android:name=".Activity.SignInActivity" />
-        <activity android:name=".Activity.InformationFilmActivity" />
+            android:name=".Activity.Account.OnboardingActivity"
+            android:exported="false" />
+        <activity android:name=".Activity.Account.SignUpActivity" />
+        <activity android:name=".Activity.Account.SignInActivity" />
+        <activity android:name=".Activity.Movie.InformationFilmActivity" />
         <activity
-            android:name=".Activity.ConfirmationProfileActivity"
+            android:name=".Activity.Account.ConfirmationProfileActivity"
             android:noHistory="true" />
-        <activity android:name=".Activity.UserProflingActivity" />
+        <activity android:name=".Activity.Account.UserProflingActivity" />
         <activity android:name=".Activity.HomeActivity" />
-        <activity android:name=".Activity.MyWalletActivity" />
-        <activity android:name=".Activity.MyTicketAllActivity" />
+        <activity android:name=".Activity.Ticket.MyWalletActivity" />
+        <activity android:name=".Activity.Ticket.MyTicketAllActivity" />
     </application>
 
 </manifest>
