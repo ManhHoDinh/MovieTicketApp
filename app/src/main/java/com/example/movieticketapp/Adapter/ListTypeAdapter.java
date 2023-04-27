@@ -1,5 +1,6 @@
 package com.example.movieticketapp.Adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -15,7 +16,7 @@ import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.movieticketapp.Model.PostItem;
+import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.R;
 
 import java.util.ArrayList;
@@ -63,7 +64,6 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
 
                 typeBtn.setBackgroundColor(Color.TRANSPARENT);
                 typeBtn.setBackground(ContextCompat.getDrawable(typeBtn.getContext(), R.drawable.bg_tabview_button));
-
             }
         }
 
@@ -71,42 +71,42 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
     }
     void loadListPost(String type){
         viewPager = activity.findViewById(R.id.typeMovieViewPage);
-        List<PostItem> listPosts = new ArrayList<PostItem>();
+        List<FilmModel> listPosts = new ArrayList<FilmModel>();
         switch(type){
             case "All":
-                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhhhh"));
-                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
-                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
+                listPosts.add(new FilmModel(R.drawable.movie_poster, "Ralph Breaks the Internet1", R.drawable.background_image,R.drawable.poster_image, 4.7, "Action & adventure, Comedy", "Wreck-It Ralph wants to be loved by many people like his kind friend, Fix-It Felix. But no one likes evil characters like Ralph.\nRalph's goal was simple, wanting to win and get a medal to be considered a hero. But without realizing Ralph instead paved the way for criminals who can kill all the games in the game complex. Read more", "1h40"));
+                listPosts.add(new FilmModel(R.drawable.movie_poster, "bìnhhh", R.drawable.background_image,R.drawable.poster_image,4.7, "Action & adventure, Comedy", "Wreck-It Ralph wants to be loved by many people like his kind friend, Fix-It Felix. But no one likes evil characters like Ralph.\nRalph's goal was simple, wanting to win and get a medal to be considered a hero. But without realizing Ralph instead paved the way for criminals who can kill all the games in the game complex. Read more", "1h40"));
+                listPosts.add(new FilmModel(R.drawable.movie_poster, "bìnhhh", R.drawable.background_image,R.drawable.poster_image,4.7, "Action & adventure, Comedy", "Wreck-It Ralph wants to be loved by many people like his kind friend, Fix-It Felix. But no one likes evil characters like Ralph.\nRalph's goal was simple, wanting to win and get a medal to be considered a hero. But without realizing Ralph instead paved the way for criminals who can kill all the games in the game complex. Read more", "1h40"));
                 break;
             case "Action":
-                listPosts.add(new PostItem(R.drawable.back_icon, "bìnhhhhh"));
-                listPosts.add(new PostItem(R.drawable.control, "bìnhhh"));
-                listPosts.add(new PostItem(R.drawable.avatar, "bìnhhh"));
+                listPosts.add(new FilmModel(R.drawable.back_icon, "Ralph Breaks the Internet", R.drawable.background_image,R.drawable.poster_image, 4.7, "Action & adventure, Comedy", "Wreck-It Ralph wants to be loved by many people like his kind friend, Fix-It Felix. But no one likes evil characters like Ralph.\nRalph's goal was simple, wanting to win and get a medal to be considered a hero. But without realizing Ralph instead paved the way for criminals who can kill all the games in the game complex. Read more", "1h40"));
+                listPosts.add(new FilmModel(R.drawable.control, "bìnhhh", R.drawable.background_image,R.drawable.poster_image,4.7, "Action & adventure, Comedy", "Wreck-It Ralph wants to be loved by many people like his kind friend, Fix-It Felix. But no one likes evil characters like Ralph.\nRalph's goal was simple, wanting to win and get a medal to be considered a hero. But without realizing Ralph instead paved the way for criminals who can kill all the games in the game complex. Read more", "1h40"));
+                listPosts.add(new FilmModel(R.drawable.avatar, "bìnhhh", R.drawable.background_image,R.drawable.poster_image,4.7, "Action & adventure, Comedy", "Wreck-It Ralph wants to be loved by many people like his kind friend, Fix-It Felix. But no one likes evil characters like Ralph.\nRalph's goal was simple, wanting to win and get a medal to be considered a hero. But without realizing Ralph instead paved the way for criminals who can kill all the games in the game complex. Read more", "1h40"));
                 break;
             case "Drama":
-                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhhhh"));
-                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
-                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
+                listPosts.add(new FilmModel(R.drawable.movie_poster, "Ralph Breaks the Internet", R.drawable.background_image,R.drawable.poster_image, 4.7, "Action & adventure, Comedy", "Wreck-It Ralph wants to be loved by many people like his kind friend, Fix-It Felix. But no one likes evil characters like Ralph.\nRalph's goal was simple, wanting to win and get a medal to be considered a hero. But without realizing Ralph instead paved the way for criminals who can kill all the games in the game complex. Read more", "1h40"));
+                listPosts.add(new FilmModel(R.drawable.movie_poster, "bìnhhh", R.drawable.background_image,R.drawable.poster_image,4.7, "Action & adventure, Comedy", "Wreck-It Ralph wants to be loved by many people like his kind friend, Fix-It Felix. But no one likes evil characters like Ralph.\nRalph's goal was simple, wanting to win and get a medal to be considered a hero. But without realizing Ralph instead paved the way for criminals who can kill all the games in the game complex. Read more", "1h40"));
+                listPosts.add(new FilmModel(R.drawable.movie_poster, "bìnhhh", R.drawable.background_image,R.drawable.poster_image,4.7, "Action & adventure, Comedy", "Wreck-It Ralph wants to be loved by many people like his kind friend, Fix-It Felix. But no one likes evil characters like Ralph.\nRalph's goal was simple, wanting to win and get a medal to be considered a hero. But without realizing Ralph instead paved the way for criminals who can kill all the games in the game complex. Read more", "1h40"));
                 break;
             case "Honor":
-                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhhhh"));
-                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
-                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
+                listPosts.add(new FilmModel(R.drawable.movie_poster, "Ralph Breaks the Internet", R.drawable.background_image,R.drawable.poster_image, 4.7, "Action & adventure, Comedy", "Wreck-It Ralph wants to be loved by many people like his kind friend, Fix-It Felix. But no one likes evil characters like Ralph.\nRalph's goal was simple, wanting to win and get a medal to be considered a hero. But without realizing Ralph instead paved the way for criminals who can kill all the games in the game complex. Read more", "1h40"));
+                listPosts.add(new FilmModel(R.drawable.movie_poster, "bìnhhh", R.drawable.background_image,R.drawable.poster_image,4.7, "Action & adventure, Comedy", "Wreck-It Ralph wants to be loved by many people like his kind friend, Fix-It Felix. But no one likes evil characters like Ralph.\nRalph's goal was simple, wanting to win and get a medal to be considered a hero. But without realizing Ralph instead paved the way for criminals who can kill all the games in the game complex. Read more", "1h40"));
+                listPosts.add(new FilmModel(R.drawable.movie_poster, "bìnhhh", R.drawable.background_image,R.drawable.poster_image,4.7, "Action & adventure, Comedy", "Wreck-It Ralph wants to be loved by many people like his kind friend, Fix-It Felix. But no one likes evil characters like Ralph.\nRalph's goal was simple, wanting to win and get a medal to be considered a hero. But without realizing Ralph instead paved the way for criminals who can kill all the games in the game complex. Read more", "1h40"));
                 break;
             case "War":
-                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhhhh"));
-                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
-                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
+                listPosts.add(new FilmModel(R.drawable.movie_poster, "Ralph Breaks the Internet", R.drawable.background_image,R.drawable.poster_image, 4.7, "Action & adventure, Comedy", "Wreck-It Ralph wants to be loved by many people like his kind friend, Fix-It Felix. But no one likes evil characters like Ralph.\nRalph's goal was simple, wanting to win and get a medal to be considered a hero. But without realizing Ralph instead paved the way for criminals who can kill all the games in the game complex. Read more", "1h40"));
+                listPosts.add(new FilmModel(R.drawable.movie_poster, "bìnhhh", R.drawable.background_image,R.drawable.poster_image,4.7, "Action & adventure, Comedy", "Wreck-It Ralph wants to be loved by many people like his kind friend, Fix-It Felix. But no one likes evil characters like Ralph.\nRalph's goal was simple, wanting to win and get a medal to be considered a hero. But without realizing Ralph instead paved the way for criminals who can kill all the games in the game complex. Read more", "1h40"));
+                listPosts.add(new FilmModel(R.drawable.movie_poster, "bìnhhh", R.drawable.background_image,R.drawable.poster_image,4.7, "Action & adventure, Comedy", "Wreck-It Ralph wants to be loved by many people like his kind friend, Fix-It Felix. But no one likes evil characters like Ralph.\nRalph's goal was simple, wanting to win and get a medal to be considered a hero. But without realizing Ralph instead paved the way for criminals who can kill all the games in the game complex. Read more", "1h40"));
                 break;
             case "Comedy":
-                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhhhh"));
-                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
-                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
+                listPosts.add(new FilmModel(R.drawable.movie_poster, "Ralph Breaks the Internet", R.drawable.background_image,R.drawable.poster_image, 4.7, "Action & adventure, Comedy", "Wreck-It Ralph wants to be loved by many people like his kind friend, Fix-It Felix. But no one likes evil characters like Ralph.\nRalph's goal was simple, wanting to win and get a medal to be considered a hero. But without realizing Ralph instead paved the way for criminals who can kill all the games in the game complex. Read more", "1h40"));
+                listPosts.add(new FilmModel(R.drawable.movie_poster, "bìnhhh", R.drawable.background_image,R.drawable.poster_image,4.7, "Action & adventure, Comedy", "Wreck-It Ralph wants to be loved by many people like his kind friend, Fix-It Felix. But no one likes evil characters like Ralph.\nRalph's goal was simple, wanting to win and get a medal to be considered a hero. But without realizing Ralph instead paved the way for criminals who can kill all the games in the game complex. Read more", "1h40"));
+                listPosts.add(new FilmModel(R.drawable.movie_poster, "bìnhhh", R.drawable.background_image,R.drawable.poster_image,4.7, "Action & adventure, Comedy", "Wreck-It Ralph wants to be loved by many people like his kind friend, Fix-It Felix. But no one likes evil characters like Ralph.\nRalph's goal was simple, wanting to win and get a medal to be considered a hero. But without realizing Ralph instead paved the way for criminals who can kill all the games in the game complex. Read more", "1h40"));
                 break;
             case "Crime":
-                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhhhh"));
-                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
-                listPosts.add(new PostItem(R.drawable.movie_poster, "bìnhhh"));
+                listPosts.add(new FilmModel(R.drawable.movie_poster, "Ralph Breaks the Internet", R.drawable.background_image,R.drawable.poster_image, 4.7, "Action & adventure, Comedy", "Wreck-It Ralph wants to be loved by many people like his kind friend, Fix-It Felix. But no one likes evil characters like Ralph.\nRalph's goal was simple, wanting to win and get a medal to be considered a hero. But without realizing Ralph instead paved the way for criminals who can kill all the games in the game complex. Read more", "1h40"));
+                listPosts.add(new FilmModel(R.drawable.movie_poster, "bìnhhh", R.drawable.background_image,R.drawable.poster_image,4.7, "Action & adventure, Comedy", "Wreck-It Ralph wants to be loved by many people like his kind friend, Fix-It Felix. But no one likes evil characters like Ralph.\nRalph's goal was simple, wanting to win and get a medal to be considered a hero. But without realizing Ralph instead paved the way for criminals who can kill all the games in the game complex. Read more", "1h40"));
+                listPosts.add(new FilmModel(R.drawable.movie_poster, "bìnhhh", R.drawable.background_image,R.drawable.poster_image,4.7, "Action & adventure, Comedy", "Wreck-It Ralph wants to be loved by many people like his kind friend, Fix-It Felix. But no one likes evil characters like Ralph.\nRalph's goal was simple, wanting to win and get a medal to be considered a hero. But without realizing Ralph instead paved the way for criminals who can kill all the games in the game complex. Read more", "1h40"));
                 break;
 
 

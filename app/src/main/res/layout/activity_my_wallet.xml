@@ -6,12 +6,15 @@
     android:layout_height="match_parent"
     android:background="@color/background_color"
     tools:context=".Activity.MyWalletActivity">
+
+
     <LinearLayout
 
         android:orientation="vertical"
         android:layout_marginHorizontal="24dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <TextView
             android:textColor="@color/white"
             android:text="My Wallet"
@@ -19,6 +22,14 @@
             android:layout_marginTop="76dp"
             android:gravity="center_horizontal"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <ProgressBar
+            android:id="@+id/progressId"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <LinearLayout
             android:layout_marginTop="32dp"
@@ -51,7 +62,7 @@
             <TextView
                 android:textColor="@color/white"
                 android:id="@+id/total"
-                android:text="100000"
+
                 android:textSize="28dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -85,4 +96,15 @@
         android:backgroundTint="@color/main_color"
         app:borderWidth="0dp"
         android:src="@drawable/top_up"/>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:background="@color/background_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="match_parent"
+        app:itemIconTint="@drawable/bottom_tem_selector"
+        app:itemTextColor="@drawable/bottom_tem_selector"
+        app:menu="@menu/bottom_bar_menu"
+        android:layout_height="60dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

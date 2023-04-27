@@ -141,6 +141,7 @@
                 </LinearLayout>
                 <androidx.appcompat.widget.AppCompatButton
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:id="@+id/SeatBookBt"
                     android:text="Book Ticket"
                     android:textSize="12dp"
                     android:textColor="@color/white"

@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.R;
 
 import org.w3c.dom.Text;
@@ -29,6 +30,7 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
     private TextView countTicketTv;
     private TextView priceTv;
     private Button backBtn;
+    private Button SeatBookBtn;
     ViewGroup layout;
     ViewGroup layout1;
 
@@ -68,7 +70,7 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
         backBtn = (Button) findViewById(R.id.backbutton);
         layout = findViewById(R.id.layoutSeat);
         //layout1 = findViewById(R.id.layoutBinh);
-
+        SeatBookBtn = findViewById(R.id.SeatBookBt);
 
 
         LinearLayout layoutSeat = new LinearLayout(this);
@@ -144,6 +146,14 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
             }
         });
         layout1 = layoutSeat;
+        SeatBookBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), CheckoutWalletEnoughActivity.class);
+                //i.putExtra(ExtraIntent.film, film);
+                startActivity(i);
+            }
+        });
     }
 
 
