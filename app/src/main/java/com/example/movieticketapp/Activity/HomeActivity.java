@@ -7,10 +7,13 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.SearchView;
 
+import com.example.movieticketapp.Activity.Account.AccountActivity;
 import com.example.movieticketapp.Activity.Ticket.MyTicketAllActivity;
-import com.example.movieticketapp.Activity.Ticket.MyWalletActivity;
+import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
 import com.example.movieticketapp.Adapter.ListTypeAdapter;
 import com.example.movieticketapp.Adapter.posterAdapter;
 import com.example.movieticketapp.R;
@@ -31,17 +34,29 @@ public class HomeActivity extends AppCompatActivity {
     private TabLayout typeMovieLayout;
     private BottomNavigationView bottomNavigation;
     private HomeScreenBinding binding;
+    private ImageView accountImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = HomeScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        accountImage = findViewById(R.id.accountImage);
+        accountImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //FirebaseAuth.getInstance().signOut();
+                Intent i = new Intent(getApplicationContext(), AccountActivity.class);
+                startActivity(i);
+            }
+        });
         String[] listType = {"All", "Honor", "Action", "Drama", "War", "Comedy", "Crime"};
         List<Integer> listPoster = new ArrayList<Integer>();
         listPoster.add(R.drawable.poster_1);
         listPoster.add(R.drawable.poster_1);
         listPoster.add(R.drawable.poster_1);
+
         posterRecyclerView = (RecyclerView) findViewById(R.id.commingMovieView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         posterRecyclerView.setAdapter(new posterAdapter(listPoster));

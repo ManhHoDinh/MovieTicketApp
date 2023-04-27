@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.movieticketapp.Activity.HomeActivity;
-import com.example.movieticketapp.Activity.Ticket.MyWalletActivity;
 import com.example.movieticketapp.R;
 
 public class SuccessTopUpActivity extends AppCompatActivity {

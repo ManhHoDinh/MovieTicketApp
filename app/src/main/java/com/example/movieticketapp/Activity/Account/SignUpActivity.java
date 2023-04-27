@@ -25,6 +25,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -103,6 +104,7 @@ public class SignUpActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = FirebaseRequest.mAuth.getCurrentUser();
+                            UpdateFullName();
                             user.getUid();
                             Users u = new Users(user.getUid(), email, Name);
                             FirebaseRequest.database.collection("Users").document(user.getUid())
@@ -134,5 +136,22 @@ public class SignUpActivity extends AppCompatActivity {
 
 
     }
+    void UpdateFullName()
+    {
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(fullNameET.getText().toString())
+                .build();
+        FirebaseRequest.mAuth.getCurrentUser().updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+
+                } else {
+
+                }
+            }
+        });
+    }
+
 
 }

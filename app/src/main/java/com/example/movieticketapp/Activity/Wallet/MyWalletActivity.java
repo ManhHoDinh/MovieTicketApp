@@ -1,4 +1,4 @@
-package com.example.movieticketapp.Activity.Ticket;
+package com.example.movieticketapp.Activity.Wallet;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.example.movieticketapp.Activity.HomeActivity;
-import com.example.movieticketapp.Activity.Wallet.TopUpActivity;
+import com.example.movieticketapp.Activity.Ticket.MyTicketAllActivity;
 import com.example.movieticketapp.Adapter.MovieBookedAdapter;
 import com.example.movieticketapp.Model.MovieBooked;
 import com.example.movieticketapp.R;
