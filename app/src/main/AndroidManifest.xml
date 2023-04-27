@@ -11,22 +11,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MovieTicketApp"
         tools:targetApi="31">
-
         <activity
             android:name=".Activity.SuccessTopUpActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.TopUpActivity"
             android:exported="true"
-            android:theme="@style/Theme.MovieProject.Main"></activity>
+            android:theme="@style/Theme.MovieProject.Main" />
         <activity
             android:name=".Activity.CheckoutWalletEnoughActivity"
-            android:exported="true"
-            ></activity>
+            android:exported="true" />
         <activity
             android:name=".Activity.SuccessCheckoutActivity"
-            android:exported="true"
-            ></activity>
+            android:exported="true" />
         <activity
             android:name=".Activity.SplashActivity"
             android:exported="true"
@@ -57,6 +54,7 @@
             android:name=".Activity.ConfirmationProfileActivity"
             android:noHistory="true" />
         <activity android:name=".Activity.UserProflingActivity" />
+        <activity android:name=".Activity.TicketDetailActivity" />
         <activity android:name=".Activity.HomeActivity" />
         <activity android:name=".Activity.MyWalletActivity" />
         <activity android:name=".Activity.MyTicketAllActivity" />

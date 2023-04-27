@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 //import com.example.movieticketapp.databinding.ActivityHomeBinding;
@@ -113,6 +115,13 @@ public class MyTicketAllActivity extends AppCompatActivity {
                     break;
             }
             return true;
+        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent a = new Intent(getApplicationContext(),TicketDetailActivity.class);
+                startActivity(a);
+            }
         });
 
     }
