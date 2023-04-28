@@ -111,7 +111,7 @@
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <TextView
-                    android:id="@+id/director"
+                    android:id="@+id/genre"
                     android:textColor="@color/white"
                     android:gravity="left"
                     android:layout_marginTop="5dp"
