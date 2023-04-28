@@ -89,7 +89,11 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
         viewPager = activity.findViewById(R.id.typeMovieViewPage);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference ActionMovieRef = db.collection("ActionMovies");
+        CollectionReference DramaMovieRef = db.collection("DramaMovies");
+        CollectionReference WarMovieRef = db.collection("WarMovies");
         CollectionReference ComedyMovieRef = db.collection("ComedyMovies");
+        CollectionReference HorrorMovieRef = db.collection("HorrorMovies");
+        CollectionReference CrimeMovieRef = db.collection("CrimeMovies");
         List<FilmModel> listPosts = new ArrayList<FilmModel>();;
         switch(type){
             case "All":
@@ -104,16 +108,58 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                             listPosts.add(f);
                             Log.d(TAG, "data: " + f.getName());
                         }
-                        viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
-                        viewPager.setClipToPadding(false);
-                        viewPager.setClipChildren(false);
-                        viewPager.setOffscreenPageLimit(3);
                     } else
                     {
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
                 ComedyMovieRef.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                    {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                        {
+                            FilmModel f = documentSnapshot.toObject(FilmModel.class);
+                            listPosts.add(f);
+                            Log.d(TAG, "data: " + f.getName());
+                        }
+
+                    } else
+                    {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
+                DramaMovieRef.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                    {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                        {
+                            FilmModel f = documentSnapshot.toObject(FilmModel.class);
+                            listPosts.add(f);
+                            Log.d(TAG, "data: " + f.getName());
+                        }
+                    } else
+                    {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
+                HorrorMovieRef.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                    {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                        {
+                            FilmModel f = documentSnapshot.toObject(FilmModel.class);
+                            listPosts.add(f);
+                            Log.d(TAG, "data: " + f.getName());
+                        }
+                    } else
+                    {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
+                WarMovieRef.get().addOnCompleteListener(task -> {
                     if (task.isSuccessful())
                     {
                         QuerySnapshot querySnapshot = task.getResult();
@@ -134,13 +180,92 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                 });
                 break;
             case "Action":
-
+                listPosts.clear();
+                ActionMovieRef.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                    {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                        {
+                            FilmModel f = documentSnapshot.toObject(FilmModel.class);
+                            listPosts.add(f);
+                            Log.d(TAG, "data: " + f.getName());
+                        }
+                        viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
+                        viewPager.setClipToPadding(false);
+                        viewPager.setClipChildren(false);
+                        viewPager.setOffscreenPageLimit(3);
+                    } else
+                    {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
                break;
             case "Drama":
+                listPosts.clear();
+                DramaMovieRef.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                    {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                        {
+                            FilmModel f = documentSnapshot.toObject(FilmModel.class);
+                            listPosts.add(f);
+                            Log.d(TAG, "data: " + f.getName());
+                        }
+                        viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
+                        viewPager.setClipToPadding(false);
+                        viewPager.setClipChildren(false);
+                        viewPager.setOffscreenPageLimit(3);
+                    } else
+                    {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
                 break;
-            case "Honor":
+            case "Horror":
+                listPosts.clear();
+                HorrorMovieRef.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                    {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                        {
+                            FilmModel f = documentSnapshot.toObject(FilmModel.class);
+                            listPosts.add(f);
+                            Log.d(TAG, "data: " + f.getName());
+                        }
+                        viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
+                        viewPager.setClipToPadding(false);
+                        viewPager.setClipChildren(false);
+                        viewPager.setOffscreenPageLimit(3);
+                    } else
+                    {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
                 break;
             case "War":
+                listPosts.clear();
+                WarMovieRef.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                    {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                        {
+                            FilmModel f = documentSnapshot.toObject(FilmModel.class);
+                            listPosts.add(f);
+                            Log.d(TAG, "data: " + f.getName());
+                        }
+                        viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
+                        viewPager.setClipToPadding(false);
+                        viewPager.setClipChildren(false);
+                        viewPager.setOffscreenPageLimit(3);
+                    } else
+                    {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
                 break;
             case "Comedy":
                 listPosts.clear();
@@ -165,6 +290,26 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                 });
                 break;
             case "Crime":
+                listPosts.clear();
+                CrimeMovieRef.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                    {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                        {
+                            FilmModel f = documentSnapshot.toObject(FilmModel.class);
+                            listPosts.add(f);
+                            Log.d(TAG, "data: " + f.getName());
+                        }
+                        viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
+                        viewPager.setClipToPadding(false);
+                        viewPager.setClipChildren(false);
+                        viewPager.setOffscreenPageLimit(3);
+                    } else
+                    {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
                break;
         }
 

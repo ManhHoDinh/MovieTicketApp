@@ -45,7 +45,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = HomeScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        String[] listType = {"All", "Honor", "Action", "Drama", "War", "Comedy", "Crime"};
+        String[] listType = {"All", "Horror", "Action", "Drama", "War", "Comedy", "Crime"};
         List<Integer> listPoster = new ArrayList<Integer>();
         listPoster.add(R.drawable.poster_1);
         listPoster.add(R.drawable.poster_1);
