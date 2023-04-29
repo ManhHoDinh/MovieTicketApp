@@ -42,9 +42,9 @@ public class MyTicketAllActivity extends AppCompatActivity {
         allTicket.setText("All");
         allTicket.setSelected(true);
 
-        arrayList.add(new Ticket("Ralph Breaks the Internet 1", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph));
-        arrayList.add(new Ticket("Ralph Breaks the Internet 2", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph));
-        arrayList.add(new Ticket("Ralph Breaks the Internet 3", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph));
+        arrayList.add(new Ticket("Ralph Breaks the Internet 1", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph, 4.7, "Action & adventure, Comedy", "1h 41min", "D7, D8, D9", "IDR 150.000", "22081996"));
+        arrayList.add(new Ticket("Ralph Breaks the Internet 1", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.frozen_ii, 4.7, "Action & adventure, Comedy", "1h 41min", "D7, D8, D9", "IDR 150.000", "22081996"));
+        arrayList.add(new Ticket("Ralph Breaks the Internet 1", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph, 4.7, "Action & adventure, Comedy", "1h 41min", "D7, D8, D9", "IDR 150.000", "22081996"));
 
         adapter = new TicketListAdapter(getApplicationContext(), R.layout.list_ticket_view, arrayList);
         listView.setAdapter(adapter);
@@ -59,9 +59,9 @@ public class MyTicketAllActivity extends AppCompatActivity {
                 newTicket.setText(null);
                 expiredTicket.setText(null);
                 arrayList.clear();
-                arrayList.add(new Ticket("Ralph Breaks the Internet 1", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph));
-                arrayList.add(new Ticket("Ralph Breaks the Internet 2", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph));
-                arrayList.add(new Ticket("Ralph Breaks the Internet 2", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph));
+                arrayList.add(new Ticket("Ralph Breaks the Internet 1", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph, 4.7, "Action & adventure, Comedy", "1h 41min", "D7, D8, D9", "IDR 150.000", "22081996"));
+                arrayList.add(new Ticket("Ralph Breaks the Internet 1", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.frozen_ii, 4.7, "Action & adventure, Comedy", "1h 41min", "D7, D8, D9", "IDR 150.000", "22081996"));
+                arrayList.add(new Ticket("Ralph Breaks the Internet 1", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph, 4.7, "Action & adventure, Comedy", "1h 41min", "D7, D8, D9", "IDR 150.000", "22081996"));
 
                 adapter = new TicketListAdapter(getApplicationContext(), R.layout.list_ticket_view, arrayList);
                 listView.setAdapter(adapter);
@@ -77,8 +77,8 @@ public class MyTicketAllActivity extends AppCompatActivity {
                 newTicket.setText("News");
                 expiredTicket.setText(null);
                 arrayList.clear();
-                arrayList.add(new Ticket("Ralph Breaks the Internet 1", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph));
-                arrayList.add(new Ticket("Ralph Breaks the Internet 2", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph));
+                arrayList.add(new Ticket("Ralph Breaks the Internet 1", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph, 4.7, "Action & adventure, Comedy", "1h 41min", "D7, D8, D9", "IDR 150.000", "22081996"));
+                arrayList.add(new Ticket("Ralph Breaks the Internet 1", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.frozen_ii, 4.7, "Action & adventure, Comedy", "1h 41min", "D7, D8, D9", "IDR 150.000", "22081996"));
 
                 adapter = new TicketListAdapter(getApplicationContext(), R.layout.list_ticket_view, arrayList);
                 listView.setAdapter(adapter);
@@ -95,7 +95,7 @@ public class MyTicketAllActivity extends AppCompatActivity {
                 newTicket.setText(null);
                 expiredTicket.setText("Expired");
                 arrayList.clear();
-                arrayList.add(new Ticket("Ralph Breaks the Internet 1", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph));
+                arrayList.add(new Ticket("Ralph Breaks the Internet 1", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph, 4.7, "Action & adventure, Comedy", "1h 41min", "D7, D8, D9", "IDR 150.000", "22081996"));
 
                 adapter = new TicketListAdapter(getApplicationContext(), R.layout.list_ticket_view, arrayList);
                 listView.setAdapter(adapter);
@@ -119,7 +119,19 @@ public class MyTicketAllActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Object o = listView.getItemAtPosition(i);
+                Ticket ticket = (Ticket) o;
                 Intent a = new Intent(getApplicationContext(),TicketDetailActivity.class);
+                a.putExtra("name", ((Ticket) o).getName());
+                a.putExtra("time", ((Ticket) o).getTime());
+                a.putExtra("cinema", ((Ticket) o).getCinema());
+                a.putExtra("poster", ((Ticket) o).getPoster());
+                a.putExtra("rate", ((Ticket) o).getRate());
+                a.putExtra("kind", ((Ticket) o).getKind());
+                a.putExtra("duration", ((Ticket) o).getDuration());
+                a.putExtra("seat", ((Ticket) o).getSeat());
+                a.putExtra("paid", ((Ticket) o).getPaid());
+                a.putExtra("idorder", ((Ticket) o).getIdorder());
                 startActivity(a);
             }
         });

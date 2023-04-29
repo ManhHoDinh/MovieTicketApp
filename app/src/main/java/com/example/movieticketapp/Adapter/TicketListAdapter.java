@@ -49,7 +49,7 @@ public class TicketListAdapter extends ArrayAdapter<Ticket> {
             if (timeTextView != null)
                 timeTextView.setText(ve.getTime());
             if (studioTextView != null)
-                studioTextView.setText(ve.getStudio());
+                studioTextView.setText(ve.getCinema());
             if (posterRImageView != null)
                 posterRImageView.setImageResource(ve.getPoster());
         }

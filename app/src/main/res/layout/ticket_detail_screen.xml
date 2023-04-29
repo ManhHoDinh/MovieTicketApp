@@ -54,25 +54,24 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="top|left"
                 android:orientation="horizontal">
                 <com.makeramen.roundedimageview.RoundedImageView
                     android:layout_width="85dp"
                     android:layout_height="125dp"
                     app:riv_corner_radius="8dp"
-                    android:src="@drawable/poster_ralph"
                     android:id="@+id/ivPoster"/>
                 <LinearLayout
                     android:layout_width="167dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:gravity="center"
+                    android:gravity="top"
                     android:layout_marginLeft="14.6dp">
 
                     <TextView
                         android:id="@+id/tvName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Ralph Breaks the Internet"
                         android:fontFamily="@font/montserrat_regular"
                         android:textColor="@color/white"
                         android:textFontWeight="500"
@@ -80,9 +79,10 @@
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
                         android:orientation="horizontal"
                         android:layout_gravity="top|left"
+                        android:layout_marginBottom="12dp"
+                        android:layout_marginTop="12dp"
                         >
                         <RatingBar
                             android:id="@+id/rating"
@@ -90,12 +90,12 @@
                             android:layout_height="wrap_content"
                             android:numStars="5"
                             android:isIndicator="false"
-                            android:rating="4.7"
                             style="?android:attr/ratingBarStyleSmall"
                             android:progressTint="#FFFFAF34"
                             android:progressBackgroundTint="#FFDADADA"
                             />
                         <TextView
+                            android:layout_gravity="center"
                             android:id="@+id/vote"
                             android:layout_marginLeft="10dp"
                             android:textColor="@color/white"
@@ -105,22 +105,20 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
                     </androidx.appcompat.widget.LinearLayoutCompat>
+
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         android:id="@+id/tvKind"
-                        android:text="Action adventure, Comedy"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:textFontWeight="400"
-                        android:textSize="12dp"
-                        android:textColor="@color/white_opacity_70"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginBottom="8dp"/>
-                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:textColor="@color/white_opacity_70"
+                        android:textFontWeight="400"
+                        android:textSize="12dp" />
+                    <TextView
                         android:id="@+id/tvDuration"
-                        android:text="1h 41min"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_regular"
                         android:textFontWeight="400"
                         android:textSize="12dp"
@@ -146,7 +144,6 @@
                     android:id="@+id/cinema"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="FX Sudirman XXI"
                     android:fontFamily="@font/montserrat_regular"
                     android:textFontWeight="400"
                     android:textSize="16dp"
@@ -172,7 +169,6 @@
                     android:id="@+id/DateAndTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sun May 22, 16:40"
                     android:fontFamily="@font/montserrat_regular"
                     android:textFontWeight="400"
                     android:textSize="16dp"
@@ -198,7 +194,6 @@
                     android:id="@+id/SeatNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="D7,D8,D9"
                     android:fontFamily="@font/montserrat_regular"
                     android:textFontWeight="400"
                     android:textSize="16dp"
@@ -224,7 +219,6 @@
                     android:id="@+id/Paid"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="IDR 150.000"
                     android:fontFamily="@font/montserrat_regular"
                     android:textFontWeight="400"
                     android:textSize="16dp"
@@ -258,7 +252,6 @@
                 android:id="@+id/IDOrder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="22081996"
                 android:fontFamily="@font/montserrat_regular"
                 android:textFontWeight="400"
                 android:textSize="20dp"
