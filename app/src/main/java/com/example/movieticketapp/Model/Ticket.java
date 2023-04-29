@@ -4,14 +4,14 @@ public class Ticket {
     protected String name;
     protected String time;
     protected String cinema;
-    protected int poster;
+    protected String poster;
     protected double rate;
     protected String kind;
     protected String duration;
     protected String seat;
     protected String paid;
     protected String idorder;
-    public Ticket(String ten, String time, String cinema, int poster,double rate, String kind, String duration, String seat, String paid, String idorder)
+    public Ticket(String ten, String time, String cinema, String poster,double rate, String kind, String duration, String seat, String paid, String idorder)
     {
         this.name = ten;
         this.time = time;
@@ -25,11 +25,13 @@ public class Ticket {
         this.rate = rate;
     }
 
+    public Ticket(){}
+
     public String getTime() {
         return time;
     }
 
-    public int getPoster() {
+    public String getPoster() {
         return poster;
     }
 
@@ -51,7 +53,7 @@ public class Ticket {
         this.time = time;
     }
 
-    public void setPoster(int poster) {
+    public void setPoster(String poster) {
         this.poster = poster;
     }
 

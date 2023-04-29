@@ -18,12 +18,18 @@ import com.example.movieticketapp.Model.Ticket;
 import com.example.movieticketapp.R;
 import com.example.movieticketapp.databinding.HomeScreenBinding;
 import com.example.movieticketapp.databinding.MyTicketAllScreenBinding;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MyTicketAllActivity extends AppCompatActivity {
     ListView listView;
+    FirebaseFirestore firestore;
     ArrayList<Ticket> arrayList = new ArrayList<Ticket>();
     TicketListAdapter adapter;
     private BottomNavigationView bottomNavigationView;
@@ -38,16 +44,13 @@ public class MyTicketAllActivity extends AppCompatActivity {
         Button allTicket = (Button) findViewById(R.id.buttonAllTicket);
         BottomNavigationView abc = (BottomNavigationView)findViewById(R.id.bottomNavigation);
         abc.getMenu().getItem(2).setChecked(true);
+        firestore = FirebaseFirestore.getInstance();
 
         allTicket.setText("All");
         allTicket.setSelected(true);
 
-        arrayList.add(new Ticket("Ralph Breaks the Internet 1", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph, 4.7, "Action & adventure, Comedy", "1h 41min", "D7, D8, D9", "IDR 150.000", "22081996"));
-        arrayList.add(new Ticket("Ralph Breaks the Internet 1", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.frozen_ii, 4.7, "Action & adventure, Comedy", "1h 41min", "D7, D8, D9", "IDR 150.000", "22081996"));
-        arrayList.add(new Ticket("Ralph Breaks the Internet 1", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph, 4.7, "Action & adventure, Comedy", "1h 41min", "D7, D8, D9", "IDR 150.000", "22081996"));
+        loadListTicket();
 
-        adapter = new TicketListAdapter(getApplicationContext(), R.layout.list_ticket_view, arrayList);
-        listView.setAdapter(adapter);
 
         allTicket.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,12 +62,10 @@ public class MyTicketAllActivity extends AppCompatActivity {
                 newTicket.setText(null);
                 expiredTicket.setText(null);
                 arrayList.clear();
-                arrayList.add(new Ticket("Ralph Breaks the Internet 1", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph, 4.7, "Action & adventure, Comedy", "1h 41min", "D7, D8, D9", "IDR 150.000", "22081996"));
-                arrayList.add(new Ticket("Ralph Breaks the Internet 1", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.frozen_ii, 4.7, "Action & adventure, Comedy", "1h 41min", "D7, D8, D9", "IDR 150.000", "22081996"));
-                arrayList.add(new Ticket("Ralph Breaks the Internet 1", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph, 4.7, "Action & adventure, Comedy", "1h 41min", "D7, D8, D9", "IDR 150.000", "22081996"));
 
-                adapter = new TicketListAdapter(getApplicationContext(), R.layout.list_ticket_view, arrayList);
-                listView.setAdapter(adapter);
+                loadListTicket();
+
+
             }
         });
         newTicket.setOnClickListener(new View.OnClickListener() {
@@ -77,11 +78,10 @@ public class MyTicketAllActivity extends AppCompatActivity {
                 newTicket.setText("News");
                 expiredTicket.setText(null);
                 arrayList.clear();
-                arrayList.add(new Ticket("Ralph Breaks the Internet 1", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph, 4.7, "Action & adventure, Comedy", "1h 41min", "D7, D8, D9", "IDR 150.000", "22081996"));
-                arrayList.add(new Ticket("Ralph Breaks the Internet 1", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.frozen_ii, 4.7, "Action & adventure, Comedy", "1h 41min", "D7, D8, D9", "IDR 150.000", "22081996"));
 
-                adapter = new TicketListAdapter(getApplicationContext(), R.layout.list_ticket_view, arrayList);
-                listView.setAdapter(adapter);
+                loadListTicket();
+
+
             }
         });
 
@@ -95,10 +95,9 @@ public class MyTicketAllActivity extends AppCompatActivity {
                 newTicket.setText(null);
                 expiredTicket.setText("Expired");
                 arrayList.clear();
-                arrayList.add(new Ticket("Ralph Breaks the Internet 1", "16:40, Sun May 22", "FX Sudirman XXI", R.drawable.poster_ralph, 4.7, "Action & adventure, Comedy", "1h 41min", "D7, D8, D9", "IDR 150.000", "22081996"));
+                loadListTicket();
 
-                adapter = new TicketListAdapter(getApplicationContext(), R.layout.list_ticket_view, arrayList);
-                listView.setAdapter(adapter);
+
             }
         });
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
@@ -136,5 +135,23 @@ public class MyTicketAllActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    void loadListTicket() {
+        firestore.collection("Ticket").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if (!queryDocumentSnapshots.isEmpty()) {
+                    List<DocumentSnapshot> listDoc = queryDocumentSnapshots.getDocuments();
+                    for (DocumentSnapshot doc : listDoc){
+                        Ticket _ticket = doc.toObject(Ticket.class);
+                        arrayList.add(_ticket);
+                    }
+
+                    adapter = new TicketListAdapter(getApplicationContext(), R.layout.list_ticket_view, arrayList);
+                    listView.setAdapter(adapter);
+                }
+            }
+        });
     }
 }

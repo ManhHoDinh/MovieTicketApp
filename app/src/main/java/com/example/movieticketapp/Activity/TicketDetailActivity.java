@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.movieticketapp.R;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.Picasso;
 
 public class TicketDetailActivity extends AppCompatActivity {
     @Override
@@ -29,7 +30,7 @@ public class TicketDetailActivity extends AppCompatActivity {
         TextView idOder = (TextView) findViewById(R.id.IDOrder);
         Button backButton = (Button) findViewById(R.id.backbutton);
 
-        filmPoster.setImageResource(getIntent().getExtras().getInt("poster"));
+        Picasso.get().load(getIntent().getExtras().getString("poster")).into(filmPoster);
         filmName.setText(getIntent().getExtras().getString("name"));
         filmRating.setRating((float) getIntent().getExtras().getDouble("rate"));
         filmRatingText.setText("(" + getIntent().getExtras().getDouble("rate") + ")");
