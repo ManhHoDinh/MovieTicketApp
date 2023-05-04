@@ -26,6 +26,7 @@ import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
     //private ViewPager2 viewPager;
+
     private RecyclerView typeListView;
     private RecyclerView posterRecyclerView;
     private SearchView searchView;
