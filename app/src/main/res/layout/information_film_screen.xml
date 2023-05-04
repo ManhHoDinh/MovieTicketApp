@@ -111,7 +111,7 @@
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <TextView
-                    android:id="@+id/director"
+                    android:id="@+id/genre"
                     android:textColor="@color/white"
                     android:gravity="left"
                     android:layout_marginTop="5dp"
@@ -138,11 +138,12 @@
                 app:tabIndicatorColor="@color/white"
                 app:tabIndicatorFullWidth="false"
                 app:tabIndicator="@color/white"
-                android:outlineAmbientShadowColor="@an droid:color/transparent"
+                app:tabTextColor="@color/white_opacity_70"
+                app:tabSelectedTextColor="@color/white"
+                android:outlineAmbientShadowColor="@android:color/transparent"
                 android:outlineSpotShadowColor="@android:color/transparent"
                 app:tabRippleColor="@android:color/transparent"
-                android:textAllCaps="false"
-                >
+                android:textAllCaps="false">
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

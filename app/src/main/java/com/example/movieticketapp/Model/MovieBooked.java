@@ -4,13 +4,14 @@ public class MovieBooked {
     private String name;
     private int price;
     private String timeBooked;
-    private int imageMovie;
-    public MovieBooked(String name, int price, String timeBooked, int imageMovie) {
+    private String imageMovie;
+    public MovieBooked(String name, int price, String timeBooked, String imageMovie) {
         this.name = name;
         this.price = price;
         this.timeBooked = timeBooked;
         this.imageMovie = imageMovie;
     }
+    public MovieBooked(){}
 
     public String getName() {
         return name;
@@ -24,7 +25,7 @@ public class MovieBooked {
         return timeBooked;
     }
 
-    public int getImageMovie() {
+    public String getImageMovie() {
         return imageMovie;
     }
 }
