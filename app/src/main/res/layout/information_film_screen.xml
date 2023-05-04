@@ -138,7 +138,7 @@
                 app:tabIndicatorColor="@color/white"
                 app:tabIndicatorFullWidth="false"
                 app:tabIndicator="@color/white"
-                android:outlineAmbientShadowColor="@android:color/transparent"
+                android:outlineAmbientShadowColor="@an droid:color/transparent"
                 android:outlineSpotShadowColor="@android:color/transparent"
                 app:tabRippleColor="@android:color/transparent"
                 android:textAllCaps="false"
