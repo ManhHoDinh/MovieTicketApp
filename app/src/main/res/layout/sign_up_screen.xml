@@ -7,7 +7,7 @@
     android:paddingLeft="24dp"
     android:paddingRight="24dp"
     android:background="@color/dark_background_1"
-    tools:context=".Activity.SignUpActivity">
+    tools:context=".Activity.Account.SignUpActivity">
 
     <ScrollView
         android:scrollbars="none"
@@ -74,7 +74,9 @@
                 android:singleLine="true"
                 android:textColor="@color/white_background"
                 android:textColorHint="@color/hint_color"
-                android:textSize="14dp" />
+                android:textSize="14sp"
+                android:paddingRight="24dp"
+                />
 
             <EditText
                 android:id="@+id/emailaddress"
@@ -83,14 +85,15 @@
                 android:layout_marginTop="42dp"
                 android:background="@drawable/edittext_boder"
                 android:hint="Email Address"
-                android:inputType="textEmailSubject"
                 android:paddingLeft="24dp"
+                android:inputType="text"
                 android:singleLine="true"
                 android:textColor="@color/white_background"
                 android:textColorHint="@color/hint_color"
                 android:textSize="14dp"
                 android:fontFamily="@font/montserrat_regular"
-                android:textFontWeight="400"/>
+                android:textFontWeight="400"
+                android:paddingRight="24dp"/>
 
             <EditText
                 android:id="@+id/password"
@@ -106,7 +109,8 @@
                 android:textColorHint="@color/hint_color"
                 android:textSize="14dp"
                 android:fontFamily="@font/montserrat_regular"
-                android:textFontWeight="400"/>
+                android:textFontWeight="400"
+                android:paddingRight="24dp"/>
 
             <EditText
                 android:id="@+id/confirmpassword"
@@ -122,7 +126,8 @@
                 android:textColorHint="@color/hint_color"
                 android:textSize="14dp"
                 android:fontFamily="@font/montserrat_regular"
-                android:textFontWeight="400"/>
+                android:textFontWeight="400"
+                android:paddingRight="24dp"/>
 
             <Button
                 android:id="@+id/SignUpBtn"

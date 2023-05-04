@@ -1,16 +1,15 @@
-package com.example.movieticketapp.Activity;
+package com.example.movieticketapp.Activity.Wallet;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.example.movieticketapp.Adapter.Helper;
 import com.example.movieticketapp.Adapter.PriceGridAdapter;
 import com.example.movieticketapp.R;
 import com.google.android.material.textfield.TextInputEditText;
@@ -43,6 +42,7 @@ public class TopUpActivity extends AppCompatActivity {
 
         textInputEditText = (TextInputEditText) findViewById(R.id.amountEt);
         PriceGridAdapter a =new PriceGridAdapter( this, list, textInputEditText );
+
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -52,7 +52,15 @@ public class TopUpActivity extends AppCompatActivity {
         topUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(TopUpActivity.this, SuccessTopUpActivity.class));
+                if(textInputEditText.getText().toString().equals("")){
+                    Toast.makeText(TopUpActivity.this, "Please choose price to top up!", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    Intent intent = new Intent(TopUpActivity.this, SuccessTopUpActivity.class);
+                    intent.putExtra("selectedPrice", textInputEditText.getText().toString());
+                    startActivity(intent);
+                }
+
             }
         });
 

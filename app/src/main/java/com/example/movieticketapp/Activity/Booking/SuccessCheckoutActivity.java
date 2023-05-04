@@ -1,5 +1,6 @@
-package com.example.movieticketapp.Activity;
+package com.example.movieticketapp.Activity.Booking;
 
+import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.R;
 
 import androidx.appcompat.app.AppCompatActivity;

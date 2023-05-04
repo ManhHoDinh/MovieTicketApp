@@ -1,4 +1,4 @@
-package com.example.movieticketapp.Activity;
+package com.example.movieticketapp.Activity.Movie;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager.widget.ViewPager;
@@ -15,6 +15,7 @@ import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.R;
 import com.google.android.material.tabs.TabLayout;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -24,7 +25,7 @@ public class InformationFilmActivity extends FragmentActivity {
     ImageView PosterImage;
     RatingBar ratingBar;
     TextView voteTV;
-    TextView directorTV;
+    TextView genreTV;
     TextView durationTime;
     TabLayout tabLayout;
     ViewPager2 pager;
@@ -37,23 +38,23 @@ public class InformationFilmActivity extends FragmentActivity {
         FilmModel f = intent.getParcelableExtra(ExtraIntent.film);
         setContentView(R.layout.information_film_screen);
 
-        backgroundImage= findViewById(R.id.backgroundImage);
-        backgroundImage.setImageResource(f.getBackGroundImage());
+        backgroundImage = findViewById(R.id.backgroundImage);
+        Picasso.get().load(f.getBackGroundImage()).fit().centerCrop().into(backgroundImage);
 
         nameTV= findViewById(R.id.filmName);
         nameTV.setText(f.getName());
 
         PosterImage= findViewById(R.id.PosterImage);
-        PosterImage.setImageResource(f.getPosterImage());
+        Picasso.get().load(f.getPosterImage()).fit().centerCrop().into(PosterImage);
 
         ratingBar = findViewById(R.id.rating);
-        ratingBar.setRating((float) f.getVote());
+        ratingBar.setRating(Float.parseFloat(f.getVote()));
 
         voteTV = findViewById(R.id.vote);
         voteTV.setText("(" + String.valueOf(f.getVote())+")");
 
-        directorTV = findViewById(R.id.director);
-        directorTV.setText(f.getDirector());
+        genreTV = findViewById(R.id.genre);
+        genreTV.setText(f.getGenre());
 
         durationTime = findViewById(R.id.durationTime);
         durationTime.setText(f.getDurationTime());

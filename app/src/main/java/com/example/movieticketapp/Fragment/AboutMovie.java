@@ -13,8 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.movieticketapp.Activity.BookedActivity;
-import com.example.movieticketapp.Activity.InformationFilmActivity;
+import com.example.movieticketapp.Activity.Booking.BookedActivity;
 import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.R;

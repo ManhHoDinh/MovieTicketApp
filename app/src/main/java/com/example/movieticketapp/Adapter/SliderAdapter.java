@@ -4,17 +4,21 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.movieticketapp.Activity.InformationFilmActivity;
+import com.example.movieticketapp.Activity.Movie.InformationFilmActivity;
 import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.R;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -40,6 +44,8 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.sliderView
     public void onBindViewHolder(@NonNull sliderViewHolder holder, int position) {
         holder.textView.setText(listPosts.get(position).getName());
         holder.SetImage(listPosts.get(position));
+        holder.rating.setRating(Float.parseFloat(listPosts.get(position).getVote()));
+        holder.ratingPoint.setText(listPosts.get(position).getVote()+"");
     }
 
     @Override
@@ -50,11 +56,15 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.sliderView
     class sliderViewHolder extends RecyclerView.ViewHolder {
         private RoundedImageView imageView;
         private TextView textView;
+        private RatingBar rating;
+        private TextView ratingPoint;
         /////ADD Film TO Film Information
         public sliderViewHolder(@NonNull View itemView, int postion) {
             super(itemView);
             imageView = (RoundedImageView) itemView.findViewById(R.id.postSlider);
             textView = (TextView) itemView.findViewById(R.id.namePost);
+            rating = (RatingBar) itemView.findViewById(R.id.rating);
+            ratingPoint = (TextView) itemView.findViewById(R.id.ratingPoint);
             FilmModel f =listPosts.get(postion);
             i++;
             itemView.findViewById(R.id.sliderItem).setOnClickListener(new View.OnClickListener() {
@@ -67,7 +77,11 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.sliderView
             });
         }
         void SetImage(FilmModel postItem){
-            imageView.setImageResource(postItem.getPrimaryImage());
+            Picasso.get()
+                    .load(postItem.getPrimaryImage())
+                    .fit()
+                    .centerCrop()
+                    .into(imageView);
         }
 
     }

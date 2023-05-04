@@ -1,24 +1,12 @@
 package com.example.movieticketapp.Adapter;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.text.Layout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.movieticketapp.Activity.TopUpActivity;
 import com.example.movieticketapp.R;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -28,7 +16,7 @@ public class PriceGridAdapter extends BaseAdapter{
     private List<String> listPrice;
     private Context context;
     private TextInputEditText textInputEditText;
-    private static ViewHolder prevView;
+   static public ViewHolder prevView;
 
 
     public PriceGridAdapter(Context context,  List<String> listPrice, TextInputEditText textInputEditText) {
@@ -53,6 +41,7 @@ public class PriceGridAdapter extends BaseAdapter{
         return position;
     }
 
+
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
@@ -69,19 +58,28 @@ public class PriceGridAdapter extends BaseAdapter{
         holder.priceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if(prevView == null){
                     holder.priceBtn.setSelected(true);
                     textInputEditText.setText( holder.priceBtn.getText());
                 }
                 else{
+
                     if(prevView.priceBtn.getText() != holder.priceBtn.getText()){
                         holder.priceBtn.setSelected(true);
                         textInputEditText.setText( holder.priceBtn.getText());
                         prevView.priceBtn.setSelected(false);
                     }
                     else {
-                        holder.priceBtn.setSelected(false);
-                        textInputEditText.setText("");
+                        if(holder.priceBtn.isSelected()) {
+                            holder.priceBtn.setSelected(false);
+                            textInputEditText.setText("");
+
+                        }
+                        else {
+                            textInputEditText.setText( holder.priceBtn.getText());
+                            holder.priceBtn.setSelected(true);
+                        }
 
                     }
                 }
