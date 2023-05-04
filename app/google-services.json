@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "929485986457-ss6js89s0sssiotr1vvrj0vbjdqv95r3.apps.googleusercontent.com",
+          "client_id": "929485986457-rk1ghm46b2qlecn3qrpfn0msa6dkc9ct.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.movieticketapp",
+            "certificate_hash": "bfe4943ac92dc3260aa9880b3ee81c2b415ecd10"
+          }
+        },
+        {
+          "client_id": "929485986457-0rd4ualg7m7f9gtvuh4bsskkqudep40e.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,7 +35,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "929485986457-ss6js89s0sssiotr1vvrj0vbjdqv95r3.apps.googleusercontent.com",
+              "client_id": "929485986457-0rd4ualg7m7f9gtvuh4bsskkqudep40e.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

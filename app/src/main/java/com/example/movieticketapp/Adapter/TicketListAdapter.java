@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import com.example.movieticketapp.Model.Ticket;
 import com.example.movieticketapp.R;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -49,9 +50,8 @@ public class TicketListAdapter extends ArrayAdapter<Ticket> {
             if (timeTextView != null)
                 timeTextView.setText(ve.getTime());
             if (studioTextView != null)
-                studioTextView.setText(ve.getStudio());
-            if (posterRImageView != null)
-                posterRImageView.setImageResource(ve.getPoster());
+                studioTextView.setText(ve.getCinema());
+            Picasso.get().load(ve.getPoster()).into(posterRImageView);
         }
         return v;
     }

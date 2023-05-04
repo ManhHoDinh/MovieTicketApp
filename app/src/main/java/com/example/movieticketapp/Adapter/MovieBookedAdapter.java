@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.MovieBooked;
 import com.example.movieticketapp.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -81,11 +82,11 @@ import java.util.List;
 //    }
 //
 //}
-public class MovieBookedAdapter extends ArrayAdapter<MovieBooked> {
-    private List<MovieBooked> listMovieBooked;
+public class MovieBookedAdapter extends ArrayAdapter<FilmModel> {
+    private List<FilmModel> listMovieBooked;
 
 
-    public MovieBookedAdapter(@NonNull Context context, int resource, List<MovieBooked> listMovieBooked) {
+    public MovieBookedAdapter(@NonNull Context context, int resource, List<FilmModel> listMovieBooked) {
         super(context, resource, listMovieBooked);
     }
 
@@ -98,12 +99,12 @@ public class MovieBookedAdapter extends ArrayAdapter<MovieBooked> {
         TextView nameMovie = itemView.findViewById(R.id.nameMovie);
         TextView priceMovie = itemView.findViewById(R.id.priceMovie);
         TextView timeBooked = itemView.findViewById(R.id.timeBooked);
-        MovieBooked movie = getItem(position);
-        Picasso.get().load(movie.getImageMovie()).into(imageView);
+        FilmModel movie = getItem(position);
+        Picasso.get().load(movie.getPosterImage()).into(imageView);
 
         nameMovie.setText(movie.getName());
-        priceMovie.setText(String.valueOf(movie.getPrice()));
-        timeBooked.setText(movie.getTimeBooked());
+        priceMovie.setText(String.valueOf(movie.getGenre()));
+        timeBooked.setText(movie.getDurationTime());
         return itemView;
     }
 

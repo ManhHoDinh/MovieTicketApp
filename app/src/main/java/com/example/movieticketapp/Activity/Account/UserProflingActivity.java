@@ -1,4 +1,4 @@
-package com.example.movieticketapp.Activity;
+package com.example.movieticketapp.Activity.Account;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.example.movieticketapp.Activity.Account.ConfirmationProfileActivity;
+import com.example.movieticketapp.Activity.Account.SignInActivity;
 import com.example.movieticketapp.R;
 
 public class UserProflingActivity extends AppCompatActivity {
@@ -205,7 +207,7 @@ public class UserProflingActivity extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(),ConfirmationProfileActivity.class);
+                Intent i = new Intent(getApplicationContext(), ConfirmationProfileActivity.class);
                 startActivity(i);
             }
         });
@@ -213,7 +215,7 @@ public class UserProflingActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(),SignInActivity.class);
+                Intent i = new Intent(getApplicationContext(), SignInActivity.class);
                 startActivity(i);
             }
         });

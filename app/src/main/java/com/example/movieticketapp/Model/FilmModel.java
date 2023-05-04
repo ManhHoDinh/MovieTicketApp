@@ -8,35 +8,36 @@ import androidx.annotation.NonNull;
 import com.example.movieticketapp.databinding.PosterItemBinding;
 
 public class FilmModel implements Parcelable {
-    private int PrimaryImage;
+    private String PrimaryImage;
     private String name;
 
-    private  int BackGroundImage;
-    private double vote;
-    private String director;
+    private  String BackGroundImage;
+    private String vote;
+    private String genre;
     private String description;
 
-    private int PosterImage;
+    private String PosterImage;
     private String durationTime;
-    public FilmModel(int PrimaryImage, String name, int BackGroundImage,int PosterImage, double vote, String director, String description, String durationTime) {
+    public FilmModel(){}
+    public FilmModel(String PrimaryImage, String name, String BackGroundImage, String PosterImage, String vote, String genre, String description, String durationTime) {
         this.PrimaryImage = PrimaryImage;
         this.name = name;
         this.BackGroundImage = BackGroundImage;
         this.vote = vote;
-        this.director = director;
+        this.genre = genre;
         this.description = description;
         this.PosterImage = PosterImage;
         this.durationTime= durationTime;
     }
 
     protected FilmModel(Parcel in) {
-        PrimaryImage = in.readInt();
+        PrimaryImage = in.readString();
         name = in.readString();
-        BackGroundImage = in.readInt();
-        vote = in.readDouble();
-        director = in.readString();
+        BackGroundImage = in.readString();
+        vote = in.readString();
+        genre = in.readString();
         description = in.readString();
-        PosterImage=in.readInt();
+        PosterImage=in.readString();
         durationTime=in.readString();
     }
 
@@ -54,14 +55,16 @@ public class FilmModel implements Parcelable {
     };
 
     public  String getDurationTime(){return  durationTime;}
-    public int getPrimaryImage() {
+    public String getPrimaryImage() {
         return PrimaryImage;
     }
 
-    public int getBackGroundImage() {
+
+
+    public String getBackGroundImage() {
         return BackGroundImage ;
     }
-    public int getPosterImage() {
+    public String getPosterImage() {
         return PosterImage ;
     }
 
@@ -69,19 +72,18 @@ public class FilmModel implements Parcelable {
         return name;
     }
 
-
-    public String getDirector() {
-        return director;
+    public String getGenre() {
+        return genre;
     }
 
     public String getDescription() {
         return description;
     }
-    public double getVote() {
+    public String getVote() {
         return vote;
     }
 
-    public void setPrimaryImage(int image) {
+    public void setPrimaryImage(String image) {
         this.PrimaryImage = image;
     }
 
@@ -96,13 +98,13 @@ public class FilmModel implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel parcel, int i) {
-        parcel.writeInt(PrimaryImage);
+        parcel.writeString(PrimaryImage);
         parcel.writeString(name);
-        parcel.writeInt(BackGroundImage);
-        parcel.writeDouble(vote);
-        parcel.writeString(director);
+        parcel.writeString(BackGroundImage);
+        parcel.writeString(vote);
+        parcel.writeString(genre);
         parcel.writeString(description);
-        parcel.writeInt(PosterImage);
+        parcel.writeString(PosterImage);
         parcel.writeString(durationTime);
     }
 }

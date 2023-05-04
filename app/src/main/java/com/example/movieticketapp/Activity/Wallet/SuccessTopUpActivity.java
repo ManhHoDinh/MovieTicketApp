@@ -1,4 +1,4 @@
-package com.example.movieticketapp.Activity;
+package com.example.movieticketapp.Activity.Wallet;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.movieticketapp.Adapter.PriceGridAdapter;
 import com.example.movieticketapp.Model.InforBooked;
+import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.R;
 
 public class SuccessTopUpActivity extends AppCompatActivity {

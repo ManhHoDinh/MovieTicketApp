@@ -1,26 +1,18 @@
-package com.example.movieticketapp.Activity;
+package com.example.movieticketapp.Activity.Booking;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.movieticketapp.Adapter.CinameNameAdapter;
 import com.example.movieticketapp.Adapter.Helper;
@@ -28,11 +20,8 @@ import com.example.movieticketapp.Adapter.TimeBookedAdapter;
 import com.example.movieticketapp.Model.InforBooked;
 import com.example.movieticketapp.R;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class BookedActivity extends AppCompatActivity {

@@ -7,7 +7,7 @@
     android:paddingLeft="24dp"
     android:paddingRight="24dp"
     android:background="@color/dark_background_1"
-    tools:context=".Activity.Account.SignUpActivity">
+    tools:context=".Activity.Account.EditProfileActivity">
 
     <ScrollView
         android:scrollbars="none"
@@ -94,6 +94,22 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:textFontWeight="400"
                 android:paddingRight="24dp"/>
+            <EditText
+                android:id="@+id/currentPassword"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="42dp"
+                android:background="@drawable/edittext_boder"
+                android:hint="Current Password"
+                android:inputType="textPassword"
+                android:paddingLeft="24dp"
+                android:singleLine="true"
+                android:textColor="@color/white_background"
+                android:textColorHint="@color/hint_color"
+                android:textSize="14dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:textFontWeight="400"
+                android:paddingRight="24dp"/>
 
             <EditText
                 android:id="@+id/password"
@@ -130,7 +146,7 @@
                 android:paddingRight="24dp"/>
 
             <Button
-                android:id="@+id/SignUpBtn"
+                android:id="@+id/UpdateBtn"
                 style="@android:style/Widget.Button"
                 android:layout_width="255dp"
                 android:layout_height="60dp"
@@ -139,7 +155,7 @@
                 android:layout_marginBottom="68dp"
                 android:background="@drawable/button_background"
                 android:gravity="center"
-                android:text="Sign Up"
+                android:text="Update My Profile"
                 android:textColor="@color/white_background"
                 android:fontFamily="@font/montserrat_regular"
                 android:textFontWeight="500"

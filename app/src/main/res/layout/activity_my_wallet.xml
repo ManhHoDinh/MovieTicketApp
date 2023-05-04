@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
 
     android:background="@color/background_color"
-    tools:context=".Activity.MyWalletActivity">
+    tools:context=".Activity.Ticket.MyTicketAllActivity">
+    >
 <!--    <ProgressBar-->
 <!--        android:id="@+id/progressId"-->
 <!--        android:layout_width="match_parent"-->

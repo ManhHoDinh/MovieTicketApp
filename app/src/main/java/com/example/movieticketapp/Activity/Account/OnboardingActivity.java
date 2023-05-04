@@ -1,11 +1,15 @@
-package com.example.movieticketapp.Activity;
+package com.example.movieticketapp.Activity.Account;
+
+import static com.example.movieticketapp.R.string.CheckUsed;
 
 import android.content.Intent;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,13 +21,12 @@ public class OnboardingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.onboarding_screen);
-        //ImageView logo = findViewById(R.id.logo);
-        //logo.setImageResource(R.drawable.splash_logo);
+        SetSharedReference();
         Button getStartBt = findViewById(R.id.getStartedBtn);
         getStartBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(),SignUpActivity.class);
+                Intent i = new Intent(getApplicationContext(), SignUpActivity.class);
                 startActivity(i);
             }
         });
@@ -31,9 +34,19 @@ public class OnboardingActivity extends AppCompatActivity {
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(),SignInActivity.class);
+                Intent i = new Intent(getApplicationContext(), SignInActivity.class);
                 startActivity(i);
             }
         });
+
+    }
+    void SetSharedReference()
+    {
+        SharedPreferences sharedPref = getSharedPreferences("shared_prefs",0);
+        SharedPreferences.Editor editor= sharedPref.edit();
+        editor.clear();
+        editor.putBoolean(String.valueOf(CheckUsed), true);
+        editor.apply();
+        editor.commit();
     }
 }
