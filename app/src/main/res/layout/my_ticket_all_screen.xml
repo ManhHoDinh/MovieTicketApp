@@ -71,11 +71,12 @@
             android:background="@color/white_opacity_70"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="12dp"/>
+
         <ListView
+            android:id="@+id/ListViewTicket"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="none"
-            android:id="@+id/ListViewTicket"/>
+            android:scrollbars="none" />
     </LinearLayout>
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
