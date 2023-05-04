@@ -61,7 +61,7 @@
             android:exported="false" />
         <activity android:name=".Activity.Account.SignUpActivity" />
         <activity android:name=".Activity.Account.SignInActivity" />
-        <activity android:name=".Activity.Movie.InformationFilmActivity" />
+        <activity android:name=".Activity.Movie.InformationFilmActivity" android:exported="false" />
         <activity
             android:name=".Activity.Account.ConfirmationProfileActivity"
             android:noHistory="true" />

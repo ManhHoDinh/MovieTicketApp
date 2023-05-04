@@ -78,69 +78,242 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                 typeBtn.setBackground(ContextCompat.getDrawable(typeBtn.getContext(), R.drawable.bg_tabview_button));
             }
         }
-
-
     }
+
+    void addData( List<FilmModel> add,  FilmModel f)
+    {
+        add.add(f);
+    }
+
     void loadListPost(String type){
         viewPager = activity.findViewById(R.id.typeMovieViewPage);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        List<FilmModel> listPosts = new ArrayList<FilmModel>();
+        CollectionReference ActionMovieRef = db.collection("ActionMovies");
+        CollectionReference DramaMovieRef = db.collection("DramaMovies");
+        CollectionReference WarMovieRef = db.collection("WarMovies");
+        CollectionReference ComedyMovieRef = db.collection("ComedyMovies");
+        CollectionReference HorrorMovieRef = db.collection("HorrorMovies");
+        CollectionReference CrimeMovieRef = db.collection("CrimeMovies");
+        List<FilmModel> listPosts = new ArrayList<FilmModel>();;
         switch(type){
             case "All":
-                CollectionReference ActionMovieRef = db.collection("ActionMovies");
-                ActionMovieRef.get()
-                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                            @Override
-                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots)
-                                {
-                                    FilmModel f = documentSnapshot.toObject(FilmModel.class);
-                                    String PrimaryImage = f.getPrimaryImage();
-                                    String name = f.getName();
-                                    String BackGroundImage = f.getBackGroundImage();
-                                    String vote = f.getVote();
-                                    String genre = f.getGenre();
-                                    String description = f.getDescription();
-                                    String PosterImage = f.getPosterImage();
-                                    String durationTime =f.getDurationTime();
-                                    Log.d(TAG, "name: " + name + "\n"
-                                            + "PrimaryImage: " +  PrimaryImage + "\n"
-                                            + "BackGroundImage: " +  BackGroundImage+ "\n"
-                                            + "vote: " + vote + "\n"
-                                            + "genre: " +  genre + "\n"
-                                            + "PosterImage: " + PosterImage + "\n"
-                                            + "durationTime: " +  durationTime );
-                                    listPosts.add(new FilmModel(PrimaryImage, name, BackGroundImage,PosterImage, vote, genre, description, durationTime));
-                                }
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d(TAG, "Fail to load data from database" );
-                            }
-                        });
+                listPosts.clear();
+                ActionMovieRef.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                    {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                        {
+                            FilmModel f = documentSnapshot.toObject(FilmModel.class);
+                            listPosts.add(f);
+                            Log.d(TAG, "data: " + f.getName());
+                        }
+                    } else
+                    {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
+                ComedyMovieRef.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                    {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                        {
+                            FilmModel f = documentSnapshot.toObject(FilmModel.class);
+                            listPosts.add(f);
+                            Log.d(TAG, "data: " + f.getName());
+                        }
 
+                    } else
+                    {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
+                DramaMovieRef.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                    {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                        {
+                            FilmModel f = documentSnapshot.toObject(FilmModel.class);
+                            listPosts.add(f);
+                            Log.d(TAG, "data: " + f.getName());
+                        }
+                    } else
+                    {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
+                HorrorMovieRef.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                    {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                        {
+                            FilmModel f = documentSnapshot.toObject(FilmModel.class);
+                            listPosts.add(f);
+                            Log.d(TAG, "data: " + f.getName());
+                        }
+                    } else
+                    {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
+                WarMovieRef.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                    {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                        {
+                            FilmModel f = documentSnapshot.toObject(FilmModel.class);
+                            listPosts.add(f);
+                            Log.d(TAG, "data: " + f.getName());
+                        }
+                        viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
+                        viewPager.setClipToPadding(false);
+                        viewPager.setClipChildren(false);
+                        viewPager.setOffscreenPageLimit(3);
+                    } else
+                    {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
                 break;
             case "Action":
-
+                listPosts.clear();
+                ActionMovieRef.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                    {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                        {
+                            FilmModel f = documentSnapshot.toObject(FilmModel.class);
+                            listPosts.add(f);
+                            Log.d(TAG, "data: " + f.getName());
+                        }
+                        viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
+                        viewPager.setClipToPadding(false);
+                        viewPager.setClipChildren(false);
+                        viewPager.setOffscreenPageLimit(3);
+                    } else
+                    {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
                break;
             case "Drama":
+                listPosts.clear();
+                DramaMovieRef.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                    {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                        {
+                            FilmModel f = documentSnapshot.toObject(FilmModel.class);
+                            listPosts.add(f);
+                            Log.d(TAG, "data: " + f.getName());
+                        }
+                        viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
+                        viewPager.setClipToPadding(false);
+                        viewPager.setClipChildren(false);
+                        viewPager.setOffscreenPageLimit(3);
+                    } else
+                    {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
                 break;
-            case "Honor":
+            case "Horror":
+                listPosts.clear();
+                HorrorMovieRef.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                    {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                        {
+                            FilmModel f = documentSnapshot.toObject(FilmModel.class);
+                            listPosts.add(f);
+                            Log.d(TAG, "data: " + f.getName());
+                        }
+                        viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
+                        viewPager.setClipToPadding(false);
+                        viewPager.setClipChildren(false);
+                        viewPager.setOffscreenPageLimit(3);
+                    } else
+                    {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
                 break;
             case "War":
+                listPosts.clear();
+                WarMovieRef.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                    {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                        {
+                            FilmModel f = documentSnapshot.toObject(FilmModel.class);
+                            listPosts.add(f);
+                            Log.d(TAG, "data: " + f.getName());
+                        }
+                        viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
+                        viewPager.setClipToPadding(false);
+                        viewPager.setClipChildren(false);
+                        viewPager.setOffscreenPageLimit(3);
+                    } else
+                    {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
                 break;
             case "Comedy":
+                listPosts.clear();
+                ComedyMovieRef.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                    {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                        {
+                            FilmModel f = documentSnapshot.toObject(FilmModel.class);
+                            listPosts.add(f);
+                            Log.d(TAG, "data: " + f.getName());
+                        }
+                        viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
+                        viewPager.setClipToPadding(false);
+                        viewPager.setClipChildren(false);
+                        viewPager.setOffscreenPageLimit(3);
+                    } else
+                    {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
                 break;
             case "Crime":
+                listPosts.clear();
+                CrimeMovieRef.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                    {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                        {
+                            FilmModel f = documentSnapshot.toObject(FilmModel.class);
+                            listPosts.add(f);
+                            Log.d(TAG, "data: " + f.getName());
+                        }
+                        viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
+                        viewPager.setClipToPadding(false);
+                        viewPager.setClipChildren(false);
+                        viewPager.setOffscreenPageLimit(3);
+                    } else
+                    {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
                break;
         }
 
-        viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
-        viewPager.setClipToPadding(false);
-        viewPager.setClipChildren(false);
-        viewPager.setOffscreenPageLimit(3);
+
         //viewPager.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
         CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
         compositePageTransformer.addTransformer(new MarginPageTransformer(24));
