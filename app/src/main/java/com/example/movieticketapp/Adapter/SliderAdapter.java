@@ -20,6 +20,7 @@ import java.util.List;
 
 public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.sliderViewHolder> {
     private List<FilmModel> listPosts;
+
     private ViewPager2 viewPage;
 
     public SliderAdapter(List<FilmModel> listPosts, ViewPager2 viewPage) {

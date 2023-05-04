@@ -1,6 +1,9 @@
 package com.example.movieticketapp.Activity;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,11 +18,15 @@ import com.example.movieticketapp.Adapter.MovieBookedAdapter;
 import com.example.movieticketapp.Model.InforBooked;
 import com.example.movieticketapp.Model.MovieBooked;
 import com.example.movieticketapp.R;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -46,7 +53,8 @@ public class MyWalletActivity extends AppCompatActivity {
 
         totalTv.setText(String.valueOf(InforBooked.getInstance().total));
         progressBar = (ProgressBar) findViewById(R.id.progressId);
-        progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
+
 //        listMovie.add(new MovieBooked("binh", 10000,"30/3/2032", R.drawable.poster_1));
 //        listMovie.add(new MovieBooked("binh", 10000,"30/3/2032", R.drawable.poster_1));
 //        listMovie.add(new MovieBooked("binh", 10000,"30/3/2032", R.drawable.poster_1));
@@ -75,9 +83,31 @@ public class MyWalletActivity extends AppCompatActivity {
         });
 
     }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        movieBookedAdapter.startListening();
+//    }
+
 
     void loadListMovieBooked(){
-            firestore.collection("BookedMovie").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        Query query = FirebaseFirestore.getInstance().collection("BookedMovie");
+//        FirestoreRecyclerOptions<MovieBooked> options = new FirestoreRecyclerOptions.Builder<MovieBooked>()
+//                .setQuery(query, MovieBooked.class)
+//                .build();
+//        movieBookedAdapter = new MovieBookedAdapter(options, progressBar);
+//        listMovieBooked.setAdapter(movieBookedAdapter);
+       // listMovieBooked.setLayoutManager(new LinearLayoutManager(MyWalletActivity.this, LinearLayoutManager.VERTICAL, false));
+//        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+//                listMovie = value.toObjects(MovieBooked.class);
+//
+//            }
+//
+//        });
+
+             firestore.collection("BookedMovie").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
