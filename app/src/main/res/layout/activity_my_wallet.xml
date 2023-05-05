@@ -4,8 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     android:background="@color/background_color"
     tools:context=".Activity.Ticket.MyTicketAllActivity">
+    >
+<!--    <ProgressBar-->
+<!--        android:id="@+id/progressId"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:gravity="center"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--       android:layout_marginTop="360dp"-->
+
+
+<!--       />-->
 
     <LinearLayout
 
@@ -22,14 +35,7 @@
             android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-        <ProgressBar
-            android:id="@+id/progressId"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+
         <LinearLayout
             android:layout_marginTop="32dp"
             android:padding="24dp"
