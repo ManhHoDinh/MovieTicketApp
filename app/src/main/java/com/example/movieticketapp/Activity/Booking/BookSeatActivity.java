@@ -146,8 +146,14 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(), CheckoutWalletEnoughActivity.class);
-                //i.putExtra(ExtraIntent.film, film);
-                startActivity(i);
+                if(priceTv.getText().equals(") VNĐ")){
+                    Toast.makeText(BookSeatActivity.this, "Please choose seats!", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    i.putExtra("price",priceTv.getText());
+                    startActivity(i);
+                }
+
             }
         });
     }

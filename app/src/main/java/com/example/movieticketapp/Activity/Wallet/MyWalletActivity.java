@@ -71,7 +71,7 @@ public class MyWalletActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-
+//                        InforBooked.getInstance().total += Integer.parseInt(String.valueOf(document.get("wallet")));
                         totalTv.setText(String.valueOf(document.get("wallet")));
 
                     } else {
@@ -83,11 +83,14 @@ public class MyWalletActivity extends AppCompatActivity {
             }
         });
 
+
+
         loadListMovieBooked();
         topUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MyWalletActivity.this, TopUpActivity.class);
+
                 startActivity(intent);
             }
         });
