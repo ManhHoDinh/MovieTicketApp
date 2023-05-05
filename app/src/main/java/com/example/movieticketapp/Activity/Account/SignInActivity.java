@@ -187,11 +187,16 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     void LoginWithEmail() {
+        boolean error = false;
         if (emailET.length() == 0) {
             emailET.setError("Email is not empty!!!");
-        } else if (passwordET.length() == 0) {
+            error=true;
+        }
+        if (passwordET.length() == 0) {
             passwordET.setError("Password is not empty!!!");
-        } else
+            error=true;
+        }
+        if(!error)
             SignIn(emailET.getText().toString(), passwordET.getText().toString());
     }
 
