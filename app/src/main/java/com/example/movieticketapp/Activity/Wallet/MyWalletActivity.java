@@ -70,7 +70,8 @@ public class MyWalletActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        totalTv.setText(String.valueOf(document.get("wallet")));
+//                        InforBooked.getInstance().total += Integer.parseInt(String.valueOf(document.get("wallet")));
+                        totalTv.setText(String.valueOf(document.get("Wallet")));
 
                     } else {
                         Log.e("c", "No such document");
@@ -80,6 +81,8 @@ public class MyWalletActivity extends AppCompatActivity {
                 }
             }
         });
+
+
 
         loadListMovieBooked();
         topUpBtn.setOnClickListener(new View.OnClickListener() {

@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.movieticketapp.Activity.Booking.SuccessCheckoutActivity;
 import com.example.movieticketapp.Adapter.MovieCheckoutAdapter;
@@ -22,7 +23,7 @@ import java.util.List;
 public class CheckoutWalletEnoughActivity extends AppCompatActivity {
     ImageView BtnBack;
     Button BtnCheckOut;
-
+    TextView priceTv;
     ListView movieInfoView;
 
     MovieCheckoutAdapter adapter;
@@ -33,9 +34,11 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
         setContentView(R.layout.checkout_wallet_enough_screen);
         BtnBack = findViewById(R.id.btnBack);
         BtnCheckOut= findViewById(R.id.btnCheckout);
-
+        priceTv = (TextView) findViewById(R.id.TotalValue) ;
         movieInfoView = findViewById(R.id.movieInfoView);
+        Intent intent = getIntent();
 
+        priceTv.setText(intent.getStringExtra("price"));
         movie.add(new CheckoutFilmModel("Ralph Breaks the Internet",4.7, "Action & adventure, Comedy","1h 41min", R.drawable.poster_ralph));
         adapter = new MovieCheckoutAdapter(getApplicationContext(), R.layout.checkout_movie_view, movie);
         movieInfoView.setAdapter(adapter);
