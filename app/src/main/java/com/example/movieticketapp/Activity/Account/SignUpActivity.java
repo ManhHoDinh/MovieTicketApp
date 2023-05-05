@@ -111,7 +111,7 @@ public class SignUpActivity extends AppCompatActivity {
                             FirebaseUser user = FirebaseRequest.mAuth.getCurrentUser();
                             UpdateFullName();
                             user.getUid();
-                            Users u = new Users(user.getUid(), email, Name);
+                            Users u = new Users(user.getUid(), email, Name,0);
                             FirebaseRequest.database.collection("Users").document(user.getUid())
                                     .set(u.toJson())
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
