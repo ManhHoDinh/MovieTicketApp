@@ -1,4 +1,4 @@
-package com.example.movieticketapp.Activity.Wallet;
+package com.example.movieticketapp.Activity.Booking;
 
 import androidx.appcompat.app.AppCompatActivity;
 
