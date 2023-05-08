@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.movieticketapp.Activity.Booking.SuccessCheckoutActivity;
 import com.example.movieticketapp.Adapter.MovieCheckoutAdapter;
@@ -175,6 +176,8 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
                             //i.putExtra(ExtraIntent.film, film);
                             startActivity(i);
                         }
+                        else
+                            Toast.makeText(CheckoutWalletEnoughActivity.this, "Your wallet is not enough!", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.movieticketapp.Activity.Wallet.CheckoutWalletEnoughActivity;
+import com.example.movieticketapp.Activity.Booking.CheckoutWalletEnoughActivity;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.R;
