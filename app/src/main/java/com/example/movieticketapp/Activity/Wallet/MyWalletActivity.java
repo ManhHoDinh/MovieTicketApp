@@ -72,7 +72,7 @@ public class MyWalletActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
 //                        InforBooked.getInstance().total += Integer.parseInt(String.valueOf(document.get("wallet")));
-                        totalTv.setText(String.valueOf(document.get("wallet")));
+                        totalTv.setText(String.valueOf(document.get("Wallet")));
 
                     } else {
                         Log.e("c", "No such document");

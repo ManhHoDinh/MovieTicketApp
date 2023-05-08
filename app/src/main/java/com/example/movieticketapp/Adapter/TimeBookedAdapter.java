@@ -45,21 +45,25 @@ public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.Vi
                 @Override
                 public void onClick(View view) {
                     if(timeView != null){
+
                         if(listTime == null){
 
                             if(prevType != cinemaName){
+
                                 if(prevView != null){
-                                    Log.e("f","f");
+
+
                                     TextView tv = (TextView) prevView.findViewById(R.id.cinemaName);
                                     RecyclerView rv = (RecyclerView) prevView.findViewById(R.id.listTime);
                                     View v = rv.getLayoutManager().findViewByPosition(prevPosition);
-                                    Log.e("f", String.valueOf(prevPosition) + " " + dateBtn.getText());
+
                                     Button btn  = v.findViewById(R.id.dateBtn);
-                                    Log.e("f", String.valueOf(prevPosition) + " " + dateBtn.getText());
+
                                     btn.setBackgroundColor(Color.TRANSPARENT);
                                     btn.setBackground(ContextCompat.getDrawable(dateBtn.getContext(), R.drawable.bg_tabview_button));
-                                    InforBooked.getInstance().timeBooked = dateBtn.getText().toString();
+
                                 }
+                                InforBooked.getInstance().timeBooked = dateBtn.getText().toString();
                                 InforBooked.getInstance().nameCinema = cinemaName;
 
 
@@ -68,10 +72,12 @@ public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.Vi
                         prevType = cinemaName;
                         prevView = timeView;
                         prevPosition = getAdapterPosition();
+
                     }
 
                     else InforBooked.getInstance().dateBooked = dateBtn.getText().toString();
                     dateBtn.setBackgroundColor(Color.TRANSPARENT);
+
                     dateBtn.setBackground(ContextCompat.getDrawable(dateBtn.getContext(), R.drawable.background_button));
 
                     if(checkedPosition!=getAdapterPosition()){

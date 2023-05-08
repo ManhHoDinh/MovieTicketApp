@@ -41,8 +41,8 @@ public class SuccessTopUpActivity extends AppCompatActivity {
 
 
 
-                     int wallet =Integer.parseInt(String.valueOf(document.get("wallet")))+ Integer.parseInt(intent.getStringExtra("selectedPrice"));
-                        docRef.update("wallet", wallet);
+                     int wallet =Integer.parseInt(String.valueOf(document.get("Wallet")))+ Integer.parseInt(intent.getStringExtra("selectedPrice"));
+                        docRef.update("Wallet", wallet);
 
                     } else {
                         Log.e("c", "No such document");
