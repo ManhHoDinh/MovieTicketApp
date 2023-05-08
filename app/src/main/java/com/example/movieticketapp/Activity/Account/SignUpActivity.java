@@ -72,23 +72,28 @@ public class SignUpActivity extends AppCompatActivity {
         signUpBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                boolean error = false;
                 if(fullNameET.length()==0)
                 {
                     fullNameET.setError("Full Name is not empty!!!");
+                    error=true;
                 }
-                else if(emailET.length()==0)
+                if(emailET.length()==0)
                 {
                     emailET.setError("Email is not empty!!!");
+                    error=true;
                 }
-                else if(passwordET.length()==0)
+                if(passwordET.length()==0)
                 {
                     passwordET.setError("Password is not empty!!!");
+                    error=true;
                 }
-                else if(!confirmPasswordET.getText().toString().equals(passwordET.getText().toString()))
+                if(!confirmPasswordET.getText().toString().equals(passwordET.getText().toString()))
                 {
                     confirmPasswordET.setError("Password and confirmation passwords are not equals !!!");
+                    error=true;
                 }
-                else{
+                if(!error){
                     CreateUser(emailET.getText().toString(), passwordET.getText().toString(), fullNameET.getText().toString());
                 }
             }
@@ -106,7 +111,7 @@ public class SignUpActivity extends AppCompatActivity {
                             FirebaseUser user = FirebaseRequest.mAuth.getCurrentUser();
                             UpdateFullName();
                             user.getUid();
-                            Users u = new Users(user.getUid(), email, Name);
+                            Users u = new Users(user.getUid(), email, Name,0);
                             FirebaseRequest.database.collection("Users").document(user.getUid())
                                     .set(u.toJson())
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {

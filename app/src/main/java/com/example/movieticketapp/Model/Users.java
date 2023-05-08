@@ -7,11 +7,13 @@ public class Users {
     private String UserID;
     private String Name;
     private String Email;
-    public Users(String UserID, String Name, String Email)
+    private int Wallet;
+    public Users(String UserID, String Name, String Email,int Wallet)
     {
         this.UserID=UserID;
         this.Name=Name;
         this.Email = Email;
+        this.Wallet=Wallet;
     }
     public Map<String, Object> toJson()
     {
@@ -19,6 +21,7 @@ public class Users {
         json.put("UserID", UserID);
         json.put("Name", Name);
         json.put("Email", Email);
+        json.put("Wallet", Wallet);
         return  json;
     };
 

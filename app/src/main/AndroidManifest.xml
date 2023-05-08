@@ -33,7 +33,7 @@
             android:exported="true"
             android:theme="@style/Theme.MovieProject.Main" />
         <activity
-            android:name=".Activity.Wallet.CheckoutWalletEnoughActivity"
+            android:name=".Activity.Booking.CheckoutWalletEnoughActivity"
             android:exported="true" />
         <activity
             android:name=".Activity.Booking.SuccessCheckoutActivity"
