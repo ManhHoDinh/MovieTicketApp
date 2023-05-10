@@ -35,7 +35,7 @@
             app:layout_constraintRight_toRightOf="parent"
             android:textColor="@color/white"
             android:textSize="24dp"
-            android:textFontWeight=""
+            android:textFontWeight="600"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -52,14 +52,226 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/headerLine"
+        android:layout_marginLeft="44dp"
+        android:layout_marginRight="44dp"
         >
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                >
+                <TextView
+                    android:id="@+id/couponTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Coupon name"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:textSize="20dp"
+                    android:lineHeight="24dp"
+                    />
+<androidx.cardview.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toBottomOf="@+id/couponTitle"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:cardCornerRadius="15dp"
+    android:layout_marginTop="18dp"
+    >
+    <com.google.android.material.textfield.TextInputEditText
+        android:layout_width="match_parent"
+        android:id="@+id/DiscountName"
+        android:layout_height="50dp"
+        android:background="@color/main_color"
+        android:textSize="16dp"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="15dp"
+        android:hint="Name"
+        android:maxLines="2"
+        />
+
+</androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                >
+                <TextView
+                    android:id="@+id/DescriptionTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Description"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:textSize="20dp"
+                    android:lineHeight="24dp"
+                    />
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/DescriptionTitle"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:cardCornerRadius="15dp"
+                    android:layout_marginTop="18dp"
+                    >
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/DiscountDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:background="@color/main_color"
+                        android:textSize="16dp"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="15dp"
+                        android:hint="Write description here..."
+                        android:maxLines="5"
+                        android:gravity="top|left"
+                        />
+
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                >
+                <TextView
+                    android:id="@+id/DiscountTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Discount"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:textSize="20dp"
+                    android:lineHeight="24dp"
+                    />
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/DiscountTitle"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:cardCornerRadius="15dp"
+                    android:layout_marginTop="18dp"
+                    >
+                 <androidx.constraintlayout.widget.ConstraintLayout
+                     android:layout_width="match_parent"
+                     android:layout_height="80dp"
+                     android:background="@color/main_color"
+                     >
+                     <TextView
+                         android:id="@+id/DiscountPercentTitle"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         app:layout_constraintTop_toTopOf="parent"
+                         app:layout_constraintBottom_toBottomOf="parent"
+                         app:layout_constraintLeft_toLeftOf="parent"
+                         android:text="Discount Percent"
+                         android:layout_marginLeft="30dp"
+                         android:textSize="16dp"
+                         />
+                     <androidx.cardview.widget.CardView
+                         android:id="@+id/DiscountPercentLayout"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         app:layout_constraintTop_toTopOf="parent"
+                         app:layout_constraintBottom_toBottomOf="parent"
+                         app:layout_constraintLeft_toRightOf="@+id/DiscountPercentTitle"
+                         app:cardCornerRadius="10dp"
+                         android:layout_marginLeft="40dp"
+                         >
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="80dp"
+                            android:layout_height="50dp"
+                            android:id="@+id/DiscountPercent"
+                            android:text="50.00"
+                            android:textSize="16dp"
+                            android:gravity="center"
+                            android:paddingHorizontal="20dp"
+                            android:letterSpacing="0.1"
+                            android:textFontWeight="400"
+                            android:inputType="numberDecimal"
+                            android:background="@color/grey_background_2"
+                            android:textColor="@color/black"/>
+
+                     </androidx.cardview.widget.CardView>
+                     <androidx.appcompat.widget.LinearLayoutCompat
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         app:layout_constraintTop_toTopOf="parent"
+                         app:layout_constraintBottom_toBottomOf="parent"
+                         app:layout_constraintLeft_toRightOf="@+id/DiscountPercentLayout"
+                         android:orientation="vertical"
+                         android:layout_marginLeft="15dp"
+                         >
+                         <ImageView
+                             android:id="@+id/IncreasingDiscountPercent"
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:src="@drawable/up"
+                             android:layout_marginBottom="15dp"
+                             />
+                         <ImageView
+                             android:id="@+id/DecreasingDiscountPercent"
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:src="@drawable/down"
+                             />
+                     </androidx.appcompat.widget.LinearLayoutCompat>
+                                      </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            >
-            <TextView
+            android:layout_marginTop="50dp">
+            <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="15dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                >
+                <TextView
+                    android:id="@+id/ConfirmButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Confirm"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:background="@color/main_color"
+                    android:paddingHorizontal="40dp"
+                    android:paddingVertical="20dp"
+                    android:textSize="20dp"
+                    />
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="15dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                >
+                <TextView
+                    android:id="@+id/CancelButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cancel"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:background="@color/grey_background_2"
+                    android:paddingHorizontal="40dp"
+                    android:paddingVertical="20dp"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    />
+            </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

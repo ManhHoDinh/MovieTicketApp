@@ -2,6 +2,7 @@ package com.example.movieticketapp.Activity;
 
 import static android.content.ContentValues.TAG;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,7 +36,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -103,44 +106,84 @@ public class HomeActivity extends AppCompatActivity {
 
         List<Discount> Discounts = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference PromoRef = db.collection("Discounts");
+        CollectionReference PromoRef = db.collection(Discount.CollectionName);
+        PromoRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    // this method is called when error is not null
+                    // and we get any error
+                    // in this case we are displaying an error message.
+                    Toast.makeText(HomeActivity.this, "Error found is " + error, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else
+                {
+                    Discounts.clear();
+                    for (DocumentSnapshot documentSnapshot : value)
+                    {
+                        Discount f = documentSnapshot.toObject(Discount.class);
+                        Discounts.add(f);
+                        Log.d(TAG, "data: " + f.getName());
+                    }
+                    promotionView =(RecyclerView) findViewById(R.id.promotionView);
+                    LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+                    promotionView.setAdapter(new PromotionAdapter(Discounts));
+                    promotionView.setLayoutManager(VerLayoutManager);
+                    if(Discounts.size()==1)
+                    {
+                        ViewGroup.LayoutParams params=promotionView.getLayoutParams();
+                        params.height=300;
+                        promotionView.setLayoutParams(params);
+                    }
+                    if(Discounts.size()==2)
+                    {
+                        ViewGroup.LayoutParams params=promotionView.getLayoutParams();
+                        params.height=700;
+                        promotionView.setLayoutParams(params);
+                    }
 
-        PromoRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful())
-            {
-                QuerySnapshot querySnapshot = task.getResult();
-                for (DocumentSnapshot documentSnapshot : querySnapshot)
-                {
-                    Discount f = documentSnapshot.toObject(Discount.class);
-                    Discounts.add(f);Discounts.add(f); Discounts.add(f);
-                    Log.d(TAG, "data: " + f.getName());
                 }
-                promotionView =(RecyclerView) findViewById(R.id.promotionView);
-                LinearLayoutManager VerLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-                promotionView.setAdapter(new PromotionAdapter(Discounts));
-                promotionView.setLayoutManager(VerLayoutManager);
-                if(Discounts.size()==1)
-                {
-                    ViewGroup.LayoutParams params=promotionView.getLayoutParams();
-                    params.height=300;
-                    promotionView.setLayoutParams(params);
-                }
-                if(Discounts.size()==2)
-                {
-                    ViewGroup.LayoutParams params=promotionView.getLayoutParams();
-                    params.height=700;
-                    promotionView.setLayoutParams(params);
-                }
-            } else
-            {
-                Log.d(TAG, "Error getting documents: ", task.getException());
             }
         });
+//        PromoRef.get().addOnCompleteListener(task -> {
+//            if (task.isSuccessful())
+//            {
+//                QuerySnapshot querySnapshot = task.getResult();
+//                for (DocumentSnapshot documentSnapshot : querySnapshot)
+//                {
+//                    Discount f = documentSnapshot.toObject(Discount.class);
+//                    Discounts.add(f);Discounts.add(f); Discounts.add(f);
+//
+//                }
+//                promotionView =(RecyclerView) findViewById(R.id.promotionView);
+//                LinearLayoutManager VerLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+//                promotionView.setAdapter(new PromotionAdapter(Discounts));
+//                promotionView.setLayoutManager(VerLayoutManager);
+//                if(Discounts.size()==1)
+//                {
+//                    ViewGroup.LayoutParams params=promotionView.getLayoutParams();
+//                    params.height=300;
+//                    promotionView.setLayoutParams(params);
+//                }
+//                if(Discounts.size()==2)
+//                {
+//                    ViewGroup.LayoutParams params=promotionView.getLayoutParams();
+//                    params.height=700;
+//                    promotionView.setLayoutParams(params);
+//                }
+//            } else
+//            {
+//                Log.d(TAG, "Error getting documents: ", task.getException());
+//            }
+//        });
+
         addDiscount.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             Intent i = new Intent(HomeActivity.this, AddDiscount.class);
-            }
+        startActivity(i);
+        }
         });
     }
 
