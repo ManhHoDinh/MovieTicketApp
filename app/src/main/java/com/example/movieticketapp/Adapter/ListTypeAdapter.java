@@ -106,7 +106,6 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                         {
                             FilmModel f = documentSnapshot.toObject(FilmModel.class);
                             listPosts.add(f);
-                            Log.d(TAG, "data: " + f.getName());
                         }
                     } else
                     {
@@ -121,7 +120,6 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                         {
                             FilmModel f = documentSnapshot.toObject(FilmModel.class);
                             listPosts.add(f);
-                            Log.d(TAG, "data: " + f.getName());
                         }
 
                     } else
@@ -137,7 +135,6 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                         {
                             FilmModel f = documentSnapshot.toObject(FilmModel.class);
                             listPosts.add(f);
-                            Log.d(TAG, "data: " + f.getName());
                         }
                     } else
                     {
@@ -152,7 +149,6 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                         {
                             FilmModel f = documentSnapshot.toObject(FilmModel.class);
                             listPosts.add(f);
-                            Log.d(TAG, "data: " + f.getName());
                         }
                     } else
                     {
@@ -167,7 +163,6 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                         {
                             FilmModel f = documentSnapshot.toObject(FilmModel.class);
                             listPosts.add(f);
-                            Log.d(TAG, "data: " + f.getName());
                         }
                         viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
                         viewPager.setClipToPadding(false);
@@ -189,7 +184,6 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                         {
                             FilmModel f = documentSnapshot.toObject(FilmModel.class);
                             listPosts.add(f);
-                            Log.d(TAG, "data: " + f.getName());
                         }
                         viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
                         viewPager.setClipToPadding(false);
@@ -211,7 +205,6 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                         {
                             FilmModel f = documentSnapshot.toObject(FilmModel.class);
                             listPosts.add(f);
-                            Log.d(TAG, "data: " + f.getName());
                         }
                         viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
                         viewPager.setClipToPadding(false);
@@ -233,7 +226,6 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                         {
                             FilmModel f = documentSnapshot.toObject(FilmModel.class);
                             listPosts.add(f);
-                            Log.d(TAG, "data: " + f.getName());
                         }
                         viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
                         viewPager.setClipToPadding(false);
@@ -255,7 +247,6 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                         {
                             FilmModel f = documentSnapshot.toObject(FilmModel.class);
                             listPosts.add(f);
-                            Log.d(TAG, "data: " + f.getName());
                         }
                         viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
                         viewPager.setClipToPadding(false);
@@ -277,7 +268,6 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                         {
                             FilmModel f = documentSnapshot.toObject(FilmModel.class);
                             listPosts.add(f);
-                            Log.d(TAG, "data: " + f.getName());
                         }
                         viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
                         viewPager.setClipToPadding(false);
@@ -299,7 +289,6 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                         {
                             FilmModel f = documentSnapshot.toObject(FilmModel.class);
                             listPosts.add(f);
-                            Log.d(TAG, "data: " + f.getName());
                         }
                         viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
                         viewPager.setClipToPadding(false);

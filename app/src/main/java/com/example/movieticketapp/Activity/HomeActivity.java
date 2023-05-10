@@ -1,5 +1,7 @@
 package com.example.movieticketapp.Activity;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -7,19 +9,34 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.example.movieticketapp.Activity.Account.AccountActivity;
+import com.example.movieticketapp.Activity.Discount.AddDiscount;
 import com.example.movieticketapp.Activity.Ticket.MyTicketAllActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
 import com.example.movieticketapp.Adapter.ListTypeAdapter;
+import com.example.movieticketapp.Adapter.PromotionAdapter;
 import com.example.movieticketapp.Adapter.posterAdapter;
+import com.example.movieticketapp.Model.Discount;
+import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.R;
 import com.example.movieticketapp.databinding.HomeScreenBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +46,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private RecyclerView typeListView;
     private RecyclerView posterRecyclerView;
+    private RecyclerView promotionView;
     private SearchView searchView;
     private ViewPager2 typeMoviePage;
     private BottomNavigationView bottomNavigationView;
@@ -36,6 +54,7 @@ public class HomeActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigation;
     private HomeScreenBinding binding;
     private ImageView accountImage;
+    private  ImageView addDiscount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +64,7 @@ public class HomeActivity extends AppCompatActivity {
         String[] listType = {"All", "Horror", "Action", "Drama", "War", "Comedy", "Crime"};
 
         accountImage = findViewById(R.id.accountImage);
+        addDiscount= findViewById(R.id.AddDiscount);
         accountImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,6 +99,48 @@ public class HomeActivity extends AppCompatActivity {
                     break;
             }
             return true;
+        });
+
+        List<Discount> Discounts = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference PromoRef = db.collection("Discounts");
+
+        PromoRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful())
+            {
+                QuerySnapshot querySnapshot = task.getResult();
+                for (DocumentSnapshot documentSnapshot : querySnapshot)
+                {
+                    Discount f = documentSnapshot.toObject(Discount.class);
+                    Discounts.add(f);Discounts.add(f); Discounts.add(f);
+                    Log.d(TAG, "data: " + f.getName());
+                }
+                promotionView =(RecyclerView) findViewById(R.id.promotionView);
+                LinearLayoutManager VerLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+                promotionView.setAdapter(new PromotionAdapter(Discounts));
+                promotionView.setLayoutManager(VerLayoutManager);
+                if(Discounts.size()==1)
+                {
+                    ViewGroup.LayoutParams params=promotionView.getLayoutParams();
+                    params.height=300;
+                    promotionView.setLayoutParams(params);
+                }
+                if(Discounts.size()==2)
+                {
+                    ViewGroup.LayoutParams params=promotionView.getLayoutParams();
+                    params.height=700;
+                    promotionView.setLayoutParams(params);
+                }
+            } else
+            {
+                Log.d(TAG, "Error getting documents: ", task.getException());
+            }
+        });
+        addDiscount.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent i = new Intent(HomeActivity.this, AddDiscount.class);
+            }
         });
     }
 

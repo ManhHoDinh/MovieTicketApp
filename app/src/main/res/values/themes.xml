@@ -12,6 +12,15 @@
         <item name="colorAccent">@color/teal_200</item>
         <!-- Customize your theme here. -->
         <item name="android:autofilledHighlight">@android:color/transparent</item>
+        <item name="popupMenuBackground">@drawable/menu_background</item>
+        <item name="actionOverflowMenuStyle">@style/popupOverflowMenu</item>
+        <item name="android:dropDownListViewStyle">@style/PopupMenuListView</item>
+        <item name="android:actionBarWidgetTheme">@style/PopupMenuTextView</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu</item>
+        <!-- Change Overflow Menu ListView Item Height & Property -->
+        <item name="android:listPreferredItemHeightSmall">50dp</item>
+        <item name="android:listPreferredItemPaddingLeft">25dp</item>
+        <item name="android:listPreferredItemPaddingRight">25dp</item>
     </style>
     <style name="Theme.MovieTicketApp.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -36,4 +45,7 @@
     <style name="Theme.MovieTicketApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.MovieTicketApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="popupOverflowMenu" parent="@style/Widget.MaterialComponents.PopupMenu.Overflow">
+        <item name="android:popupBackground">@drawable/menu_background</item>
+    </style>
 </resources>
