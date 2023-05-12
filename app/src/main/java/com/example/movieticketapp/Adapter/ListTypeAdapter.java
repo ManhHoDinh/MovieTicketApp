@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
@@ -27,7 +28,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -88,226 +91,218 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
     void loadListPost(String type){
         viewPager = activity.findViewById(R.id.typeMovieViewPage);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference ActionMovieRef = db.collection("ActionMovies");
-        CollectionReference DramaMovieRef = db.collection("DramaMovies");
-        CollectionReference WarMovieRef = db.collection("WarMovies");
-        CollectionReference ComedyMovieRef = db.collection("ComedyMovies");
-        CollectionReference HorrorMovieRef = db.collection("HorrorMovies");
-        CollectionReference CrimeMovieRef = db.collection("CrimeMovies");
+        CollectionReference MovieRef = db.collection("Movies");
         List<FilmModel> listPosts = new ArrayList<FilmModel>();;
         switch(type){
             case "All":
                 listPosts.clear();
-                ActionMovieRef.get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful())
-                    {
-                        QuerySnapshot querySnapshot = task.getResult();
-                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                MovieRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (error != null)
                         {
-                            FilmModel f = documentSnapshot.toObject(FilmModel.class);
-                            listPosts.add(f);
-                            Log.d(TAG, "data: " + f.getName());
-                        }
-                    } else
-                    {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
-                    }
-                });
-                ComedyMovieRef.get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful())
-                    {
-                        QuerySnapshot querySnapshot = task.getResult();
-                        for (DocumentSnapshot documentSnapshot : querySnapshot)
-                        {
-                            FilmModel f = documentSnapshot.toObject(FilmModel.class);
-                            listPosts.add(f);
-                            Log.d(TAG, "data: " + f.getName());
+                            Log.d(TAG, "Listen failed", error);
+                            return;
                         }
 
-                    } else
-                    {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
-                    }
-                });
-                DramaMovieRef.get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful())
-                    {
-                        QuerySnapshot querySnapshot = task.getResult();
-                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                        for (QueryDocumentSnapshot documentSnapshot : value)
                         {
                             FilmModel f = documentSnapshot.toObject(FilmModel.class);
                             listPosts.add(f);
-                            Log.d(TAG, "data: " + f.getName());
-                        }
-                    } else
-                    {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
-                    }
-                });
-                HorrorMovieRef.get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful())
-                    {
-                        QuerySnapshot querySnapshot = task.getResult();
-                        for (DocumentSnapshot documentSnapshot : querySnapshot)
-                        {
-                            FilmModel f = documentSnapshot.toObject(FilmModel.class);
-                            listPosts.add(f);
-                            Log.d(TAG, "data: " + f.getName());
-                        }
-                    } else
-                    {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
-                    }
-                });
-                WarMovieRef.get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful())
-                    {
-                        QuerySnapshot querySnapshot = task.getResult();
-                        for (DocumentSnapshot documentSnapshot : querySnapshot)
-                        {
-                            FilmModel f = documentSnapshot.toObject(FilmModel.class);
-                            listPosts.add(f);
-                            Log.d(TAG, "data: " + f.getName());
+                            Log.d(TAG, "Added data: " + f.getName());
                         }
                         viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
                         viewPager.setClipToPadding(false);
                         viewPager.setClipChildren(false);
                         viewPager.setOffscreenPageLimit(3);
-                    } else
-                    {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
+
                 break;
             case "Action":
                 listPosts.clear();
-                ActionMovieRef.get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful())
-                    {
-                        QuerySnapshot querySnapshot = task.getResult();
-                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+
+                MovieRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (error != null)
+                        {
+                            Log.d(TAG, "Listen failed", error);
+                            return;
+                        }
+
+                        for (QueryDocumentSnapshot documentSnapshot : value)
                         {
                             FilmModel f = documentSnapshot.toObject(FilmModel.class);
-                            listPosts.add(f);
-                            Log.d(TAG, "data: " + f.getName());
+                            if (f.getGenre().contains("Action"))
+                            {
+                                listPosts.add(f);
+                                Log.d(TAG, "Added data: " + f.getName());
+                            }
+                            else
+                            {
+                                Log.d(TAG, "Not added data: "+ f.getName());
+                            }
                         }
                         viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
                         viewPager.setClipToPadding(false);
                         viewPager.setClipChildren(false);
                         viewPager.setOffscreenPageLimit(3);
-                    } else
-                    {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
                break;
             case "Drama":
                 listPosts.clear();
-                DramaMovieRef.get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful())
-                    {
-                        QuerySnapshot querySnapshot = task.getResult();
-                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                MovieRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (error != null)
+                        {
+                            Log.d(TAG, "Listen failed", error);
+                            return;
+                        }
+
+                        for (QueryDocumentSnapshot documentSnapshot : value)
                         {
                             FilmModel f = documentSnapshot.toObject(FilmModel.class);
-                            listPosts.add(f);
-                            Log.d(TAG, "data: " + f.getName());
+                            if (f.getGenre().contains("Drama"))
+                            {
+                                listPosts.add(f);
+                                Log.d(TAG, "Added data: " + f.getName());
+                            }
+                            else
+                            {
+                                Log.d(TAG, "Not added data: "+ f.getName());
+                            }
                         }
                         viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
                         viewPager.setClipToPadding(false);
                         viewPager.setClipChildren(false);
                         viewPager.setOffscreenPageLimit(3);
-                    } else
-                    {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
                 break;
             case "Horror":
                 listPosts.clear();
-                HorrorMovieRef.get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful())
-                    {
-                        QuerySnapshot querySnapshot = task.getResult();
-                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                MovieRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (error != null)
+                        {
+                            Log.d(TAG, "Listen failed", error);
+                            return;
+                        }
+
+                        for (QueryDocumentSnapshot documentSnapshot : value)
                         {
                             FilmModel f = documentSnapshot.toObject(FilmModel.class);
-                            listPosts.add(f);
-                            Log.d(TAG, "data: " + f.getName());
+                            if (f.getGenre().contains("Horror"))
+                            {
+                                listPosts.add(f);
+                                Log.d(TAG, "Added data: " + f.getName());
+                            }
+                            else
+                            {
+                                Log.d(TAG, "Not added data: "+ f.getName());
+                            }
                         }
                         viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
                         viewPager.setClipToPadding(false);
                         viewPager.setClipChildren(false);
                         viewPager.setOffscreenPageLimit(3);
-                    } else
-                    {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
                 break;
             case "War":
                 listPosts.clear();
-                WarMovieRef.get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful())
-                    {
-                        QuerySnapshot querySnapshot = task.getResult();
-                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                MovieRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (error != null)
+                        {
+                            Log.d(TAG, "Listen failed", error);
+                            return;
+                        }
+
+                        for (QueryDocumentSnapshot documentSnapshot : value)
                         {
                             FilmModel f = documentSnapshot.toObject(FilmModel.class);
-                            listPosts.add(f);
-                            Log.d(TAG, "data: " + f.getName());
+                            if (f.getGenre().contains("War"))
+                            {
+                                listPosts.add(f);
+                                Log.d(TAG, "Added data: " + f.getName());
+                            }
+                            else
+                            {
+                                Log.d(TAG, "Not added data: "+ f.getName());
+                            }
                         }
                         viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
                         viewPager.setClipToPadding(false);
                         viewPager.setClipChildren(false);
                         viewPager.setOffscreenPageLimit(3);
-                    } else
-                    {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
                 break;
             case "Comedy":
                 listPosts.clear();
-                ComedyMovieRef.get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful())
-                    {
-                        QuerySnapshot querySnapshot = task.getResult();
-                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                MovieRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (error != null)
+                        {
+                            Log.d(TAG, "Listen failed", error);
+                            return;
+                        }
+
+                        for (QueryDocumentSnapshot documentSnapshot : value)
                         {
                             FilmModel f = documentSnapshot.toObject(FilmModel.class);
-                            listPosts.add(f);
-                            Log.d(TAG, "data: " + f.getName());
+                            if (f.getGenre().contains("Comedy"))
+                            {
+                                listPosts.add(f);
+                                Log.d(TAG, "Added data: " + f.getName());
+                            }
+                            else
+                            {
+                                Log.d(TAG, "Not added data: "+ f.getName());
+                            }
                         }
                         viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
                         viewPager.setClipToPadding(false);
                         viewPager.setClipChildren(false);
                         viewPager.setOffscreenPageLimit(3);
-                    } else
-                    {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
                 break;
             case "Crime":
                 listPosts.clear();
-                CrimeMovieRef.get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful())
-                    {
-                        QuerySnapshot querySnapshot = task.getResult();
-                        for (DocumentSnapshot documentSnapshot : querySnapshot)
+                MovieRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (error != null)
+                        {
+                            Log.d(TAG, "Listen failed", error);
+                            return;
+                        }
+
+                        for (QueryDocumentSnapshot documentSnapshot : value)
                         {
                             FilmModel f = documentSnapshot.toObject(FilmModel.class);
-                            listPosts.add(f);
-                            Log.d(TAG, "data: " + f.getName());
+                            if (f.getGenre().contains("Crime"))
+                            {
+                                listPosts.add(f);
+                                Log.d(TAG, "Added data: " + f.getName());
+                            }
+                            else
+                            {
+                                Log.d(TAG, "Not added data: "+ f.getName());
+                            }
                         }
                         viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
                         viewPager.setClipToPadding(false);
                         viewPager.setClipChildren(false);
                         viewPager.setOffscreenPageLimit(3);
-                    } else
-                    {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
                break;

@@ -6,6 +6,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -62,6 +63,13 @@ public class InformationFilmActivity extends FragmentActivity {
         tabLayout=findViewById(R.id.tab_layout);
         pager=findViewById(R.id.pager);
 
+        ImageView btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         pager.setAdapter(new FilmDetailPagerAdapter(this, f));
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
