@@ -150,7 +150,7 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                         viewPager.setOffscreenPageLimit(3);
                     }
                 });
-               break;
+                break;
             case "Drama":
                 listPosts.clear();
                 MovieRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -305,7 +305,7 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                         viewPager.setOffscreenPageLimit(3);
                     }
                 });
-               break;
+                break;
         }
 
 
@@ -347,4 +347,3 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
         return listType.length;
     }
 }
-
