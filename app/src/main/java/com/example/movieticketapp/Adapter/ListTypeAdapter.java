@@ -93,7 +93,6 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                 @Override
                 public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                     if (error != null) {
-                        Log.d(TAG, "Listen failed", error);
                         return;
                     }
 
@@ -101,7 +100,6 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                     for (QueryDocumentSnapshot documentSnapshot : value) {
                         FilmModel f = documentSnapshot.toObject(FilmModel.class);
                         listPosts.add(f);
-                        Log.d(TAG, "Added data: " + f.getName());
                     }
                     updateViewPager();
                 }
@@ -112,7 +110,6 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                 @Override
                 public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                     if (error != null) {
-                        Log.d(TAG, "Listen failed", error);
                         return;
                     }
                     listPosts.clear();
@@ -120,9 +117,7 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                         FilmModel f = documentSnapshot.toObject(FilmModel.class);
                         if (f.getGenre().contains(type)) {
                             listPosts.add(f);
-                            Log.d(TAG, "Added data: " + f.getName());
                         } else {
-                            Log.d(TAG, "Not added data: " + f.getName());
                         }
                     }
                     updateViewPager();
