@@ -26,8 +26,9 @@ import java.util.List;
 public class CommentAdapter extends ArrayAdapter<Comment> {
     Context context;
     private int resource;
-    ArrayList<Comment> commentList;
-    public CommentAdapter (Context context, int resource, ArrayList<Comment> commentList)
+    List<Comment> commentList;
+
+    public CommentAdapter (Context context, int resource, List<Comment> commentList)
     {
         super(context, resource, commentList);
         this.resource = resource;
@@ -61,12 +62,14 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
             TextView reviewText = v.findViewById(R.id.review_text);
             TextView likeNumber = v.findViewById(R.id.likeNumber);
             TextView dislikeNumber = v.findViewById(R.id.dislikeNumber);
+            TextView timeStamp = v.findViewById(R.id.timeStamp);
 
             SetImage(comment, profile);
             name.setText(comment.getName());
             reviewText.setText(comment.getReviewText());
-            likeNumber.setText(comment.getLike()+"");
-            dislikeNumber.setText(comment.getDislike()+"");
+            likeNumber.setText(comment.getLike());
+            dislikeNumber.setText(comment.getDislike());
+            timeStamp.setText(comment.getTimeStamp());
         }
 
         return v;

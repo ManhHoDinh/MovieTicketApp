@@ -7,16 +7,27 @@ public class Comment {
 
     private String reviewText;
 
-    private int like;
+    private String like;
 
-    private int dislike;
+    private String dislike;
 
-    public Comment(String profileUrl, String name, String reviewText, int like, int dislike) {
+    private String timeStamp;
+
+    public String getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    public Comment(String profileUrl, String name, String reviewText, String like, String dislike, String timeStamp) {
         this.profileUrl = profileUrl;
         this.name = name;
         this.reviewText = reviewText;
         this.like = like;
         this.dislike = dislike;
+        this.timeStamp = timeStamp;
     }
 
     public String getProfileUrl() {
@@ -43,19 +54,19 @@ public class Comment {
         this.reviewText = reviewText;
     }
 
-    public int getLike() {
+    public String getLike() {
         return like;
     }
 
-    public void setLike(int like) {
+    public void setLike(String like) {
         this.like = like;
     }
 
-    public int getDislike() {
+    public String getDislike() {
         return dislike;
     }
 
-    public void setDislike(int dislike) {
+    public void setDislike(String dislike) {
         this.dislike = dislike;
     }
 }
