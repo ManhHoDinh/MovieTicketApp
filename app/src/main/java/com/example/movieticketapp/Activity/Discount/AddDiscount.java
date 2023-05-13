@@ -5,6 +5,7 @@ import static android.content.ContentValues.TAG;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.movieticketapp.Model.Discount;
+import com.example.movieticketapp.Model.ExtraIntent;
+import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,6 +35,7 @@ public class AddDiscount extends AppCompatActivity {
     ImageView DecreasingDiscountPercent;
     TextView CancelButton;
     TextView ConfirmButton;
+    Discount discount;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +47,14 @@ public class AddDiscount extends AppCompatActivity {
         DecreasingDiscountPercent = findViewById(R.id.DecreasingDiscountPercent);
         ConfirmButton = findViewById(R.id.ConfirmButton);
         CancelButton = findViewById(R.id.CancelButton);
+        Intent intent = getIntent();
+        discount = intent.getParcelableExtra(ExtraIntent.discount);
+        if(discount!=null) {
+            Name.setText(discount.getName());
+            Description.setText(discount.getDescription());
+            DiscountPercent.setText(String.valueOf(discount.getDiscountRate()));
+
+        }
         IncreasingDiscountPercent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,16 +112,26 @@ public class AddDiscount extends AppCompatActivity {
 
     private void CreateDiscountToDatabase() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference doc = db.collection(Discount.CollectionName).document();
 
+        DocumentReference doc ;
+        if (discount!=null)
+         doc = db.collection(Discount.CollectionName).document(discount.getID());
+        else
+            doc = db.collection(Discount.CollectionName).document();
         Discount discount = new Discount(doc.getId(), Name.getText().toString(), Description.getText().toString(), Double.valueOf(DiscountPercent.getText().toString()));
         doc.set(discount.toJson())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Name.setText("");
-                        Description.setText("");
-                        DiscountPercent.setText("50");
+                        if(discount==null)
+                        {
+                            Name.setText("");
+                            Description.setText("");
+                            DiscountPercent.setText("50");
+                        }
+                        else
+                            finish();
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

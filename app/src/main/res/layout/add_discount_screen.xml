@@ -15,16 +15,16 @@
         android:layout_marginTop="37dp"
         android:id="@+id/header"
         >
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/back_icon"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginLeft="26dp"
-            android:id="@+id/backButton"
-            android:layout_marginTop="5dp"
-            />
+<!--        <ImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/back_icon"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintLeft_toLeftOf="parent"-->
+<!--            android:layout_marginLeft="26dp"-->
+<!--            android:id="@+id/backButton"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            />-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -171,7 +171,7 @@
                          app:layout_constraintBottom_toBottomOf="parent"
                          app:layout_constraintLeft_toLeftOf="parent"
                          android:text="Discount Percent"
-                         android:layout_marginLeft="30dp"
+                         android:layout_marginLeft="20dp"
                          android:textSize="16dp"
                          />
                      <androidx.cardview.widget.CardView
@@ -182,7 +182,7 @@
                          app:layout_constraintBottom_toBottomOf="parent"
                          app:layout_constraintLeft_toRightOf="@+id/DiscountPercentTitle"
                          app:cardCornerRadius="10dp"
-                         android:layout_marginLeft="40dp"
+                         android:layout_marginLeft="30dp"
                          >
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="80dp"
@@ -191,7 +191,7 @@
                             android:text="50.00"
                             android:textSize="16dp"
                             android:gravity="center"
-                            android:paddingHorizontal="20dp"
+                            android:paddingHorizontal="15dp"
                             android:letterSpacing="0.1"
                             android:textFontWeight="400"
                             android:inputType="numberDecimal"

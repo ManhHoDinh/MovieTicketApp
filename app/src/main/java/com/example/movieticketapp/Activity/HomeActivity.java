@@ -29,6 +29,7 @@ import com.example.movieticketapp.Adapter.ListTypeAdapter;
 import com.example.movieticketapp.Adapter.PromotionAdapter;
 import com.example.movieticketapp.Adapter.posterAdapter;
 import com.example.movieticketapp.Model.Discount;
+import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.R;
 import com.example.movieticketapp.databinding.HomeScreenBinding;
