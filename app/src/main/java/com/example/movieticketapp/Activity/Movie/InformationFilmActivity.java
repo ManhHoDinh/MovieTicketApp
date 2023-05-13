@@ -55,9 +55,10 @@ public class InformationFilmActivity extends FragmentActivity {
         voteTV = findViewById(R.id.vote);
         genreTV = findViewById(R.id.genre);
         durationTime = findViewById(R.id.durationTime);
-        tabLayout=findViewById(R.id.tab_layout);
         ImageView btnBack = findViewById(R.id.btnBack);
-
+        pager=findViewById(R.id.pager);
+        tabLayout=findViewById(R.id.tab_layout);
+        pager.setAdapter(new FilmDetailPagerAdapter(this, f));
         getFilm(f.getId());
 
         refreshScreen();
@@ -67,12 +68,11 @@ public class InformationFilmActivity extends FragmentActivity {
                 onBackPressed();
             }
         });
-        pager.setAdapter(new FilmDetailPagerAdapter(this, f));
-
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 pager.setCurrentItem(tab.getPosition(),true);
+
             }
 
             @Override
@@ -126,8 +126,5 @@ public class InformationFilmActivity extends FragmentActivity {
         genreTV.setText(f.getGenre());
 
         durationTime.setText(f.getDurationTime());
-
-        pager=findViewById(R.id.pager);
-
     }
 }
