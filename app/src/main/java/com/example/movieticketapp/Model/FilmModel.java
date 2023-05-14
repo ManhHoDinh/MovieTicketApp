@@ -20,7 +20,7 @@ public class FilmModel implements Parcelable {
     private String PosterImage;
     private String durationTime;
     public FilmModel(){}
-    public FilmModel(String PrimaryImage, String name, String BackGroundImage, String PosterImage, String vote, String genre, String description, String durationTime, String id) {
+    public FilmModel(String id,String PrimaryImage, String name, String BackGroundImage, String PosterImage, String vote, String genre, String description, String durationTime) {
         this.PrimaryImage = PrimaryImage;
         this.name = name;
         this.BackGroundImage = BackGroundImage;
@@ -115,5 +115,6 @@ public class FilmModel implements Parcelable {
         parcel.writeString(description);
         parcel.writeString(PosterImage);
         parcel.writeString(durationTime);
+        parcel.writeString(id);
     }
 }

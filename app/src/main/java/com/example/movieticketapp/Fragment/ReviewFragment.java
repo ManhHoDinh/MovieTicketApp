@@ -47,10 +47,6 @@ public class ReviewFragment extends Fragment {
         // Required empty public constructor
         film = f;
     }
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
