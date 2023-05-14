@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
+import com.example.movieticketapp.Model.InforBooked;
 import com.example.movieticketapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -26,7 +27,7 @@ public class SplashActivity extends AppCompatActivity {
         ImageView logo = findViewById(R.id.logo);
         logo.setImageResource(R.drawable.splash_logo);
         FirebaseRequest.mAuth = FirebaseAuth.getInstance();
-
+        InforBooked.getInstance().removeExpireFilm();
         new Handler().postDelayed(new Runnable() {
 
 // Using handler with postDelayed called runnable run method
