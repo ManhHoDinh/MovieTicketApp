@@ -43,6 +43,15 @@ import java.util.List;
 public class ReviewFragment extends Fragment {
 
     FilmModel film;
+
+    ArrayList<Comment> comments;
+    ArrayList<Comment> SavedComments;
+
+    FirebaseFirestore db;
+
+    ListView commentList;
+
+    CommentAdapter commentAdapter;
     public ReviewFragment(FilmModel f) {
         // Required empty public constructor
         film = f;
@@ -55,21 +64,20 @@ public class ReviewFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_review, container, false);
     }
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ListView commentList = getView().findViewById(R.id.ReviewList);
-
-        ArrayList<Comment> comments = new ArrayList<>();
+        comments = new ArrayList<>();
+        commentList = getView().findViewById(R.id.ReviewList);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference CommentRef = db.collection("Movies").document(film.getName()).collection("Comment");
-        CommentRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                if (!queryDocumentSnapshots.isEmpty())
-                {
-                    List<DocumentSnapshot> listDoc = queryDocumentSnapshots.getDocuments();
-                    for (DocumentSnapshot doc : listDoc)
+        CollectionReference CommentRef = db.collection("Movies").document(film.getId()).collection("Comment");
+        CommentRef.get().addOnCompleteListener(task -> {
+            if(task.isSuccessful())
+            {
+                QuerySnapshot querySnapshot =  task.getResult();
+                if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                    for (QueryDocumentSnapshot doc : querySnapshot)
                     {
                         String profileUrl = doc.getString("profileUrl");
                         String name = doc.getString("name");
@@ -77,11 +85,11 @@ public class ReviewFragment extends Fragment {
                         String like = doc.getString("like");
                         String dislike = doc.getString("dislike");
                         String timeStamp = doc.getString("timeStamp");
-                        comments.add(new Comment(profileUrl, name, reviewText, like, dislike, timeStamp));
+                        Comment data = new Comment(profileUrl, name, reviewText, like, dislike, timeStamp);
+                        comments.add(data);
                         Log.d(TAG, "Added comment from: " + name);
                     }
-
-                    CommentAdapter commentAdapter = new CommentAdapter(getView().getContext(), R.layout.review_comment_view, comments);
+                    commentAdapter = new CommentAdapter(getView().getContext(), R.layout.review_comment_view, comments);
                     commentList.setAdapter(commentAdapter);
                 }
             }
