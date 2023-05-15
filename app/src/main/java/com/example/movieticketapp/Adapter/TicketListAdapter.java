@@ -1,6 +1,7 @@
 package com.example.movieticketapp.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,12 @@ import androidx.annotation.Nullable;
 
 import com.example.movieticketapp.Model.Ticket;
 import com.example.movieticketapp.R;
+import com.google.firebase.Timestamp;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class TicketListAdapter extends ArrayAdapter<Ticket> {
@@ -47,8 +51,13 @@ public class TicketListAdapter extends ArrayAdapter<Ticket> {
 
             if (nameTextView != null)
                 nameTextView.setText(ve.getName());
-            if (timeTextView != null)
-                timeTextView.setText(ve.getTime());
+            if (timeTextView != null){
+                Timestamp time = ve.getTime();
+                DateFormat dateFormat = new SimpleDateFormat("hh:mm, E MMM dd");
+                timeTextView.setText(dateFormat.format(time.toDate()));
+
+            }
+
             if (studioTextView != null)
                 studioTextView.setText(ve.getCinema());
             Picasso.get().load(ve.getPoster()).into(posterRImageView);

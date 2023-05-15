@@ -66,7 +66,7 @@ public class CinameNameAdapter extends ArrayAdapter<String> {
                 if(doc.get("NameCinema").equals(item) && doc.get("NameFilm").equals(filmName) && dateFormat.format(time.toDate()).equals(InforBooked.getInstance().dateBooked)){
                      //  Log.e("ffff",  dateFormatFormat.format(time.toDate()) + " /" +InforBooked.getInstance().dateBooked);
 
-                    DateFormat timeFormat = new SimpleDateFormat("H:m");
+                    DateFormat timeFormat = new SimpleDateFormat("H:mm");
 
                     listTime.add(timeFormat.format(time.toDate()));
 
