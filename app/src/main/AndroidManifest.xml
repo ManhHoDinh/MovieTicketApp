@@ -16,6 +16,9 @@
         android:theme="@style/Theme.MovieTicketApp"
         tools:targetApi="31">
         <activity
+            android:name=".ShowTimeScheduleActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.Discount.AddDiscount"
             android:exported="false" />
         <activity

@@ -135,7 +135,6 @@ public class SignUpActivity extends AppCompatActivity {
                             Users.currentUser = u;
                             Intent i = new Intent(getApplicationContext(), UserProflingActivity.class);
                             startActivity(i);
-                            //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
