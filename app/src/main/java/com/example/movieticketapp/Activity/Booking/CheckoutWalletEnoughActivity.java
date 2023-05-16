@@ -25,12 +25,14 @@ import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Document;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -52,7 +54,7 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
     FilmModel film;
     int total;
     String date;
-    String time;
+    String timeBooked;
     String cinemaName;
     String[] listDate;
     String listSeat;
@@ -86,12 +88,12 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
         cinemaName =intent.getStringExtra("cinemaName");
         cinemaNameTv.setText(cinemaName);
         date = intent.getStringExtra("dateBooked");
-        time = intent.getStringExtra("timeBooked");
+        timeBooked = intent.getStringExtra("timeBooked");
         listDate = date.split("\n");
         Calendar cal=Calendar.getInstance();
         SimpleDateFormat month_date = new SimpleDateFormat("MMM");
         String month_name = month_date.format(cal.getTime());
-        dateTimeTv.setText( listDate[0] + " "+month_name+" " + listDate[1]+", " + time);
+        dateTimeTv.setText( listDate[0] + " "+month_name+" " + listDate[1]+", " + timeBooked);
         Random rdn = new Random();
 
         FirebaseRequest.database.collection("Ticket").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -129,7 +131,7 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
         priceTv.setText(initPrice + " x " + seats.size());
         seatTv.setText(listSeat);
         totalTv.setText(price);
-        movie.add(new CheckoutFilmModel("Ralph Breaks the Internet",4.7, "Action & adventure, Comedy","1h 41min", R.drawable.poster_ralph));
+        movie.add(new CheckoutFilmModel(film.getName(),film.getVote(), film.getGenre(),film.getDurationTime(), film.getPosterImage()));
         adapter = new MovieCheckoutAdapter(getApplicationContext(), R.layout.checkout_movie_view, movie);
         movieInfoView.setAdapter(adapter);
         BtnBack.setOnClickListener(new View.OnClickListener() {
@@ -149,24 +151,31 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
                         if(Integer.parseInt(price.substring(0, price.length() - 4)) <= totalWallet){
                             totalWallet -= Integer.parseInt(price.substring(0, price.length() - 4));
                             FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid()).update("Wallet", totalWallet);
-                            String timeBook = time + ", " + listDate[0] + " "+month_name+" " + listDate[1];
-                            Ticket ticket = new Ticket(film.getName(),timeBook,
-                                    cinemaName,film.getPosterImage(),
-                                    Double.parseDouble(film.getVote()),
-                                    film.getGenre(), film.getDurationTime(), listSeat, price, idOrder.getText().toString() );
-                            FirebaseRequest.database.collection("Ticket").document().set(ticket);
                             FirebaseRequest.database.collection("showtime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
                                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                     List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
                                     for(DocumentSnapshot doc : listDocs){
-                                        if(doc.get("NameCinema").equals(cinemaName)){
+                                        Timestamp time = doc.getTimestamp("TimeBooked");
+                                        DateFormat dateFormat = new SimpleDateFormat("EEE\ndd");
+                                        DateFormat timeFormat = new SimpleDateFormat("H:mm");
+                                        DateFormat monthformat = new SimpleDateFormat("MMM");
+                                        String month_name = monthformat.format(time.toDate());
+                                      //  String timeBook = timeBooked + ", " + listDate[0] + " "+month_name+" " + listDate[1];
+
+
+                                        if(doc.get("NameCinema").equals(cinemaName) && doc.get("NameFilm").equals(film.getName()) && timeFormat.format(time.toDate()).equals(timeBooked) && dateFormat.format(time.toDate()).equals(date)){
                                             List<String> listSeats = (List<String>) doc.get("BookedSeat");
 
                                             for(int i = 0; i < seats.size(); i++){
                                                 listSeats.add(seats.get(i));
                                                 FirebaseRequest.database.collection("showtime").document(doc.getId()).update("BookedSeat", listSeats);
                                             }
+                                            Ticket ticket = new Ticket(film.getName(),time,
+                                                    cinemaName,film.getPosterImage(),
+                                                    Double.parseDouble(film.getVote()),
+                                                    film.getGenre(), film.getDurationTime(), listSeat, price, idOrder.getText().toString() );
+                                            FirebaseRequest.database.collection("Ticket").document().set(ticket);
 
                                         }
                                     }

@@ -15,6 +15,7 @@ import com.example.movieticketapp.Model.CheckoutFilmModel;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.R;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -54,12 +55,15 @@ public class MovieCheckoutAdapter extends ArrayAdapter<CheckoutFilmModel> {
             if (ratingPoint != null)
             {
                 ratingPoint.setText("("+movie.getVote()+")");
-                rating.setRating((float)movie.getVote());
+                rating.setRating(Float.parseFloat(movie.getVote()));
             }
             if (genre != null)
                 genre.setText(movie.getGenre());
-            if (poster != null)
-                poster.setImageResource(movie.getPoster());
+            if (poster != null){
+                Picasso.get().load(movie.getPoster()).into(poster);
+
+            }
+
             if (duration != null)
                 duration.setText(movie.getDuration());
         }

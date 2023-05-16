@@ -15,14 +15,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.movieticketapp.Activity.Booking.BookedActivity;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
+import com.example.movieticketapp.Model.InforBooked;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.ktx.Firebase;
 
 import org.w3c.dom.Document;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +37,7 @@ public class CinameNameAdapter extends ArrayAdapter<String> {
     public CinameNameAdapter(@NonNull Context context, int resource,  List<String> listCinemaName, String filmName) {
         super(context, resource, listCinemaName);
         this.filmName = filmName;
+        this.listCinemaName = listCinemaName;
     }
     static  int selectedPosition = 0;
 
@@ -43,8 +49,9 @@ public class CinameNameAdapter extends ArrayAdapter<String> {
         TextView cinemaName = (TextView) itemView.findViewById(R.id.cinemaName);
         RecyclerView recyclerView = (RecyclerView) itemView.findViewById(R.id.listTime);
         List<String> listTime = new ArrayList<String>();
-
+        InforBooked.getInstance().listCinemaName = listCinemaName;
         String item = getItem(position);
+
 
         FirebaseRequest.database.collection("showtime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -52,16 +59,23 @@ public class CinameNameAdapter extends ArrayAdapter<String> {
                 List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
 
                 for(DocumentSnapshot doc : listDocs){
-                    //  Log.e("f",doc.get("NameCinema").toString() + "/" + item + "/" +doc.get("NameFilm").toString() + "/" + filmName);
-                if(doc.get("NameCinema").equals(item) && doc.get("NameFilm").equals(filmName)){
-                    listTime.add(doc.get("Time").toString());
+                    Timestamp time = doc.getTimestamp("TimeBooked");
+
+                    DateFormat dateFormat = new SimpleDateFormat("EEE\ndd");
+
+                if(doc.get("NameCinema").equals(item) && doc.get("NameFilm").equals(filmName) && dateFormat.format(time.toDate()).equals(InforBooked.getInstance().dateBooked)){
+                     //  Log.e("ffff",  dateFormatFormat.format(time.toDate()) + " /" +InforBooked.getInstance().dateBooked);
+
+                    DateFormat timeFormat = new SimpleDateFormat("H:mm");
+
+                    listTime.add(timeFormat.format(time.toDate()));
 
 //                        Log.e("f",doc.get("Time").toString() + doc.get("NameCinema")+ " " + item);
                  }
                 }
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(new BookedActivity(), LinearLayoutManager.HORIZONTAL, false);
                 recyclerView.setLayoutManager(linearLayoutManager);
-                recyclerView.setAdapter(new TimeBookedAdapter(listTime, null, item, itemView));
+                recyclerView.setAdapter(new TimeBookedAdapter(listTime, null, item, itemView, null, null));
                 cinemaName.setText(item);
 
 

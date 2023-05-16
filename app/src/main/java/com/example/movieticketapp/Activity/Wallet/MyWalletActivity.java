@@ -26,6 +26,7 @@ import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.InforBooked;
 import com.example.movieticketapp.Model.MovieBooked;
+import com.example.movieticketapp.Model.Ticket;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -51,7 +52,7 @@ public class MyWalletActivity extends AppCompatActivity {
     private TextView totalTv;
     private SharedPreferences sharedPreferences;
     private ProgressBar progressBar;
-    List<FilmModel> listMovie;
+    List<Ticket> listMovie;
     private MovieBookedAdapter movieBookedAdapter;
 
     @Override
@@ -61,7 +62,7 @@ public class MyWalletActivity extends AppCompatActivity {
         listMovieBooked = (ListView) findViewById(R.id.listMovieBooked);
         topUpBtn = (FloatingActionButton) findViewById(R.id.topUpBtn);
         firestore = FirebaseFirestore.getInstance();
-        listMovie = new ArrayList<FilmModel>();
+        listMovie = new ArrayList<Ticket>();
         totalTv = (TextView) findViewById(R.id.total);
         DocumentReference docRef = FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -81,9 +82,6 @@ public class MyWalletActivity extends AppCompatActivity {
                 }
             }
         });
-
-
-
         loadListMovieBooked();
         topUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,7 +115,8 @@ public class MyWalletActivity extends AppCompatActivity {
 
 
     void loadListMovieBooked(){
-        Query query = FirebaseFirestore.getInstance().collection("BookedMovie");
+
+
 //        FirestoreRecyclerOptions<MovieBooked> options = new FirestoreRecyclerOptions.Builder<MovieBooked>()
 //                .setQuery(query, MovieBooked.class)
 //                .build();
@@ -158,7 +157,7 @@ public class MyWalletActivity extends AppCompatActivity {
         });
     }
     void setListBookedMovie(String movieID){
-        firestore.collection("ActionMovies").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        firestore.collection("Ticket").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
@@ -168,9 +167,9 @@ public class MyWalletActivity extends AppCompatActivity {
 
                         if(doc.getId().equals(movieID)) {
 
-                            FilmModel filmModel = doc.toObject(FilmModel.class);
+                            Ticket film = doc.toObject(Ticket.class);
 
-                            listMovie.add(filmModel);
+                            listMovie.add(film);
                         }
                     }
                     movieBookedAdapter = new MovieBookedAdapter(getApplicationContext(), R.layout.movie_booked_item, listMovie );
