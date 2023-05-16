@@ -16,11 +16,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.MovieBooked;
+import com.example.movieticketapp.Model.Ticket;
 import com.example.movieticketapp.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.Timestamp;
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 //public class MovieBookedAdapter extends FirestoreRecyclerAdapter<MovieBooked, MovieBookedAdapter.movieHolder> {
@@ -82,11 +86,11 @@ import java.util.List;
 //    }
 //
 //}
-public class MovieBookedAdapter extends ArrayAdapter<FilmModel> {
-    private List<FilmModel> listMovieBooked;
+public class MovieBookedAdapter extends ArrayAdapter<Ticket> {
+    private List<Ticket> listMovieBooked;
 
 
-    public MovieBookedAdapter(@NonNull Context context, int resource, List<FilmModel> listMovieBooked) {
+    public MovieBookedAdapter(@NonNull Context context, int resource, List<Ticket> listMovieBooked) {
         super(context, resource, listMovieBooked);
     }
 
@@ -99,12 +103,14 @@ public class MovieBookedAdapter extends ArrayAdapter<FilmModel> {
         TextView nameMovie = itemView.findViewById(R.id.nameMovie);
         TextView priceMovie = itemView.findViewById(R.id.priceMovie);
         TextView timeBooked = itemView.findViewById(R.id.timeBooked);
-        FilmModel movie = getItem(position);
-        Picasso.get().load(movie.getPosterImage()).into(imageView);
+        Ticket movie = getItem(position);
+        Picasso.get().load(movie.getPoster()).into(imageView);
 
         nameMovie.setText(movie.getName());
-        priceMovie.setText(String.valueOf(movie.getGenre()));
-        timeBooked.setText(movie.getDurationTime());
+        priceMovie.setText(String.valueOf(movie.getPaid()));
+        Timestamp time = movie.getTime();
+        DateFormat dateFormat = new SimpleDateFormat("hh:mm, E MMM dd");
+        timeBooked.setText(dateFormat.format(time.toDate()));
         return itemView;
     }
 

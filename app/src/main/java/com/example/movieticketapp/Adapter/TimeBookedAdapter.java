@@ -1,11 +1,17 @@
 package com.example.movieticketapp.Adapter;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,9 +19,16 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.movieticketapp.Activity.Booking.BookedActivity;
+import com.example.movieticketapp.Firebase.FirebaseRequest;
+import com.example.movieticketapp.Model.City;
 import com.example.movieticketapp.Model.InforBooked;
 import com.example.movieticketapp.R;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.ViewHolder> {
@@ -29,11 +42,15 @@ public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.Vi
     private static int prevPosition = 0;
     private View timeView;
     private static View prevView;
-    public TimeBookedAdapter(List<String> listDate,@Nullable List<String> listTime, @Nullable String cinemaName, @Nullable View view) {
+    private ListView timelistView;
+    private Activity activity;
+    public TimeBookedAdapter(List<String> listDate, @Nullable List<String> listTime, @Nullable String cinemaName, @Nullable View view, @Nullable ListView timelistView, @Nullable Activity activity) {
         this.listDate = listDate;
         this.listTime = listTime;
         this.cinemaName = cinemaName;
         this.timeView = view;
+        this.timelistView = timelistView;
+        this.activity = activity;
     }
     public class ViewHolder extends RecyclerView.ViewHolder{
         Button dateBtn;
@@ -44,9 +61,19 @@ public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.Vi
             dateBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+
                     if(timeView != null){
 
                         if(listTime == null){
+
+
+
+
+
+
+
+
 
                             if(prevType != cinemaName){
 
@@ -76,6 +103,7 @@ public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.Vi
                     }
 
                     else InforBooked.getInstance().dateBooked = dateBtn.getText().toString();
+
                     dateBtn.setBackgroundColor(Color.TRANSPARENT);
 
                     dateBtn.setBackground(ContextCompat.getDrawable(dateBtn.getContext(), R.drawable.background_button));
@@ -83,6 +111,30 @@ public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.Vi
                     if(checkedPosition!=getAdapterPosition()){
                         notifyItemChanged(checkedPosition);
                         checkedPosition = getAdapterPosition();
+                    }
+                    if(listTime != null){
+                        List<String> listCinemaName = new ArrayList<String>();
+
+
+
+                        FirebaseRequest.database.collection("Cinema").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
+
+                                if(!InforBooked.getInstance().dateBooked.equals(null)){
+
+                                    CinameNameAdapter cinameNameAdapter = new CinameNameAdapter(activity, R.layout.cinema_booked_item,InforBooked.getInstance().listCinemaName, InforBooked.getInstance().nameFilm);
+                                    timelistView.setAdapter(cinameNameAdapter);
+                                    timelistView.setEnabled(false);
+
+                                    Helper.getListViewSize(timelistView);
+                                }
+
+
+
+                            }
+                        });
                     }
 
                 }

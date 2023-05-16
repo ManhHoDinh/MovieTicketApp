@@ -1,5 +1,6 @@
 package com.example.movieticketapp.Activity.Booking;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,6 +29,7 @@ import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.InforBooked;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -64,7 +66,10 @@ public class BookedActivity extends AppCompatActivity {
 
         dayRecycleView = (RecyclerView) findViewById(R.id.dayRecycleView);
         Calendar calendar = Calendar.getInstance();
-        String[]dateName={"SAT", "SUN", "MON","TUE","WED", "THU", "FRI", };
+
+//        Timestamp time = new Timestamp(calendar.getTime());
+//        Log.e("ff", (time + 1).toDate().toString());
+        String[]dateName={"Sat", "Sun", "Mon","Tue","Wed", "Thu", "Fri", };
         List<String> listDate = new ArrayList<String>();
         List<String> listTime = new ArrayList<String>();
         //Toast.makeText(this, String.valueOf(calendar.getActualMaximum(Calendar.DAY_OF_MONTH)) , Toast.LENGTH_LONG).show();
@@ -84,19 +89,22 @@ public class BookedActivity extends AppCompatActivity {
             countDate++;
             countTime++;
         }
-        TimeBookedAdapter timeBookedAdapter = new TimeBookedAdapter(listDate, listTime, null, null);
+        cinemaLv = (ListView) findViewById(R.id.cinemaLv);
+        TimeBookedAdapter timeBookedAdapter = new TimeBookedAdapter(listDate, listTime, null, null, cinemaLv, BookedActivity.this);
 
-        dayRecycleView.setAdapter(new TimeBookedAdapter(listDate, listTime, null, null));
+        dayRecycleView.setAdapter(new TimeBookedAdapter(listDate, listTime, null, null, cinemaLv, BookedActivity.this));
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         dayRecycleView.setLayoutManager(layoutManager);
 
-        cinemaLv = (ListView) findViewById(R.id.cinemaLv);
+
 
        // String[] listCinemaName = {"Central Park CGV", "FX Sudirman XXI", "Kelapa Gading IMAX"};
 
         nameFilmTv = (TextView) findViewById(R.id.nameFilmtv);
         nameFilmTv.setText(selectedFilm.getName());
+
         nextBtn = (ImageButton) findViewById(R.id.btnNext);
+
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -154,11 +162,14 @@ public class BookedActivity extends AppCompatActivity {
 
                                         }
                                     }
-                                    CinameNameAdapter cinameNameAdapter = new CinameNameAdapter(BookedActivity.this, R.layout.cinema_booked_item,listCinemaName, selectedFilm.getName());
-                                    cinemaLv.setAdapter(cinameNameAdapter);
-                                    cinemaLv.setEnabled(false);
-                                    Log.e("ff", "gg");
-                                    Helper.getListViewSize(cinemaLv);
+
+                                        CinameNameAdapter cinameNameAdapter = new CinameNameAdapter(BookedActivity.this, R.layout.cinema_booked_item,listCinemaName, selectedFilm.getName());
+                                        cinemaLv.setAdapter(cinameNameAdapter);
+                                        cinemaLv.setEnabled(false);
+
+                                        Helper.getListViewSize(cinemaLv);
+
+
 
 
                                 }

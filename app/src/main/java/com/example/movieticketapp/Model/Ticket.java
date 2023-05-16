@@ -1,8 +1,13 @@
 package com.example.movieticketapp.Model;
 
+import com.google.firebase.Timestamp;
+import com.google.protobuf.TimestampProto;
+
+import java.sql.Time;
+
 public class Ticket {
     protected String name;
-    protected String time;
+    protected Timestamp time;
     protected String cinema;
     protected String poster;
     protected double rate;
@@ -11,7 +16,7 @@ public class Ticket {
     protected String seat;
     protected String paid;
     protected String idorder;
-    public Ticket(String name, String time, String cinema, String poster,double rate, String kind, String duration, String seat, String paid, String idorder)
+    public Ticket(String name, Timestamp time, String cinema, String poster,double rate, String kind, String duration, String seat, String paid, String idorder)
     {
         this.name = name;
         this.time = time;
@@ -27,7 +32,7 @@ public class Ticket {
 
     public Ticket(){}
 
-    public String getTime() {
+    public Timestamp getTime() {
         return time;
     }
 
@@ -49,7 +54,7 @@ public class Ticket {
     public double getRate() {return  rate;}
     public String getIdorder() {return idorder;}
 
-    public void setTime(String time) {
+    public void setTime(Timestamp time) {
         this.time = time;
     }
 

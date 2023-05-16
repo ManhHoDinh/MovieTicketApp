@@ -19,10 +19,13 @@ import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -188,7 +191,10 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
                 for(DocumentSnapshot doc : listDocs){
-                    if(doc.get("NameCinema").equals(nameCinema) && doc.get("Time").equals(timeBooked) && doc.get("NameFilm").equals(selectedFilm.getName())){
+                    Timestamp time = doc.getTimestamp("TimeBooked");
+                    DateFormat dateFormat = new SimpleDateFormat("EEE\ndd");
+                    DateFormat timeFormat = new SimpleDateFormat("H:m");
+                    if(doc.get("NameCinema").equals(nameCinema) && timeFormat.format(time.toDate()).equals(timeBooked) && dateFormat.format(time.toDate()).equals(dateBooked) && doc.get("NameFilm").equals(selectedFilm.getName())){
                         List<String> bookedSeats = (List<String>) doc.get("BookedSeat");
                         LinearLayout linearLayout =(LinearLayout) layout.getChildAt(0);
                         for(int i = 0; i < 10; i ++){
