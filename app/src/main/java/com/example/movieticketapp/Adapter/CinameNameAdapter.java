@@ -14,9 +14,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.movieticketapp.Activity.Booking.BookedActivity;
+import com.example.movieticketapp.Activity.Booking.ShowTimeScheduleActivity;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.InforBooked;
+import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.flexbox.JustifyContent;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -52,38 +57,96 @@ public class CinameNameAdapter extends ArrayAdapter<String> {
         InforBooked.getInstance().listCinemaName = listCinemaName;
         String item = getItem(position);
 
+        try{
+            if(Users.currentUser!=null)
+                if(((Users.currentUser.getAccountType().toString()).equals("admin")))
+                {
+                    for (int i = 10; i <= 20;i++)
+                        for (int j = 0; j <60; j=j+15)
+                        {
+                            listTime.add(i+":"+j);
+                        }
+                    FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext());
+                    layoutManager.setFlexDirection(FlexDirection.ROW);
+                    layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+                    recyclerView.setLayoutManager(layoutManager);
+                    recyclerView.setAdapter(new TimeBookedAdapter(listTime, null, item, itemView, null, null));
+                    cinemaName.setText(item);
 
-        FirebaseRequest.database.collection("showtime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
+                }
+            else {
+                    FirebaseRequest.database.collection("showtime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
 
-                for(DocumentSnapshot doc : listDocs){
-                    Timestamp time = doc.getTimestamp("TimeBooked");
+                            for(DocumentSnapshot doc : listDocs){
+                                Timestamp time = doc.getTimestamp("TimeBooked");
 
-                    DateFormat dateFormat = new SimpleDateFormat("EEE\ndd");
+                                DateFormat dateFormat = new SimpleDateFormat("EEE\ndd");
 
-                if(doc.get("NameCinema").equals(item) && doc.get("NameFilm").equals(filmName) && dateFormat.format(time.toDate()).equals(InforBooked.getInstance().dateBooked)){
-                     //  Log.e("ffff",  dateFormatFormat.format(time.toDate()) + " /" +InforBooked.getInstance().dateBooked);
+                                if(doc.get("NameCinema").equals(item) && doc.get("NameFilm").equals(filmName) && dateFormat.format(time.toDate()).equals(InforBooked.getInstance().dateBooked)){
+                                    //  Log.e("ffff",  dateFormatFormat.format(time.toDate()) + " /" +InforBooked.getInstance().dateBooked);
 
-                    DateFormat timeFormat = new SimpleDateFormat("H:mm");
+                                    DateFormat timeFormat = new SimpleDateFormat("H:mm");
 
-                    listTime.add(timeFormat.format(time.toDate()));
+                                    listTime.add(timeFormat.format(time.toDate()));
 
 //                        Log.e("f",doc.get("Time").toString() + doc.get("NameCinema")+ " " + item);
-                 }
+                                }
+                            }
+                            FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext());
+                            layoutManager.setFlexDirection(FlexDirection.ROW);
+                            layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+                            recyclerView.setLayoutManager(layoutManager);
+                            recyclerView.setAdapter(new TimeBookedAdapter(listTime, null, item, itemView, null, null));
+                            cinemaName.setText(item);
+
+
+                        }
+                    });
+
                 }
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(new BookedActivity(), LinearLayoutManager.HORIZONTAL, false);
-                recyclerView.setLayoutManager(linearLayoutManager);
-                recyclerView.setAdapter(new TimeBookedAdapter(listTime, null, item, itemView, null, null));
-                cinemaName.setText(item);
+        }
+        catch (Exception e)
+        {
+            FirebaseRequest.database.collection("showtime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
 
+                    for(DocumentSnapshot doc : listDocs){
+                        Timestamp time = doc.getTimestamp("TimeBooked");
 
-            }
-        });
+                        DateFormat dateFormat = new SimpleDateFormat("EEE\ndd");
+
+                        if(doc.get("NameCinema").equals(item) && doc.get("NameFilm").equals(filmName) && dateFormat.format(time.toDate()).equals(InforBooked.getInstance().dateBooked)){
+                            //  Log.e("ffff",  dateFormatFormat.format(time.toDate()) + " /" +InforBooked.getInstance().dateBooked);
+
+                            DateFormat timeFormat = new SimpleDateFormat("H:mm");
+
+                            listTime.add(timeFormat.format(time.toDate()));
+
+//                        Log.e("f",doc.get("Time").toString() + doc.get("NameCinema")+ " " + item);
+                        }
+                    }
+                    FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext());
+                    layoutManager.setFlexDirection(FlexDirection.ROW);
+                    layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+                    recyclerView.setLayoutManager(layoutManager);
+                    recyclerView.setAdapter(new TimeBookedAdapter(listTime, null, item, itemView, null, null));
+                    cinemaName.setText(item);
+                }
+            });
+
+        }
 
 
         return itemView;
+    }
+    void checkAccountType()
+    {
+
     }
 
 

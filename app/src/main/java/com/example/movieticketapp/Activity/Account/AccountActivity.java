@@ -43,12 +43,13 @@ public class AccountActivity extends AppCompatActivity {
         Name.setText(currentUser.getDisplayName());
         Email.setText(currentUser.getEmail());
         Avatar= findViewById(R.id.avatar);
+        if (currentUser.getPhotoUrl()!=null)
         Picasso.get().load(currentUser.getPhotoUrl()).into(Avatar);
+        else Avatar.setImageResource(R.drawable.avatar);
         BackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(AccountActivity.this, HomeActivity.class);
-                startActivity(i);
+                finish();
             }
         });
         EditProfile.setOnClickListener(new View.OnClickListener() {

@@ -38,8 +38,8 @@ import java.util.Calendar;
 import java.util.List;
 
 public class ShowTimeScheduleActivity extends AppCompatActivity {
-    ActivityShowTimeScheduleBinding binding;
-    private List<Stgring> listCity;
+
+    private List<String> listCity;
     private AutoCompleteTextView countryAutoTv;
     private RecyclerView dayRecycleView;
     private FirebaseFirestore firestore;
@@ -51,11 +51,11 @@ public class ShowTimeScheduleActivity extends AppCompatActivity {
     protected static String binhdd;
     private String monthName;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityShowTimeScheduleBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        setContentView(R.layout.activity_show_time_schedule);
         backBtn = (Button) findViewById(R.id.backbutton);
         firestore = FirebaseFirestore.getInstance();
         countryAutoTv = (AutoCompleteTextView) findViewById(R.id.countryAutoTv);
@@ -64,7 +64,10 @@ public class ShowTimeScheduleActivity extends AppCompatActivity {
 
         dayRecycleView = (RecyclerView) findViewById(R.id.dayRecycleView);
         Calendar calendar = Calendar.getInstance();
-        String[]dateName={"SAT", "SUN", "MON","TUE","WED", "THU", "FRI", };
+
+//        Timestamp time = new Timestamp(calendar.getTime());
+//        Log.e("ff", (time + 1).toDate().toString());
+        String[]dateName={"Sat", "Sun", "Mon","Tue","Wed", "Thu", "Fri", };
         List<String> listDate = new ArrayList<String>();
         List<String> listTime = new ArrayList<String>();
         //Toast.makeText(this, String.valueOf(calendar.getActualMaximum(Calendar.DAY_OF_MONTH)) , Toast.LENGTH_LONG).show();
@@ -77,25 +80,29 @@ public class ShowTimeScheduleActivity extends AppCompatActivity {
             if (countDate > 6) countDate = countDate - 7;
             if (countTime > dayOfMonth) {
                 countTime = 1;
+
             }
             listDate.add(dateName[countDate]);
             listTime.add(String.valueOf(countTime));
             countDate++;
             countTime++;
         }
-        TimeBookedAdapter timeBookedAdapter = new TimeBookedAdapter(listDate, listTime, null, null);
+        cinemaLv = (ListView) findViewById(R.id.cinemaLv);
+        TimeBookedAdapter timeBookedAdapter = new TimeBookedAdapter(listDate, listTime, null, null, cinemaLv, ShowTimeScheduleActivity.this);
 
-        dayRecycleView.setAdapter(new TimeBookedAdapter(listDate, listTime, null, null));
+        dayRecycleView.setAdapter(new TimeBookedAdapter(listDate, listTime, null, null, cinemaLv, ShowTimeScheduleActivity.this));
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         dayRecycleView.setLayoutManager(layoutManager);
 
-        cinemaLv = (ListView) findViewById(R.id.cinemaLv);
+
 
         // String[] listCinemaName = {"Central Park CGV", "FX Sudirman XXI", "Kelapa Gading IMAX"};
 
         nameFilmTv = (TextView) findViewById(R.id.nameFilmtv);
         nameFilmTv.setText(selectedFilm.getName());
+
         nextBtn = (ImageButton) findViewById(R.id.btnNext);
+
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,47 +132,48 @@ public class ShowTimeScheduleActivity extends AppCompatActivity {
         firestore.collection("City").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-            List<City> list = new ArrayList<City>();
-            if (!queryDocumentSnapshots.isEmpty()) {
-            List<DocumentSnapshot> listDoc = queryDocumentSnapshots.getDocuments();
-            for (DocumentSnapshot doc : listDoc) {
-                list.add(doc.toObject(City.class));
-                listCity.add(String.valueOf(doc.get("Name")));
+                List<City> list = new ArrayList<City>();
+                if (!queryDocumentSnapshots.isEmpty()) {
+                    List<DocumentSnapshot> listDoc = queryDocumentSnapshots.getDocuments();
+                    for (DocumentSnapshot doc : listDoc) {
+                        list.add(doc.toObject(City.class));
+                        listCity.add(String.valueOf(doc.get("Name")));
 
-            }
-            countryAutoTv.setAdapter(new ArrayAdapter<String>(ShowTimeScheduleActivity.this, R.layout.country_item, listCity));
-            countryAutoTv.setDropDownBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_background_1)));
+                    }
+                    countryAutoTv.setAdapter(new ArrayAdapter<String>(ShowTimeScheduleActivity.this, R.layout.country_item, listCity));
+                    countryAutoTv.setDropDownBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.dark_background_1)));
 
-            countryAutoTv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-
-
-                    List<String> listCinemaName = new ArrayList<String>();
-                    FirebaseRequest.database.collection("Cinema").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    countryAutoTv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
-                            for(DocumentSnapshot doc : listDocs){
-                                if(doc.get("CityID").equals(list.get(i).getID())){
-                                    listCinemaName.add(String.valueOf(doc.get("Name")));
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            List<String> listCinemaName = new ArrayList<String>();
+                            FirebaseRequest.database.collection("Cinema").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                @Override
+                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                    List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
+                                    for(DocumentSnapshot doc : listDocs){
+                                        if(doc.get("CityID").equals(list.get(i).getID())){
+                                            listCinemaName.add(String.valueOf(doc.get("Name")));
+                                        }
+                                    }
+
+                                    CinameNameAdapter cinameNameAdapter = new CinameNameAdapter(ShowTimeScheduleActivity.this, R.layout.cinema_booked_item,listCinemaName, selectedFilm.getName());
+                                    cinemaLv.setAdapter(cinameNameAdapter);
+                                    cinemaLv.setEnabled(false);
+
+                                    Helper.getListViewSize(cinemaLv);
+
+
+
 
                                 }
-                            }
-                            CinameNameAdapter cinameNameAdapter = new CinameNameAdapter(ShowTimeScheduleActivity.this, R.layout.cinema_booked_item,listCinemaName, selectedFilm.getName());
-                            cinemaLv.setAdapter(cinameNameAdapter);
-                            cinemaLv.setEnabled(false);
-                            Log.e("ff", "gg");
-                            Helper.getListViewSize(cinemaLv);
+                            });
                         }
                     });
                 }
-            });
             }
-            }
-}
-        );
+        }
+    );
     }
 
     void loadListCinema(){

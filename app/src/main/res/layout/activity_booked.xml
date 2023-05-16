@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <androidx.appcompat.widget.AppCompatButton
-
+                android:text=""
                 android:layout_marginTop="40dp"
                 android:id="@+id/backbutton"
                 android:layout_width="20dp"
@@ -81,7 +81,7 @@
                 android:id="@+id/btnNext"
                 android:layout_width="64.22923636363636dp"
                 android:layout_height="64.22923636363636dp"
-
+                android:text=""
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="40dp"
                 android:layout_gravity="center_horizontal"

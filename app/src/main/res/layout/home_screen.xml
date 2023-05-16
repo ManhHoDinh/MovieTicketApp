@@ -47,14 +47,20 @@
                             android:textColor="@color/white"
                             android:textSize="24dp" />
 
-
+                    <androidx.cardview.widget.CardView
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="100dp"
+                        >
                         <ImageView
-                            android:id="@+id/accountImage"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            android:layout_gravity="end"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:src="@drawable/avatar" />
+                                                android:id="@+id/accountImage"
+                                                android:layout_gravity="end"
+                                                android:layout_width="48dp"
+                                                android:layout_height="48dp"
+                                                android:src="@drawable/avatar" />
+                    </androidx.cardview.widget.CardView>
+
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout

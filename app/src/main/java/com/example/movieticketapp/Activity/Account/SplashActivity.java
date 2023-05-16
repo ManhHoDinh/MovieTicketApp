@@ -29,7 +29,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.ea.async.Async;
 public class SplashActivity extends AppCompatActivity {
 
     @Override

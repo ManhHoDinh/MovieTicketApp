@@ -43,17 +43,17 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
     ViewGroup layout1;
 
     String seats =
-            "AAAAAA_AAAAAA_AAAAAA/"
-                    + "AAAAAA_AAAAAA_AAAAAA/"
-                    + "AAAAAA_AAAAAA_AAAAAA/"
-                    + "AAAAAA_AAAAAA_AAAAAA/"
-                    + "__AAAA_AAAAAA_AAAA__/"
-                    + "__AAAA_AAAAAA_AAAA__/"
-                    + "__AAAA_AAAAAA_AAAA__/"
-                    + "__AAAA_AAAAAA_AAAA__/"
-                    + "__AAAA_AAAAAA_AAAA__/"
-                    + "__AAAA_AAAAAA_AAAA__/"
-            ;
+             "AAAAAA_AAAAAA_AAAAAA/"
+            +"AAAAAA_AAAAAA_AAAAAA/"
+            +"AAAAAA_AAAAAA_AAAAAA/"
+            +"AAAAAA_AAAAAA_AAAAAA/"
+            +"__AAAA_AAAAAA_AAAA__/"
+            +"__AAAA_AAAAAA_AAAA__/"
+            +"__AAAA_AAAAAA_AAAA__/"
+            +"__AAAA_AAAAAA_AAAA__/"
+            +"__AAAA_AAAAAA_AAAA__/"
+            +"__AAAA_AAAAAA_AAAA__/"
+                ;
 
 
     List<TextView> seatViewList = new ArrayList<>();

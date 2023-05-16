@@ -36,12 +36,15 @@ import com.example.movieticketapp.R;
 import com.example.movieticketapp.databinding.HomeScreenBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,9 +70,14 @@ public class HomeActivity extends AppCompatActivity {
         binding = HomeScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         String[] listType = {"All", "Horror", "Action", "Drama", "War", "Comedy", "Crime"};
-
+        FirebaseUser currentUser= FirebaseAuth.getInstance().getCurrentUser();
         accountImage = findViewById(R.id.accountImage);
         addDiscount= findViewById(R.id.AddDiscount);
+
+        if (currentUser.getPhotoUrl()!=null)
+            Picasso.get().load(currentUser.getPhotoUrl()).into(accountImage);
+        else accountImage.setImageResource(R.drawable.avatar);
+
         accountImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
