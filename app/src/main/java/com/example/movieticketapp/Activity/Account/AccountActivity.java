@@ -27,7 +27,6 @@ public class AccountActivity extends AppCompatActivity {
     ImageView Avatar;
     ImageView BackBtn;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
