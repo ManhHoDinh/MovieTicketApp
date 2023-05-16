@@ -42,7 +42,8 @@ public class AboutMovie extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getView().getContext(), BookedActivity.class);
-                i.putExtra(ExtraIntent.film, film);
+                i.putExtra("selectedFilm", film);
+                i.putExtra("nameFilm", film.getName());
                 getView().getContext().startActivity(i);
             }
         });

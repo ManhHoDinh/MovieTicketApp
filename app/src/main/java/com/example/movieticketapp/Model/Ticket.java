@@ -11,9 +11,9 @@ public class Ticket {
     protected String seat;
     protected String paid;
     protected String idorder;
-    public Ticket(String ten, String time, String cinema, String poster,double rate, String kind, String duration, String seat, String paid, String idorder)
+    public Ticket(String name, String time, String cinema, String poster,double rate, String kind, String duration, String seat, String paid, String idorder)
     {
-        this.name = ten;
+        this.name = name;
         this.time = time;
         this.cinema = cinema;
         this.poster = poster;
