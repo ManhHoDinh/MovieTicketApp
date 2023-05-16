@@ -31,6 +31,7 @@ import com.example.movieticketapp.Adapter.posterAdapter;
 import com.example.movieticketapp.Model.Discount;
 import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.Model.FilmModel;
+import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
 import com.example.movieticketapp.databinding.HomeScreenBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -104,7 +105,6 @@ public class HomeActivity extends AppCompatActivity {
             }
             return true;
         });
-
         List<Discount> Discounts = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference PromoRef = db.collection(Discount.CollectionName);
@@ -131,6 +131,12 @@ public class HomeActivity extends AppCompatActivity {
                     LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
                     promotionView.setAdapter(new PromotionAdapter(Discounts));
                     promotionView.setLayoutManager(VerLayoutManager);
+                    if(Discounts.size() == 0)
+                    {
+                        ViewGroup.LayoutParams params=promotionView.getLayoutParams();
+                        params.height=0;
+                        promotionView.setLayoutParams(params);
+                    }
                     if(Discounts.size()==1)
                     {
                         ViewGroup.LayoutParams params=promotionView.getLayoutParams();
@@ -186,7 +192,28 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(i);
         }
         });
+        checkAccountType();
     }
-
+    void checkAccountType()
+    {
+        try{
+            Log.d("account type", Users.currentUser.getAccountType());
+            if(Users.currentUser!=null)
+                if((!(Users.currentUser.getAccountType().toString()).equals("admin")))
+                {
+                    ViewGroup.LayoutParams params = binding.AddDiscount.getLayoutParams();
+                    params.height = 0;
+                    binding.AddDiscount.setLayoutParams(params);
+                    addDiscount.setVisibility(View.INVISIBLE);
+                }
+        }
+        catch (Exception e)
+        {
+            ViewGroup.LayoutParams params = binding.AddDiscount.getLayoutParams();
+            params.height = 0;
+            binding.AddDiscount.setLayoutParams(params);
+            addDiscount.setVisibility(View.INVISIBLE);
+        }
+    }
 
 }

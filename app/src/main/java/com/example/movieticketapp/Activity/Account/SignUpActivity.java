@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -88,6 +89,11 @@ public class SignUpActivity extends AppCompatActivity {
                     passwordET.setError("Password is not empty!!!");
                     error=true;
                 }
+                else if(passwordET.length()<=6)
+                {
+                    passwordET.setError("Password should be at least 6 characters!!!");
+                    error=true;
+                }
                 if(!confirmPasswordET.getText().toString().equals(passwordET.getText().toString()))
                 {
                     confirmPasswordET.setError("Password and confirmation passwords are not equals !!!");
@@ -111,7 +117,7 @@ public class SignUpActivity extends AppCompatActivity {
                             FirebaseUser user = FirebaseRequest.mAuth.getCurrentUser();
                             UpdateFullName();
                             user.getUid();
-                            Users u = new Users(user.getUid(), email, Name,0);
+                            Users u = new Users(user.getUid(), Name, email,0, "user");
                             FirebaseRequest.database.collection("Users").document(user.getUid())
                                     .set(u.toJson())
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -126,6 +132,7 @@ public class SignUpActivity extends AppCompatActivity {
                                             Log.w(TAG, "Error writing document", e);
                                         }
                                     });
+                            Users.currentUser = u;
                             Intent i = new Intent(getApplicationContext(), UserProflingActivity.class);
                             startActivity(i);
                             //updateUI(user);

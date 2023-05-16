@@ -137,11 +137,13 @@
                         android:layout_marginTop="30dp"
                         android:layout_height="250dp"/>
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/PromotionHeader"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         >
                         <TextView
                             app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
                             android:text="Promotions"
                             style="@style/titleStyle"/>
                         <TextView

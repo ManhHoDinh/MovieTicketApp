@@ -31,6 +31,7 @@ import com.example.movieticketapp.Activity.Discount.AddDiscount;
 import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Model.Discount;
 import com.example.movieticketapp.Model.ExtraIntent;
+import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -46,69 +47,83 @@ public class PromotionAdapter extends RecyclerView.Adapter<PromotionAdapter.View
         holder.NameTV.setText(Discounts.get(position).getName());
         holder.DescriptionTV.setText(Discounts.get(position).getDescription());
         holder.DiscountRateTV.setText("OFF "+new DecimalFormat("#.0#").format(Discounts.get(position).getDiscountRate())+ "%");
-
-        holder.PromoMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PopupMenu popup = new PopupMenu(view.getContext(), holder.PromoMenu);
-                //inflating menu from xml resource
-                popup.inflate(R.menu.promo_menu);
-                SpannableString s = new SpannableString("Edit");
-                s.setSpan(new ForegroundColorSpan(Color.BLACK), 0, s.length(), 0);
-                popup.getMenu().getItem(0).setTitle(s);
-                SpannableString delete = new SpannableString("Delete");
-                delete.setSpan(new ForegroundColorSpan(Color.RED), 0, delete.length(), 0);
-                popup.getMenu().getItem(1).setTitle(delete);
-                //adding click listener
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.promo_edit:
-                                //handle menu1 click
-                            {
-                                Intent i = new Intent(holder.itemView.getContext(), AddDiscount.class);
-                                i.putExtra(ExtraIntent.discount, Discounts.get(position));
-                                holder.itemView.getContext().startActivity(i);
-                            }
+        //if user
+        try{
+            Log.d("account type", Users.currentUser.getAccountType());
+            if(Users.currentUser!=null)
+                if((!(Users.currentUser.getAccountType().toString()).equals("admin")))
+                {
+                   holder.PromoMenu.setVisibility(View.INVISIBLE);
+                }
+        }
+        catch (Exception e)
+        {
+            holder.PromoMenu.setVisibility(View.INVISIBLE);
+        }
+        finally {
+            holder.PromoMenu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    PopupMenu popup = new PopupMenu(view.getContext(), holder.PromoMenu);
+                    //inflating menu from xml resource
+                    popup.inflate(R.menu.promo_menu);
+                    SpannableString s = new SpannableString("Edit");
+                    s.setSpan(new ForegroundColorSpan(Color.BLACK), 0, s.length(), 0);
+                    popup.getMenu().getItem(0).setTitle(s);
+                    SpannableString delete = new SpannableString("Delete");
+                    delete.setSpan(new ForegroundColorSpan(Color.RED), 0, delete.length(), 0);
+                    popup.getMenu().getItem(1).setTitle(delete);
+                    //adding click listener
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.promo_edit:
+                                    //handle menu1 click
+                                {
+                                    Intent i = new Intent(holder.itemView.getContext(), AddDiscount.class);
+                                    i.putExtra(ExtraIntent.discount, Discounts.get(position));
+                                    holder.itemView.getContext().startActivity(i);
+                                }
                                 return true;
-                            case R.id.promo_delete:
-                            {
-                                AlertDialog.Builder alertDialog = new AlertDialog.Builder(holder.itemView.getContext(), R.style.CustomAlertDialog);
-                                LayoutInflater factory = LayoutInflater.from(holder.itemView.getContext());
-                                final View deleteDialogView = factory.inflate(R.layout.yes_no_dialog, null);
-                                alertDialog.setView(deleteDialogView);
-                                AlertDialog OptionDialog = alertDialog.create();
-                                OptionDialog.show();
-                                TextView Cancel = deleteDialogView.findViewById(R.id.Cancel_Button);
-                                TextView Delete = deleteDialogView.findViewById(R.id.DeleteButton);
-                                Delete.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                        CollectionReference PromoRef = db.collection(Discount.CollectionName);
-                                        PromoRef.document(Discounts.get(position).getID()).delete();
-                                        OptionDialog.dismiss();
-                                    }
-                                });
-                                Cancel.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        OptionDialog.dismiss();
-                                    }
-                                });
-                            }
+                                case R.id.promo_delete:
+                                {
+                                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(holder.itemView.getContext(), R.style.CustomAlertDialog);
+                                    LayoutInflater factory = LayoutInflater.from(holder.itemView.getContext());
+                                    final View deleteDialogView = factory.inflate(R.layout.yes_no_dialog, null);
+                                    alertDialog.setView(deleteDialogView);
+                                    AlertDialog OptionDialog = alertDialog.create();
+                                    OptionDialog.show();
+                                    TextView Cancel = deleteDialogView.findViewById(R.id.Cancel_Button);
+                                    TextView Delete = deleteDialogView.findViewById(R.id.DeleteButton);
+                                    Delete.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                            CollectionReference PromoRef = db.collection(Discount.CollectionName);
+                                            PromoRef.document(Discounts.get(position).getID()).delete();
+                                            OptionDialog.dismiss();
+                                        }
+                                    });
+                                    Cancel.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            OptionDialog.dismiss();
+                                        }
+                                    });
+                                }
                                 return true;
-                            default:
-                                return false;
+                                default:
+                                    return false;
+                            }
                         }
-                    }
-                });
-                //displaying the popup
-                popup.show();
-            }
-        });
-    }
+                    });
+                    //displaying the popup
+                    popup.show();
+                }
+            });
+        }
+     }
     List<Discount> Discounts;
 
     public PromotionAdapter(List<Discount> Discounts) {
@@ -140,24 +155,4 @@ public class PromotionAdapter extends RecyclerView.Adapter<PromotionAdapter.View
         itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.promo_item, parent, false);
         return new PromotionAdapter.ViewHolder(itemView);
     }
-    public static Rect locateView(View v)
-    {
-        int[] loc_int = new int[2];
-        if (v == null) return null;
-        try
-        {
-            v.getLocationOnScreen(loc_int);
-        } catch (NullPointerException npe)
-        {
-            //Happens when the view doesn't exist on screen anymore.
-            return null;
-        }
-        Rect location = new Rect();
-        location.left = loc_int[0];
-        location.top = loc_int[1];
-        location.right = location.left + v.getWidth();
-        location.bottom = location.top + v.getHeight();
-        return location;
-    }
-
 }
