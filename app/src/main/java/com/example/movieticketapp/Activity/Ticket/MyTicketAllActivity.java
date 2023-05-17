@@ -1,5 +1,6 @@
 package com.example.movieticketapp.Activity.Ticket;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -15,14 +16,18 @@ import android.widget.ListView;
 import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
 import com.example.movieticketapp.Adapter.TicketListAdapter;
+import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.Ticket;
 import com.example.movieticketapp.R;
 import com.example.movieticketapp.databinding.HomeScreenBinding;
 import com.example.movieticketapp.databinding.MyTicketAllScreenBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -155,4 +160,5 @@ public class MyTicketAllActivity extends AppCompatActivity {
             }
         });
     }
+
 }

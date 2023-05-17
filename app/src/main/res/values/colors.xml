@@ -25,4 +25,6 @@
     <color name="main_information_film_screen">#ff04103A</color>
     <color name="horizontal_line">#DBDBDB</color>
     <color name="button_ticket">#FF3E60F9</color>
+    <color name="bg_add_movie">#FF2741EF</color>
+    <color name="cancel_button">#FFC5BCBC</color>
 </resources>
