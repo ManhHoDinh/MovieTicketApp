@@ -1,11 +1,16 @@
 package com.example.movieticketapp.Activity.Movie;
 
+import static android.content.ContentValues.TAG;
+
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -15,6 +20,12 @@ import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.R;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -29,45 +40,42 @@ public class InformationFilmActivity extends FragmentActivity {
     TextView durationTime;
     TabLayout tabLayout;
     ViewPager2 pager;
+    FilmModel f;
+
+    FilmDetailPagerAdapter filmDetailPagerAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-
-        Intent intent = getIntent();
-        FilmModel f = intent.getParcelableExtra(ExtraIntent.film);
         setContentView(R.layout.information_film_screen);
-
+        Intent intent = getIntent();
+        f = intent.getParcelableExtra(ExtraIntent.film);
         backgroundImage = findViewById(R.id.backgroundImage);
-        Picasso.get().load(f.getBackGroundImage()).fit().centerCrop().into(backgroundImage);
-
         nameTV= findViewById(R.id.filmName);
-        nameTV.setText(f.getName());
-
         PosterImage= findViewById(R.id.PosterImage);
-        Picasso.get().load(f.getPosterImage()).fit().centerCrop().into(PosterImage);
-
         ratingBar = findViewById(R.id.rating);
-        ratingBar.setRating(Float.parseFloat(f.getVote()));
-
         voteTV = findViewById(R.id.vote);
-        voteTV.setText("(" + String.valueOf(f.getVote())+")");
-
         genreTV = findViewById(R.id.genre);
-        genreTV.setText(f.getGenre());
-
         durationTime = findViewById(R.id.durationTime);
-        durationTime.setText(f.getDurationTime());
-
-        tabLayout=findViewById(R.id.tab_layout);
+        ImageView btnBack = findViewById(R.id.btnBack);
         pager=findViewById(R.id.pager);
+        tabLayout=findViewById(R.id.tab_layout);
+        filmDetailPagerAdapter = new FilmDetailPagerAdapter(this, f);
+        pager.setAdapter(filmDetailPagerAdapter);
+        pager.setOffscreenPageLimit(3);
+        getFilm(f.getId());
 
-        pager.setAdapter(new FilmDetailPagerAdapter(this, f));
-
+        refreshScreen();
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 pager.setCurrentItem(tab.getPosition(),true);
+
             }
 
             @Override
@@ -86,6 +94,40 @@ public class InformationFilmActivity extends FragmentActivity {
                 tabLayout.selectTab(tabLayout.getTabAt(position));
             }
         });
+    }
+    void getFilm(String id)
+    {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final DocumentReference docRef = db.collection("Movies").document(id);
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException error) { if (error != null) {
+                    refreshScreen();
+                    return;
+                }
 
+
+                if (snapshot != null && snapshot.exists()) {
+                    f = snapshot.toObject(FilmModel.class);
+                    refreshScreen();
+                }
+            }
+        });
+    }
+    void refreshScreen()
+    {
+        nameTV.setText(f.getName());
+
+        Picasso.get().load(f.getBackGroundImage()).fit().centerCrop().into(backgroundImage);
+
+        Picasso.get().load(f.getPosterImage()).fit().centerCrop().into(PosterImage);
+
+        ratingBar.setRating(Float.parseFloat(f.getVote()));
+
+        voteTV.setText("(" + String.valueOf(f.getVote())+")");
+
+        genreTV.setText(f.getGenre());
+
+        durationTime.setText(f.getDurationTime());
     }
 }

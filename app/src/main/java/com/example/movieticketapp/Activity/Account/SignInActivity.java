@@ -48,6 +48,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.ktx.Firebase;
 
 public class SignInActivity extends AppCompatActivity {
@@ -143,21 +148,26 @@ public class SignInActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Users u = new Users(user.getUid(),  user.getEmail(), user.getDisplayName());
-                            FirebaseRequest.database.collection("Users").document(user.getUid())
-                                    .set(u.toJson())
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Log.d(TAG, "DocumentSnapshot successfully written!");
+                            //Check Exist
+                            getUser(user.getUid());
+                            FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
+                            DocumentReference docIdRef = rootRef.collection("Users").document(user.getUid());
+                            docIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot document = task.getResult();
+                                        if (document.exists()) {
+
+                                        } else {
+                                            CreateUser(user);
                                         }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.w(TAG, "Error writing document", e);
-                                        }
-                                    });
+                                    } else {
+                                        Log.d(TAG, "Failed with: ", task.getException());
+                                    }
+                                }
+                            });
+
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -175,7 +185,24 @@ public class SignInActivity extends AppCompatActivity {
         updateUI(currentUser);
     }
 
-
+    void CreateUser(FirebaseUser user){
+        Users u = new Users(user.getUid(),   user.getDisplayName(),user.getEmail(),0, "user");
+        FirebaseRequest.database.collection("Users").document(user.getUid())
+                .set(u.toJson())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });
+        getUser(user.getUid());
+    }
 
     void FacebookLogin() {
 
@@ -187,11 +214,16 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     void LoginWithEmail() {
+        boolean error = false;
         if (emailET.length() == 0) {
             emailET.setError("Email is not empty!!!");
-        } else if (passwordET.length() == 0) {
+            error=true;
+        }
+        if (passwordET.length() == 0) {
             passwordET.setError("Password is not empty!!!");
-        } else
+            error=true;
+        }
+        if(!error)
             SignIn(emailET.getText().toString(), passwordET.getText().toString());
     }
 
@@ -202,6 +234,7 @@ public class SignInActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
+                            getUser(user.getUid());
                             updateUI(user);
                         } else {
                             Toast.makeText(SignInActivity.this, "Authentication failed.",
@@ -219,5 +252,19 @@ public class SignInActivity extends AppCompatActivity {
             startActivity(i);
         }
     }
-
+    void getUser(String id)
+    {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final DocumentReference docRef = db.collection("Users").document(id);
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException error) { if (error != null) {
+                return;
+            }
+                if (snapshot != null && snapshot.exists()) {
+                   Users.currentUser = snapshot.toObject(Users.class);
+                }
+            }
+        });
+    }
 }

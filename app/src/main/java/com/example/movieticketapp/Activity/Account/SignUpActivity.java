@@ -3,8 +3,12 @@ package com.example.movieticketapp.Activity.Account;
 import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.provider.MediaStore;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,6 +31,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
+
+import java.net.URI;
+import java.net.URL;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -48,16 +56,28 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up_screen);
         ImageView imageView =  findViewById(R.id.addimage);
+        ImageView imageAvatar = findViewById(R.id.avatarprofile);
         fullNameET=findViewById(R.id.fullname);
         emailET=findViewById(R.id.emailaddress);
         passwordET=findViewById(R.id.password);
         confirmPasswordET=findViewById(R.id.confirmpassword);
 
+        ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
+                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                    if (uri != null) {
+                        imageAvatar.setImageURI(uri);
+                    } else {
+                        Log.d("PhotoPicker", "No media selected");
+                    }
+                });
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent =  new Intent(Intent.ACTION_PICK);
-                intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                //Intent intent =  new Intent(Intent.ACTION_PICK);
+                //intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                pickMedia.launch(new PickVisualMediaRequest.Builder()
+//                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+//                        .build());
             }
         });
         Button backBt = findViewById(R.id.backbutton);
@@ -72,23 +92,33 @@ public class SignUpActivity extends AppCompatActivity {
         signUpBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                boolean error = false;
                 if(fullNameET.length()==0)
                 {
                     fullNameET.setError("Full Name is not empty!!!");
+                    error=true;
                 }
-                else if(emailET.length()==0)
+                if(emailET.length()==0)
                 {
                     emailET.setError("Email is not empty!!!");
+                    error=true;
                 }
-                else if(passwordET.length()==0)
+                if(passwordET.length()==0)
                 {
                     passwordET.setError("Password is not empty!!!");
+                    error=true;
                 }
-                else if(!confirmPasswordET.getText().toString().equals(passwordET.getText().toString()))
+                else if(passwordET.length()<=6)
+                {
+                    passwordET.setError("Password should be at least 6 characters!!!");
+                    error=true;
+                }
+                if(!confirmPasswordET.getText().toString().equals(passwordET.getText().toString()))
                 {
                     confirmPasswordET.setError("Password and confirmation passwords are not equals !!!");
+                    error=true;
                 }
-                else{
+                if(!error){
                     CreateUser(emailET.getText().toString(), passwordET.getText().toString(), fullNameET.getText().toString());
                 }
             }
@@ -106,7 +136,7 @@ public class SignUpActivity extends AppCompatActivity {
                             FirebaseUser user = FirebaseRequest.mAuth.getCurrentUser();
                             UpdateFullName();
                             user.getUid();
-                            Users u = new Users(user.getUid(), email, Name);
+                            Users u = new Users(user.getUid(), Name, email,0, "user");
                             FirebaseRequest.database.collection("Users").document(user.getUid())
                                     .set(u.toJson())
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -121,9 +151,9 @@ public class SignUpActivity extends AppCompatActivity {
                                             Log.w(TAG, "Error writing document", e);
                                         }
                                     });
+                            Users.currentUser = u;
                             Intent i = new Intent(getApplicationContext(), UserProflingActivity.class);
                             startActivity(i);
-                            //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());

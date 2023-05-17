@@ -1,5 +1,7 @@
 package com.example.movieticketapp.Activity.Account;
 
+import static com.example.movieticketapp.R.string.CheckUsed;
+
 import android.content.Intent;
 
 import android.content.SharedPreferences;
@@ -43,7 +45,7 @@ public class OnboardingActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences("shared_prefs",0);
         SharedPreferences.Editor editor= sharedPref.edit();
         editor.clear();
-        editor.putBoolean(String.valueOf(R.string.CheckUsed), true);
+        editor.putBoolean(String.valueOf(CheckUsed), true);
         editor.apply();
         editor.commit();
     }

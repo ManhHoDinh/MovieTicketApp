@@ -11,6 +11,7 @@ public class FilmModel implements Parcelable {
     private String PrimaryImage;
     private String name;
 
+    private String id;
     private  String BackGroundImage;
     private String vote;
     private String genre;
@@ -19,7 +20,7 @@ public class FilmModel implements Parcelable {
     private String PosterImage;
     private String durationTime;
     public FilmModel(){}
-    public FilmModel(String PrimaryImage, String name, String BackGroundImage, String PosterImage, String vote, String genre, String description, String durationTime) {
+    public FilmModel(String id,String PrimaryImage, String name, String BackGroundImage, String PosterImage, String vote, String genre, String description, String durationTime) {
         this.PrimaryImage = PrimaryImage;
         this.name = name;
         this.BackGroundImage = BackGroundImage;
@@ -27,7 +28,8 @@ public class FilmModel implements Parcelable {
         this.genre = genre;
         this.description = description;
         this.PosterImage = PosterImage;
-        this.durationTime= durationTime;
+        this.durationTime = durationTime;
+        this.id = id;
     }
 
     protected FilmModel(Parcel in) {
@@ -39,6 +41,7 @@ public class FilmModel implements Parcelable {
         description = in.readString();
         PosterImage=in.readString();
         durationTime=in.readString();
+        id=in.readString();
     }
 
 
@@ -59,7 +62,13 @@ public class FilmModel implements Parcelable {
         return PrimaryImage;
     }
 
+    public String getId() {
+        return id;
+    }
 
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getBackGroundImage() {
         return BackGroundImage ;
@@ -106,5 +115,6 @@ public class FilmModel implements Parcelable {
         parcel.writeString(description);
         parcel.writeString(PosterImage);
         parcel.writeString(durationTime);
+        parcel.writeString(id);
     }
 }

@@ -7,7 +7,6 @@
     tools:context=".Fragment.AboutMovie"
     android:layout_gravity="center"
     >
-
         <TextView
             android:id="@+id/SynopsisTV"
             android:layout_width="wrap_content"
