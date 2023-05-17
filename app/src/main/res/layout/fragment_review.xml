@@ -16,6 +16,9 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:paddingBottom="50dp"
+
+            android:layout_below="@+id/commentSectionLayout"
+            android:layout_marginTop="10dp"
             >
 
     <!--  Comment List here-->
@@ -23,7 +26,7 @@
                 android:id="@+id/ReviewList"
                 android:layout_marginLeft="12dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="670dp"
                 android:paddingBottom="150dp"
                 />
 
@@ -31,7 +34,7 @@
     <LinearLayout
         android:layout_below="@+id/ReviewedLayout"
         android:layout_width="match_parent"
-        android:layout_height="300dp"></LinearLayout>
+        android:layout_height="500dp"></LinearLayout>
 
     <!-- Comment section at the bottom -->
     <RelativeLayout
@@ -79,3 +82,4 @@
             />
     </RelativeLayout>
 
+</RelativeLayout>
