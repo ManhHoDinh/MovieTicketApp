@@ -96,8 +96,6 @@ public class BookedActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         dayRecycleView.setLayoutManager(layoutManager);
 
-
-
        // String[] listCinemaName = {"Central Park CGV", "FX Sudirman XXI", "Kelapa Gading IMAX"};
 
         nameFilmTv = (TextView) findViewById(R.id.nameFilmtv);

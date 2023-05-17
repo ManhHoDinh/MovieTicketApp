@@ -70,7 +70,7 @@ public class CinameNameAdapter extends ArrayAdapter<String> {
                     layoutManager.setFlexDirection(FlexDirection.ROW);
                     layoutManager.setJustifyContent(JustifyContent.FLEX_START);
                     recyclerView.setLayoutManager(layoutManager);
-                    recyclerView.setAdapter(new TimeBookedAdapter(listTime, null, item, itemView, null, null));
+                    recyclerView.setAdapter(new TimeScheduleAdapter(listTime, null, item, itemView, null, null));
                     cinemaName.setText(item);
 
                 }
