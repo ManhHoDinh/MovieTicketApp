@@ -25,7 +25,18 @@ public class Comment implements Parcelable {
     public void setTimeStamp(String timeStamp) {
         this.timeStamp = timeStamp;
     }
-
+//    public Date getDateTime() {
+//        return timeStamp.;
+//    }
+//
+//    public void setDateTime(Date datetime) {
+//        this.dateTime = datetime;
+//    }
+//
+//    @Override
+//    public int compareTo(MyObject o) {
+//        return getDateTime().compareTo(o.getDateTime());
+//    }
     public Comment(String profileUrl, String name, String reviewText, String like, String dislike, String timeStamp) {
         this.profileUrl = profileUrl;
         this.name = name;

@@ -7,39 +7,40 @@
     android:background="@color/background_color"
     tools:context=".Fragment.ReviewFragment"
     android:layout_gravity="center"
+
     >
     <!-- Main content layout with comment list -->
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/main_information_film_screen"
-        android:layout_marginTop="10dp"
-        android:layout_below="@id/commentSectionLayout">
         <LinearLayout
+            android:id="@+id/ReviewedLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="50dp"
+            >
 
     <!--  Comment List here-->
             <ListView
                 android:id="@+id/ReviewList"
                 android:layout_marginLeft="12dp"
                 android:layout_width="match_parent"
-                android:layout_height="670dp"
-
+                android:layout_height="match_parent"
+                android:paddingBottom="150dp"
                 />
 
-
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+    <LinearLayout
+        android:layout_below="@+id/ReviewedLayout"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"></LinearLayout>
 
     <!-- Comment section at the bottom -->
     <RelativeLayout
         android:id="@+id/commentSectionLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="10dp"
+        >
 
         <!-- Profile Image -->
         <com.makeramen.roundedimageview.RoundedImageView
@@ -77,6 +78,4 @@
             android:layout_alignParentEnd="true"
             />
     </RelativeLayout>
-
-</RelativeLayout>
 

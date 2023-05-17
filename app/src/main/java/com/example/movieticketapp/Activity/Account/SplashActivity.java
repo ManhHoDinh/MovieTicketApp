@@ -86,11 +86,6 @@ public class SplashActivity extends AppCompatActivity {
             });
             return 0;
         }
-//        catch (Exception e)
-//        {
-//            e.printStackTrace();
-//            return  0;
-//        }
     }
 
 }

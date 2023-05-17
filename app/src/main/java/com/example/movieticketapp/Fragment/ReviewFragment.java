@@ -26,7 +26,6 @@ import com.example.movieticketapp.Model.Comment;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.Ticket;
 import com.example.movieticketapp.R;
-import com.example.movieticketapp.databinding.FragmentReviewBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -48,6 +47,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -109,8 +109,10 @@ public class ReviewFragment extends Fragment {
                     comments.add(data);
                     Log.d(TAG, "Added comment from: " + name);
                 }
-                commentAdapter = new CommentAdapter(getView().getContext(), R.layout.review_comment_view, comments);
+
+                commentAdapter = new CommentAdapter(view.getContext(), R.layout.review_comment_view, comments);
                 commentList.setAdapter(commentAdapter);
+
             }
         });
         sendBtn.setOnClickListener(new View.OnClickListener() {
