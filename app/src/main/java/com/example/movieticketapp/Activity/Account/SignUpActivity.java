@@ -5,6 +5,9 @@ import static android.content.ContentValues.TAG;
 import android.content.Intent;
 import android.provider.MediaStore;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -48,16 +51,28 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up_screen);
         ImageView imageView =  findViewById(R.id.addimage);
+        ImageView imageAvatar = findViewById(R.id.avatarprofile);
         fullNameET=findViewById(R.id.fullname);
         emailET=findViewById(R.id.emailaddress);
         passwordET=findViewById(R.id.password);
         confirmPasswordET=findViewById(R.id.confirmpassword);
 
+        ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
+                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                    if (uri != null) {
+                        imageAvatar.setImageURI(uri);
+                    } else {
+                        Log.d("PhotoPicker", "No media selected");
+                    }
+                });
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent =  new Intent(Intent.ACTION_PICK);
-                intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                //Intent intent =  new Intent(Intent.ACTION_PICK);
+                //intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                pickMedia.launch(new PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                        .build());
             }
         });
         Button backBt = findViewById(R.id.backbutton);
