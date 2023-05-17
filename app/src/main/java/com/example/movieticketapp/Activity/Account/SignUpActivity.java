@@ -3,6 +3,7 @@ package com.example.movieticketapp.Activity.Account;
 import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
@@ -28,6 +29,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.auth.User;
+
+import java.net.URI;
+import java.net.URL;
 
 public class SignUpActivity extends AppCompatActivity {
 
