@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -14,10 +15,16 @@
         android:theme="@style/Theme.MovieTicketApp"
         tools:targetApi="31">
         <activity
+            android:name=".Activity.SearchActivity"
+
+            android:exported="false" />
+        <activity
+            android:name=".Activity.ViewAllActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.Booking.ShowTimeScheduleActivity"
             android:exported="false"
-            android:theme="@style/Theme.MovieProject.Main"
-            />
+            android:theme="@style/Theme.MovieProject.Main" />
         <activity
             android:name=".Activity.Discount.AddDiscount"
             android:exported="false" />
@@ -47,7 +54,7 @@
         <activity
             android:name=".Activity.Account.SplashActivity"
             android:exported="true"
-            android:theme="@style/Theme.MovieProject.Main" >
+            android:theme="@style/Theme.MovieProject.Main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

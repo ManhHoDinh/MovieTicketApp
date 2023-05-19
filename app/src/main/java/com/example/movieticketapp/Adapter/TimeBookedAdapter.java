@@ -44,6 +44,7 @@ public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.Vi
     private static View prevView;
     private ListView timelistView;
     private Activity activity;
+    private List<Integer> listSelected = new ArrayList<Integer>();
     public TimeBookedAdapter(List<String> listDate, @Nullable List<String> listTime, @Nullable String cinemaName, @Nullable View view, @Nullable ListView timelistView, @Nullable Activity activity) {
         this.listDate = listDate;
         this.listTime = listTime;

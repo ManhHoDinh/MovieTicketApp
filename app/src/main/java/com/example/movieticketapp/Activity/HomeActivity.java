@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -18,7 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.movieticketapp.Activity.Account.AccountActivity;
@@ -31,6 +32,7 @@ import com.example.movieticketapp.Adapter.posterAdapter;
 import com.example.movieticketapp.Model.Discount;
 import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.Model.FilmModel;
+import com.example.movieticketapp.Model.InforBooked;
 import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
 import com.example.movieticketapp.databinding.HomeScreenBinding;
@@ -63,6 +65,7 @@ public class HomeActivity extends AppCompatActivity {
     private HomeScreenBinding binding;
     private ImageView accountImage;
     private  ImageView addDiscount;
+    private TextView viewAllBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +76,18 @@ public class HomeActivity extends AppCompatActivity {
         FirebaseUser currentUser= FirebaseAuth.getInstance().getCurrentUser();
         accountImage = findViewById(R.id.accountImage);
         addDiscount= findViewById(R.id.AddDiscount);
+        viewAllBtn = findViewById(R.id.viewAllBtn);
+        searchView = findViewById(R.id.searchField);
 
+
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(b){
+                    startActivity(new Intent(HomeActivity.this, SearchActivity.class));
+                }
+            }
+        });
         if (currentUser.getPhotoUrl()!=null)
             Picasso.get().load(currentUser.getPhotoUrl()).into(accountImage);
         else accountImage.setImageResource(R.drawable.avatar);
@@ -113,6 +127,7 @@ public class HomeActivity extends AppCompatActivity {
             }
             return true;
         });
+
         List<Discount> Discounts = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference PromoRef = db.collection(Discount.CollectionName);
@@ -222,6 +237,12 @@ public class HomeActivity extends AppCompatActivity {
             binding.AddDiscount.setLayoutParams(params);
             addDiscount.setVisibility(View.INVISIBLE);
         }
+        viewAllBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(HomeActivity.this,ViewAllActivity.class));
+            }
+        });
     }
 
 }
