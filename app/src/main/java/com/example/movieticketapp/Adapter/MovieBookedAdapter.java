@@ -104,9 +104,9 @@ public class MovieBookedAdapter extends ArrayAdapter<Ticket> {
         TextView priceMovie = itemView.findViewById(R.id.priceMovie);
         TextView timeBooked = itemView.findViewById(R.id.timeBooked);
         Ticket movie = getItem(position);
-        Picasso.get().load(movie.getPoster()).into(imageView);
-
-        nameMovie.setText(movie.getName());
+//        Picasso.get().load(movie.getPoster()).into(imageView);
+//
+//        nameMovie.setText(movie.getName());
         priceMovie.setText(String.valueOf(movie.getPaid()));
         Timestamp time = movie.getTime();
         DateFormat dateFormat = new SimpleDateFormat("hh:mm, E MMM dd");
