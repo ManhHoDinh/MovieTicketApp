@@ -58,8 +58,7 @@ public class EditProfileActivity extends AppCompatActivity {
         backBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(EditProfileActivity.this, AccountActivity.class);
-                startActivity(i);
+                finish();
             }
         });
         Button UpdateBtn =  findViewById(R.id.UpdateBtn);
