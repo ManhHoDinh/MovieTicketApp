@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="500dp"></LinearLayout>
 
-    <!-- Comment section at the bottom -->
+    <!-- Comment section at the top -->
     <RelativeLayout
         android:id="@+id/commentSectionLayout"
         android:layout_width="match_parent"
