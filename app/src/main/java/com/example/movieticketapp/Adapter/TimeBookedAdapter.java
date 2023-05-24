@@ -23,6 +23,7 @@ import com.example.movieticketapp.Activity.Booking.BookedActivity;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.City;
 import com.example.movieticketapp.Model.InforBooked;
+import com.example.movieticketapp.Model.ScheduleFilm;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -44,14 +45,17 @@ public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.Vi
     private static View prevView;
     private ListView timelistView;
     private Activity activity;
+    private String filmName;
+
     private List<Integer> listSelected = new ArrayList<Integer>();
-    public TimeBookedAdapter(List<String> listDate, @Nullable List<String> listTime, @Nullable String cinemaName, @Nullable View view, @Nullable ListView timelistView, @Nullable Activity activity) {
+    public TimeBookedAdapter(List<String> listDate, @Nullable List<String> listTime, @Nullable String filmName, @Nullable String cinemaName, @Nullable View view, @Nullable ListView timelistView, @Nullable Activity activity) {
         this.listDate = listDate;
         this.listTime = listTime;
         this.cinemaName = cinemaName;
         this.timeView = view;
         this.timelistView = timelistView;
         this.activity = activity;
+        this.filmName = filmName;
     }
     public class ViewHolder extends RecyclerView.ViewHolder{
         Button dateBtn;
@@ -104,6 +108,9 @@ public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.Vi
                     }
 
                     else InforBooked.getInstance().dateBooked = dateBtn.getText().toString();
+                    if(filmName != null){
+                        ScheduleFilm.getInstance().dateBooked = InforBooked.getInstance().dateBooked;
+                    }
 
                     dateBtn.setBackgroundColor(Color.TRANSPARENT);
 

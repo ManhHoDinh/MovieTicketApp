@@ -1,10 +1,16 @@
 package com.example.movieticketapp.Adapter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
+
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -14,38 +20,57 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.movieticketapp.Activity.Booking.BookedActivity;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
+import com.example.movieticketapp.Model.City;
 import com.example.movieticketapp.Model.InforBooked;
+import com.example.movieticketapp.Model.ScheduleFilm;
+import com.example.movieticketapp.Model.ShowTime;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class TimeScheduleAdapter extends RecyclerView.Adapter<TimeScheduleAdapter.ViewHolder> {
     private List<String> listDate;
+
     private List<String> listTime;
     private String cinemaName;
     private Button preButton;
+    private LayoutInflater layoutInflater = null;
     private int checkedPosition = -1;
     private static String prevType = "";
-
+    private List<ShowTime> listSelect = new ArrayList<ShowTime>();
     private static int prevPosition = 0;
     private View timeView;
     private static View prevView;
     private ListView timelistView;
+    private String dateBooked;
+    private String filmName;
     private Activity activity;
-    public TimeScheduleAdapter(List<String> listDate, @Nullable List<String> listTime, @Nullable String cinemaName, @Nullable View view, @Nullable ListView timelistView, @Nullable Activity activity) {
+
+
+    public TimeScheduleAdapter(List<String> listDate, @Nullable List<String> listTime,String filmName, @Nullable String cinemaName, @Nullable View view, @Nullable ListView timelistView, @Nullable Activity activity) {
         this.listDate = listDate;
         this.listTime = listTime;
         this.cinemaName = cinemaName;
         this.timeView = view;
         this.timelistView = timelistView;
         this.activity = activity;
+        this.filmName = filmName;
     }
-    public class ViewHolder extends RecyclerView.ViewHolder{
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
         Button dateBtn;
 
         public ViewHolder(@NonNull View itemView) {
@@ -54,85 +79,134 @@ public class TimeScheduleAdapter extends RecyclerView.Adapter<TimeScheduleAdapte
             dateBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(timeView != null){
-                        if(listTime == null){
-                            if(prevType != cinemaName){
-
-                                if(prevView != null){
 
 
+                    if (timeView != null) {
+
+                        if (listTime == null) {
+                            if (prevType != cinemaName) {
+                                if (prevView != null) {
                                     TextView tv = (TextView) prevView.findViewById(R.id.cinemaName);
                                     RecyclerView rv = (RecyclerView) prevView.findViewById(R.id.listTime);
                                     View v = rv.getLayoutManager().findViewByPosition(prevPosition);
-
-                                    Button btn  = v.findViewById(R.id.dateBtn);
-
+                                    Button btn = v.findViewById(R.id.dateBtn);
                                     btn.setBackgroundColor(Color.TRANSPARENT);
                                     btn.setBackground(ContextCompat.getDrawable(dateBtn.getContext(), R.drawable.bg_tabview_button));
-
                                 }
-                                InforBooked.getInstance().timeBooked = dateBtn.getText().toString();
-                                InforBooked.getInstance().nameCinema = cinemaName;
+
+
+
+                            }
+                            int count = 0;
+                            int selectedIndex = -1;
+                            List<ShowTime> listShowTime = ScheduleFilm.getInstance().listShowTime;
+
+                          //  Timestamp timeSchedule = new Timestamp();
+                            for (int i = 0; i < listShowTime.size(); i++) {
+                                ShowTime showTime = listShowTime.get(i);
+                                DateFormat dateFormat = new SimpleDateFormat("EEE\ndd");
+                                DateFormat timeFormat = new SimpleDateFormat("H:m");
+
+                                if(cinemaName.equals(showTime.getNameCinema())
+                                        && filmName.equals(showTime.getNameFilm())
+                                        && dateFormat.format(showTime.getTimeBooked().toDate()).equals(ScheduleFilm.getInstance().dateBooked)
+                                        && timeFormat.format(showTime.getTimeBooked().toDate()).equals(dateBtn.getText().toString())){
+                                    selectedIndex = i;
+                                }
+
+
+                            }
+                            if (selectedIndex == -1) {
+                                List<String> bookedSeat = new ArrayList<String>();
+                                Calendar calendar = Calendar.getInstance();
+                                int date = calendar.get(Calendar.DATE);
+                                int month = calendar.get(Calendar.MONTH);
+                                int year = calendar.get(Calendar.YEAR);
+                                String[] dateBook = ScheduleFilm.getInstance().dateBooked.split("\n");
+                                String[] timeBook = dateBtn.getText().toString().split(":");
+                                int dateSelect = Integer.parseInt(dateBook[1]);
+                                calendar.set(Calendar.DATE, dateSelect);
+                                calendar.set(Calendar.YEAR, year);
+                                calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeBook[0]));
+                                calendar.set(Calendar.MINUTE,Integer.parseInt(timeBook[1]));
+                                calendar.set(Calendar.MILLISECOND, 0);
+                                calendar.set(Calendar.SECOND, 0);
+
+                                if(date <= dateSelect){
+                                    calendar.set(Calendar.MONTH, month);
+                                } else calendar.set(Calendar.MONTH, month + 1);
+                                Timestamp timeSchedule = new Timestamp(calendar.getTime());
+                                ScheduleFilm.getInstance().listShowTime.add(new ShowTime(filmName, cinemaName,bookedSeat, timeSchedule ));
+                                dateBtn.setBackgroundColor(Color.TRANSPARENT);
+
+                                dateBtn.setBackground(ContextCompat.getDrawable(dateBtn.getContext(), R.drawable.background_button));
+
+
+                            } else {
+                                ScheduleFilm.getInstance().listShowTime.remove(selectedIndex);
+                                dateBtn.setBackgroundColor(Color.TRANSPARENT);
+
+                                dateBtn.setBackground(ContextCompat.getDrawable(dateBtn.getContext(), R.drawable.bg_tabview_button));
+
                             }
                         }
+//                        dateBtn.setBackgroundColor(Color.TRANSPARENT);
+//
+//                        dateBtn.setBackground(ContextCompat.getDrawable(dateBtn.getContext(), R.drawable.background_button));
                         prevType = cinemaName;
                         prevView = timeView;
                         prevPosition = getAdapterPosition();
 
-                    }
+                    } else dateBooked = dateBtn.getText().toString();
 
-                    else InforBooked.getInstance().dateBooked = dateBtn.getText().toString();
 
-                    dateBtn.setBackgroundColor(Color.TRANSPARENT);
 
-                    dateBtn.setBackground(ContextCompat.getDrawable(dateBtn.getContext(), R.drawable.background_button));
 
-                    if(checkedPosition!=getAdapterPosition()){
-                        notifyItemChanged(checkedPosition);
-                        checkedPosition = getAdapterPosition();
-                    }
-                    if(listTime != null){
+
+
+
+
+                    //  if(checkedPosition==getAdapterPosition()){
+//                        if(dateBtn.getBackground().equals(ContextCompat.getDrawable(dateBtn.getContext(), R.drawable.background_button))){
+//                            Log.e("dfd", "binh");
+//                            dateBtn.setBackgroundColor(Color.TRANSPARENT);
+//
+//                            dateBtn.setBackground(ContextCompat.getDrawable(dateBtn.getContext(), R.drawable.bg_tabview_button));
+//                        }
+
+                    ///  }
+                    if (listTime != null) {
                         List<String> listCinemaName = new ArrayList<String>();
-
-
-
                         FirebaseRequest.database.collection("Cinema").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                             @Override
                             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                 List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
 
-                                if(!InforBooked.getInstance().dateBooked.equals(null)){
-
-                                    CinameNameAdapter cinameNameAdapter = new CinameNameAdapter(activity, R.layout.cinema_booked_item,InforBooked.getInstance().listCinemaName, InforBooked.getInstance().nameFilm);
+                                if (!dateBooked.equals(null)) {
+                                    CinameNameAdapter cinameNameAdapter = new CinameNameAdapter(activity, R.layout.cinema_booked_item, InforBooked.getInstance().listCinemaName, InforBooked.getInstance().nameFilm);
                                     timelistView.setAdapter(cinameNameAdapter);
                                     timelistView.setEnabled(false);
-
                                     Helper.getListViewSize(timelistView);
                                 }
-
-
-
                             }
                         });
                     }
-
                 }
             });
         }
 
-        void Binding(){
-            if(checkedPosition != getAdapterPosition()){
-                dateBtn.setBackgroundColor(Color.TRANSPARENT);
-                dateBtn.setBackground(ContextCompat.getDrawable(dateBtn.getContext(), R.drawable.bg_tabview_button));
-            }
-            else {
-                dateBtn.setBackgroundColor(Color.TRANSPARENT);
-                dateBtn.setBackground(ContextCompat.getDrawable(dateBtn.getContext(), R.drawable.background_button));
-            }
-
-
+        void Binding() {
+//            if(checkedPosition != getAdapterPosition()){
+            dateBtn.setBackgroundColor(Color.TRANSPARENT);
+            dateBtn.setBackground(ContextCompat.getDrawable(dateBtn.getContext(), R.drawable.bg_tabview_button));
+            //}
+//            else {
+//                dateBtn.setBackgroundColor(Color.TRANSPARENT);
+//                dateBtn.setBackground(ContextCompat.getDrawable(dateBtn.getContext(), R.drawable.background_button));
+//            }
         }
     }
+
     @NonNull
     @Override
     public TimeScheduleAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -143,12 +217,62 @@ public class TimeScheduleAdapter extends RecyclerView.Adapter<TimeScheduleAdapte
 
     @Override
     public void onBindViewHolder(@NonNull TimeScheduleAdapter.ViewHolder holder, int position) {
-        if(listTime != null){
+        DateFormat dateFormat = new SimpleDateFormat("EEE\ndd");
+        DateFormat timeFormat = new SimpleDateFormat("H:m");
+        if (listTime != null) {
             holder.dateBtn.setText(listDate.get(position) + "\n" + listTime.get(position));
+//            for(ShowTime showTime : ScheduleFilm.getInstance().listShowTime){
+//                if(timeFormat.format(showTime.getTimeBooked().toDate()).equals(holder.dateBtn.getText().toString())){
+//                    holder.dateBtn.setBackgroundColor(Color.TRANSPARENT);
+//                    holder.dateBtn.setBackground(ContextCompat.getDrawable(holder.dateBtn.getContext(), R.drawable.bg_tabview_button));
+//                }
+//                else  holder.Binding();
+//            }
+        } else {
+            holder.dateBtn.setText(listDate.get(position));
+
+
+            if( ScheduleFilm.getInstance().listShowTime.size() > 0){
+                for(ShowTime showTime : ScheduleFilm.getInstance().listShowTime){
+
+                    if(timeFormat.format(showTime.getTimeBooked().toDate()).equals(holder.dateBtn.getText().toString()) && cinemaName.equals(showTime.getNameCinema()) && dateFormat.format(showTime.getTimeBooked().toDate()).equals(ScheduleFilm.getInstance().dateBooked)){
+
+                        listSelect.add(showTime);
+                        holder.dateBtn.setBackgroundColor(Color.TRANSPARENT);
+                        holder.dateBtn.setBackground(ContextCompat.getDrawable(holder.dateBtn.getContext(), R.drawable.background_button));
+                        break;
+
+                    }
+                    else {
+                        holder.Binding();
+                    }
+
+                }
+            }
+            FirebaseRequest.database.collection("showtime").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                    List<DocumentSnapshot> listDocs = value.getDocuments();
+                    for(DocumentSnapshot doc : listDocs){
+                        ShowTime showTime = doc.toObject(ShowTime.class);
+
+                        if(timeFormat.format(showTime.getTimeBooked().toDate()).equals(holder.dateBtn.getText().toString())
+                                && cinemaName.equals(showTime.getNameCinema())
+                                && filmName.equals(showTime.getNameFilm())
+                                && dateFormat.format(showTime.getTimeBooked().toDate()).equals(ScheduleFilm.getInstance().dateBooked)){
+                            holder.dateBtn.setEnabled(false);
+                            holder.dateBtn.setBackgroundColor(Color.TRANSPARENT);
+                            holder.dateBtn.setBackground(ContextCompat.getDrawable(holder.dateBtn.getContext(), R.drawable.background_disable));
+                            break;
+                        }
+                        else holder.Binding();
+                    }
+                }
+            });
+
+
 
         }
-        else holder.dateBtn.setText(listDate.get(position));
-        holder.Binding();
 
     }
 
