@@ -37,7 +37,10 @@ public class SuccessTopUpActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-  //                     InforBooked.getInstance().total += Integer.parseInt(String.valueOf(document.get("Wallet")));
+//                        InforBooked.getInstance().total += Integer.parseInt(String.valueOf(document.get("wallet")));
+
+
+
                      int wallet =Integer.parseInt(String.valueOf(document.get("Wallet")))+ Integer.parseInt(intent.getStringExtra("selectedPrice"));
                         docRef.update("Wallet", wallet);
 

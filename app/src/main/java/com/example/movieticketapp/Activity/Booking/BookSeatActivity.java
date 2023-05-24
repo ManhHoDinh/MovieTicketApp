@@ -14,8 +14,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.movieticketapp.Activity.Booking.CheckoutWalletEnoughActivity;
+import com.example.movieticketapp.Firebase.FirebaseRequest;
+import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.R;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,21 +36,24 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
     private TextView priceTv;
     private Button backBtn;
     private Button SeatBookBtn;
+    private int initPrice;
+    private String nameCinema;
+
     ViewGroup layout;
     ViewGroup layout1;
 
     String seats =
-            "AAAAAA_AAAAAA_AAAAAA/"
-                    + "AABBAA_AAABBA_AAAAAA/"
-                    + "AAAAAA_AAAAAA_AABBAA/"
-                    + "ABBBAA_AAAAAA_AAAAAA/"
-                    + "__AAAA_AAAAAA_AAAA__/"
-                    + "__AAAA_AAAAAA_ABAA__/"
-                    + "__AAAA_AABBAA_AAAA__/"
-                    + "__AAAA_AAAAAA_AAAA__/"
-                    + "__ABBA_AAAABA_AAAA__/"
-                    + "__BAAA_AABAAA_AAAA__/"
-            ;
+             "AAAAAA_AAAAAA_AAAAAA/"
+            +"AAAAAA_AAAAAA_AAAAAA/"
+            +"AAAAAA_AAAAAA_AAAAAA/"
+            +"AAAAAA_AAAAAA_AAAAAA/"
+            +"__AAAA_AAAAAA_AAAA__/"
+            +"__AAAA_AAAAAA_AAAA__/"
+            +"__AAAA_AAAAAA_AAAA__/"
+            +"__AAAA_AAAAAA_AAAA__/"
+            +"__AAAA_AAAAAA_AAAA__/"
+            +"__AAAA_AAAAAA_AAAA__/"
+                ;
 
 
     List<TextView> seatViewList = new ArrayList<>();
@@ -50,16 +63,24 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
     int STATUS_AVAILABLE = 1;
     int STATUS_BOOKED = 2;
     int STATUS_RESERVED = 3;
+    private FilmModel selectedFilm;
+    private String dateBooked;
+    private String timeBooked;
     List<String> selectedIds = new ArrayList<String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_seat);
         Intent intent = getIntent();
+        timeBooked = intent.getStringExtra("timeBooked");
+        dateBooked = intent.getStringExtra("dateBooked");
+        selectedFilm = intent.getParcelableExtra("selectedFilm");
         nameFilmTv = (TextView) findViewById(R.id.nameFilm);
         nameCinemaTv = (TextView) findViewById(R.id.nameCinema);
-        nameFilmTv.setText(intent.getStringExtra("nameFirm"));
-        nameCinemaTv.setText(intent.getStringExtra("nameCinema"));
+        nameFilmTv.setText(selectedFilm.getName());
+        nameCinema = intent.getStringExtra("nameCinema");
+        nameCinemaTv.setText(nameCinema);
+
         countTicketTv = (TextView) findViewById(R.id.countTicketTv);
         priceTv = (TextView) findViewById(R.id.priceTv);
         backBtn = (Button) findViewById(R.id.backbutton);
@@ -133,6 +154,7 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
 
 
                  }
+                 loadSeats();
         }
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,14 +171,52 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
                     Toast.makeText(BookSeatActivity.this, "Please choose seats!", Toast.LENGTH_SHORT).show();
                 }
                 else{
+
+                    i.putExtra("dateBooked", dateBooked);
+                    i.putExtra("timeBooked", timeBooked);
+                    i.putExtra("selectedFilm", selectedFilm);
+                    i.putExtra("cinemaName",nameCinemaTv.getText().toString());
                     i.putExtra("price",priceTv.getText());
+                    i.putExtra("price",priceTv.getText());
+                    i.putStringArrayListExtra("seats", (ArrayList<String>) selectedIds);
                     startActivity(i);
                 }
 
             }
         });
     }
+    void loadSeats(){
+        FirebaseRequest.database.collection("showtime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
+                for(DocumentSnapshot doc : listDocs){
+                    Timestamp time = doc.getTimestamp("TimeBooked");
+                    DateFormat dateFormat = new SimpleDateFormat("EEE\ndd");
+                    DateFormat timeFormat = new SimpleDateFormat("H:m");
+                    if(doc.get("NameCinema").equals(nameCinema) && timeFormat.format(time.toDate()).equals(timeBooked) && dateFormat.format(time.toDate()).equals(dateBooked) && doc.get("NameFilm").equals(selectedFilm.getName())){
+                        List<String> bookedSeats = (List<String>) doc.get("BookedSeat");
+                        LinearLayout linearLayout =(LinearLayout) layout.getChildAt(0);
+                        for(int i = 0; i < 10; i ++){
+                            LinearLayout layout = (LinearLayout) linearLayout.getChildAt(i);
+                            for(int j = 0; j < 20; j ++){
+                                TextView view = (TextView) layout.getChildAt(j);
+                                for(int z = 0; z < bookedSeats.size(); z++){
+                                    if(bookedSeats.get(z).equals(view.getText().toString())){
+                                        view.setBackgroundResource(R.drawable.booked_state);
+                                        view.setTag(STATUS_RESERVED);
 
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+        });
+
+    }
 
 
     @Override
@@ -166,6 +226,7 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
             view.setTag(STATUS_BOOKED);
             view.setBackgroundResource(R.drawable.your_state);
             selectedIds.add(((TextView) view).getText().toString());
+
 
 
 
@@ -180,6 +241,20 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
 
         }
         countTicketTv.setText("Total Price ("+ selectedIds.size()+ " Ticket)");
-        priceTv.setText(50000 * selectedIds.size() +" VNĐ");
+        FirebaseRequest.database.collection("Cinema").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
+                for(DocumentSnapshot doc : listDocs){
+                    if(doc.get("Name").equals(nameCinema)){
+                        initPrice = Integer.parseInt(String.valueOf(doc.get("Price")));
+
+                        priceTv.setText(initPrice * selectedIds.size() +" VNĐ");
+                    }
+                }
+
+            }
+        });
+
     }
 }

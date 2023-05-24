@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.movieticketapp"
-        minSdk 26
+        minSdk 28
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -52,4 +52,5 @@ dependencies {
     implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation 'com.squareup.picasso:picasso:2.8'
     implementation 'com.firebaseui:firebase-ui-firestore:8.0.2'
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
 }

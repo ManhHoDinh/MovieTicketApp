@@ -1,15 +1,10 @@
 package com.example.movieticketapp.Adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,9 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.movieticketapp.Activity.Booking.BookedActivity;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
-import com.example.movieticketapp.Model.City;
 import com.example.movieticketapp.Model.InforBooked;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,7 +24,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.ViewHolder> {
+public class TimeScheduleAdapter extends RecyclerView.Adapter<TimeScheduleAdapter.ViewHolder> {
     private List<String> listDate;
     private List<String> listTime;
     private String cinemaName;
@@ -44,7 +37,7 @@ public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.Vi
     private static View prevView;
     private ListView timelistView;
     private Activity activity;
-    public TimeBookedAdapter(List<String> listDate, @Nullable List<String> listTime, @Nullable String cinemaName, @Nullable View view, @Nullable ListView timelistView, @Nullable Activity activity) {
+    public TimeScheduleAdapter(List<String> listDate, @Nullable List<String> listTime, @Nullable String cinemaName, @Nullable View view, @Nullable ListView timelistView, @Nullable Activity activity) {
         this.listDate = listDate;
         this.listTime = listTime;
         this.cinemaName = cinemaName;
@@ -61,20 +54,8 @@ public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.Vi
             dateBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-
                     if(timeView != null){
-
                         if(listTime == null){
-
-
-
-
-
-
-
-
-
                             if(prevType != cinemaName){
 
                                 if(prevView != null){
@@ -92,8 +73,6 @@ public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.Vi
                                 }
                                 InforBooked.getInstance().timeBooked = dateBtn.getText().toString();
                                 InforBooked.getInstance().nameCinema = cinemaName;
-
-
                             }
                         }
                         prevType = cinemaName;
@@ -156,14 +135,14 @@ public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.Vi
     }
     @NonNull
     @Override
-    public TimeBookedAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TimeScheduleAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView;
         itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.time_booked_item, parent, false);
-        return new TimeBookedAdapter.ViewHolder(itemView);
+        return new TimeScheduleAdapter.ViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TimeBookedAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TimeScheduleAdapter.ViewHolder holder, int position) {
         if(listTime != null){
             holder.dateBtn.setText(listDate.get(position) + "\n" + listTime.get(position));
 

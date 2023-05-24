@@ -41,9 +41,10 @@ public class InformationFilmActivity extends FragmentActivity {
     TabLayout tabLayout;
     ViewPager2 pager;
     FilmModel f;
+
+    FilmDetailPagerAdapter filmDetailPagerAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.information_film_screen);
         Intent intent = getIntent();
@@ -58,7 +59,9 @@ public class InformationFilmActivity extends FragmentActivity {
         ImageView btnBack = findViewById(R.id.btnBack);
         pager=findViewById(R.id.pager);
         tabLayout=findViewById(R.id.tab_layout);
-        pager.setAdapter(new FilmDetailPagerAdapter(this, f));
+        filmDetailPagerAdapter = new FilmDetailPagerAdapter(this, f);
+        pager.setAdapter(filmDetailPagerAdapter);
+        pager.setOffscreenPageLimit(3);
         getFilm(f.getId());
 
         refreshScreen();

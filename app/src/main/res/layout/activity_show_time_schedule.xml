@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".Activity.Booking.BookedActivity"
+    tools:context=".Activity.Booking.ShowTimeScheduleActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
     >
-    <androidx.core.widget.NestedScrollView
 
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_marginHorizontal="24dp"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            >
             <androidx.appcompat.widget.AppCompatButton
-                android:text=""
+
                 android:layout_marginTop="40dp"
                 android:id="@+id/backbutton"
                 android:layout_width="20dp"
@@ -29,7 +28,6 @@
                 android:id="@+id/nameFilmtv"
                 android:layout_marginTop="20dp"
                 android:layout_marginHorizontal="60dp"
-
                 android:textColor="@color/white"
                 android:textSize="24dp"
                 android:gravity="center"
@@ -68,6 +66,7 @@
                 />
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/dayRecycleView"
+                android:nestedScrollingEnabled="false"
                 android:layout_marginTop="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -81,15 +80,13 @@
                 android:id="@+id/btnNext"
                 android:layout_width="64.22923636363636dp"
                 android:layout_height="64.22923636363636dp"
-                android:text=""
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="40dp"
+               android:layout_marginTop="10dp"
+                android:layout_marginBottom="80dp"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/roundstyle50"
                 android:backgroundTint="@color/button_background_color"
                 android:rotationY="180"
                 android:src="@drawable/ic_back"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
-    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

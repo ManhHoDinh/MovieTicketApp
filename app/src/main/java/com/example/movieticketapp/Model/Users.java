@@ -8,13 +8,18 @@ public class Users {
     private String Name;
     private String Email;
     private int Wallet;
-    public Users(String UserID, String Name, String Email,int Wallet)
+    private String accountType;
+    public static Users currentUser;
+    public Users(String UserID, String Name, String Email,int Wallet, String accountType)
     {
         this.UserID=UserID;
         this.Name=Name;
         this.Email = Email;
         this.Wallet=Wallet;
+        this.accountType = accountType;
     }
+    public  Users(){}
+
     public Map<String, Object> toJson()
     {
         Map<String, Object> json = new HashMap<>();
@@ -22,7 +27,13 @@ public class Users {
         json.put("Name", Name);
         json.put("Email", Email);
         json.put("Wallet", Wallet);
+        json.put("accountType", accountType);
         return  json;
     };
-
+    public String getAccountType(){
+        return  accountType;
+    };
+    public String getEmail(){
+        return  Email;
+    };
 }
