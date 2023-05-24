@@ -40,7 +40,7 @@
             android:name=".Activity.Booking.SuccessCheckoutActivity"
             android:exported="true" />
         <activity
-            android:name=".Activity.Account.SplashActivity"
+            android:name=".Activity.Movie.AddMovieActivity"
             android:exported="true"
             android:theme="@style/Theme.MovieProject.Main">
             <intent-filter>
@@ -62,9 +62,9 @@
             android:exported="false" />
         <activity android:name=".Activity.Account.SignUpActivity" />
         <activity android:name=".Activity.Account.SignInActivity" />
-        <activity
-            android:name=".Activity.Movie.AddMovieActivity"
-            android:exported="false" />
+
+
+
         <activity
             android:name=".Activity.Movie.InformationFilmActivity"
             android:exported="false" />
