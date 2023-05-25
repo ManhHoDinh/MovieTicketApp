@@ -132,11 +132,15 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textSize="12dp"
                             android:textColor="@color/white"
                             android:text="Name: "/>
                         <EditText
                             android:layout_width="190dp"
                             android:layout_height="wrap_content"
+                            android:textSize="12dp"
+                            android:hint="Movie Name"
+                            android:textColorHint="@color/hint_color"
                             android:textColor="@color/white"
                             android:id="@+id/movieName"/>
                     </LinearLayout>
@@ -148,11 +152,15 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/white"
+                            android:textSize="12dp"
                             android:text="Kind: "/>
                         <EditText
                             android:layout_width="190dp"
                             android:layout_height="wrap_content"
                             android:textColor="@color/white"
+                            android:hint="Kind of movie"
+                            android:textColorHint="@color/hint_color"
+                            android:textSize="12dp"
                             android:id="@+id/movieKind"/>
                     </LinearLayout>
                     <LinearLayout
@@ -162,12 +170,17 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textSize="12dp"
                             android:textColor="@color/white"
                             android:text="Duration: "/>
                         <EditText
                             android:layout_width="190dp"
                             android:layout_height="wrap_content"
                             android:textColor="@color/white"
+                            android:hint="Duration time of movie"
+                            android:textColorHint="@color/hint_color"
+                            android:textSize="12dp"
+                            android:textColorLink="@color/white"
                             android:id="@+id/movieDuration"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -191,6 +204,9 @@
                     <EditText
                         android:layout_width="250dp"
                         android:layout_height="wrap_content"
+                        android:hint="(playing or coming soon)"
+                        android:textSize="13dp"
+                        android:textColorHint="@color/hint_color"
                         android:textColor="@color/white"
                         android:id="@+id/moviestatus"/>
                 </LinearLayout>

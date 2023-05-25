@@ -312,6 +312,12 @@ public class AddMovieActivity extends AppCompatActivity {
         data.put("name", movieName.getText().toString());
         data.put("status", movieStatus.getText().toString());
         data.put("vote", "0");
-        document.set(data);
+        document.set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(getApplicationContext(), "Add Movie Success!", Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 }
