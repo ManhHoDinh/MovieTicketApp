@@ -297,6 +297,12 @@ public class AddMovieActivity extends AppCompatActivity {
                 }
             }
         });
+        cancleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     private void SaveDatatoDatabase() {
