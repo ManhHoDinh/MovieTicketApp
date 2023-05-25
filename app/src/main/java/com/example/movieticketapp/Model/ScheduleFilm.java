@@ -1,5 +1,10 @@
 package com.example.movieticketapp.Model;
 
+import com.example.movieticketapp.Firebase.FirebaseRequest;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,4 +20,5 @@ public class ScheduleFilm {
         }
         return instance;
     }
+
 }
