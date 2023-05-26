@@ -76,9 +76,11 @@
             android:exported="false" />
         <activity android:name=".Activity.Account.SignUpActivity" />
         <activity android:name=".Activity.Account.SignInActivity" />
+
         <activity
             android:name=".Activity.Movie.AddMovieActivity"
             android:exported="false" />
+
         <activity
             android:name=".Activity.Movie.InformationFilmActivity"
             android:exported="false" />
