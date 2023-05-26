@@ -17,11 +17,11 @@
             android:name=".Activity.Discount.DiscountViewAll"
             />
         <activity
-            android:name=".Activity.SearchActivity"
+            android:name=".Activity.Movie.SearchActivity"
 
             android:exported="false" />
         <activity
-            android:name=".Activity.ViewAllActivity"
+            android:name=".Activity.Movie.ViewAllActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.Booking.ShowTimeScheduleActivity"

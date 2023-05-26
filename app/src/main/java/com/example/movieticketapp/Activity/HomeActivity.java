@@ -8,16 +8,11 @@ import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,15 +20,15 @@ import android.widget.Toast;
 import com.example.movieticketapp.Activity.Account.AccountActivity;
 import com.example.movieticketapp.Activity.Discount.AddDiscount;
 import com.example.movieticketapp.Activity.Discount.DiscountViewAll;
+import com.example.movieticketapp.Activity.Movie.SearchActivity;
+import com.example.movieticketapp.Activity.Movie.ViewAllActivity;
 import com.example.movieticketapp.Activity.Ticket.MyTicketAllActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
 import com.example.movieticketapp.Adapter.ListTypeAdapter;
 import com.example.movieticketapp.Adapter.PromotionAdapter;
 import com.example.movieticketapp.Adapter.posterAdapter;
 import com.example.movieticketapp.Model.Discount;
-import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.Model.FilmModel;
-import com.example.movieticketapp.Model.InforBooked;
 import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
 import com.example.movieticketapp.databinding.HomeScreenBinding;
@@ -162,7 +157,7 @@ public class HomeActivity extends AppCompatActivity {
         viewAllBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(HomeActivity.this,ViewAllActivity.class));
+                startActivity(new Intent(HomeActivity.this, ViewAllActivity.class));
             }
         });
     }
@@ -214,30 +209,5 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    void GetComingMovies() {
-        List<FilmModel> listPoster = new ArrayList<FilmModel>();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference MovieRef = db.collection("Movies");
-        MovieRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error != null) {
-                    return;
-                } else {
-                    listPoster.clear();
-                    for (QueryDocumentSnapshot documentSnapshot : value) {
-                        FilmModel f = documentSnapshot.toObject(FilmModel.class);
-                        listPoster.add(f);
-                    }
-                    posterRecyclerView = (RecyclerView) findViewById(R.id.commingMovieView);
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(HomeActivity.this, LinearLayoutManager.HORIZONTAL, false);
-                    posterRecyclerView.setAdapter(new posterAdapter(listPoster));
-                    posterRecyclerView.setLayoutManager(linearLayoutManager);
-                }
-            }
-        });
-
-
-    }
 
 }

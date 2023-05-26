@@ -1,4 +1,4 @@
-package com.example.movieticketapp.Activity;
+package com.example.movieticketapp.Activity.Movie;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,21 +7,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Adapter;
-import android.widget.AdapterView;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.SearchView;
+import android.widget.ImageView;
 
-import com.example.movieticketapp.Activity.Movie.InformationFilmActivity;
 import com.example.movieticketapp.Adapter.ViewAllAdapter;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
-import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.InforBooked;
+import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -41,14 +37,14 @@ public class ViewAllActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_all);
         filmGridview = findViewById(R.id.filmGridView);
         backBtn = findViewById(R.id.backbutton);
-
-        List<FilmModel> listFilm = new ArrayList<FilmModel>();
+       List<FilmModel> listFilm = new ArrayList<FilmModel>();
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
+        checkAccountType();
         FirebaseRequest.database.collection("Movies").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -72,5 +68,36 @@ public class ViewAllActivity extends AppCompatActivity {
 
 
     }
+    void checkAccountType()
+    {
+        ImageView addMovie= findViewById(R.id.AddMovie);
 
+        try{
+            Log.d("account type", Users.currentUser.getAccountType());
+            if(Users.currentUser!=null)
+                if((!(Users.currentUser.getAccountType().toString()).equals("admin")))
+                {
+                    ViewGroup.LayoutParams params = addMovie.getLayoutParams();
+                    params.height = 0;
+                    addMovie.setLayoutParams(params);
+                    addMovie.setVisibility(View.INVISIBLE);
+                }
+            else {
+                    addMovie.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent i = new Intent(ViewAllActivity.this, AddMovieActivity.class);
+                            startActivity(i);
+                        }
+                    });
+                }
+        }
+        catch (Exception e)
+        {
+            ViewGroup.LayoutParams params = addMovie.getLayoutParams();
+            params.height = 0;
+            addMovie.setLayoutParams(params);
+            addMovie.setVisibility(View.INVISIBLE);
+        }
+    }
 }
