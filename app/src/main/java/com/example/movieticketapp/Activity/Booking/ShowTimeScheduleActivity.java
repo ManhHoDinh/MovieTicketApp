@@ -88,9 +88,9 @@ public class ShowTimeScheduleActivity extends AppCompatActivity {
             countTime++;
         }
         cinemaLv = (ListView) findViewById(R.id.cinemaLv);
-        TimeBookedAdapter timeBookedAdapter = new TimeBookedAdapter(listDate, listTime, null, null, cinemaLv, ShowTimeScheduleActivity.this);
+        TimeBookedAdapter timeBookedAdapter = new TimeBookedAdapter(listDate, listTime, selectedFilm.getName(), null, null, cinemaLv, ShowTimeScheduleActivity.this);
 
-        dayRecycleView.setAdapter(new TimeBookedAdapter(listDate, listTime, null, null, cinemaLv, ShowTimeScheduleActivity.this));
+        dayRecycleView.setAdapter(new TimeBookedAdapter(listDate, listTime, selectedFilm.getName(), null, null, cinemaLv, ShowTimeScheduleActivity.this));
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         dayRecycleView.setLayoutManager(layoutManager);
 

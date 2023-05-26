@@ -3,6 +3,7 @@ package com.example.movieticketapp.Activity.Movie;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -11,23 +12,83 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Activity.Ticket.MyTicketAllActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
+import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.R;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.google.protobuf.Any;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddMovieActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     int th;
+    StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+    StorageReference storageReference2 = FirebaseStorage.getInstance().getReference();
+    FirebaseFirestore databaseReference = FirebaseFirestore.getInstance();
+    DocumentReference document;
+    ImageView moviebackground;
+    TextView textbg;
+    ImageView imbg;
+
+    RoundedImageView movieavatar;
+    TextView textavt;
+    ImageView imavt;
+    EditText description;
+    EditText movieName;
+    EditText movieKind;
+    EditText movieDurarion;
+    EditText movieStatus;
+    RoundedImageView movieactor;
+    ImageView imcast;
+    TextView textcast;
+
+    VideoView movietrailer;
+    ImageView imtrailer;
+    TextView texttrailer;
+    Button applyButton;
+    Button cancleButton;
+    Uri backgrounduri;
+    Uri avataruri = null;
+    Uri actoruri = null;
+    Uri traileruri = null;
+
+    String urlbackground;
+
+    String urlavatar;
+    String urlactor;
+    String urltrailer;
+    UploadTask uploadTask;
+    UploadTask uploadTask2;
+    boolean error = false;
+    boolean finish = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,23 +111,30 @@ public class AddMovieActivity extends AppCompatActivity {
             }
             return true;
         });
-        ImageView moviebackground = (ImageView) findViewById(R.id.moviebackground);
-        TextView textbg = (TextView) findViewById(R.id.textbackground);
-        ImageView imbg = (ImageView) findViewById(R.id.imbackground);
 
-        RoundedImageView movieavatar = (RoundedImageView) findViewById(R.id.movieavatar);
-        TextView textavt = (TextView) findViewById(R.id.textavt);
-        ImageView imavt = (ImageView) findViewById(R.id.imavt);
+        moviebackground = (ImageView) findViewById(R.id.moviebackground);
+        textbg = (TextView) findViewById(R.id.textbackground);
+        imbg = (ImageView) findViewById(R.id.imbackground);
 
-        EditText description = (EditText) findViewById(R.id.moviedes);
+        movieavatar = (RoundedImageView) findViewById(R.id.movieavatar);
+        textavt = (TextView) findViewById(R.id.textavt);
+        imavt = (ImageView) findViewById(R.id.imavt);
 
-        RoundedImageView movieactor = (RoundedImageView) findViewById(R.id.movieactor);
-        ImageView imcast = (ImageView) findViewById(R.id.imcast);
-        TextView textcast = (TextView) findViewById(R.id.textcast);
+        description = (EditText) findViewById(R.id.moviedes);
+        movieName = (EditText) findViewById(R.id.movieName);
+        movieKind = (EditText) findViewById(R.id.movieKind);
+        movieDurarion =(EditText) findViewById(R.id.movieDuration);
+        movieStatus = (EditText) findViewById(R.id.moviestatus);
+        applyButton = (Button) findViewById(R.id.applybutton);
+        cancleButton = (Button) findViewById(R.id.cancelbutton);
 
-        VideoView movietrailer = (VideoView) findViewById(R.id.movietrailer);
-        ImageView imtrailer = (ImageView) findViewById(R.id.imtrailer);
-        TextView texttrailer = (TextView) findViewById(R.id.texttrailer);
+        movieactor = (RoundedImageView) findViewById(R.id.movieactor);
+        imcast = (ImageView) findViewById(R.id.imcast);
+        textcast = (TextView) findViewById(R.id.textcast);
+
+        movietrailer = (VideoView) findViewById(R.id.movietrailer);
+        imtrailer = (ImageView) findViewById(R.id.imtrailer);
+        texttrailer = (TextView) findViewById(R.id.texttrailer);
 
         ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
                 registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
@@ -74,22 +142,29 @@ public class AddMovieActivity extends AppCompatActivity {
                         switch (th) {
                             case 0:
                                 moviebackground.setImageURI(uri);
+                                backgrounduri = uri;
                                 break;
                             case 1:
                                 movieavatar.setImageURI(uri);
+                                avataruri = uri;
                                 break;
                             case 2:
                                 movieactor.setImageURI(uri);
+                                actoruri = uri;
                                 break;
                             case 3:
                                 movietrailer.setVideoURI(uri);
+                                traileruri = uri;
                                 break;
                         }
 
                     } else {
                         Log.d("PhotoPicker", "No media selected");
                     }
-                });
+                }
+            );
+
+
         moviebackground.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,7 +177,6 @@ public class AddMovieActivity extends AppCompatActivity {
                  
             }
         });
-
         movieavatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,7 +189,6 @@ public class AddMovieActivity extends AppCompatActivity {
                  
             }
         });
-
         movieactor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -127,7 +200,6 @@ public class AddMovieActivity extends AppCompatActivity {
                 imcast.setImageResource(0);
             }
         });
-
         movietrailer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,7 +209,120 @@ public class AddMovieActivity extends AppCompatActivity {
                 th = 3;
                 texttrailer.setText("");
                 imtrailer.setImageResource(0);
-                 
+            }
+        });
+        applyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (movieName.length() == 0) {
+                    movieName.setError("Movie Name cannot be empty!!!");
+                    error = true;
+                }
+                if (movieKind.length() == 0) {
+                    movieKind.setError("Movie Kind cannot be empty!!!");
+                    error = true;
+                }
+                if (movieDurarion.length() == 0) {
+                    movieDurarion.setError("Movie Duration cannot be empty!!!");
+                    error = true;
+                }
+                if (movieStatus.length() == 0) {
+                    movieStatus.setError("Movie Status cannot be empty!!!");
+                    error = true;
+                }
+
+                if (!error)
+                {
+                    Calendar calFordData = Calendar.getInstance();
+                    SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-yyyy");
+                    String saveCurrentData = currentDate.format(calFordData.getTime());
+
+                    Calendar calFordTime = Calendar.getInstance();
+                    SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm");
+                    String saveCurrentTime = currentTime.format(calFordData.getTime());
+
+                    String postRandomName = saveCurrentData + saveCurrentTime;
+
+                    storageReference = storageReference.child(postRandomName+".jpg");
+                    uploadTask = storageReference.putFile(backgrounduri);
+                    Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                        @Override
+                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                            if (!task.isSuccessful()) {
+                                throw task.getException();
+                            }
+
+                            // Continue with the task to get the download URL
+                            return storageReference.getDownloadUrl();
+                        }
+                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if (task.isSuccessful()) {
+                                urlbackground = task.getResult().toString();
+                                SaveDatatoDatabase();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    storageReference2 = storageReference2.child(postRandomName+"th2.jpg");
+                    uploadTask2 = storageReference2.putFile(avataruri);
+                    Task<Uri> urlTask2 = uploadTask2.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                        @Override
+                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                            if (!task.isSuccessful()) {
+                                throw task.getException();
+                            }
+
+                            // Continue with the task to get the download URL
+                            return storageReference2.getDownloadUrl();
+                        }
+                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if (task.isSuccessful()) {
+                                urlavatar = task.getResult().toString();
+                                SaveDatatoDatabase();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+                else
+                {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Have some errors!!!", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            }
+        });
+        cancleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+    }
+
+    private void SaveDatatoDatabase() {
+        document = databaseReference.document("Movies/"+movieName.getText().toString());
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("BackGroundImage", urlbackground);
+        data.put("PosterImage", urlbackground);
+        data.put("PrimaryImage", urlavatar);
+        data.put("description", description.getText().toString());
+        data.put("durationTime", movieDurarion.getText().toString());
+        data.put("genre", movieKind.getText().toString());
+        data.put("id", movieName.getText().toString());
+        data.put("name", movieName.getText().toString());
+        data.put("status", movieStatus.getText().toString());
+        data.put("vote", "0");
+        document.set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(getApplicationContext(), "Add Movie Success!", Toast.LENGTH_SHORT).show();
+
             }
         });
     }

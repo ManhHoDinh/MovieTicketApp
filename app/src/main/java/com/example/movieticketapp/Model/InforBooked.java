@@ -20,6 +20,7 @@ public class InforBooked {
     public String nameFilm;
     public List<String> listCinemaName = new ArrayList<String>();
     public String timeBooked;
+    public String typeFilm = "All";
     public int total = 0;
     public static InforBooked getInstance(){
         if(instance == null){

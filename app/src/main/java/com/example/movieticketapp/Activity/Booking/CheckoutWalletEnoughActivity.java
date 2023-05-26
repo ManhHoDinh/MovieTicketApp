@@ -171,10 +171,11 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
                                                 listSeats.add(seats.get(i));
                                                 FirebaseRequest.database.collection("showtime").document(doc.getId()).update("BookedSeat", listSeats);
                                             }
-                                            Ticket ticket = new Ticket(film.getName(),time,
-                                                    cinemaName,film.getPosterImage(),
-                                                    Double.parseDouble(film.getVote()),
-                                                    film.getGenre(), film.getDurationTime(), listSeat, price, idOrder.getText().toString() );
+//                                            Ticket ticket = new Ticket(film.getName(),time,
+//                                                    cinemaName,film.getPosterImage(),
+//                                                    Double.parseDouble(film.getVote()),
+//                                                    film.getGenre(), film.getDurationTime(), listSeat, price, idOrder.getText().toString() );
+                                            Ticket ticket = new Ticket(time, cinemaName, listSeat, price, idOrder.getText().toString(), film.getId(), FirebaseRequest.mAuth.getUid());
                                             FirebaseRequest.database.collection("Ticket").document().set(ticket);
 
                                         }

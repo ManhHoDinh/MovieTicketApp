@@ -14,7 +14,7 @@ public class Helper {
             return;
         }
         //set listAdapter in loop for getting final size
-        int totalHeight=0;
+        int totalHeight=100;
         for (int size=0; size < myListAdapter.getCount(); size++) {
 
             View listItem=myListAdapter.getView(size, null, myListView);

@@ -29,4 +29,6 @@
     <color name="AlizarinCrimson">#FFD42121</color>
     <color name="bg_add_movie">#FF2741EF</color>
     <color name="cancel_button">#FFC5BCBC</color>
+    <color name="playing">#4D08FC4D</color>
+    <color name="coming">#4DF7FC08</color>
 </resources>

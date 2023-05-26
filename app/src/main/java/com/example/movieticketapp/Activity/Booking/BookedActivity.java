@@ -90,9 +90,9 @@ public class BookedActivity extends AppCompatActivity {
             countTime++;
         }
         cinemaLv = (ListView) findViewById(R.id.cinemaLv);
-        TimeBookedAdapter timeBookedAdapter = new TimeBookedAdapter(listDate, listTime, null, null, cinemaLv, BookedActivity.this);
+        TimeBookedAdapter timeBookedAdapter = new TimeBookedAdapter(listDate, listTime,null, null, null, cinemaLv, BookedActivity.this);
 
-        dayRecycleView.setAdapter(new TimeBookedAdapter(listDate, listTime, null, null, cinemaLv, BookedActivity.this));
+        dayRecycleView.setAdapter(new TimeBookedAdapter(listDate, listTime, null,null, null, cinemaLv, BookedActivity.this));
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         dayRecycleView.setLayoutManager(layoutManager);
 
