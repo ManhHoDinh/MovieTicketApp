@@ -2,6 +2,8 @@ package com.example.movieticketapp.Adapter;
 
 
 
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,15 +12,21 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.movieticketapp.Activity.Movie.InformationFilmActivity;
+import com.example.movieticketapp.Model.ExtraIntent;
+import com.example.movieticketapp.Model.FilmModel;
+import com.example.movieticketapp.Model.InforBooked;
 import com.example.movieticketapp.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class posterAdapter extends RecyclerView.Adapter<posterAdapter.ViewHolder> {
-    List<Integer> listPoster;
+    List<FilmModel> listPoster;
 
-    public posterAdapter(List<Integer> listPoster) {
+    public posterAdapter(List<FilmModel> listPoster) {
         this.listPoster = listPoster;
+        Log.d("Size", String.valueOf(listPoster.size()));
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -38,7 +46,18 @@ public class posterAdapter extends RecyclerView.Adapter<posterAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull posterAdapter.ViewHolder holder, int position) {
-        holder.imageView.setImageResource(listPoster.get(position));
+        Picasso.get().load(listPoster.get(position).getPosterImage()).into(holder.imageView);
+        FilmModel f =listPoster.get(position);
+
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(holder.imageView.getContext(), InformationFilmActivity.class);
+                i.putExtra(ExtraIntent.film, f);
+                InforBooked.getInstance().nameFilm = f.getName();
+                holder.imageView.getContext().startActivity(i);
+            }
+        });
     }
 
     @Override
