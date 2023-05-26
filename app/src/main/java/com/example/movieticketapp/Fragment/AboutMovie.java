@@ -1,28 +1,54 @@
 package com.example.movieticketapp.Fragment;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.example.movieticketapp.Activity.Booking.BookedActivity;
 import com.example.movieticketapp.Activity.Booking.ShowTimeScheduleActivity;
+import com.example.movieticketapp.Adapter.AddDecoration;
+import com.example.movieticketapp.Adapter.VideoAdapter;
+import com.example.movieticketapp.Model.Comment;
 import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AboutMovie extends Fragment {
     FilmModel film;
+
+    RecyclerView videoListView;
+
+    String[] videoList;
     public AboutMovie(FilmModel f) {
         // Required empty public constructor
         film = f;
@@ -41,6 +67,37 @@ public class AboutMovie extends Fragment {
         TextView description = getView().findViewById(R.id.descriptionTV);
         description.setText(film.getDescription());
         Button BookBt = getView().findViewById(R.id.BookBt);
+        List<String> videoList = new ArrayList<>();
+        videoListView = getView().findViewById(R.id.videoList);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext(), RecyclerView.HORIZONTAL, false);
+        VideoAdapter videoAdapter = new VideoAdapter();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference VideoRef = db.collection("Movies").document(film.getId()).collection("TrailerAndSongUrls");
+        VideoRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    return;
+                }
+
+                videoList.clear();
+                for (QueryDocumentSnapshot doc : value)
+                {
+                    String videoURL = doc.getString("videoURL");
+
+                    videoList.add(videoURL);
+                    Log.d(TAG, "Added video with url: " + videoURL);
+                }
+
+                videoAdapter.setVideoIdList(videoList);
+
+                videoListView.setAdapter(videoAdapter);
+                videoListView.setLayoutManager(linearLayoutManager);
+            }
+        });
+
+
+
         try{
             Log.d("account type", Users.currentUser.getAccountType());
             if(Users.currentUser!=null)
@@ -72,6 +129,7 @@ public class AboutMovie extends Fragment {
                 }
             });
         }
+
 
     }
 
