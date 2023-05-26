@@ -45,7 +45,7 @@ private ListSearchAdapter adapter;
         closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(SearchActivity.this, HomeActivity.class));
+                finish();
             }
         });
         listFilm = new ArrayList<FilmModel>();

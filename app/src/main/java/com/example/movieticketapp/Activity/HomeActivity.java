@@ -8,6 +8,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -61,7 +62,7 @@ public class HomeActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigation;
     private HomeScreenBinding binding;
     private ImageView accountImage;
-    private  ImageView addDiscount;
+    private ImageView addDiscount;
     private TextView viewAllBtn;
 
     @Override
@@ -73,21 +74,19 @@ public class HomeActivity extends AppCompatActivity {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         accountImage = findViewById(R.id.accountImage);
         addDiscount = findViewById(R.id.AddDiscount);
-        addDiscount= findViewById(R.id.AddDiscount);
+        addDiscount = findViewById(R.id.AddDiscount);
         viewAllBtn = findViewById(R.id.viewAllBtn);
-        searchView = findViewById(R.id.searchField);
-
-        if (currentUser.getPhotoUrl() != null)
+        searchView=findViewById(R.id.searchField);
 
         searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if(b){
+                if (b) {
                     startActivity(new Intent(HomeActivity.this, SearchActivity.class));
                 }
             }
         });
-        if (currentUser.getPhotoUrl()!=null)
+        if (currentUser.getPhotoUrl() != null)
             Picasso.get().load(currentUser.getPhotoUrl()).into(accountImage);
         else accountImage.setImageResource(R.drawable.avatar);
 
@@ -99,7 +98,7 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-      //  GetComingMovies();
+        //  GetComingMovies();
 
         typeListView = (RecyclerView) findViewById(R.id.listTypeMovie);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -147,8 +146,7 @@ public class HomeActivity extends AppCompatActivity {
                     binding.AddDiscount.setLayoutParams(params);
                     addDiscount.setVisibility(View.INVISIBLE);
                 }
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             ViewGroup.LayoutParams params = binding.AddDiscount.getLayoutParams();
             params.height = 0;
             binding.AddDiscount.setLayoutParams(params);
