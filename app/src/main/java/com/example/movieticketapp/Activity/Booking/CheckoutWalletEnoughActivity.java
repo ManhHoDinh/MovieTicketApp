@@ -156,7 +156,7 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
                                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                     List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
                                     for(DocumentSnapshot doc : listDocs){
-                                        Timestamp time = doc.getTimestamp("TimeBooked");
+                                        Timestamp time = doc.getTimestamp("timeBooked");
                                         DateFormat dateFormat = new SimpleDateFormat("EEE\ndd");
                                         DateFormat timeFormat = new SimpleDateFormat("H:mm");
                                         DateFormat monthformat = new SimpleDateFormat("MMM");
@@ -164,12 +164,12 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
                                       //  String timeBook = timeBooked + ", " + listDate[0] + " "+month_name+" " + listDate[1];
 
 
-                                        if(doc.get("NameCinema").equals(cinemaName) && doc.get("NameFilm").equals(film.getName()) && timeFormat.format(time.toDate()).equals(timeBooked) && dateFormat.format(time.toDate()).equals(date)){
-                                            List<String> listSeats = (List<String>) doc.get("BookedSeat");
+                                        if(doc.get("nameCinema").equals(cinemaName) && doc.get("nameFilm").equals(film.getName()) && timeFormat.format(time.toDate()).equals(timeBooked) && dateFormat.format(time.toDate()).equals(date)){
+                                            List<String> listSeats = (List<String>) doc.get("bookedSeat");
 
                                             for(int i = 0; i < seats.size(); i++){
                                                 listSeats.add(seats.get(i));
-                                                FirebaseRequest.database.collection("showtime").document(doc.getId()).update("BookedSeat", listSeats);
+                                                FirebaseRequest.database.collection("showtime").document(doc.getId()).update("bookedSeat", listSeats);
                                             }
 //                                            Ticket ticket = new Ticket(film.getName(),time,
 //                                                    cinemaName,film.getPosterImage(),
