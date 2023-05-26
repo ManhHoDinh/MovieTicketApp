@@ -15,8 +15,10 @@
         android:theme="@style/Theme.MovieTicketApp"
         tools:targetApi="31">
         <activity
+            android:name=".ConfirmDialogActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.SearchActivity"
-
             android:exported="false" />
         <activity
             android:name=".Activity.ViewAllActivity"

@@ -191,11 +191,14 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
                 for(DocumentSnapshot doc : listDocs){
-                    Timestamp time = doc.getTimestamp("TimeBooked");
+                    Timestamp time = doc.getTimestamp("timeBooked");
                     DateFormat dateFormat = new SimpleDateFormat("EEE\ndd");
                     DateFormat timeFormat = new SimpleDateFormat("H:m");
-                    if(doc.get("NameCinema").equals(nameCinema) && timeFormat.format(time.toDate()).equals(timeBooked) && dateFormat.format(time.toDate()).equals(dateBooked) && doc.get("NameFilm").equals(selectedFilm.getName())){
-                        List<String> bookedSeats = (List<String>) doc.get("BookedSeat");
+                    if(doc.get("nameCinema").equals(nameCinema)
+                            && timeFormat.format(time.toDate()).equals(timeBooked)
+                            && dateFormat.format(time.toDate()).equals(dateBooked)
+                            && doc.get("nameFilm").equals(selectedFilm.getName())){
+                        List<String> bookedSeats = (List<String>) doc.get("bookedSeat");
                         LinearLayout linearLayout =(LinearLayout) layout.getChildAt(0);
                         for(int i = 0; i < 10; i ++){
                             LinearLayout layout = (LinearLayout) linearLayout.getChildAt(i);

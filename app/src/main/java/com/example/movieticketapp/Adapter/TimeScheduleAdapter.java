@@ -217,42 +217,46 @@ public class TimeScheduleAdapter extends RecyclerView.Adapter<TimeScheduleAdapte
         } else {
             holder.dateBtn.setText(listDate.get(position));
 
-            Log.e("d", holder.dateBtn.getText().toString());
+
+            for(ShowTime show : listShowTimeSelected) {
+                if (timeFormat.format(show.getTimeBooked().toDate()).equals(holder.dateBtn.getText().toString())
+                        && cinemaName.equals(show.getNameCinema())
+                        && filmName.equals(show.getNameFilm())
+                        && dateFormat.format(show.getTimeBooked().toDate()).equals(ScheduleFilm.getInstance().dateBooked)) {
+                    listSelect.add(show);
+                    holder.dateBtn.setEnabled(false);
+                    holder.dateBtn.setBackgroundColor(Color.TRANSPARENT);
+                    holder.dateBtn.setBackground(ContextCompat.getDrawable(holder.dateBtn.getContext(), R.drawable.background_disable));
+                    break;
+                } else holder.Binding();
+            }
             if( ScheduleFilm.getInstance().listShowTime.size() > 0){
                 for(ShowTime showTime : ScheduleFilm.getInstance().listShowTime){
                   //  Log.e("binh",timeFormat.format(showTime.getTimeBooked().toDate())+ " " +  holder.dateBtn.getText().toString() + " "+ cinemaName+ " " + showTime.getNameCinema() + " " + dateFormat.format(showTime.getTimeBooked().toDate()) + " " + ScheduleFilm.getInstance().dateBooked);
-                    if(timeFormat.format(showTime.getTimeBooked().toDate()).equals(holder.dateBtn.getText().toString()) && cinemaName.equals(showTime.getNameCinema()) && dateFormat.format(showTime.getTimeBooked().toDate()).equals(ScheduleFilm.getInstance().dateBooked)){
+                    if(timeFormat.format(showTime.getTimeBooked().toDate()).equals(holder.dateBtn.getText().toString())
+                            && cinemaName.equals(showTime.getNameCinema())
+                            && dateFormat.format(showTime.getTimeBooked().toDate()).equals(ScheduleFilm.getInstance().dateBooked)){
 
-                        listSelect.add(showTime);
+
                         holder.dateBtn.setBackgroundColor(Color.TRANSPARENT);
                         holder.dateBtn.setBackground(ContextCompat.getDrawable(holder.dateBtn.getContext(), R.drawable.background_button));
-                        Log.e("fdf", "binh");
+
                         break;
 
                     }
-                    else {
-                        for(ShowTime show : listShowTimeSelected){
-                            if(timeFormat.format(show.getTimeBooked().toDate()).equals(holder.dateBtn.getText().toString())
-                                    && cinemaName.equals(show.getNameCinema())
-                                    && filmName.equals(show.getNameFilm())
-                                    && dateFormat.format(show.getTimeBooked().toDate()).equals(ScheduleFilm.getInstance().dateBooked)){
-                                holder.dateBtn.setEnabled(false);
-                                holder.dateBtn.setBackgroundColor(Color.TRANSPARENT);
-                                holder.dateBtn.setBackground(ContextCompat.getDrawable(holder.dateBtn.getContext(), R.drawable.background_disable));
-                                break;
-                            }
-                            else {
+//                    else {
 
-                                holder.Binding();
-                            }
-
-                        }
-
-                    }
+//                            else {
+//
+//                                holder.Binding();
+//                            }
+//
+//                        }
+//
+//                    }
 
                 }
             }
-            else holder.Binding();
             //Log.e("fdf", String.valueOf(listSelect.size()) + " " + String.valueOf(listShowTimeSelected.size()));
 //            FirebaseRequest.database.collection("showtime").addSnapshotListener(new EventListener<QuerySnapshot>() {
 //                @Override
