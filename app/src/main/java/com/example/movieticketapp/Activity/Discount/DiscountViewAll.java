@@ -104,6 +104,7 @@ public class DiscountViewAll extends AppCompatActivity {
                                 double finalTotal = totalBook * Discounts.get(i).getDiscountRate() /100;
                                 intent.putExtra("total", finalTotal);
                                 intent.putExtra("nameDiscount", Discounts.get(i).getName());
+                                intent.putExtra("idDiscount", Discounts.get(i).getID());
                                 setResult(RESULT_OK, intent);
                                 finish();
                             }

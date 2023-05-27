@@ -48,6 +48,7 @@ import java.util.Random;
 
 public class CheckoutWalletEnoughActivity extends AppCompatActivity {
     ImageView BtnBack;
+    private String idDiscount;
     Button BtnCheckOut;
     TextView totalTv;
     ListView movieInfoView;
@@ -81,9 +82,9 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
 
                     total = result.getData().getDoubleExtra("total", 0);
                     String name = result.getData().getStringExtra("nameDiscount");
+                    idDiscount = result.getData().getStringExtra("idDiscount");
                     selectTv.setVisibility(View.GONE);
                     selectVoucherBtn.setText(name);
-
                     totalTv.setText(String.valueOf(Math.round(total)) + " VNĐ");
 
 //                    String title = result.getData().getStringExtra("title") ;
@@ -206,6 +207,7 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
                         int totalWallet = Integer.parseInt(String.valueOf(doc.get("Wallet")));
                         if(Math.round(total) <= totalWallet){
                             totalWallet -= Math.round(total);
+                            FirebaseRequest.database.collection("Discounts").document(idDiscount).delete();
                             FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid()).update("Wallet", totalWallet);
                             FirebaseRequest.database.collection("showtime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
