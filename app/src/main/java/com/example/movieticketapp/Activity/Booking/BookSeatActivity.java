@@ -28,6 +28,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class BookSeatActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView nameFilmTv;
@@ -166,19 +167,29 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
         SeatBookBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), CheckoutWalletEnoughActivity.class);
+                Intent i = new Intent(getApplicationContext(), ServiceActivity.class);
                 if(priceTv.getText().equals(") VNĐ")){
                     Toast.makeText(BookSeatActivity.this, "Please choose seats!", Toast.LENGTH_SHORT).show();
                 }
                 else{
+                    Bundle bundle = new Bundle();
+                    bundle.putString("dateBooked", dateBooked);
+                    bundle.putString("timeBooked", timeBooked);
+                    bundle.putParcelable("selectedFilm", selectedFilm);
+                    bundle.putString("cinemaName",nameCinemaTv.getText().toString());
+                    String priceSeat = priceTv.getText().toString();
+                    bundle.putString("price",priceSeat.substring(0, priceSeat.length() - 4));
+                    bundle.putStringArrayList("seats", (ArrayList<String>) selectedIds);
+                    i.putExtras(bundle);
 
-                    i.putExtra("dateBooked", dateBooked);
-                    i.putExtra("timeBooked", timeBooked);
-                    i.putExtra("selectedFilm", selectedFilm);
-                    i.putExtra("cinemaName",nameCinemaTv.getText().toString());
-                    i.putExtra("price",priceTv.getText());
-                    i.putExtra("price",priceTv.getText());
-                    i.putStringArrayListExtra("seats", (ArrayList<String>) selectedIds);
+
+//                    i.putExtra("dateBooked", dateBooked);
+//                    i.putExtra("timeBooked", timeBooked);
+//                    i.putExtra("selectedFilm", selectedFilm);
+//                    i.putExtra("cinemaName",nameCinemaTv.getText().toString());
+//                    i.putExtra("price",priceTv.getText());
+//                    i.putExtra("price",priceTv.getText());
+//                    i.putStringArrayListExtra("seats", (ArrayList<String>) selectedIds);
                     startActivity(i);
                 }
 

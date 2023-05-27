@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,9 +50,12 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
     TextView dateTimeTv;
     TextView seatTv;
     TextView priceTv;
+    TextView totalService;
+    Button selectVoucherBtn;
     TextView yourWallet;
     TextView idOrder;
     FilmModel film;
+    LinearLayout checkoutinforView;
     int total;
     String date;
     String timeBooked;
@@ -75,7 +79,11 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
         seatTv = (TextView) findViewById(R.id.SeatNumberValue) ;
         yourWallet = (TextView) findViewById(R.id.YourWalletValue) ;
         idOrder = (TextView) findViewById(R.id.IDOrderValue);
+        selectVoucherBtn = findViewById(R.id.selectVoucherBtn);
+        totalService = findViewById(R.id.totalService);
         movieInfoView = findViewById(R.id.movieInfoView);
+        checkoutinforView = findViewById(R.id.checkoutinfo);
+
         FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -84,11 +92,17 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
             }
         });
         Intent intent = getIntent();
-        film = intent.getParcelableExtra("selectedFilm");
-        cinemaName =intent.getStringExtra("cinemaName");
+        Bundle bundle = intent.getExtras();
+        film = bundle.getParcelable("selectedFilm");
+       // film = intent.getParcelableExtra("selectedFilm");
+        cinemaName =bundle.getString("cinemaName");
+       // cinemaName =intent.getStringExtra("cinemaName");
         cinemaNameTv.setText(cinemaName);
-        date = intent.getStringExtra("dateBooked");
-        timeBooked = intent.getStringExtra("timeBooked");
+        date = bundle.getString("dateBooked");
+       // date = intent.getStringExtra("dateBooked");
+        timeBooked = bundle.getString("timeBooked");
+        totalService.setText(bundle.getString("total service"));
+       // timeBooked = intent.getStringExtra("timeBooked");
         listDate = date.split("\n");
         Calendar cal=Calendar.getInstance();
         SimpleDateFormat month_date = new SimpleDateFormat("MMM");
@@ -113,7 +127,8 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
             }
         });
         int id;
-        seats = intent.getStringArrayListExtra("seats");
+        seats = bundle.getStringArrayList("seats");
+        //seats = intent.getStringArrayListExtra("seats");
         listSeat = "";
         for(int i = 0; i < seats.size(); i++){
             if(i != seats.size() - 1){
@@ -125,12 +140,13 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
             }
 
         }
-
-        price = intent.getStringExtra("price");
-        int initPrice = Integer.parseInt(price.substring(0,price.length() -4)) / seats.size();
+        price = bundle.getString("price");
+        int total = Integer.parseInt(price) + Integer.parseInt(bundle.getString("total service"));
+        //price = intent.getStringExtra("price");
+        int initPrice = Integer.parseInt(price) / seats.size();
         priceTv.setText(initPrice + " x " + seats.size());
         seatTv.setText(listSeat);
-        totalTv.setText(price);
+        totalTv.setText(String.valueOf(total) + " VNĐ");
         movie.add(new CheckoutFilmModel(film.getName(),film.getVote(), film.getGenre(),film.getDurationTime(), film.getPosterImage()));
         adapter = new MovieCheckoutAdapter(getApplicationContext(), R.layout.checkout_movie_view, movie);
         movieInfoView.setAdapter(adapter);
