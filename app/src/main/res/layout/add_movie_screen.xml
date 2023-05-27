@@ -120,24 +120,69 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_toRightOf="@+id/movieavatar"
                     android:layout_marginRight="15dp"
-                    android:translationY="60dp"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:textColor="@color/white"
-                        android:id="@+id/movieinfo"
+                    android:translationY="47dp"
+                    android:translationX="10dp"
+                    android:orientation="vertical">
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16dp"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:text="Add movie information"/>
-                    <ImageView
-                        android:layout_marginLeft="3dp"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:id="@+id/addmovieinfo"
-                        android:src="@drawable/add_info_movie"/>
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12dp"
+                            android:textColor="@color/white"
+                            android:text="Name: "/>
+                        <EditText
+                            android:layout_width="190dp"
+                            android:layout_height="wrap_content"
+                            android:textSize="12dp"
+                            android:hint="Movie Name"
+                            android:textColorHint="@color/hint_color"
+                            android:textColor="@color/white"
+                            android:id="@+id/movieName"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:textSize="12dp"
+                            android:text="Kind: "/>
+                        <EditText
+                            android:layout_width="190dp"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:hint="Kind of movie"
+                            android:textColorHint="@color/hint_color"
+                            android:textSize="12dp"
+                            android:id="@+id/movieKind"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12dp"
+                            android:textColor="@color/white"
+                            android:text="Duration: "/>
+                        <EditText
+                            android:layout_width="190dp"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:hint="Duration time of movie"
+                            android:textColorHint="@color/hint_color"
+                            android:textSize="12dp"
+                            android:textColorLink="@color/white"
+                            android:id="@+id/movieDuration"/>
+                    </LinearLayout>
                 </LinearLayout>
             </RelativeLayout>
             <LinearLayout
@@ -145,7 +190,29 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="24dp"
                 android:paddingRight="24dp"
+                android:translationY="-50dp"
                 android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text="Status: "/>
+                    <EditText
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:hint="(playing or coming soon)"
+                        android:textSize="13dp"
+                        android:textColorHint="@color/hint_color"
+                        android:textColor="@color/white"
+                        android:id="@+id/moviestatus"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -15,11 +15,13 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.InforBooked;
 import com.example.movieticketapp.R;
@@ -42,13 +44,16 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
     private Activity activity;
     private String[] listType;
     private int checkedPosition = 0;
-    private ViewPager2 viewPager;
-    private List<FilmModel> listPosts;
+    private ViewPager2 NowPlaying;
+    private  RecyclerView ComingSoon;
+    private List<FilmModel> PlayingFilms;
+    private List<FilmModel> ComingFilms;
 
     public ListTypeAdapter(Activity activity, String[] listType) {
         this.activity = activity;
         this.listType = listType;
-        this.listPosts = new ArrayList<>();
+        this.PlayingFilms = new ArrayList<FilmModel>();
+        this.ComingFilms = new ArrayList<FilmModel>();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -85,12 +90,14 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
     }
 
     void loadListPost(String type) {
-        viewPager = activity.findViewById(R.id.typeMovieViewPage);
+        NowPlaying = activity.findViewById(R.id.typeMovieViewPage);
+        ComingSoon = activity.findViewById(R.id.commingMovieView);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference MovieRef = db.collection("Movies");
 
         if (type.equals("All")) {
-            listPosts.clear();
+            PlayingFilms.clear();
+            ComingFilms.clear();
             MovieRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -98,27 +105,37 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                         return;
                     }
 
-                    listPosts.clear();
+                    PlayingFilms.clear();
+                    ComingFilms.clear();
                     for (QueryDocumentSnapshot documentSnapshot : value) {
                         FilmModel f = documentSnapshot.toObject(FilmModel.class);
-                        listPosts.add(f);
+                        Log.d(f.getStatus(),f.getStatus());
+                        if(f.getStatus().equals("playing"))
+                            PlayingFilms.add(f);
+                        else
+                            ComingFilms.add(f);
                     }
                     updateViewPager();
                 }
             });
         } else {
-            listPosts.clear();
+            PlayingFilms.clear();
+            ComingFilms.clear();
             MovieRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                     if (error != null) {
                         return;
                     }
-                    listPosts.clear();
+                    PlayingFilms.clear();
+                    ComingFilms.clear();
                     for (QueryDocumentSnapshot documentSnapshot : value) {
                         FilmModel f = documentSnapshot.toObject(FilmModel.class);
                         if (f.getGenre().contains(type)) {
-                            listPosts.add(f);
+                            if(f.getStatus().equals("playing"))
+                                PlayingFilms.add(f);
+                            else
+                                ComingFilms.add(f);
                         } else {
                         }
                     }
@@ -129,11 +146,13 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
     }
 
     void updateViewPager() {
-        viewPager.setAdapter(new SliderAdapter(listPosts, viewPager));
-        viewPager.setClipToPadding(false);
-        viewPager.setClipChildren(false);
-        viewPager.setOffscreenPageLimit(3);
-
+        NowPlaying.setAdapter(new SliderAdapter(PlayingFilms, NowPlaying));
+        NowPlaying.setClipToPadding(false);
+        NowPlaying.setClipChildren(false);
+        NowPlaying.setOffscreenPageLimit(3);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false);
+        ComingSoon.setAdapter(new posterAdapter(ComingFilms));
+        ComingSoon.setLayoutManager(linearLayoutManager);
         // Other transformations and settings
         CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
         compositePageTransformer.addTransformer(new MarginPageTransformer(24));
@@ -144,7 +163,7 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                 page.setScaleY(0.65f + r * 0.15f);
             }
         });
-        viewPager.setPageTransformer(compositePageTransformer);
+        NowPlaying.setPageTransformer(compositePageTransformer);
     }
 
     @NonNull

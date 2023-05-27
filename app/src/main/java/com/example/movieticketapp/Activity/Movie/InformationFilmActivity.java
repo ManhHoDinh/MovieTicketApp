@@ -105,8 +105,6 @@ public class InformationFilmActivity extends FragmentActivity {
                     refreshScreen();
                     return;
                 }
-
-
                 if (snapshot != null && snapshot.exists()) {
                     f = snapshot.toObject(FilmModel.class);
                     refreshScreen();

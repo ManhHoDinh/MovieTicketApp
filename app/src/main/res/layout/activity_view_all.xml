@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
-    tools:context=".Activity.ViewAllActivity">
+    tools:context=".Activity.Movie.ViewAllActivity">
     <androidx.constraintlayout.widget.ConstraintLayout
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginHorizontal="24dp"
@@ -48,7 +48,20 @@
             android:id="@+id/filmGridView"
             android:horizontalSpacing="24dp"
             android:verticalSpacing="24dp"
+            android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </LinearLayout>
+    <ImageView
+        android:id="@+id/AddMovie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="50dp"
+        android:src="@drawable/add_promo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

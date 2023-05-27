@@ -7,16 +7,20 @@
     android:id="@+id/filmItem"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    >
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/imgFilm"
         app:riv_corner_radius="8dp"
         android:layout_width="match_parent"
         android:layout_height="184dp"/>
     <TextView
-        android:layout_marginLeft="8dp"
-        android:layout_width="127dp"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textAlignment="center"
         android:id="@+id/nameFilm"/>
 </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
