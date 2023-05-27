@@ -13,7 +13,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.movieticketapp.Activity.HomeActivity;
@@ -35,8 +37,9 @@ import java.util.List;
 
 public class DiscountViewAll extends AppCompatActivity {
     ActivityDiscountViewAllBinding binding;
-    private RecyclerView promotionView;
+    private ListView promotionView;
     List<Discount> Discounts = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +47,6 @@ public class DiscountViewAll extends AppCompatActivity {
 
         binding = ActivityDiscountViewAllBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
 
         // below line is to call set on query text listener method.
         binding.searchField.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -88,11 +90,28 @@ public class DiscountViewAll extends AppCompatActivity {
                         Discounts.add(f);
                         Log.d(TAG, "data: " + f.getName());
                     }
-                    promotionView =(RecyclerView) findViewById(R.id.promotionView);
-                    LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-                    promotionView.setAdapter(new PromotionAdapter(Discounts));
-                    promotionView.setLayoutManager(VerLayoutManager);
+                    promotionView =(ListView) findViewById(R.id.promotionView);
+                 //   LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+                   // promotionView.setLayoutManager(VerLayoutManager);
+                    Intent intent = getIntent();
+                    PromotionAdapter promotionAdapter = new PromotionAdapter(DiscountViewAll.this,R.layout.promo_item,Discounts);
+                    promotionView.setAdapter(promotionAdapter);
+                    Double totalBook = intent.getDoubleExtra("total", 0);
+                    if( totalBook != 0){
+                        promotionView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                double finalTotal = totalBook * Discounts.get(i).getDiscountRate() /100;
+                                intent.putExtra("total", finalTotal);
+                                intent.putExtra("nameDiscount", Discounts.get(i).getName());
+                                setResult(RESULT_OK, intent);
+                                finish();
+                            }
+                        });
 
+
+
+                    }
                 }
             }
         });
@@ -140,7 +159,7 @@ public class DiscountViewAll extends AppCompatActivity {
                 filteredlist.add(item);
             }
         }
-            promotionView.setAdapter(new PromotionAdapter(filteredlist));
+            promotionView.setAdapter(new PromotionAdapter(DiscountViewAll.this,R.layout.promo_item, filteredlist));
 
     }
 }

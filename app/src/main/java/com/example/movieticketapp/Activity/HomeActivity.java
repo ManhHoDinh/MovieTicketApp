@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +55,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private RecyclerView typeListView;
     private RecyclerView posterRecyclerView;
-    private RecyclerView promotionView;
+    private ListView promotionView;
     private SearchView searchView;
     private ViewPager2 typeMoviePage;
     private BottomNavigationView bottomNavigationView;
@@ -181,10 +182,10 @@ public class HomeActivity extends AppCompatActivity {
                         Discounts.add(f);
                         Log.d(TAG, "data: " + f.getName());
                     }
-                    promotionView = (RecyclerView) findViewById(R.id.promotionView);
-                    LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-                    promotionView.setAdapter(new PromotionAdapter(Discounts));
-                    promotionView.setLayoutManager(VerLayoutManager);
+                    promotionView = (ListView) findViewById(R.id.promotionView);
+                   // LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+                    promotionView.setAdapter(new PromotionAdapter(HomeActivity.this,R.layout.promo_item, Discounts));
+                   // promotionView.setLayoutManager(VerLayoutManager);
                     if (Discounts.size() == 0) {
                         ViewGroup.LayoutParams params = promotionView.getLayoutParams();
                         params.height = 0;

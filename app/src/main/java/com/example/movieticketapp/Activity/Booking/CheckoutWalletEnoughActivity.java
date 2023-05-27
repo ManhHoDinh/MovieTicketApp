@@ -1,5 +1,9 @@
 package com.example.movieticketapp.Activity.Booking;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.movieticketapp.Activity.Booking.SuccessCheckoutActivity;
+import com.example.movieticketapp.Activity.Discount.DiscountViewAll;
 import com.example.movieticketapp.Adapter.MovieCheckoutAdapter;
 import com.example.movieticketapp.Adapter.TicketListAdapter;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
@@ -56,8 +61,9 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
     TextView idOrder;
     FilmModel film;
     LinearLayout checkoutinforView;
-    int total;
+    double total;
     String date;
+    TextView selectTv;
     String timeBooked;
     String cinemaName;
     String[] listDate;
@@ -66,6 +72,30 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
     MovieCheckoutAdapter adapter;
     List<String> seats;
     ArrayList<CheckoutFilmModel> movie = new ArrayList<>();
+    ActivityResultLauncher<Intent> startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+
+            if(result != null && result.getResultCode() == RESULT_OK){
+                if(result.getData() != null){
+
+                    total = result.getData().getDoubleExtra("total", 0);
+                    String name = result.getData().getStringExtra("nameDiscount");
+                    selectTv.setVisibility(View.GONE);
+                    selectVoucherBtn.setText(name);
+
+                    totalTv.setText(String.valueOf(Math.round(total)) + " VNĐ");
+
+//                    String title = result.getData().getStringExtra("title") ;
+//                    String date = result.getData().getStringExtra("date") ;
+//                    boolean isDone = result.getData().getBooleanExtra("checked", false) ;
+
+
+
+                }
+            }
+        }
+    });
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,8 +111,17 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
         idOrder = (TextView) findViewById(R.id.IDOrderValue);
         selectVoucherBtn = findViewById(R.id.selectVoucherBtn);
         totalService = findViewById(R.id.totalService);
+        selectTv = findViewById(R.id.selectTv);
         movieInfoView = findViewById(R.id.movieInfoView);
         checkoutinforView = findViewById(R.id.checkoutinfo);
+        selectVoucherBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CheckoutWalletEnoughActivity.this, DiscountViewAll.class);
+                intent.putExtra("total", total);
+                startForResult.launch(intent);
+            }
+        });
 
         FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -141,12 +180,12 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
 
         }
         price = bundle.getString("price");
-        int total = Integer.parseInt(price) + Integer.parseInt(bundle.getString("total service"));
+        total = Integer.parseInt(price) + Integer.parseInt(bundle.getString("total service"));
         //price = intent.getStringExtra("price");
         int initPrice = Integer.parseInt(price) / seats.size();
         priceTv.setText(initPrice + " x " + seats.size());
         seatTv.setText(listSeat);
-        totalTv.setText(String.valueOf(total) + " VNĐ");
+        totalTv.setText(String.valueOf(Math.round(total)) + " VNĐ");
         movie.add(new CheckoutFilmModel(film.getName(),film.getVote(), film.getGenre(),film.getDurationTime(), film.getPosterImage()));
         adapter = new MovieCheckoutAdapter(getApplicationContext(), R.layout.checkout_movie_view, movie);
         movieInfoView.setAdapter(adapter);
@@ -159,13 +198,14 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
         BtnCheckOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         DocumentSnapshot doc = task.getResult();
                         int totalWallet = Integer.parseInt(String.valueOf(doc.get("Wallet")));
-                        if(Integer.parseInt(price.substring(0, price.length() - 4)) <= totalWallet){
-                            totalWallet -= Integer.parseInt(price.substring(0, price.length() - 4));
+                        if(Math.round(total) <= totalWallet){
+                            totalWallet -= Math.round(total);
                             FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid()).update("Wallet", totalWallet);
                             FirebaseRequest.database.collection("showtime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
@@ -191,7 +231,7 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
 //                                                    cinemaName,film.getPosterImage(),
 //                                                    Double.parseDouble(film.getVote()),
 //                                                    film.getGenre(), film.getDurationTime(), listSeat, price, idOrder.getText().toString() );
-                                            Ticket ticket = new Ticket(time, cinemaName, listSeat, price, idOrder.getText().toString(), film.getId(), FirebaseRequest.mAuth.getUid());
+                                            Ticket ticket = new Ticket(time, cinemaName, listSeat, String.valueOf(Math.round(total)) + " VNĐ", idOrder.getText().toString(), film.getId(), FirebaseRequest.mAuth.getUid());
                                             FirebaseRequest.database.collection("Ticket").document().set(ticket);
 
                                         }

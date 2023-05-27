@@ -212,7 +212,7 @@
                 android:id="@+id/totalService"
                 android:layout_width="114dp"
                 android:layout_height="20dp"
-                android:fontFamily="@font/montserrat600"
+                android:fontFamily="@font/montserrat400"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="222dp"
@@ -226,6 +226,7 @@
             android:layout_height="wrap_content"
             android:text="PROMOTION"/>
         <TextView
+            android:id="@+id/selectTv"
             android:textSize="16sp"
             android:fontFamily="@font/montserrat400"
             android:layout_width="wrap_content"
@@ -233,6 +234,7 @@
             android:text="Choose a promo card"/>
         <androidx.appcompat.widget.AppCompatButton
             android:layout_marginTop="12dp"
+            android:paddingVertical="20dp"
             android:id="@+id/selectVoucherBtn"
             android:background="@drawable/dash_background"
             android:layout_width="match_parent"
