@@ -20,20 +20,27 @@ import android.widget.Toast;
 
 import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Adapter.PromotionAdapter;
+import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Discount;
+import com.example.movieticketapp.Model.UserAndDiscount;
 import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
 import com.example.movieticketapp.databinding.ActivityDiscountViewAllBinding;
 import com.example.movieticketapp.databinding.HomeScreenBinding;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 public class DiscountViewAll extends AppCompatActivity {
     ActivityDiscountViewAllBinding binding;
@@ -69,54 +76,53 @@ public class DiscountViewAll extends AppCompatActivity {
                 finish();
             }
         });
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference PromoRef = db.collection(Discount.CollectionName);
-        PromoRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        CollectionReference PromoRef = db.collection(UserAndDiscount.collectionName);
+
+        Query query = PromoRef.whereEqualTo("userID", FirebaseRequest.mAuth.getUid());
+
+        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error != null) {
-                    // this method is called when error is not null
-                    // and we get any error
-                    // in this case we are displaying an error message.
-                    Toast.makeText(DiscountViewAll.this, "Error found is " + error, Toast.LENGTH_SHORT).show();
-                    return;
+                List<String> listDiscountID = new ArrayList<>();
+                for(DocumentSnapshot doc : value){
+                    listDiscountID.add(doc.get("discountID").toString());
+                    // DocumentReference document = FirebaseRequest.database.collection(Discount.CollectionName).document(doc.get("discountID").toString());
                 }
-                else
-                {
-                    Discounts.clear();
-                    for (DocumentSnapshot documentSnapshot : value)
-                    {
-                        Discount f = documentSnapshot.toObject(Discount.class);
-                        Discounts.add(f);
-                        Log.d(TAG, "data: " + f.getName());
+                Query query2 = db.collection(Discount.CollectionName).whereIn("ID", listDiscountID);
+                query2.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        for(DocumentSnapshot doc : value){
+                            Discount f = doc.toObject(Discount.class);
+                            Discounts.add(f);
+                        }
+                        promotionView =(ListView) findViewById(R.id.promotionView);
+                        //   LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+                        // promotionView.setLayoutManager(VerLayoutManager);
+                        Intent intent = getIntent();
+                        PromotionAdapter promotionAdapter = new PromotionAdapter(DiscountViewAll.this,R.layout.promo_item,Discounts);
+                        promotionView.setAdapter(promotionAdapter);
+                        Double totalBook = intent.getDoubleExtra("total", 0);
+                        if( totalBook != 0){
+                            promotionView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                    double finalTotal = totalBook * Discounts.get(i).getDiscountRate() /100;
+                                    intent.putExtra("total", finalTotal);
+                                    intent.putExtra("nameDiscount", Discounts.get(i).getName());
+                                    intent.putExtra("idDiscount", Discounts.get(i).getID());
+                                    setResult(RESULT_OK, intent);
+                                    finish();
+                                }
+                            });
+                        }
                     }
-                    promotionView =(ListView) findViewById(R.id.promotionView);
-                 //   LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-                   // promotionView.setLayoutManager(VerLayoutManager);
-                    Intent intent = getIntent();
-                    PromotionAdapter promotionAdapter = new PromotionAdapter(DiscountViewAll.this,R.layout.promo_item,Discounts);
-                    promotionView.setAdapter(promotionAdapter);
-                    Double totalBook = intent.getDoubleExtra("total", 0);
-                    if( totalBook != 0){
-                        promotionView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                double finalTotal = totalBook * Discounts.get(i).getDiscountRate() /100;
-                                intent.putExtra("total", finalTotal);
-                                intent.putExtra("nameDiscount", Discounts.get(i).getName());
-                                intent.putExtra("idDiscount", Discounts.get(i).getID());
-                                setResult(RESULT_OK, intent);
-                                finish();
-                            }
-                        });
+                });
 
-
-
-                    }
-                }
             }
         });
-
         binding.AddDiscount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
