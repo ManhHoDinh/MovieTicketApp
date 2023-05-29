@@ -68,7 +68,9 @@ public class HomeActivity extends AppCompatActivity {
     private HomeScreenBinding binding;
     private ImageView accountImage;
     private ImageView addDiscount;
-    private TextView viewAllBtn;
+    private TextView viewAllPlayingBtn;
+    private TextView viewAllComingBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +82,9 @@ public class HomeActivity extends AppCompatActivity {
         accountImage = findViewById(R.id.accountImage);
         addDiscount = findViewById(R.id.AddDiscount);
         addDiscount = findViewById(R.id.AddDiscount);
-        viewAllBtn = findViewById(R.id.viewAllBtn);
+        viewAllPlayingBtn = findViewById(R.id.viewAllPlayingBtn);
+        viewAllComingBtn = findViewById(R.id.viewAllComingBtn);
+
         searchView=findViewById(R.id.searchField);
 
         searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
@@ -157,10 +161,20 @@ public class HomeActivity extends AppCompatActivity {
             binding.AddDiscount.setLayoutParams(params);
             addDiscount.setVisibility(View.INVISIBLE);
         }
-        viewAllBtn.setOnClickListener(new View.OnClickListener() {
+        viewAllPlayingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(HomeActivity.this, ViewAllActivity.class));
+                Intent intent = new Intent(HomeActivity.this, ViewAllActivity.class);
+                intent.putExtra("status", "playing");
+                startActivity(intent);
+            }
+        });
+        viewAllComingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, ViewAllActivity.class);
+                intent.putExtra("status", "coming");
+                startActivity(intent);
             }
         });
     }

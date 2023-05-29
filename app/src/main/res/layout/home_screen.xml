@@ -105,7 +105,7 @@
                             android:text="Now Playing"
                             style="@style/titleStyle"/>
                         <TextView
-                            android:id="@+id/viewAllBtn"
+                            android:id="@+id/viewAllPlayingBtn"
                             app:layout_constraintEnd_toEndOf="parent"
                             android:text="View all"
                             android:textSize="14dp"
@@ -131,6 +131,7 @@
                             android:text="Coming soon"
                             style="@style/titleStyle"/>
                         <TextView
+                            android:id="@+id/viewAllComingBtn"
                             app:layout_constraintEnd_toEndOf="parent"
                             android:text="View all"
                             android:textSize="14dp"
