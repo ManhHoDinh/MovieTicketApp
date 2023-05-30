@@ -12,6 +12,8 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -23,6 +25,7 @@ import com.example.movieticketapp.Activity.Discount.AddDiscount;
 import com.example.movieticketapp.Activity.Discount.DiscountViewAll;
 import com.example.movieticketapp.Activity.Movie.SearchActivity;
 import com.example.movieticketapp.Activity.Movie.ViewAllActivity;
+import com.example.movieticketapp.Activity.Report.ReportActivity;
 import com.example.movieticketapp.Activity.Ticket.MyTicketAllActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
 import com.example.movieticketapp.Adapter.ListTypeAdapter;
@@ -105,10 +108,15 @@ public class HomeActivity extends AppCompatActivity {
         typeListView.setLayoutManager(layoutManager);
         //  typeListView.addItemDecoration(new AddDecoration(10));
         typeListView.setAdapter(new ListTypeAdapter(this, listType));
+
         binding.bottomNavigation.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.walletPage:
                     startActivity(new Intent(HomeActivity.this, MyWalletActivity.class));
+                    overridePendingTransition(0, 0);
+                    break;
+                case R.id.ReportPage:
+                    startActivity(new Intent(HomeActivity.this, ReportActivity.class));
                     overridePendingTransition(0, 0);
                     break;
                 case R.id.ticketPage:
@@ -138,13 +146,19 @@ public class HomeActivity extends AppCompatActivity {
 
     void checkAccountType() {
         try {
-            Log.d("account type", Users.currentUser.getAccountType());
             if (Users.currentUser != null)
                 if ((!(Users.currentUser.getAccountType().toString()).equals("admin"))) {
                     ViewGroup.LayoutParams params = binding.AddDiscount.getLayoutParams();
                     params.height = 0;
                     binding.AddDiscount.setLayoutParams(params);
                     addDiscount.setVisibility(View.INVISIBLE);
+                }
+            else {
+                    Menu menu = binding.bottomNavigation.getMenu();
+                    MenuItem ReportPage = menu.findItem(R.id.ReportPage);
+                    MenuItem WalletPage = menu.findItem(R.id.walletPage);
+                    WalletPage.setVisible(false);
+                    ReportPage.setVisible(true);
                 }
         } catch (Exception e) {
             ViewGroup.LayoutParams params = binding.AddDiscount.getLayoutParams();

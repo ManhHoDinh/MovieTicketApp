@@ -9,6 +9,11 @@
         android:title="Wallet"
         android:id="@+id/walletPage"/>
     <item
+        android:icon="@drawable/report_icon"
+        android:title="Report"
+        android:id="@+id/ReportPage"
+        android:visible="false"/>
+    <item
         android:icon="@drawable/ticket"
         android:title="My ticket"
         android:id="@+id/ticketPage"/>
