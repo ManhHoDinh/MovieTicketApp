@@ -106,7 +106,7 @@ public class TimeScheduleAdapter extends RecyclerView.Adapter<TimeScheduleAdapte
                           //  Timestamp timeSchedule = new Timestamp();
                             for (int i = 0; i < listShowTime.size(); i++) {
                                 ShowTime showTime = listShowTime.get(i);
-                                DateFormat dateFormat = new SimpleDateFormat("EEE\ndd");
+                                DateFormat dateFormat = new SimpleDateFormat("EEE\nd");
                                 DateFormat timeFormat = new SimpleDateFormat("H:m");
 
                                 if(cinemaName.equals(showTime.getNameCinema())
@@ -203,7 +203,7 @@ public class TimeScheduleAdapter extends RecyclerView.Adapter<TimeScheduleAdapte
 
     @Override
     public void onBindViewHolder(@NonNull TimeScheduleAdapter.ViewHolder holder, int position) {
-        DateFormat dateFormat = new SimpleDateFormat("EEE\ndd");
+        DateFormat dateFormat = new SimpleDateFormat("EEE\nd");
         DateFormat timeFormat = new SimpleDateFormat("H:m");
         if (listTime != null) {
             holder.dateBtn.setText(listDate.get(position) + "\n" + listTime.get(position));
@@ -219,11 +219,13 @@ public class TimeScheduleAdapter extends RecyclerView.Adapter<TimeScheduleAdapte
 
 
             for(ShowTime show : listShowTimeSelected) {
+
                 if (timeFormat.format(show.getTimeBooked().toDate()).equals(holder.dateBtn.getText().toString())
                         && cinemaName.equals(show.getNameCinema())
                         && filmName.equals(show.getNameFilm())
                         && dateFormat.format(show.getTimeBooked().toDate()).equals(ScheduleFilm.getInstance().dateBooked)) {
                     listSelect.add(show);
+
                     holder.dateBtn.setEnabled(false);
                     holder.dateBtn.setBackgroundColor(Color.TRANSPARENT);
                     holder.dateBtn.setBackground(ContextCompat.getDrawable(holder.dateBtn.getContext(), R.drawable.background_disable));
@@ -236,8 +238,6 @@ public class TimeScheduleAdapter extends RecyclerView.Adapter<TimeScheduleAdapte
                     if(timeFormat.format(showTime.getTimeBooked().toDate()).equals(holder.dateBtn.getText().toString())
                             && cinemaName.equals(showTime.getNameCinema())
                             && dateFormat.format(showTime.getTimeBooked().toDate()).equals(ScheduleFilm.getInstance().dateBooked)){
-
-
                         holder.dateBtn.setBackgroundColor(Color.TRANSPARENT);
                         holder.dateBtn.setBackground(ContextCompat.getDrawable(holder.dateBtn.getContext(), R.drawable.background_button));
 

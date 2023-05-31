@@ -207,7 +207,10 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
                         int totalWallet = Integer.parseInt(String.valueOf(doc.get("Wallet")));
                         if(Math.round(total) <= totalWallet){
                             totalWallet -= Math.round(total);
-                            FirebaseRequest.database.collection("Discounts").document(idDiscount).delete();
+                            if(idDiscount != null){
+                                FirebaseRequest.database.collection("Discounts").document(idDiscount).delete();
+
+                            }
                             FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid()).update("Wallet", totalWallet);
                             FirebaseRequest.database.collection("showtime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
@@ -215,7 +218,7 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
                                     List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
                                     for(DocumentSnapshot doc : listDocs){
                                         Timestamp time = doc.getTimestamp("timeBooked");
-                                        DateFormat dateFormat = new SimpleDateFormat("EEE\ndd");
+                                        DateFormat dateFormat = new SimpleDateFormat("EEE\nd");
                                         DateFormat timeFormat = new SimpleDateFormat("H:mm");
                                         DateFormat monthformat = new SimpleDateFormat("MMM");
                                         String month_name = monthformat.format(time.toDate());

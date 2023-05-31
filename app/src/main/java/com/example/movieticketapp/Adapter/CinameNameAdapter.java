@@ -30,6 +30,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.ktx.Firebase;
 
@@ -102,16 +103,14 @@ public class CinameNameAdapter extends ArrayAdapter<String> {
                     cinemaName.setText(item);
                 }
             else {
-
-                    FirebaseRequest.database.collection("showtime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    Query query = FirebaseRequest.database.collection("showtime").orderBy("timeBooked");
+                    query.addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
-
-                            for(DocumentSnapshot doc : listDocs){
+                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                            for(DocumentSnapshot doc : value){
                                 Timestamp time = doc.getTimestamp("timeBooked");
 
-                                DateFormat dateFormat = new SimpleDateFormat("EEE\ndd");
+                                DateFormat dateFormat = new SimpleDateFormat("EEE\nd");
 
                                 if(doc.get("nameCinema").equals(item) && doc.get("nameFilm").equals(filmName) && dateFormat.format(time.toDate()).equals(InforBooked.getInstance().dateBooked)){
                                     DateFormat timeFormat = new SimpleDateFormat("H:mm");
@@ -129,6 +128,32 @@ public class CinameNameAdapter extends ArrayAdapter<String> {
                             cinemaName.setText(item);
                         }
                     });
+//                   query.addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//                        @Override
+//                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                            List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
+//
+//                            for(DocumentSnapshot doc : listDocs){
+//                                Timestamp time = doc.getTimestamp("timeBooked");
+//
+//                                DateFormat dateFormat = new SimpleDateFormat("EEE\ndd");
+//
+//                                if(doc.get("nameCinema").equals(item) && doc.get("nameFilm").equals(filmName) && dateFormat.format(time.toDate()).equals(InforBooked.getInstance().dateBooked)){
+//                                    DateFormat timeFormat = new SimpleDateFormat("H:mm");
+//                                    listTime.add(timeFormat.format(time.toDate()));
+//                                }
+//                            }
+//                            FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext());
+//                            layoutManager.setFlexDirection(FlexDirection.ROW);
+//                            layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+//                            recyclerView.setLayoutManager(layoutManager);
+//                            if(InforBooked.getInstance().dateBooked == null){
+//                                recyclerView.setAdapter(new TimeBookedAdapter(new ArrayList<String>(), null,null, item, itemView, null, null));
+//                            }
+//                            else recyclerView.setAdapter(new TimeBookedAdapter(listTime, null,null, item, itemView, null, null));
+//                            cinemaName.setText(item);
+//                        }
+//                    });
 
 
                 }
@@ -141,7 +166,7 @@ public class CinameNameAdapter extends ArrayAdapter<String> {
                     List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
                     for(DocumentSnapshot doc : listDocs){
                         Timestamp time = doc.getTimestamp("TimeBooked");
-                        DateFormat dateFormat = new SimpleDateFormat("EEE\ndd");
+                        DateFormat dateFormat = new SimpleDateFormat("EEE\nd");
                         if(doc.get("NameCinema").equals(item) && doc.get("NameFilm").equals(filmName) && dateFormat.format(time.toDate()).equals(InforBooked.getInstance().dateBooked)){
                             DateFormat timeFormat = new SimpleDateFormat("H:mm");
                             listTime.add(timeFormat.format(time.toDate()));

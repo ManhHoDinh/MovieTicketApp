@@ -13,11 +13,11 @@ import com.example.movieticketapp.Model.FilmModel;
 
 public class FilmDetailPagerAdapter extends FragmentStateAdapter {
     FilmModel film;
-    String type;
-    public FilmDetailPagerAdapter(@NonNull FragmentActivity fragmentActivity, FilmModel f, String type) {
+
+    public FilmDetailPagerAdapter(@NonNull FragmentActivity fragmentActivity, FilmModel f) {
         super(fragmentActivity);
         film = f;
-        this.type = type;
+
     }
 
     @NonNull
@@ -26,7 +26,7 @@ public class FilmDetailPagerAdapter extends FragmentStateAdapter {
         if(position==1)
             return new ReviewFragment(film);
         else
-            return new AboutMovie(film, type);
+            return new AboutMovie(film);
     }
 
     @Override

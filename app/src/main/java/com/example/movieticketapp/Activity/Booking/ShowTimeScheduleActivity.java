@@ -136,6 +136,7 @@ public class ShowTimeScheduleActivity extends AppCompatActivity {
                         public void onClick(View view) {
                             for(ShowTime showTime : ScheduleFilm.getInstance().listShowTime){
                                 FirebaseRequest.database.collection("showtime").document().set(showTime);
+                                Log.e("fds", showTime.getTimeBooked().toDate().toString());
                             }
 
                             ScheduleFilm.getInstance().listShowTime = new ArrayList<ShowTime>();

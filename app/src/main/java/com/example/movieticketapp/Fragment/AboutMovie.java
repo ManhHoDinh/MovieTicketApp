@@ -45,21 +45,22 @@ import java.util.List;
 
 public class AboutMovie extends Fragment {
     FilmModel film;
-    String type;
+
 
     RecyclerView videoListView;
 
     String[] videoList;
-    public AboutMovie(FilmModel f, String type) {
+    public AboutMovie(FilmModel f) {
         // Required empty public constructor
         film = f;
-        this.type = type;
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_about_movie, container, true);
     }
 
@@ -70,11 +71,13 @@ public class AboutMovie extends Fragment {
         description.setText(film.getDescription());
         Button BookBt = getView().findViewById(R.id.BookBt);
         List<String> videoList = new ArrayList<>();
-        if(type != null){
-            if(type.equals("Information")){
-                BookBt.setVisibility(View.GONE);
-            } else BookBt.setVisibility(View.VISIBLE);
+
+        if(film.getStatus().equals("coming")) {
+
+            BookBt.setVisibility(View.GONE);
         }
+            else BookBt.setVisibility(View.VISIBLE);
+
         videoListView = getView().findViewById(R.id.videoList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext(), RecyclerView.HORIZONTAL, false);
         VideoAdapter videoAdapter = new VideoAdapter();
