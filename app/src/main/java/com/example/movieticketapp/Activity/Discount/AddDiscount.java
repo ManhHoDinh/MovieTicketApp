@@ -119,7 +119,7 @@ public class AddDiscount extends AppCompatActivity {
 
     private void CreateDiscountToDatabase() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+        Log.e("d", "binh");
         DocumentReference doc ;
         boolean isDocNull = false;
         if (discount!=null)
@@ -157,7 +157,7 @@ public class AddDiscount extends AppCompatActivity {
 
     }
     void addUserAndDiscountToDb(DocumentReference documentReference){
-        Log.e("binh", "dd");
+
         FirebaseFirestore.getInstance().collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {

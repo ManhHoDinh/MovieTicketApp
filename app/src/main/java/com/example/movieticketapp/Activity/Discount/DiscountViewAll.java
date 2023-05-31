@@ -54,7 +54,7 @@ public class DiscountViewAll extends AppCompatActivity {
 
         binding = ActivityDiscountViewAllBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        promotionView =(ListView) findViewById(R.id.promotionView);
         // below line is to call set on query text listener method.
         binding.searchField.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -78,51 +78,71 @@ public class DiscountViewAll extends AppCompatActivity {
         });
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference PromoRef = db.collection(UserAndDiscount.collectionName);
-
-        Query query = PromoRef.whereEqualTo("userID", FirebaseRequest.mAuth.getUid());
-
-        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                List<String> listDiscountID = new ArrayList<>();
-                for(DocumentSnapshot doc : value){
-                    listDiscountID.add(doc.get("discountID").toString());
-                    // DocumentReference document = FirebaseRequest.database.collection(Discount.CollectionName).document(doc.get("discountID").toString());
-                }
-                Query query2 = db.collection(Discount.CollectionName).whereIn("ID", listDiscountID);
-                query2.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        if(Users.currentUser!=null)
+            if(((Users.currentUser.getAccountType().toString()).equals("admin"))){
+                FirebaseFirestore.getInstance().collection(Discount.CollectionName).addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        List<Discount> listDiscounts = new ArrayList<Discount>();
                         for(DocumentSnapshot doc : value){
                             Discount f = doc.toObject(Discount.class);
-                            Discounts.add(f);
+                            listDiscounts.add(f);
+
                         }
-                        promotionView =(ListView) findViewById(R.id.promotionView);
-                        //   LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-                        // promotionView.setLayoutManager(VerLayoutManager);
-                        Intent intent = getIntent();
-                        PromotionAdapter promotionAdapter = new PromotionAdapter(DiscountViewAll.this,R.layout.promo_item,Discounts);
+                        PromotionAdapter promotionAdapter = new PromotionAdapter(DiscountViewAll.this,R.layout.promo_item,listDiscounts);
                         promotionView.setAdapter(promotionAdapter);
-                        Double totalBook = intent.getDoubleExtra("total", 0);
-                        if( totalBook != 0){
-                            promotionView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                    double finalTotal = totalBook * Discounts.get(i).getDiscountRate() /100;
-                                    intent.putExtra("total", finalTotal);
-                                    intent.putExtra("nameDiscount", Discounts.get(i).getName());
-                                    intent.putExtra("idDiscount", Discounts.get(i).getID());
-                                    setResult(RESULT_OK, intent);
-                                    finish();
-                                }
-                            });
-                        }
+
                     }
                 });
-
             }
-        });
+        else{
+                CollectionReference PromoRef = db.collection(UserAndDiscount.collectionName);
+                Query query = PromoRef.whereEqualTo("userID", FirebaseRequest.mAuth.getUid());
+
+                query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                        List<String> listDiscountID = new ArrayList<>();
+                        for(DocumentSnapshot doc : value){
+                            listDiscountID.add(doc.get("discountID").toString());
+                            // DocumentReference document = FirebaseRequest.database.collection(Discount.CollectionName).document(doc.get("discountID").toString());
+                        }
+                        Query query2 = db.collection(Discount.CollectionName).whereIn("ID", listDiscountID);
+                        query2.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                for(DocumentSnapshot doc : value){
+                                    Discount f = doc.toObject(Discount.class);
+                                    Discounts.add(f);
+                                }
+
+                                //   LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+                                // promotionView.setLayoutManager(VerLayoutManager);
+                                Intent intent = getIntent();
+                                PromotionAdapter promotionAdapter = new PromotionAdapter(DiscountViewAll.this,R.layout.promo_item,Discounts);
+                                promotionView.setAdapter(promotionAdapter);
+                                Double totalBook = intent.getDoubleExtra("total", 0);
+                                if( totalBook != 0){
+                                    promotionView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                            double finalTotal = totalBook * Discounts.get(i).getDiscountRate() /100;
+                                            intent.putExtra("total", finalTotal);
+                                            intent.putExtra("nameDiscount", Discounts.get(i).getName());
+                                            intent.putExtra("idDiscount", Discounts.get(i).getID());
+                                            setResult(RESULT_OK, intent);
+                                            finish();
+                                        }
+                                    });
+                                }
+                            }
+                        });
+
+                    }
+                });
+            }
+
         binding.AddDiscount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
