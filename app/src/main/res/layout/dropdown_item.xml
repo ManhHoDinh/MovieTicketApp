@@ -5,7 +5,7 @@
     android:maxLines="1"
     android:ellipsize="end"
     android:singleLine="true"
-    android:textSize="16dp"
+    android:textSize="12dp"
     android:paddingVertical="8dp"
     android:background="@color/main_color"
     android:textColor="@color/white"

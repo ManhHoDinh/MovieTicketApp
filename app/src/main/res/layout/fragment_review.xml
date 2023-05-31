@@ -4,10 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/background_color"
     tools:context=".Fragment.ReviewFragment"
     android:layout_gravity="center"
-
     >
     <!-- Main content layout with comment list -->
         <LinearLayout
@@ -26,8 +24,8 @@
                 android:id="@+id/ReviewList"
                 android:layout_marginLeft="12dp"
                 android:layout_width="match_parent"
-                android:layout_height="670dp"
-                android:paddingBottom="150dp"
+                android:layout_height="wrap_content"
+                android:paddingBottom="350dp"
                 />
 
         </LinearLayout>
@@ -43,8 +41,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="10dp"
+        android:layout_marginTop="20dp"
         >
-
         <!-- Profile Image -->
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/profileImgView"

@@ -109,35 +109,115 @@
                     app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="150dp"
-            android:id="@+id/CinemaTv"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            app:boxBackgroundColor="@color/main_color"
-            app:boxCornerRadiusBottomEnd="20dp"
-            app:boxCornerRadiusBottomStart="20dp"
-            app:boxCornerRadiusTopEnd="20dp"
-            app:boxCornerRadiusTopStart="20dp"
-            app:hintTextColor="@color/white"
-            app:boxStrokeColor="@drawable/border_input"
-            app:boxStrokeWidth="1dp"
-            android:textColorHint="@color/white"
-            app:startIconTint="@color/white"
-            app:endIconDrawable="@drawable/down_arrow"
-            app:endIconTint="@color/white"
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/Filter"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:visibility="invisible"
+    android:paddingTop="10dp"
+    >
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/CinemaTIL"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_width="130dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        app:boxBackgroundColor="@color/main_color"
+        app:boxCornerRadiusBottomEnd="20dp"
+        app:boxCornerRadiusBottomStart="20dp"
+        app:boxCornerRadiusTopEnd="20dp"
+        app:boxCornerRadiusTopStart="20dp"
+        app:hintTextColor="@color/white"
+        app:boxStrokeColor="@drawable/border_input"
+        app:boxStrokeWidth="1dp"
+        android:textColorHint="@color/white"
+        app:startIconTint="@color/white"
+        app:endIconDrawable="@drawable/down_arrow"
+        app:endIconTint="@color/white"
+        android:layout_height="wrap_content"
+        >
+        <AutoCompleteTextView
+            android:inputType="none"
+            android:textColor="@color/white"
+            android:id="@+id/CinemaFilter"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            >
-            <AutoCompleteTextView
-                android:inputType="none"
-                android:textColor="@color/white"
-                android:id="@+id/CinemaFilter"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="All Cinema"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
+            android:textSize="10dp"
+            android:text="All Cinema"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/CinemaTIL"
+        app:layout_constraintRight_toLeftOf="@id/YearTIL"
+        android:layout_width="105dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        app:boxBackgroundColor="@color/main_color"
+        app:boxCornerRadiusBottomEnd="20dp"
+        app:boxCornerRadiusBottomStart="20dp"
+        app:boxCornerRadiusTopEnd="20dp"
+        app:boxCornerRadiusTopStart="20dp"
+        app:hintTextColor="@color/white"
+        app:boxStrokeColor="@drawable/border_input"
+        app:boxStrokeWidth="1dp"
+        android:textColorHint="@color/white"
+        app:startIconTint="@color/white"
+        app:endIconDrawable="@drawable/down_arrow"
+        app:endIconTint="@color/white"
+        android:layout_height="wrap_content"
+        >
+        <AutoCompleteTextView
+            android:inputType="none"
+            android:textColor="@color/white"
+            android:id="@+id/MonthFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="10dp"
+            android:text="Month"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:id="@+id/YearTIL"
+
+        android:layout_width="95dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        app:boxBackgroundColor="@color/main_color"
+        app:boxCornerRadiusBottomEnd="20dp"
+        app:boxCornerRadiusBottomStart="20dp"
+        app:boxCornerRadiusTopEnd="20dp"
+        app:boxCornerRadiusTopStart="20dp"
+        app:hintTextColor="@color/white"
+        app:boxStrokeColor="@drawable/border_input"
+        app:boxStrokeWidth="1dp"
+        android:textColorHint="@color/white"
+        app:startIconTint="@color/white"
+        app:endIconDrawable="@drawable/down_arrow"
+        app:endIconTint="@color/white"
+        android:layout_height="wrap_content"
+        >
+        <AutoCompleteTextView
+            android:inputType="none"
+            android:textColor="@color/white"
+            android:id="@+id/YearFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="10dp"
+            android:text="Year"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/FilmReports"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="85dp"
+            ></androidx.recyclerview.widget.RecyclerView>
+      </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
