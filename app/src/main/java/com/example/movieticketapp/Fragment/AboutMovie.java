@@ -45,13 +45,15 @@ import java.util.List;
 
 public class AboutMovie extends Fragment {
     FilmModel film;
+    String type;
 
     RecyclerView videoListView;
 
     String[] videoList;
-    public AboutMovie(FilmModel f) {
+    public AboutMovie(FilmModel f, String type) {
         // Required empty public constructor
         film = f;
+        this.type = type;
     }
 
     @Override
@@ -68,6 +70,11 @@ public class AboutMovie extends Fragment {
         description.setText(film.getDescription());
         Button BookBt = getView().findViewById(R.id.BookBt);
         List<String> videoList = new ArrayList<>();
+        if(type != null){
+            if(type.equals("Information")){
+                BookBt.setVisibility(View.GONE);
+            } else BookBt.setVisibility(View.VISIBLE);
+        }
         videoListView = getView().findViewById(R.id.videoList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext(), RecyclerView.HORIZONTAL, false);
         VideoAdapter videoAdapter = new VideoAdapter();
@@ -97,7 +104,7 @@ public class AboutMovie extends Fragment {
 
 
         try{
-            Log.d("account type", Users.currentUser.getAccountType());
+
             if(Users.currentUser!=null)
                 if(((Users.currentUser.getAccountType().toString()).equals("admin")))
                 {
@@ -137,7 +144,8 @@ public class AboutMovie extends Fragment {
         i.putExtra("selectedFilm", film);
         i.putExtra("nameFilm", film.getName());
         getView().getContext().startActivity(i);
-    }void schedule()
+    }
+    void schedule()
     {
         Intent i = new Intent(getView().getContext(), ShowTimeScheduleActivity.class);
         i.putExtra("selectedFilm", film);
