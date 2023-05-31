@@ -110,8 +110,10 @@ public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.Vi
                     else InforBooked.getInstance().dateBooked = dateBtn.getText().toString();
                     if(filmName != null){
                         ScheduleFilm.getInstance().dateBooked = InforBooked.getInstance().dateBooked;
+                        ScheduleFilm.getInstance().isDateSelected = true;
                     }
 
+                    InforBooked.getInstance().isDateSelected = true;
                     dateBtn.setBackgroundColor(Color.TRANSPARENT);
 
                     dateBtn.setBackground(ContextCompat.getDrawable(dateBtn.getContext(), R.drawable.background_button));
@@ -132,7 +134,7 @@ public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.Vi
 
                                 if(!InforBooked.getInstance().dateBooked.equals(null)){
 
-                                    CinameNameAdapter cinameNameAdapter = new CinameNameAdapter(activity, R.layout.cinema_booked_item,InforBooked.getInstance().listCinemaID, InforBooked.getInstance().filmBooked);
+                                    CinameNameAdapter cinameNameAdapter = new CinameNameAdapter(activity, R.layout.cinema_booked_item,InforBooked.getInstance().listCinemaName, InforBooked.getInstance().nameFilm);
                                     timelistView.setAdapter(cinameNameAdapter);
                                     timelistView.setEnabled(false);
 

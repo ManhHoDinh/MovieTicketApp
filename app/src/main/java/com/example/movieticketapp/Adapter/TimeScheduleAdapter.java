@@ -169,7 +169,7 @@ public class TimeScheduleAdapter extends RecyclerView.Adapter<TimeScheduleAdapte
                                 List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
 
                                 if (!dateBooked.equals(null)) {
-                                    CinameNameAdapter cinameNameAdapter = new CinameNameAdapter(activity, R.layout.cinema_booked_item, InforBooked.getInstance().listCinemaID, InforBooked.getInstance().filmBooked);
+                                    CinameNameAdapter cinameNameAdapter = new CinameNameAdapter(activity, R.layout.cinema_booked_item, InforBooked.getInstance().listCinemaName, InforBooked.getInstance().nameFilm);
                                     timelistView.setAdapter(cinameNameAdapter);
                                     timelistView.setEnabled(false);
                                     Helper.getListViewSize(timelistView);
@@ -234,7 +234,7 @@ public class TimeScheduleAdapter extends RecyclerView.Adapter<TimeScheduleAdapte
             }
             if( ScheduleFilm.getInstance().listShowTime.size() > 0){
                 for(ShowTime showTime : ScheduleFilm.getInstance().listShowTime){
-                  //  Log.e("binh",timeFormat.format(showTime.getTimeBooked().toDate())+ " " +  holder.dateBtn.getText().toString() + " "+ cinemaName+ " " + showTime.getNameCinema() + " " + dateFormat.format(showTime.getTimeBooked().toDate()) + " " + ScheduleFilm.getInstance().dateBooked);
+                   // Log.e("binh",timeFormat.format(showTime.getTimeBooked().toDate())+ " " +  holder.dateBtn.getText().toString() + " "+ cinemaName+ " " + showTime.getNameCinema() + " " + dateFormat.format(showTime.getTimeBooked().toDate()) + " " + ScheduleFilm.getInstance().dateBooked);
                     if(timeFormat.format(showTime.getTimeBooked().toDate()).equals(holder.dateBtn.getText().toString())
                             && cinemaName.equals(showTime.getNameCinema())
                             && dateFormat.format(showTime.getTimeBooked().toDate()).equals(ScheduleFilm.getInstance().dateBooked)){

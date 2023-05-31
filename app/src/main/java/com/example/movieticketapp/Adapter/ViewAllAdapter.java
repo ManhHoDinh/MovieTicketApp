@@ -68,7 +68,7 @@ public class ViewAllAdapter extends BaseAdapter {
             public void onClick(View view) {
                 Intent i = new Intent(view.getContext(), InformationFilmActivity.class);
                 i.putExtra(ExtraIntent.film, f);
-                InforBooked.getInstance().filmBooked = f;
+                InforBooked.getInstance().nameFilm = f.getName();
                 view.getContext().startActivity(i);
             }
         });

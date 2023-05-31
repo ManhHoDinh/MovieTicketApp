@@ -53,7 +53,12 @@ public class BookedActivity extends AppCompatActivity {
     private Button backBtn;
     protected static String binhdd;
     private String monthName;
-
+    @Override
+    protected void onStop() {
+        super.onStop();
+        InforBooked.getInstance().isDateSelected = false;
+        InforBooked.getInstance().isCitySelected = false;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,7 +152,7 @@ public class BookedActivity extends AppCompatActivity {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-
+                            InforBooked.getInstance().isCitySelected = true;
 
                             List<String> listCinemaName = new ArrayList<String>();
                             FirebaseRequest.database.collection("Cinema").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {

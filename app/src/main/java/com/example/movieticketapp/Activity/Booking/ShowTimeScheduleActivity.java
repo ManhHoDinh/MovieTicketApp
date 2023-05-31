@@ -62,7 +62,14 @@ public class ShowTimeScheduleActivity extends AppCompatActivity {
 
     private String monthName;
     private CinameNameAdapter cinameNameAdapter;
+    @Override
+    protected void onStop() {
+        super.onStop();
+       // ScheduleFilm.getInstance().listShowTime = new ArrayList<ShowTime>();
+        ScheduleFilm.getInstance().isDateSelected = false;
+        ScheduleFilm.getInstance().isCitySelected = false;
 
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -188,18 +195,19 @@ public class ShowTimeScheduleActivity extends AppCompatActivity {
                     countryAutoTv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            List<String> listCinemaID = new ArrayList<String>();
+                            ScheduleFilm.getInstance().isCitySelected = true;
+                            List<String> listCinemaName = new ArrayList<String>();
                             FirebaseRequest.database.collection("Cinema").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
                                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                     List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
                                     for(DocumentSnapshot doc : listDocs){
                                         if(doc.get("CityID").equals(list.get(i).getID())){
-                                            listCinemaID.add(doc.getId());
+                                            listCinemaName.add(String.valueOf(doc.get("Name")));
                                         }
                                     }
 
-                                    cinameNameAdapter = new CinameNameAdapter(ShowTimeScheduleActivity.this, R.layout.cinema_booked_item,listCinemaID, selectedFilm);
+                                    cinameNameAdapter = new CinameNameAdapter(ShowTimeScheduleActivity.this, R.layout.cinema_booked_item,listCinemaName, selectedFilm.getName());
                                     cinemaLv.setAdapter(cinameNameAdapter);
                                     cinemaLv.setEnabled(false);
 

@@ -84,7 +84,7 @@ public class ListSearchAdapter extends RecyclerView.Adapter<ListSearchAdapter.It
                 Intent i = new Intent(view.getContext(), InformationFilmActivity.class);
                 i.putExtra(ExtraIntent.film, filmModel);
                 i.putExtra("type", holder.inforBtn.getText().toString());
-                InforBooked.getInstance().filmBooked = filmModel;
+                InforBooked.getInstance().nameFilm = filmModel.getName();
                 view.getContext().startActivity(i);
             }
         });
