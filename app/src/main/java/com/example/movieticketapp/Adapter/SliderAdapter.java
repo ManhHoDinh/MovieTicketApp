@@ -76,7 +76,7 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.sliderView
 
                     Intent i = new Intent(itemView.getContext(), InformationFilmActivity.class);
                     i.putExtra(ExtraIntent.film, f);
-                    InforBooked.getInstance().nameFilm = f.getName();
+                    InforBooked.getInstance().filmBooked= f;
                     itemView.getContext().startActivity(i);
                 }
             });

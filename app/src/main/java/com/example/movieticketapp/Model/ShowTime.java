@@ -6,33 +6,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ShowTime {
-    private String NameFilm;
-    private String NameCinema;
-    private List<String> BookedSeat;
-    private Timestamp TimeBooked;
+    private String filmID;
+    private String cinemaID;
+    private String showtimeID;
+    private List<String> bookedSeat;
+    private Timestamp timeBooked;
 
-    public ShowTime(String nameFilm, String nameCinema, List<String> bookedSeat, Timestamp timeBooked) {
-        NameFilm = nameFilm;
-        NameCinema = nameCinema;
-        BookedSeat = bookedSeat;
-        TimeBooked = timeBooked;
-    }
     public ShowTime(){}
 
-    public String getNameFilm() {
-        return NameFilm;
+    public ShowTime(String showtimeID, String filmID, String cinemaID, List<String> bookedSeat, Timestamp timeBooked) {
+        this.filmID = filmID;
+        this.cinemaID = cinemaID;
+        this.bookedSeat = bookedSeat;
+        this.timeBooked = timeBooked;
+        this.showtimeID = showtimeID;
+
     }
 
-    public void setNameFilm(String nameFilm) {
-        NameFilm = nameFilm;
+    public String getShowtimeID() {
+        return showtimeID;
     }
 
-    public String getNameCinema() {
-        return NameCinema;
+    public void setShowtimeID(String showtimeID) {
+        this.showtimeID = showtimeID;
     }
 
-    public void setNameCinema(String nameCinema) {
-        NameCinema = nameCinema;
+    public String getFilmID() {
+        return filmID;
+    }
+
+
+    public void setFilmID(String filmID) {
+        this.filmID = filmID;
+    }
+
+    public String getCinemaID() {
+        return cinemaID;
+    }
+
+    public void setCinemaID(String cinemaID) {
+        this.cinemaID = cinemaID;
     }
 
     public List<String> getBookedSeat() {

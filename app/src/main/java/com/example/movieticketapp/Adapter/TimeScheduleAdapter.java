@@ -169,7 +169,7 @@ public class TimeScheduleAdapter extends RecyclerView.Adapter<TimeScheduleAdapte
                                 List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
 
                                 if (!dateBooked.equals(null)) {
-                                    CinameNameAdapter cinameNameAdapter = new CinameNameAdapter(activity, R.layout.cinema_booked_item, InforBooked.getInstance().listCinemaName, InforBooked.getInstance().nameFilm);
+                                    CinameNameAdapter cinameNameAdapter = new CinameNameAdapter(activity, R.layout.cinema_booked_item, InforBooked.getInstance().listCinemaID, InforBooked.getInstance().filmBooked);
                                     timelistView.setAdapter(cinameNameAdapter);
                                     timelistView.setEnabled(false);
                                     Helper.getListViewSize(timelistView);

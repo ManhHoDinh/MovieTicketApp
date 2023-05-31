@@ -18,7 +18,8 @@ public class InforBooked {
     public String nameCinema;
     public String dateBooked;
     public String nameFilm;
-    public List<String> listCinemaName = new ArrayList<String>();
+    public List<String> listCinemaID = new ArrayList<String>();
+    public FilmModel filmBooked;
     public String timeBooked;
     public String typeFilm = "All";
     public int total = 0;

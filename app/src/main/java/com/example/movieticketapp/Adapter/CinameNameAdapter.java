@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.movieticketapp.Activity.Booking.BookedActivity;
 import com.example.movieticketapp.Activity.Booking.ShowTimeScheduleActivity;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
+import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.InforBooked;
 import com.example.movieticketapp.Model.ScheduleFilm;
 import com.example.movieticketapp.Model.ShowTime;
@@ -42,14 +43,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CinameNameAdapter extends ArrayAdapter<String> {
-    private List<String> listCinemaName;
-    private String filmName;
+    private List<String> listCinemaID;
+    private FilmModel film;
     private LayoutInflater layoutInflater;
 
-    public CinameNameAdapter(@NonNull Context context, int resource,  List<String> listCinemaName, String filmName) {
-        super(context, resource, listCinemaName);
-        this.filmName = filmName;
-        this.listCinemaName = listCinemaName;
+    public CinameNameAdapter(@NonNull Context context, int resource,  List<String> listCinemaID, FilmModel film) {
+        super(context, resource, listCinemaID);
+        this.film = film;
+        this.listCinemaID = listCinemaID;
         this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
     static  int selectedPosition = 0;
@@ -68,7 +69,7 @@ public class CinameNameAdapter extends ArrayAdapter<String> {
         TextView cinemaName = (TextView) itemView.findViewById(R.id.cinemaName);
         RecyclerView recyclerView = (RecyclerView) itemView.findViewById(R.id.listTime);
         List<String> listTime = new ArrayList<String>();
-        InforBooked.getInstance().listCinemaName = listCinemaName;
+        InforBooked.getInstance().listCinemaID = listCinemaID;
         String item = getItem(position);
 
         try{
@@ -95,7 +96,7 @@ public class CinameNameAdapter extends ArrayAdapter<String> {
                                 ShowTime showTime = doc.toObject(ShowTime.class);
                                 listShowTime.add(showTime);
                       }
-                            recyclerView.setAdapter(new TimeScheduleAdapter(listTime, null, filmName, item, itemView, null, null, listShowTime));
+                            recyclerView.setAdapter(new TimeScheduleAdapter(listTime, null, film, item, itemView, null, null, listShowTime));
 
                         }
                     });
@@ -112,7 +113,7 @@ public class CinameNameAdapter extends ArrayAdapter<String> {
 
                                 DateFormat dateFormat = new SimpleDateFormat("EEE\nd");
 
-                                if(doc.get("nameCinema").equals(item) && doc.get("nameFilm").equals(filmName) && dateFormat.format(time.toDate()).equals(InforBooked.getInstance().dateBooked)){
+                                if(doc.get("nameCinema").equals(item) && doc.get("nameFilm").equals(film.getName()) && dateFormat.format(time.toDate()).equals(InforBooked.getInstance().dateBooked)){
                                     DateFormat timeFormat = new SimpleDateFormat("H:mm");
                                     listTime.add(timeFormat.format(time.toDate()));
                                 }

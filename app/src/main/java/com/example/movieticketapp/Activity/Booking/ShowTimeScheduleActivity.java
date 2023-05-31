@@ -188,18 +188,18 @@ public class ShowTimeScheduleActivity extends AppCompatActivity {
                     countryAutoTv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            List<String> listCinemaName = new ArrayList<String>();
+                            List<String> listCinemaID = new ArrayList<String>();
                             FirebaseRequest.database.collection("Cinema").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
                                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                     List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
                                     for(DocumentSnapshot doc : listDocs){
                                         if(doc.get("CityID").equals(list.get(i).getID())){
-                                            listCinemaName.add(String.valueOf(doc.get("Name")));
+                                            listCinemaID.add(doc.getId());
                                         }
                                     }
 
-                                    cinameNameAdapter = new CinameNameAdapter(ShowTimeScheduleActivity.this, R.layout.cinema_booked_item,listCinemaName, selectedFilm.getName());
+                                    cinameNameAdapter = new CinameNameAdapter(ShowTimeScheduleActivity.this, R.layout.cinema_booked_item,listCinemaID, selectedFilm);
                                     cinemaLv.setAdapter(cinameNameAdapter);
                                     cinemaLv.setEnabled(false);
 
