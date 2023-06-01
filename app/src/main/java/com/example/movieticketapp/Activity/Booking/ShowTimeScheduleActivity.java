@@ -65,7 +65,7 @@ public class ShowTimeScheduleActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-       // ScheduleFilm.getInstance().listShowTime = new ArrayList<ShowTime>();
+        ScheduleFilm.getInstance().listShowTime = new ArrayList<ShowTime>();
         ScheduleFilm.getInstance().isDateSelected = false;
         ScheduleFilm.getInstance().isCitySelected = false;
 
