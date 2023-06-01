@@ -22,6 +22,7 @@ public class InforBooked {
     public boolean isDateSelected;
     public boolean isCitySelected;
     public String timeBooked;
+    public int prevPosition = -1;
     public String typeFilm = "All";
     public int total = 0;
     public static InforBooked getInstance(){

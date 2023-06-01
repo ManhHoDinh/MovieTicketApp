@@ -157,17 +157,26 @@ public class AddDiscount extends AppCompatActivity {
 
     }
     void addUserAndDiscountToDb(DocumentReference documentReference){
-
-        FirebaseFirestore.getInstance().collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        FirebaseFirestore.getInstance().collection("Users").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                List<DocumentSnapshot> listDocs = value.getDocuments();
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
                 for(DocumentSnapshot doc : listDocs){
                     UserAndDiscount userAndDiscount = new UserAndDiscount(doc.getId(), documentReference.getId());
                     FirebaseFirestore.getInstance().collection("UserAndDiscount").document().set(userAndDiscount);
                 }
             }
         });
+//        FirebaseFirestore.getInstance().collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+//                List<DocumentSnapshot> listDocs = value.getDocuments();
+//                for(DocumentSnapshot doc : listDocs){
+//                    UserAndDiscount userAndDiscount = new UserAndDiscount(doc.getId(), documentReference.getId());
+//                    FirebaseFirestore.getInstance().collection("UserAndDiscount").document().set(userAndDiscount);
+//                }
+//            }
+//        });
     }
     void IncreasingDiscountPercent()
     {

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -74,6 +75,7 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_book_seat);
         Intent intent = getIntent();
         timeBooked = intent.getStringExtra("timeBooked");
+        Log.e("f", timeBooked);
         dateBooked = intent.getStringExtra("dateBooked");
         selectedFilm = intent.getParcelableExtra("selectedFilm");
         nameFilmTv = (TextView) findViewById(R.id.nameFilm);
@@ -203,7 +205,7 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
                 List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
                 for(DocumentSnapshot doc : listDocs){
                     Timestamp time = doc.getTimestamp("timeBooked");
-                    DateFormat dateFormat = new SimpleDateFormat("EEE\ndd");
+                    DateFormat dateFormat = new SimpleDateFormat("EEE\nd");
                     DateFormat timeFormat = new SimpleDateFormat("HH:mm");
                     if(doc.get("nameCinema").equals(nameCinema)
                             && timeFormat.format(time.toDate()).equals(timeBooked)

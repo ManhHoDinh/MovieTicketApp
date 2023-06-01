@@ -40,7 +40,7 @@ public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.Vi
     private int checkedPosition = -1;
     private static String prevType = "";
 
-    private static int prevPosition = 0;
+    private static int prevPosition = -1;
     private View timeView;
     private static View prevView;
     private ListView timelistView;
@@ -87,23 +87,28 @@ public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.Vi
 
                                     TextView tv = (TextView) prevView.findViewById(R.id.cinemaName);
                                     RecyclerView rv = (RecyclerView) prevView.findViewById(R.id.listTime);
-                                    View v = rv.getLayoutManager().findViewByPosition(prevPosition);
+//                                    Log.e("f",String.valueOf(prevPosition) );
+                                    if(InforBooked.getInstance().prevPosition >-1){
+                                        View v = rv.getLayoutManager().findViewByPosition(InforBooked.getInstance().prevPosition);
+                                        Button btn  = v.findViewById(R.id.dateBtn);
+                                        btn.setBackgroundColor(Color.TRANSPARENT);
+                                        btn.setBackground(ContextCompat.getDrawable(dateBtn.getContext(), R.drawable.bg_tabview_button));
+                                    }
 
-                                    Button btn  = v.findViewById(R.id.dateBtn);
 
-                                    btn.setBackgroundColor(Color.TRANSPARENT);
-                                    btn.setBackground(ContextCompat.getDrawable(dateBtn.getContext(), R.drawable.bg_tabview_button));
+
 
                                 }
-                                InforBooked.getInstance().timeBooked = dateBtn.getText().toString();
-                                InforBooked.getInstance().nameCinema = cinemaName;
+
 
 
                             }
+                            InforBooked.getInstance().timeBooked = dateBtn.getText().toString();
+                            InforBooked.getInstance().nameCinema = cinemaName;
                         }
                         prevType = cinemaName;
                         prevView = timeView;
-                        prevPosition = getAdapterPosition();
+                        InforBooked.getInstance().prevPosition = getAdapterPosition();
 
                     }
 
@@ -178,7 +183,9 @@ public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.Vi
             holder.dateBtn.setText(listDate.get(position) + "\n" + listTime.get(position));
 
         }
-        else holder.dateBtn.setText(listDate.get(position));
+        else{
+            holder.dateBtn.setText(listDate.get(position));
+        }
         holder.Binding();
 
     }

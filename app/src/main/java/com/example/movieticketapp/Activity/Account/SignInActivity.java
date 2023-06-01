@@ -258,7 +258,8 @@ public class SignInActivity extends AppCompatActivity {
         final DocumentReference docRef = db.collection("Users").document(id);
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException error) { if (error != null) {
+            public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
                 return;
             }
                 if (snapshot != null && snapshot.exists()) {

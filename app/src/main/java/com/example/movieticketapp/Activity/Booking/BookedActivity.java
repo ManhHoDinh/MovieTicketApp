@@ -58,6 +58,7 @@ public class BookedActivity extends AppCompatActivity {
         super.onStop();
         InforBooked.getInstance().isDateSelected = false;
         InforBooked.getInstance().isCitySelected = false;
+        InforBooked.getInstance().prevPosition = -1;
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
