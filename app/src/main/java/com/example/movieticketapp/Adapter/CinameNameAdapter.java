@@ -17,6 +17,7 @@ import com.example.movieticketapp.Activity.Booking.BookedActivity;
 import com.example.movieticketapp.Activity.Booking.ShowTimeScheduleActivity;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.InforBooked;
+import com.example.movieticketapp.Model.ShowTime;
 import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
 import com.google.android.flexbox.FlexDirection;
@@ -25,7 +26,9 @@ import com.google.android.flexbox.JustifyContent;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.ktx.Firebase;
 
@@ -39,10 +42,13 @@ import java.util.List;
 public class CinameNameAdapter extends ArrayAdapter<String> {
     private List<String> listCinemaName;
     private String filmName;
+    private LayoutInflater layoutInflater;
+
     public CinameNameAdapter(@NonNull Context context, int resource,  List<String> listCinemaName, String filmName) {
         super(context, resource, listCinemaName);
         this.filmName = filmName;
         this.listCinemaName = listCinemaName;
+        this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
     static  int selectedPosition = 0;
 
@@ -50,7 +56,12 @@ public class CinameNameAdapter extends ArrayAdapter<String> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View itemView;
-        itemView = LayoutInflater.from(getContext()).inflate(R.layout.cinema_booked_item, null);
+        if(convertView == null){
+            itemView = layoutInflater.inflate(R.layout.cinema_booked_item, null);
+            convertView = layoutInflater.inflate(R.layout.cinema_booked_item, null);
+        }
+        else  itemView = convertView;
+
         TextView cinemaName = (TextView) itemView.findViewById(R.id.cinemaName);
         RecyclerView recyclerView = (RecyclerView) itemView.findViewById(R.id.listTime);
         List<String> listTime = new ArrayList<String>();
@@ -70,9 +81,31 @@ public class CinameNameAdapter extends ArrayAdapter<String> {
                     layoutManager.setFlexDirection(FlexDirection.ROW);
                     layoutManager.setJustifyContent(JustifyContent.FLEX_START);
                     recyclerView.setLayoutManager(layoutManager);
-                    recyclerView.setAdapter(new TimeScheduleAdapter(listTime, null, item, itemView, null, null));
-                    cinemaName.setText(item);
+                    FirebaseRequest.database.collection("showtime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
+                            List<ShowTime> listShowTime = new ArrayList<ShowTime>();
+                            for (DocumentSnapshot doc : listDocs) {
+                                ShowTime showTime = doc.toObject(ShowTime.class);
+                                listShowTime.add(showTime);
+                            }
+                            recyclerView.setAdapter(new TimeScheduleAdapter(listTime, null, filmName, item, itemView, null, null, listShowTime));
 
+                        }});
+//                    FirebaseRequest.database.collection("showtime").addSnapshotListener(new EventListener<QuerySnapshot>() {
+//                        @Override
+//                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+//                            List<DocumentSnapshot> listDocs = value.getDocuments();
+//                            for(DocumentSnapshot doc : listDocs){
+//                                ShowTime showTime = doc.toObject(ShowTime.class);
+//                                listShowTime.add(showTime);
+//                      }
+//
+//                        }
+//                    });
+
+                    cinemaName.setText(item);
                 }
             else {
                     FirebaseRequest.database.collection("showtime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -99,7 +132,7 @@ public class CinameNameAdapter extends ArrayAdapter<String> {
                             layoutManager.setFlexDirection(FlexDirection.ROW);
                             layoutManager.setJustifyContent(JustifyContent.FLEX_START);
                             recyclerView.setLayoutManager(layoutManager);
-                            recyclerView.setAdapter(new TimeBookedAdapter(listTime, null, item, itemView, null, null));
+                            recyclerView.setAdapter(new TimeBookedAdapter(listTime, null,null, item, itemView, null, null));
                             cinemaName.setText(item);
 
 
@@ -134,7 +167,7 @@ public class CinameNameAdapter extends ArrayAdapter<String> {
                     layoutManager.setFlexDirection(FlexDirection.ROW);
                     layoutManager.setJustifyContent(JustifyContent.FLEX_START);
                     recyclerView.setLayoutManager(layoutManager);
-                    recyclerView.setAdapter(new TimeBookedAdapter(listTime, null, item, itemView, null, null));
+                    recyclerView.setAdapter(new TimeBookedAdapter(listTime, null,null, item, itemView, null, null));
                     cinemaName.setText(item);
                 }
             });

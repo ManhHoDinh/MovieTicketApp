@@ -18,9 +18,6 @@
                 android:background="@color/background_color"
                 tools:context=".Activity.Movie.InformationFilmActivity"
                 >
-
-
-
                         <ImageView
                             android:id="@+id/backgroundImage"
                             android:layout_width="match_parent"
@@ -63,23 +60,30 @@
                             app:layout_constraintLeft_toLeftOf="parent"
                             android:src="@drawable/ic_back"
                             />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/PosterImageLayout"
+                    android:layout_width="120dp"
+                    android:layout_height="172dp"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="24dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/topView"
+                    app:cardCornerRadius="12dp"
+                    >
                         <ImageView
                             android:id="@+id/PosterImage"
-                            android:layout_width="120dp"
-                            android:layout_height="172dp"
-                            android:layout_marginLeft="24dp"
-                            android:layout_marginRight="24dp"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintBottom_toBottomOf="@+id/topView"
                             android:scaleType="fitXY"
-                            android:foreground="@drawable/border_radius"
-                            android:background="@drawable/border_radius"
                             android:adjustViewBounds="true"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             />
+<!--                            android:layout_marginLeft="24dp"-->
+<!--                            android:layout_marginRight="24dp"-->
+                </androidx.cardview.widget.CardView>
                         <androidx.appcompat.widget.LinearLayoutCompat
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:layout_constraintLeft_toRightOf="@id/PosterImage"
+                            app:layout_constraintLeft_toRightOf="@id/PosterImageLayout"
                             app:layout_constraintTop_toBottomOf="@+id/bg_img_shadow"
                             android:layout_marginLeft="16dp"
                             android:layout_marginRight="24dp"
@@ -142,6 +146,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
 
+
                         </androidx.appcompat.widget.LinearLayoutCompat>
 
                         <com.google.android.material.tabs.TabLayout
@@ -149,7 +154,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/PosterImage"
+                            app:layout_constraintTop_toBottomOf="@+id/PosterImageLayout"
                             app:tabIndicatorHeight="2dp"
                             app:tabIndicatorColor="@color/white"
                             app:tabIndicatorFullWidth="false"
@@ -181,6 +186,7 @@
                             app:layout_constraintTop_toBottomOf="@+id/tab_layout"
                             android:id="@+id/pager"
                             />
+                    
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>

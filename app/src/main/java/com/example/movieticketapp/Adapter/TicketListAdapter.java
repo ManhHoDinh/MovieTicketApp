@@ -11,9 +11,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Ticket;
 import com.example.movieticketapp.R;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
@@ -48,19 +54,25 @@ public class TicketListAdapter extends ArrayAdapter<Ticket> {
             TextView timeTextView = (TextView) v.findViewById(R.id.tvTime);
             TextView studioTextView = (TextView) v.findViewById(R.id.tvStudio);
             RoundedImageView posterRImageView = (RoundedImageView) v.findViewById(R.id.ivPoster);
+            DocumentReference film =  FirebaseRequest.database.collection("Movies").document(ve.getFilmID());
+            film.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                    if (nameTextView != null)
+                        nameTextView.setText(value.get("name").toString());
+                    if (timeTextView != null){
+                        Timestamp time = ve.getTime();
+                        DateFormat dateFormat = new SimpleDateFormat("hh:mm, E MMM dd");
+                        timeTextView.setText(dateFormat.format(time.toDate()));
 
-            if (nameTextView != null)
-                nameTextView.setText(ve.getName());
-            if (timeTextView != null){
-                Timestamp time = ve.getTime();
-                DateFormat dateFormat = new SimpleDateFormat("hh:mm, E MMM dd");
-                timeTextView.setText(dateFormat.format(time.toDate()));
+                    }
 
-            }
+                    if (studioTextView != null)
+                        studioTextView.setText(ve.getCinema());
+                    Picasso.get().load(value.get("PosterImage").toString()).into(posterRImageView);
+                }
+            });
 
-            if (studioTextView != null)
-                studioTextView.setText(ve.getCinema());
-            Picasso.get().load(ve.getPoster()).into(posterRImageView);
         }
         return v;
     }

@@ -1,5 +1,6 @@
 package com.example.movieticketapp.Activity.Ticket;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.widget.ListView;
 import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
 import com.example.movieticketapp.Adapter.TicketListAdapter;
+import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Ticket;
 import com.example.movieticketapp.R;
 import com.example.movieticketapp.databinding.HomeScreenBinding;
@@ -22,8 +24,11 @@ import com.example.movieticketapp.databinding.MyTicketAllScreenBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.DateFormat;
@@ -126,21 +131,28 @@ public class MyTicketAllActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Object o = listView.getItemAtPosition(i);
                 Ticket ticket = (Ticket) o;
-                Intent a = new Intent(getApplicationContext(),TicketDetailActivity.class);
-                Timestamp time = ((Ticket) o).getTime();
-                DateFormat dateFormat = new SimpleDateFormat("hh:mm, E MMM dd");
-                String timeBooked = dateFormat.format(time.toDate());
-                a.putExtra("name", ((Ticket) o).getName());
-                a.putExtra("time",timeBooked );
-                a.putExtra("cinema", ((Ticket) o).getCinema());
-                a.putExtra("poster", ((Ticket) o).getPoster());
-                a.putExtra("rate", ((Ticket) o).getRate());
-                a.putExtra("kind", ((Ticket) o).getKind());
-                a.putExtra("duration", ((Ticket) o).getDuration());
-                a.putExtra("seat", ((Ticket) o).getSeat());
-                a.putExtra("paid", ((Ticket) o).getPaid());
-                a.putExtra("idorder", ((Ticket) o).getIdorder());
-                startActivity(a);
+                DocumentReference film =  FirebaseRequest.database.collection("Movies").document(ticket.getFilmID());
+                film.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                        Intent a = new Intent(getApplicationContext(),TicketDetailActivity.class);
+                        Timestamp time = ((Ticket) o).getTime();
+                        DateFormat dateFormat = new SimpleDateFormat("hh:mm, E MMM dd");
+                        String timeBooked = dateFormat.format(time.toDate());
+                        a.putExtra("name", value.get("name").toString());
+                        a.putExtra("time",timeBooked );
+                        a.putExtra("cinema", ((Ticket) o).getCinema());
+                        a.putExtra("poster", value.get("PosterImage").toString());
+                        a.putExtra("rate", value.get("vote").toString());
+                        a.putExtra("kind", value.get("genre").toString());
+                        a.putExtra("duration", value.get("durationTime").toString());
+                        a.putExtra("seat", ((Ticket) o).getSeat());
+                        a.putExtra("paid", ((Ticket) o).getPaid());
+                        a.putExtra("idorder", ((Ticket) o).getIdorder());
+                        startActivity(a);
+                    }
+                });
             }
         });
 
@@ -151,30 +163,40 @@ public class MyTicketAllActivity extends AppCompatActivity {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 if (!queryDocumentSnapshots.isEmpty()) {
+
                     List<DocumentSnapshot> listDoc = queryDocumentSnapshots.getDocuments();
                     Calendar calendar = Calendar.getInstance();
                     Date currentTime= calendar.getTime();
                     switch(type){
                         case "all":
                             for (DocumentSnapshot doc : listDoc){
-                                Ticket _ticket = doc.toObject(Ticket.class);
-                                arrayList.add(_ticket);
+                                if(doc.get("userID").equals(FirebaseRequest.mAuth.getUid())){
+                                    Ticket _ticket = doc.toObject(Ticket.class);
+                                    arrayList.add(_ticket);
+                                }
+
                             }
                             break;
                         case "new":
                             for (DocumentSnapshot doc : listDoc){
-                                if(currentTime.before(doc.getTimestamp("time").toDate())){
-                                    Ticket _ticket = doc.toObject(Ticket.class);
-                                    arrayList.add(_ticket);
+                                if(doc.get("userID").equals(FirebaseRequest.mAuth.getUid())) {
+
+                                    if (currentTime.before(doc.getTimestamp("time").toDate())) {
+                                        Ticket _ticket = doc.toObject(Ticket.class);
+                                        arrayList.add(_ticket);
+                                    }
                                 }
                             }
 
                             break;
                         case "expire":
                             for (DocumentSnapshot doc : listDoc){
-                                if(currentTime.after(doc.getTimestamp("time").toDate()) ||currentTime.equals(doc.getTimestamp("time").toDate())){
-                                    Ticket _ticket = doc.toObject(Ticket.class);
-                                    arrayList.add(_ticket);
+                                if(doc.get("userID").equals(FirebaseRequest.mAuth.getUid())) {
+
+                                    if (currentTime.after(doc.getTimestamp("time").toDate()) || currentTime.equals(doc.getTimestamp("time").toDate())) {
+                                        Ticket _ticket = doc.toObject(Ticket.class);
+                                        arrayList.add(_ticket);
+                                    }
                                 }
                             }
                             break;
