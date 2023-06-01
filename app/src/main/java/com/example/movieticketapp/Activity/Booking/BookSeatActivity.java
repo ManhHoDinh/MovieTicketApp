@@ -204,7 +204,7 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
                 for(DocumentSnapshot doc : listDocs){
                     Timestamp time = doc.getTimestamp("timeBooked");
                     DateFormat dateFormat = new SimpleDateFormat("EEE\ndd");
-                    DateFormat timeFormat = new SimpleDateFormat("H:m");
+                    DateFormat timeFormat = new SimpleDateFormat("HH:mm");
                     if(doc.get("nameCinema").equals(nameCinema)
                             && timeFormat.format(time.toDate()).equals(timeBooked)
                             && dateFormat.format(time.toDate()).equals(dateBooked)

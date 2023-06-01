@@ -219,7 +219,7 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
                                     for(DocumentSnapshot doc : listDocs){
                                         Timestamp time = doc.getTimestamp("timeBooked");
                                         DateFormat dateFormat = new SimpleDateFormat("EEE\nd");
-                                        DateFormat timeFormat = new SimpleDateFormat("H:mm");
+                                        DateFormat timeFormat = new SimpleDateFormat("HH:mm");
                                         DateFormat monthformat = new SimpleDateFormat("MMM");
                                         String month_name = monthformat.format(time.toDate());
                                       //  String timeBook = timeBooked + ", " + listDate[0] + " "+month_name+" " + listDate[1];

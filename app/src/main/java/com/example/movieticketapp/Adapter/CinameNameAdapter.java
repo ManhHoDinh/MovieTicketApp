@@ -38,6 +38,8 @@ import com.google.firebase.ktx.Firebase;
 import org.w3c.dom.Document;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +82,9 @@ public class CinameNameAdapter extends ArrayAdapter<String> {
                         for (int i = 10; i <= 20;i++)
                             for (int j = 0; j <60; j=j+15)
                             {
-                                listTime.add(i+":"+j);
+                                NumberFormat formatter = new DecimalFormat("00");
+
+                                listTime.add(formatter.format(i)+":" + formatter.format(j));
                             }
                     }
                     FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext());
@@ -114,7 +118,7 @@ public class CinameNameAdapter extends ArrayAdapter<String> {
                                 DateFormat dateFormat = new SimpleDateFormat("EEE\nd");
 
                                 if(doc.get("nameCinema").equals(item) && doc.get("nameFilm").equals(filmName) && dateFormat.format(time.toDate()).equals(InforBooked.getInstance().dateBooked)){
-                                    DateFormat timeFormat = new SimpleDateFormat("H:mm");
+                                    DateFormat timeFormat = new SimpleDateFormat("HH:mm");
                                     listTime.add(timeFormat.format(time.toDate()));
                                 }
                             }
@@ -169,7 +173,7 @@ public class CinameNameAdapter extends ArrayAdapter<String> {
                         Timestamp time = doc.getTimestamp("TimeBooked");
                         DateFormat dateFormat = new SimpleDateFormat("EEE\nd");
                         if(doc.get("NameCinema").equals(item) && doc.get("NameFilm").equals(filmName) && dateFormat.format(time.toDate()).equals(InforBooked.getInstance().dateBooked)){
-                            DateFormat timeFormat = new SimpleDateFormat("H:mm");
+                            DateFormat timeFormat = new SimpleDateFormat("HH:mm");
                             listTime.add(timeFormat.format(time.toDate()));
                         }
                     }

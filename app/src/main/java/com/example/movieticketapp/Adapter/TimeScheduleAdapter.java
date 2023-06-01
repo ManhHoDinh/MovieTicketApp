@@ -107,7 +107,7 @@ public class TimeScheduleAdapter extends RecyclerView.Adapter<TimeScheduleAdapte
                             for (int i = 0; i < listShowTime.size(); i++) {
                                 ShowTime showTime = listShowTime.get(i);
                                 DateFormat dateFormat = new SimpleDateFormat("EEE\nd");
-                                DateFormat timeFormat = new SimpleDateFormat("H:m");
+                                DateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
                                 if(cinemaName.equals(showTime.getNameCinema())
                                         && filmName.equals(showTime.getNameFilm())
@@ -204,7 +204,7 @@ public class TimeScheduleAdapter extends RecyclerView.Adapter<TimeScheduleAdapte
     @Override
     public void onBindViewHolder(@NonNull TimeScheduleAdapter.ViewHolder holder, int position) {
         DateFormat dateFormat = new SimpleDateFormat("EEE\nd");
-        DateFormat timeFormat = new SimpleDateFormat("H:m");
+        DateFormat timeFormat = new SimpleDateFormat("HH:mm");
         if (listTime != null) {
             holder.dateBtn.setText(listDate.get(position) + "\n" + listTime.get(position));
 //            for(ShowTime showTime : ScheduleFilm.getInstance().listShowTime){
