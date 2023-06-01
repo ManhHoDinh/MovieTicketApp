@@ -78,7 +78,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/holo_orange_dark"
-                android:text="Ticket : 100"
+                android:text="Ticket : 0"
                 android:paddingHorizontal="5dp"
                 android:paddingVertical="5dp"
                 android:gravity="center"
