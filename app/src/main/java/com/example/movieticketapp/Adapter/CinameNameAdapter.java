@@ -170,7 +170,7 @@ public class CinameNameAdapter extends ArrayAdapter<String> {
                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                     List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
                     for(DocumentSnapshot doc : listDocs){
-                        Timestamp time = doc.getTimestamp("TimeBooked");
+                        Timestamp time = doc.getTimestamp("timeBooked");
                         DateFormat dateFormat = new SimpleDateFormat("EEE\nd");
                         if(doc.get("NameCinema").equals(item) && doc.get("NameFilm").equals(filmName) && dateFormat.format(time.toDate()).equals(InforBooked.getInstance().dateBooked)){
                             DateFormat timeFormat = new SimpleDateFormat("HH:mm");

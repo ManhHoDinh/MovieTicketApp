@@ -84,7 +84,7 @@ public class HomeActivity extends AppCompatActivity {
         addDiscount = findViewById(R.id.AddDiscount);
         viewAllPlayingBtn = findViewById(R.id.viewAllPlayingBtn);
         viewAllComingBtn = findViewById(R.id.viewAllComingBtn);
-
+        promotionView =(ListView) findViewById(R.id.promotionView);
         searchView=findViewById(R.id.searchField);
 
         searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
@@ -182,55 +182,84 @@ public class HomeActivity extends AppCompatActivity {
     void GetDiscounts() {
 
         List<Discount> Discounts = new ArrayList<>();
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference PromoRef = db.collection(UserAndDiscount.collectionName);
 
-        Query query = PromoRef.whereEqualTo("userID", FirebaseRequest.mAuth.getUid());
 
-        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                List<String> listDiscountID = new ArrayList<>();
-                for(DocumentSnapshot doc : value){
-                    listDiscountID.add(doc.get("discountID").toString());
-                    // DocumentReference document = FirebaseRequest.database.collection(Discount.CollectionName).document(doc.get("discountID").toString());
-                }
-                Query query2 = db.collection(Discount.CollectionName).whereIn("ID", listDiscountID);
-                query2.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        if(Users.currentUser!=null)
+            if(((Users.currentUser.getAccountType().toString()).equals("admin"))){
+                FirebaseFirestore.getInstance().collection(Discount.CollectionName).addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        List<Discount> listDiscounts = new ArrayList<Discount>();
                         for(DocumentSnapshot doc : value){
                             Discount f = doc.toObject(Discount.class);
-                            Discounts.add(f);
-                        }
-                        promotionView =(ListView) findViewById(R.id.promotionView);
-                        //   LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-                        // promotionView.setLayoutManager(VerLayoutManager);
-                        Intent intent = getIntent();
-                        PromotionAdapter promotionAdapter = new PromotionAdapter(HomeActivity.this,R.layout.promo_item,Discounts);
-                        promotionView.setAdapter(promotionAdapter);
-                        if (Discounts.size() == 0) {
-                            ViewGroup.LayoutParams params = promotionView.getLayoutParams();
-                            params.height = 0;
-                            promotionView.setLayoutParams(params);
-                        }
-                        if (Discounts.size() == 1) {
-                            ViewGroup.LayoutParams params = promotionView.getLayoutParams();
-                            params.height = 300;
-                            promotionView.setLayoutParams(params);
-                        }
-                        if (Discounts.size() == 2) {
-                            ViewGroup.LayoutParams params = promotionView.getLayoutParams();
-                            params.height = 700;
-                            promotionView.setLayoutParams(params);
-                        }
+                            listDiscounts.add(f);
 
+                        }
+                        PromotionAdapter promotionAdapter = new PromotionAdapter(HomeActivity.this,R.layout.promo_item,listDiscounts);
+                        promotionView.setAdapter(promotionAdapter);
 
                     }
                 });
-
             }
-        });
+        else {
+                CollectionReference PromoRef = db.collection(UserAndDiscount.collectionName);
+
+                Query query = PromoRef.whereEqualTo("userID", FirebaseRequest.mAuth.getUid());
+
+                query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        List<String> listDiscountID = new ArrayList<>();
+                        Log.e("f", String.valueOf(value.size()));
+//                        for(DocumentSnapshot doc : value){
+//                            listDiscountID.add(doc.get("discountID").toString());
+//                            // DocumentReference document = FirebaseRequest.database.collection(Discount.CollectionName).document(doc.get("discountID").toString());
+//                        }
+
+                        if(listDiscountID.size() > 0 ){
+                            Query query2 = db.collection(Discount.CollectionName).whereIn("ID", listDiscountID);
+                            query2.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                    for(DocumentSnapshot doc : value){
+                                        Discount f = doc.toObject(Discount.class);
+                                        Discounts.add(f);
+                                    }
+
+                                    //   LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+                                    // promotionView.setLayoutManager(VerLayoutManager);
+                                    Intent intent = getIntent();
+                                    PromotionAdapter promotionAdapter = new PromotionAdapter(HomeActivity.this,R.layout.promo_item,Discounts);
+                                    promotionView.setAdapter(promotionAdapter);
+                                    if (Discounts.size() == 0) {
+                                        ViewGroup.LayoutParams params = promotionView.getLayoutParams();
+                                        params.height = 0;
+                                        promotionView.setLayoutParams(params);
+                                    }
+                                    if (Discounts.size() == 1) {
+                                        ViewGroup.LayoutParams params = promotionView.getLayoutParams();
+                                        params.height = 300;
+                                        promotionView.setLayoutParams(params);
+                                    }
+                                    if (Discounts.size() == 2) {
+                                        ViewGroup.LayoutParams params = promotionView.getLayoutParams();
+                                        params.height = 700;
+                                        promotionView.setLayoutParams(params);
+                                    }
+
+
+                                }
+                            });
+
+                        }
+                        else  promotionView.setAdapter( new PromotionAdapter(HomeActivity.this,R.layout.promo_item,new ArrayList<Discount>()));
+
+                    }
+                });
+            }
+
 
 
 

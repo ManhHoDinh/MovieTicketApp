@@ -108,36 +108,39 @@ public class DiscountViewAll extends AppCompatActivity {
                             listDiscountID.add(doc.get("discountID").toString());
                             // DocumentReference document = FirebaseRequest.database.collection(Discount.CollectionName).document(doc.get("discountID").toString());
                         }
-                        Query query2 = db.collection(Discount.CollectionName).whereIn("ID", listDiscountID);
-                        query2.addSnapshotListener(new EventListener<QuerySnapshot>() {
-                            @Override
-                            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                                for(DocumentSnapshot doc : value){
-                                    Discount f = doc.toObject(Discount.class);
-                                    Discounts.add(f);
-                                }
+                        if(listDiscountID.size() > 0){
+                            Query query2 = db.collection(Discount.CollectionName).whereIn("ID", listDiscountID);
+                            query2.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                    for(DocumentSnapshot doc : value){
+                                        Discount f = doc.toObject(Discount.class);
+                                        Discounts.add(f);
+                                    }
 
-                                //   LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-                                // promotionView.setLayoutManager(VerLayoutManager);
-                                Intent intent = getIntent();
-                                PromotionAdapter promotionAdapter = new PromotionAdapter(DiscountViewAll.this,R.layout.promo_item,Discounts);
-                                promotionView.setAdapter(promotionAdapter);
-                                Double totalBook = intent.getDoubleExtra("total", 0);
-                                if( totalBook != 0){
-                                    promotionView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                        @Override
-                                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                            double finalTotal = totalBook * Discounts.get(i).getDiscountRate() /100;
-                                            intent.putExtra("total", finalTotal);
-                                            intent.putExtra("nameDiscount", Discounts.get(i).getName());
-                                            intent.putExtra("idDiscount", Discounts.get(i).getID());
-                                            setResult(RESULT_OK, intent);
-                                            finish();
-                                        }
-                                    });
+                                    //   LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+                                    // promotionView.setLayoutManager(VerLayoutManager);
+                                    Intent intent = getIntent();
+                                    PromotionAdapter promotionAdapter = new PromotionAdapter(DiscountViewAll.this,R.layout.promo_item,Discounts);
+                                    promotionView.setAdapter(promotionAdapter);
+                                    Double totalBook = intent.getDoubleExtra("total", 0);
+                                    if( totalBook != 0){
+                                        promotionView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                            @Override
+                                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                                double finalTotal = totalBook * Discounts.get(i).getDiscountRate() /100;
+                                                intent.putExtra("total", finalTotal);
+                                                intent.putExtra("nameDiscount", Discounts.get(i).getName());
+                                                intent.putExtra("idDiscount", Discounts.get(i).getID());
+                                                setResult(RESULT_OK, intent);
+                                                finish();
+                                            }
+                                        });
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
+
 
                     }
                 });
