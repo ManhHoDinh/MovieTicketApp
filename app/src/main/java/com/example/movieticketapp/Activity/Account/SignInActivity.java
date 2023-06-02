@@ -262,7 +262,7 @@ public class SignInActivity extends AppCompatActivity {
                 return;
             }
                 if (snapshot != null && snapshot.exists()) {
-                   Users.currentUser = snapshot.toObject(Users.class);
+                    Users.currentUser = snapshot.toObject(Users.class);
                 }
             }
         });
