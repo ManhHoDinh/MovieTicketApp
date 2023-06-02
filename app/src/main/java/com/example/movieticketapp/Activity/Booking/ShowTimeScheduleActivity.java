@@ -28,6 +28,7 @@ import com.example.movieticketapp.Adapter.CinameNameAdapter;
 import com.example.movieticketapp.Adapter.Helper;
 import com.example.movieticketapp.Adapter.TimeBookedAdapter;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
+import com.example.movieticketapp.Model.Cinema;
 import com.example.movieticketapp.Model.City;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.InforBooked;
@@ -107,9 +108,9 @@ public class ShowTimeScheduleActivity extends AppCompatActivity {
             countTime++;
         }
         cinemaLv = (ListView) findViewById(R.id.cinemaLv);
-        TimeBookedAdapter timeBookedAdapter = new TimeBookedAdapter(listDate, listTime, selectedFilm.getName(), null, null, cinemaLv, ShowTimeScheduleActivity.this);
+        TimeBookedAdapter timeBookedAdapter = new TimeBookedAdapter(listDate, listTime, selectedFilm, null, null, cinemaLv, ShowTimeScheduleActivity.this);
 
-        dayRecycleView.setAdapter(new TimeBookedAdapter(listDate, listTime, selectedFilm.getName(), null, null, cinemaLv, ShowTimeScheduleActivity.this));
+        dayRecycleView.setAdapter(new TimeBookedAdapter(listDate, listTime, selectedFilm, null, null, cinemaLv, ShowTimeScheduleActivity.this));
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         dayRecycleView.setLayoutManager(layoutManager);
 
@@ -142,7 +143,7 @@ public class ShowTimeScheduleActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             for(ShowTime showTime : ScheduleFilm.getInstance().listShowTime){
-                                FirebaseRequest.database.collection("showtime").document().set(showTime);
+                                FirebaseRequest.database.collection("Showtime").document().set(showTime);
                                 Log.e("fds", showTime.getTimeBooked().toDate().toString());
                             }
 
@@ -196,18 +197,18 @@ public class ShowTimeScheduleActivity extends AppCompatActivity {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                             ScheduleFilm.getInstance().isCitySelected = true;
-                            List<String> listCinemaName = new ArrayList<String>();
+                            List<Cinema> listCinema = new ArrayList<Cinema>();
                             FirebaseRequest.database.collection("Cinema").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
                                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                     List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
                                     for(DocumentSnapshot doc : listDocs){
                                         if(doc.get("CityID").equals(list.get(i).getID())){
-                                            listCinemaName.add(String.valueOf(doc.get("Name")));
+                                            listCinema.add(doc.toObject(Cinema.class));
                                         }
                                     }
 
-                                    cinameNameAdapter = new CinameNameAdapter(ShowTimeScheduleActivity.this, R.layout.cinema_booked_item,listCinemaName, selectedFilm.getName());
+                                    cinameNameAdapter = new CinameNameAdapter(ShowTimeScheduleActivity.this, R.layout.cinema_booked_item,listCinema, selectedFilm);
                                     cinemaLv.setAdapter(cinameNameAdapter);
                                     cinemaLv.setEnabled(false);
 

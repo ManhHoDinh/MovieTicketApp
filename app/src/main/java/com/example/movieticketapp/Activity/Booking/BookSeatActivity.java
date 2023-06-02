@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.movieticketapp.Activity.Booking.CheckoutWalletEnoughActivity;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
+import com.example.movieticketapp.Model.Cinema;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -39,7 +41,7 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
     private Button backBtn;
     private Button SeatBookBtn;
     private int initPrice;
-    private String nameCinema;
+    private Cinema cinema;
 
     ViewGroup layout;
     ViewGroup layout1;
@@ -81,8 +83,8 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
         nameFilmTv = (TextView) findViewById(R.id.nameFilm);
         nameCinemaTv = (TextView) findViewById(R.id.nameCinema);
         nameFilmTv.setText(selectedFilm.getName());
-        nameCinema = intent.getStringExtra("nameCinema");
-        nameCinemaTv.setText(nameCinema);
+        cinema = intent.getParcelableExtra("cinema");
+        nameCinemaTv.setText(cinema.getName());
 
         countTicketTv = (TextView) findViewById(R.id.countTicketTv);
         priceTv = (TextView) findViewById(R.id.priceTv);
@@ -178,7 +180,7 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
                     bundle.putString("dateBooked", dateBooked);
                     bundle.putString("timeBooked", timeBooked);
                     bundle.putParcelable("selectedFilm", selectedFilm);
-                    bundle.putString("cinemaName",nameCinemaTv.getText().toString());
+                    bundle.putParcelable("cinema",(Parcelable) cinema);
                     String priceSeat = priceTv.getText().toString();
                     bundle.putString("price",priceSeat.substring(0, priceSeat.length() - 4));
                     bundle.putStringArrayList("seats", (ArrayList<String>) selectedIds);
@@ -199,7 +201,7 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
         });
     }
     void loadSeats(){
-        FirebaseRequest.database.collection("showtime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        FirebaseRequest.database.collection("Showtime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
@@ -207,10 +209,10 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
                     Timestamp time = doc.getTimestamp("timeBooked");
                     DateFormat dateFormat = new SimpleDateFormat("EEE\nd");
                     DateFormat timeFormat = new SimpleDateFormat("HH:mm");
-                    if(doc.get("nameCinema").equals(nameCinema)
+                    if(doc.get("cinemaID").equals(cinema.getCinemaID())
                             && timeFormat.format(time.toDate()).equals(timeBooked)
                             && dateFormat.format(time.toDate()).equals(dateBooked)
-                            && doc.get("nameFilm").equals(selectedFilm.getName())){
+                            && doc.get("filmID").equals(selectedFilm.getId())){
                         List<String> bookedSeats = (List<String>) doc.get("bookedSeat");
                         LinearLayout linearLayout =(LinearLayout) layout.getChildAt(0);
                         for(int i = 0; i < 10; i ++){
@@ -262,7 +264,7 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
                 for(DocumentSnapshot doc : listDocs){
-                    if(doc.get("Name").equals(nameCinema)){
+                    if(doc.get("CinemaID").equals(cinema.getCinemaID())){
                         initPrice = Integer.parseInt(String.valueOf(doc.get("Price")));
 
                         priceTv.setText(initPrice * selectedIds.size() +" VNĐ");
