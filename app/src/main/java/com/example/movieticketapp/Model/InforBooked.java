@@ -15,13 +15,14 @@ import java.util.List;
 
 public class InforBooked {
     private static InforBooked instance;
-    public String nameCinema;
+    public Cinema cinema;
     public String dateBooked;
-    public String nameFilm;
-    public List<String> listCinemaName = new ArrayList<String>();
+    public FilmModel film;
+    public List<Cinema> listCinema = new ArrayList<Cinema>();
     public boolean isDateSelected;
     public boolean isCitySelected;
     public String timeBooked;
+    public int prevPosition = -1;
     public String typeFilm = "All";
     public int total = 0;
     public static InforBooked getInstance(){
@@ -31,8 +32,8 @@ public class InforBooked {
         return  instance;
     }
     public void removeExpireFilm(){
-        CollectionReference showtimeCollection= FirebaseRequest.database.collection("showtime");
-        FirebaseRequest.database.collection("showtime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        CollectionReference showtimeCollection= FirebaseRequest.database.collection("Showtime");
+        FirebaseRequest.database.collection("Showtime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();

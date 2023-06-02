@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.example.movieticketapp.Adapter.CinameNameAdapter;
 import com.example.movieticketapp.Adapter.Helper;
 import com.example.movieticketapp.Adapter.TimeBookedAdapter;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
+import com.example.movieticketapp.Model.Cinema;
 import com.example.movieticketapp.Model.City;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.InforBooked;
@@ -58,6 +60,7 @@ public class BookedActivity extends AppCompatActivity {
         super.onStop();
         InforBooked.getInstance().isDateSelected = false;
         InforBooked.getInstance().isCitySelected = false;
+        InforBooked.getInstance().prevPosition = -1;
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,12 +115,12 @@ public class BookedActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
             if(InforBooked.getInstance().dateBooked == null || InforBooked.getInstance().timeBooked == null ){
-                Toast.makeText(BookedActivity.this, "Please choote time and date!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BookedActivity.this, "Please choose time and date!", Toast.LENGTH_SHORT).show();
             }
             else{
                 Intent intent = new Intent(BookedActivity.this, BookSeatActivity.class);
                 intent.putExtra("selectedFilm", selectedFilm);
-                intent.putExtra("nameCinema", InforBooked.getInstance().nameCinema);
+                intent.putExtra("cinema", (Parcelable) InforBooked.getInstance().cinema);
                 intent.putExtra("dateBooked", InforBooked.getInstance().dateBooked);
                 intent.putExtra("timeBooked", InforBooked.getInstance().timeBooked);
                 startActivity(intent);
@@ -154,19 +157,20 @@ public class BookedActivity extends AppCompatActivity {
 
                             InforBooked.getInstance().isCitySelected = true;
 
-                            List<String> listCinemaName = new ArrayList<String>();
+                            List<Cinema> listCinema = new ArrayList<Cinema>();
                             FirebaseRequest.database.collection("Cinema").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
                                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                     List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
                                     for(DocumentSnapshot doc : listDocs){
                                         if(doc.get("CityID").equals(list.get(i).getID())){
-                                           listCinemaName.add(String.valueOf(doc.get("Name")));
+                                            Cinema cinemaItem = doc.toObject(Cinema.class);
+                                           listCinema.add(cinemaItem);
 
                                         }
                                     }
 
-                                        CinameNameAdapter cinameNameAdapter = new CinameNameAdapter(BookedActivity.this, R.layout.cinema_booked_item,listCinemaName, selectedFilm.getName());
+                                        CinameNameAdapter cinameNameAdapter = new CinameNameAdapter(BookedActivity.this, R.layout.cinema_booked_item,listCinema, selectedFilm);
                                         cinemaLv.setAdapter(cinameNameAdapter);
                                         cinemaLv.setEnabled(false);
 

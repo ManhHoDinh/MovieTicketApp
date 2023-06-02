@@ -5,6 +5,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -25,6 +26,7 @@ import com.example.movieticketapp.Adapter.MovieCheckoutAdapter;
 import com.example.movieticketapp.Adapter.TicketListAdapter;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.CheckoutFilmModel;
+import com.example.movieticketapp.Model.Cinema;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.Ticket;
 import com.example.movieticketapp.R;
@@ -33,7 +35,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Document;
@@ -66,7 +70,7 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
     String date;
     TextView selectTv;
     String timeBooked;
-    String cinemaName;
+    Cinema cinema;
     String[] listDate;
     String listSeat;
     String price;
@@ -135,9 +139,9 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         film = bundle.getParcelable("selectedFilm");
        // film = intent.getParcelableExtra("selectedFilm");
-        cinemaName =bundle.getString("cinemaName");
+        cinema =bundle.getParcelable("cinema");
        // cinemaName =intent.getStringExtra("cinemaName");
-        cinemaNameTv.setText(cinemaName);
+        cinemaNameTv.setText(cinema.getName());
         date = bundle.getString("dateBooked");
        // date = intent.getStringExtra("dateBooked");
         timeBooked = bundle.getString("timeBooked");
@@ -208,11 +212,18 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
                         if(Math.round(total) <= totalWallet){
                             totalWallet -= Math.round(total);
                             if(idDiscount != null){
-                                FirebaseRequest.database.collection("Discounts").document(idDiscount).delete();
+                                FirebaseRequest.database.collection("UserAndDiscount").whereEqualTo("discountID", idDiscount).whereEqualTo("userID", FirebaseRequest.mAuth.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                        for(DocumentSnapshot doc : value){
+                                            doc.getReference().delete();
+                                        }
+                                    }
+                                });
 
                             }
                             FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid()).update("Wallet", totalWallet);
-                            FirebaseRequest.database.collection("showtime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            FirebaseRequest.database.collection("Showtime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
                                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                     List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
@@ -224,19 +235,20 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
                                         String month_name = monthformat.format(time.toDate());
                                       //  String timeBook = timeBooked + ", " + listDate[0] + " "+month_name+" " + listDate[1];
 
-
-                                        if(doc.get("nameCinema").equals(cinemaName) && doc.get("nameFilm").equals(film.getName()) && timeFormat.format(time.toDate()).equals(timeBooked) && dateFormat.format(time.toDate()).equals(date)){
+                                       // Log.e("f",doc.get("nameCinema").toString() + " " +cinemaName + doc.get("nameFilm").toString()+ " " +film.getName() +timeFormat.format(time.toDate()) + " " + timeBooked + dateFormat.format(time.toDate()) + date  );
+                                        if(doc.get("cinemaID").toString().equals(cinema.getCinemaID()) && doc.get("filmID").toString().equals(film.getId()) && timeFormat.format(time.toDate()).equals(timeBooked) && dateFormat.format(time.toDate()).equals(date)){
                                             List<String> listSeats = (List<String>) doc.get("bookedSeat");
 
                                             for(int i = 0; i < seats.size(); i++){
                                                 listSeats.add(seats.get(i));
-                                                FirebaseRequest.database.collection("showtime").document(doc.getId()).update("bookedSeat", listSeats);
+
                                             }
+                                            FirebaseRequest.database.collection("Showtime").document(doc.getId()).update("bookedSeat", listSeats);
 //                                            Ticket ticket = new Ticket(film.getName(),time,
 //                                                    cinemaName,film.getPosterImage(),
 //                                                    Double.parseDouble(film.getVote()),
 //                                                    film.getGenre(), film.getDurationTime(), listSeat, price, idOrder.getText().toString() );
-                                            Ticket ticket = new Ticket(time, cinemaName, listSeat, String.valueOf(Math.round(total)) + " VNĐ", idOrder.getText().toString(), film.getId(), FirebaseRequest.mAuth.getUid());
+                                            Ticket ticket = new Ticket(time, cinema.getName(), listSeat, String.valueOf(Math.round(total)) + " VNĐ", idOrder.getText().toString(), film.getId(), FirebaseRequest.mAuth.getUid());
                                             FirebaseRequest.database.collection("Ticket").document().set(ticket);
 
                                         }
