@@ -59,6 +59,7 @@ public class BookedActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         InforBooked.getInstance().isDateSelected = false;
+        InforBooked.getInstance().isTimeSelected = false;
         InforBooked.getInstance().isCitySelected = false;
         InforBooked.getInstance().prevPosition = -1;
     }
@@ -114,7 +115,7 @@ public class BookedActivity extends AppCompatActivity {
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            if(InforBooked.getInstance().dateBooked == null || InforBooked.getInstance().timeBooked == null ){
+            if(!InforBooked.getInstance().isTimeSelected|| !InforBooked.getInstance().isDateSelected || !InforBooked.getInstance().isCitySelected ){
                 Toast.makeText(BookedActivity.this, "Please choose time and date!", Toast.LENGTH_SHORT).show();
             }
             else{

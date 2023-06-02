@@ -172,7 +172,7 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(), ServiceActivity.class);
-                if(priceTv.getText().equals(") VNĐ")){
+                if(selectedIds.size() == 0){
                     Toast.makeText(BookSeatActivity.this, "Please choose seats!", Toast.LENGTH_SHORT).show();
                 }
                 else{

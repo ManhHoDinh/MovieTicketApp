@@ -21,6 +21,7 @@ public class InforBooked {
     public List<Cinema> listCinema = new ArrayList<Cinema>();
     public boolean isDateSelected;
     public boolean isCitySelected;
+    public boolean isTimeSelected;
     public String timeBooked;
     public int prevPosition = -1;
     public String typeFilm = "All";

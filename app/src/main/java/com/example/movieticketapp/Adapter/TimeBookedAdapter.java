@@ -105,6 +105,7 @@ public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.Vi
 
 
                             }
+                            InforBooked.getInstance().isTimeSelected = true;
                             InforBooked.getInstance().timeBooked = dateBtn.getText().toString();
                             InforBooked.getInstance().cinema = cinema;
                         }
