@@ -143,7 +143,7 @@ public class MyTicketAllActivity extends AppCompatActivity {
                         String timeBooked = dateFormat.format(time.toDate());
                         a.putExtra("name", value.get("name").toString());
                         a.putExtra("time",timeBooked );
-                        a.putExtra("cinema", ((Ticket) o).getCinema());
+                        a.putExtra("cinemaID", ((Ticket) o).getCinemaID());
                         a.putExtra("poster", value.get("PosterImage").toString());
                         a.putExtra("rate", value.get("vote").toString());
                         a.putExtra("kind", value.get("genre").toString());

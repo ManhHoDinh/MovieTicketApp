@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Ticket;
 import com.example.movieticketapp.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -67,8 +68,15 @@ public class TicketListAdapter extends ArrayAdapter<Ticket> {
 
                     }
 
-                    if (studioTextView != null)
-                        studioTextView.setText(ve.getCinema());
+                    if (studioTextView != null){
+                        FirebaseRequest.database.collection("Cinema").document(ve.getCinemaID()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                studioTextView.setText(documentSnapshot.get("Name").toString());
+                            }
+                        });
+                    }
+
                     Picasso.get().load(value.get("PosterImage").toString()).into(posterRImageView);
                 }
             });

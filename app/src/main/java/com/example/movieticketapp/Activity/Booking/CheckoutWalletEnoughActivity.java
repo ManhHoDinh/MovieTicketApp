@@ -248,7 +248,7 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
 //                                                    cinemaName,film.getPosterImage(),
 //                                                    Double.parseDouble(film.getVote()),
 //                                                    film.getGenre(), film.getDurationTime(), listSeat, price, idOrder.getText().toString() );
-                                            Ticket ticket = new Ticket(time, cinema.getName(), listSeat, String.valueOf(Math.round(total)) + " VNĐ", idOrder.getText().toString(), film.getId(), FirebaseRequest.mAuth.getUid());
+                                            Ticket ticket = new Ticket(time, cinema.getCinemaID(), listSeat, String.valueOf(Math.round(total)) + " VNĐ", idOrder.getText().toString(), film.getId(), FirebaseRequest.mAuth.getUid());
                                             FirebaseRequest.database.collection("Ticket").document().set(ticket);
 
                                         }
