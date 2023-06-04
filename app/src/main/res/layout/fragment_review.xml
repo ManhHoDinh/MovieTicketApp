@@ -26,8 +26,8 @@
                 android:id="@+id/ReviewList"
                 android:layout_marginLeft="12dp"
                 android:layout_width="match_parent"
-                android:layout_height="670dp"
-                android:paddingBottom="150dp"
+                android:layout_height="330dp"
+                android:paddingBottom="10dp"
                 />
 
         </LinearLayout>

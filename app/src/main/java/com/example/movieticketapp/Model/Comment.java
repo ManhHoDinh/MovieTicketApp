@@ -5,6 +5,9 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 public class Comment implements Parcelable {
     private String profileUrl;
 
@@ -17,6 +20,26 @@ public class Comment implements Parcelable {
     private String dislike;
 
     private String timeStamp;
+
+    private LocalDate date;
+
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
 
     public String getTimeStamp() {
         return timeStamp;
@@ -37,13 +60,14 @@ public class Comment implements Parcelable {
 //    public int compareTo(MyObject o) {
 //        return getDateTime().compareTo(o.getDateTime());
 //    }
-    public Comment(String profileUrl, String name, String reviewText, String like, String dislike, String timeStamp) {
+    public Comment(String profileUrl, String name, String reviewText, String like, String dislike, String timeStamp, String id) {
         this.profileUrl = profileUrl;
         this.name = name;
         this.reviewText = reviewText;
         this.like = like;
         this.dislike = dislike;
         this.timeStamp = timeStamp;
+        this.id = id;
     }
 
     public String getProfileUrl() {
@@ -85,6 +109,7 @@ public class Comment implements Parcelable {
     public void setDislike(String dislike) {
         this.dislike = dislike;
     }
+
     protected Comment(Parcel in) {
         profileUrl = in.readString();
         name = in.readString();
@@ -92,6 +117,7 @@ public class Comment implements Parcelable {
         like = in.readString();
         dislike = in.readString();
         timeStamp = in.readString();
+        id = in.readString();
     }
     @Override
     public int describeContents() {
