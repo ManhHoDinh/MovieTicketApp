@@ -106,10 +106,10 @@ public class ServiceViewAll extends AppCompatActivity {
         }
         catch (Exception e)
         {
-            ViewGroup.LayoutParams params = binding.AddServiceButton.getLayoutParams();
+            ViewGroup.LayoutParams params = AddServiceButton.getLayoutParams();
             params.height = 0;
-            binding.AddServiceButton.setLayoutParams(params);
-            binding.AddServiceButton.setVisibility(View.INVISIBLE);
+            AddServiceButton.setLayoutParams(params);
+            AddServiceButton.setVisibility(View.INVISIBLE);
         }
     }
 }
