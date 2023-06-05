@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +37,7 @@ import com.example.movieticketapp.Model.Discount;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.UserAndDiscount;
 import com.example.movieticketapp.Model.Users;
+import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.example.movieticketapp.databinding.HomeScreenBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -58,6 +61,7 @@ import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
     //private ViewPager2 viewPager;
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
 
     private RecyclerView typeListView;
     private RecyclerView posterRecyclerView;
@@ -187,8 +191,7 @@ public class HomeActivity extends AppCompatActivity {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        Log.e("binh", FirebaseRequest.mAuth.getUid());
-        Log.e("ffff", Users.currentUser.getUserID());
+
         if(Users.currentUser!=null){
             FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
@@ -217,7 +220,7 @@ public class HomeActivity extends AppCompatActivity {
                                     listDiscounts.add(f);
 
                                 }
-                                Log.e("fd", String.valueOf(listDiscounts.size()));
+
                                 PromotionAdapter promotionAdapter = new PromotionAdapter(HomeActivity.this,R.layout.promo_item,listDiscounts);
                                 promotionView.setAdapter(promotionAdapter);
 
@@ -227,21 +230,16 @@ public class HomeActivity extends AppCompatActivity {
                     else {
                         CollectionReference PromoRef = db.collection(UserAndDiscount.collectionName);
 
-                        PromoRef.whereEqualTo("userID", "7rTuQWknNQPXPNYiTAW2STZESe93").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                            @Override
-                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                Log.e("size", String.valueOf(queryDocumentSnapshots.size()));
-                            }
-                        });
+
 
 
                         Query query = PromoRef.whereEqualTo("userID", FirebaseRequest.mAuth.getUid());
-                        Log.e("binh", FirebaseRequest.mAuth.getUid());
+
                         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                             @Override
                             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                 List<String> listDiscountID = new ArrayList<>();
-                                Log.e("faa", String.valueOf(queryDocumentSnapshots.size()));
+
                                 for(DocumentSnapshot doc : queryDocumentSnapshots){
                                     listDiscountID.add(doc.get("discountID").toString());
                                     //DocumentReference document = FirebaseRequest.database.collection(Discount.CollectionName).document(doc.get("discountID").toString());
@@ -351,49 +349,20 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//        CollectionReference PromoRef = db.collection(Discount.CollectionName);
-//        PromoRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-//                if (error != null) {
-//                    // this method is called when error is not null
-//                    // and we get any error
-//                    // in this case we are displaying an error message.
-//                    Toast.makeText(HomeActivity.this, "Error found is " + error, Toast.LENGTH_SHORT).show();
-//                    return;
-//                } else {
-//                    Discounts.clear();
-//                    for (DocumentSnapshot documentSnapshot : value) {
-//                        Discount f = documentSnapshot.toObject(Discount.class);
-//                        Discounts.add(f);
-//                        Log.d(TAG, "data: " + f.getName());
-//                    }
-//                    promotionView = (ListView) findViewById(R.id.promotionView);
-//                   // LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-//                    promotionView.setAdapter(new PromotionAdapter(HomeActivity.this,R.layout.promo_item, Discounts));
-//                   // promotionView.setLayoutManager(VerLayoutManager);
-//                    if (Discounts.size() == 0) {
-//                        ViewGroup.LayoutParams params = promotionView.getLayoutParams();
-//                        params.height = 0;
-//                        promotionView.setLayoutParams(params);
-//                    }
-//                    if (Discounts.size() == 1) {
-//                        ViewGroup.LayoutParams params = promotionView.getLayoutParams();
-//                        params.height = 300;
-//                        promotionView.setLayoutParams(params);
-//                    }
-//                    if (Discounts.size() == 2) {
-//                        ViewGroup.LayoutParams params = promotionView.getLayoutParams();
-//                        params.height = 700;
-//                        promotionView.setLayoutParams(params);
-//                    }
-//
-//                }
-//            }
-//        });
+
 
     }
 
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListener, filter);
+        super.onStart();
+    }
 
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListener);
+        super.onStop();
+    }
 }

@@ -40,6 +40,7 @@ import java.util.Date;
 import java.util.List;
 
 public class MyTicketAllActivity extends AppCompatActivity {
+
     ListView listView;
     FirebaseFirestore firestore;
     ArrayList<Ticket> arrayList = new ArrayList<Ticket>();

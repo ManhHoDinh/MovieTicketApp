@@ -6,7 +6,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -29,6 +31,7 @@ import com.example.movieticketapp.Model.Cinema;
 import com.example.movieticketapp.Model.City;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.InforBooked;
+import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
@@ -43,7 +46,7 @@ import java.util.List;
 import java.util.Queue;
 
 public class BookedActivity extends AppCompatActivity {
-
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
     private List<String> listCity;
     private AutoCompleteTextView countryAutoTv;
     private RecyclerView dayRecycleView;
@@ -56,7 +59,16 @@ public class BookedActivity extends AppCompatActivity {
     protected static String binhdd;
     private String monthName;
     @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListener, filter);
+        super.onStart();
+    }
+
+
+    @Override
     protected void onStop() {
+        unregisterReceiver(networkChangeListener);
         super.onStop();
         InforBooked.getInstance().isDateSelected = false;
         InforBooked.getInstance().isTimeSelected = false;
@@ -173,9 +185,9 @@ public class BookedActivity extends AppCompatActivity {
 
                                         CinameNameAdapter cinameNameAdapter = new CinameNameAdapter(BookedActivity.this, R.layout.cinema_booked_item,listCinema, selectedFilm);
                                         cinemaLv.setAdapter(cinameNameAdapter);
-                                        cinemaLv.setEnabled(false);
 
-                                        Helper.getListViewSize(cinemaLv);
+
+                                        //Helper.getListViewSize(cinemaLv, BookedActivity.this);
 
 
 

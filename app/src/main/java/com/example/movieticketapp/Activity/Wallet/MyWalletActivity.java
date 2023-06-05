@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyWalletActivity extends AppCompatActivity {
+
     private ListView listMovieBooked;
     private FloatingActionButton topUpBtn;
     private BottomNavigationView bottomNavigationView;

@@ -119,7 +119,7 @@ public class AddDiscount extends AppCompatActivity {
 
     private void CreateDiscountToDatabase() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Log.e("d", "binh");
+
         DocumentReference doc ;
         boolean isDocNull = false;
         if (discount!=null)

@@ -3,6 +3,8 @@ package com.example.movieticketapp.Activity.Account;
 import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.provider.MediaStore;
 
@@ -17,10 +19,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Users;
+import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -37,11 +41,12 @@ import java.net.URI;
 import java.net.URL;
 
 public class SignUpActivity extends AppCompatActivity {
-
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
     EditText fullNameET;
     EditText emailET;
     EditText passwordET;
     EditText confirmPasswordET;
+    TextView forgotPasswordTv;
 //    @Override
 //    public void onStart() {
 //        super.onStart();
@@ -51,6 +56,18 @@ public class SignUpActivity extends AppCompatActivity {
 //            currentUser.reload();
 //        }
 //    }
+@Override
+protected void onStart() {
+    IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    registerReceiver(networkChangeListener, filter);
+    super.onStart();
+}
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListener);
+        super.onStop();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +78,7 @@ public class SignUpActivity extends AppCompatActivity {
         emailET=findViewById(R.id.emailaddress);
         passwordET=findViewById(R.id.password);
         confirmPasswordET=findViewById(R.id.confirmpassword);
+
 
         ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
                 registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
@@ -80,6 +98,7 @@ public class SignUpActivity extends AppCompatActivity {
 //                        .build());
             }
         });
+
         Button backBt = findViewById(R.id.backbutton);
         backBt.setOnClickListener(new View.OnClickListener() {
             @Override

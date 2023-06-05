@@ -4,6 +4,8 @@ import static android.content.ContentValues.TAG;
 
 import static com.example.movieticketapp.Firebase.FirebaseRequest.mAuth;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 
 import androidx.activity.result.ActivityResultCallback;
@@ -13,21 +15,35 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.movieticketapp.Activity.Booking.ShowTimeScheduleActivity;
 import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
+import com.example.movieticketapp.Model.ScheduleFilm;
+import com.example.movieticketapp.Model.ShowTime;
 import com.example.movieticketapp.Model.Users;
+import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
 import com.google.android.gms.auth.api.identity.BeginSignInResult;
@@ -55,7 +71,17 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.ktx.Firebase;
 
+import java.util.ArrayList;
+
 public class SignInActivity extends AppCompatActivity {
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
+
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListener);
+        super.onStop();
+    }
     EditText emailET;
     EditText passwordET;
     Button LoginBtn;
@@ -66,6 +92,7 @@ public class SignInActivity extends AppCompatActivity {
     private SignInClient oneTapClient;
     private BeginSignInRequest signInRequest;
     private static final int REQ_ONE_TAP = 2;
+    private TextView forgotPasswordTv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,12 +103,72 @@ public class SignInActivity extends AppCompatActivity {
         LoginBtn = findViewById(R.id.LoginBtn);
         GoogleLogin = findViewById(R.id.GoogleLogin);
         FacebookLogin = findViewById(R.id.FacebookLogin);
-
+        forgotPasswordTv = findViewById(R.id.ForgotPassword);
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SignUp();
+            }
+        });
+        forgotPasswordTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Dialog layout_dialog = new Dialog(SignInActivity.this);
+                layout_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                layout_dialog.setContentView(R.layout.forgot_password_dialog);
+                Window window = layout_dialog.getWindow();
+                if(window != null){
+                    window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+                    window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    WindowManager.LayoutParams windowAttribute = window.getAttributes();
+                    windowAttribute.gravity = Gravity.CENTER;
+                    window.setAttributes(windowAttribute);
+                    layout_dialog.show();
+                    EditText mailEdit = layout_dialog.findViewById(R.id.emailEdit);
+                    Button cancelBtn = layout_dialog.findViewById(R.id.cancelBtn);
+                    Button resetBtn = layout_dialog.findViewById(R.id.resetPassBtn);
+                    resetBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String userEmail = mailEdit.getText().toString();
+                            if(TextUtils.isEmpty(userEmail) && !Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
+                                Toast.makeText(SignInActivity.this, "Enter your email!", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                                mAuth.sendPasswordResetEmail(userEmail).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(SignInActivity.this, "Check your email!", Toast.LENGTH_SHORT).show();
+                                            layout_dialog.dismiss();
+                                        } else {
+                                            Toast.makeText(SignInActivity.this, "Unable to send, fail!", Toast.LENGTH_SHORT).show();
+
+                                        }
+                                    }
+                                });
+
+                        }
+                    });
+                    cancelBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            layout_dialog.dismiss();
+                        }
+                    });
+
+
+
+                }
+
+
+
+
+
+
+
+
             }
         });
         LoginBtn.setOnClickListener(new View.OnClickListener() {
@@ -180,6 +267,8 @@ public class SignInActivity extends AppCompatActivity {
 
     @Override
     public void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListener, filter);
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);

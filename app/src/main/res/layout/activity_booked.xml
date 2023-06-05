@@ -7,14 +7,14 @@
     android:layout_height="match_parent"
     android:background="@color/background_color"
     >
-<androidx.core.widget.NestedScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_marginHorizontal="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnNext"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="0dp">
         <androidx.appcompat.widget.AppCompatButton
             android:text=""
             android:layout_marginTop="40dp"
@@ -28,7 +28,6 @@
             android:id="@+id/nameFilmtv"
             android:layout_marginTop="20dp"
             android:layout_marginHorizontal="60dp"
-
             android:textColor="@color/white"
             android:textSize="24dp"
             android:gravity="center"
@@ -71,27 +70,29 @@
             android:layout_marginTop="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-        <ListView
-            android:nestedScrollingEnabled="false"
-            android:scrollbars="none"
-            android:id="@+id/cinemaLv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-        <ImageButton
-            android:id="@+id/btnNext"
-            android:layout_width="64.22923636363636dp"
-            android:layout_height="64.22923636363636dp"
-            android:text=""
-            android:layout_marginTop="20dp"
 
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/roundstyle50"
-            android:backgroundTint="@color/button_background_color"
-            android:rotationY="180"
-            android:src="@drawable/ic_back"/>
+
+            <ListView
+                android:scrollbars="none"
+                android:id="@+id/cinemaLv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
     </androidx.appcompat.widget.LinearLayoutCompat>
-</androidx.core.widget.NestedScrollView>
-
+    <ImageButton
+        android:id="@+id/btnNext"
+        android:layout_width="64.22923636363636dp"
+        android:layout_height="64.22923636363636dp"
+        android:text=""
+        android:layout_marginBottom="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/roundstyle50"
+        android:backgroundTint="@color/button_background_color"
+        android:rotationY="180"
+        android:src="@drawable/ic_back"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -31,6 +31,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 public class InformationFilmActivity extends FragmentActivity {
+
     ImageView backgroundImage;
     TextView nameTV;
     ImageView PosterImage;

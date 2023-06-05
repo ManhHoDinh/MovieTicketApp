@@ -3,7 +3,9 @@ package com.example.movieticketapp.Activity.Booking;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -20,6 +22,7 @@ import com.example.movieticketapp.Activity.Booking.CheckoutWalletEnoughActivity;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Cinema;
 import com.example.movieticketapp.Model.FilmModel;
+import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
@@ -34,6 +37,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class BookSeatActivity extends AppCompatActivity implements View.OnClickListener {
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
     private TextView nameFilmTv;
     private TextView nameCinemaTv;
     private TextView countTicketTv;
@@ -77,7 +81,7 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_book_seat);
         Intent intent = getIntent();
         timeBooked = intent.getStringExtra("timeBooked");
-        Log.e("f", timeBooked);
+
         dateBooked = intent.getStringExtra("dateBooked");
         selectedFilm = intent.getParcelableExtra("selectedFilm");
         nameFilmTv = (TextView) findViewById(R.id.nameFilm);
@@ -274,5 +278,17 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
             }
         });
 
+    }
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListener, filter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListener);
+        super.onStop();
     }
 }
