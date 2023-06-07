@@ -22,13 +22,7 @@ public class FilmModel implements Parcelable {
     private String durationTime;
     public FilmModel(){}
 
-    public String getStatus() {
-        return status;
-    }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
     public FilmModel(String id, String PrimaryImage, String name, String BackGroundImage, String PosterImage, String vote, String genre, String description, String durationTime, String status) {
         this.PrimaryImage = PrimaryImage;
@@ -53,6 +47,7 @@ public class FilmModel implements Parcelable {
         PosterImage=in.readString();
         durationTime=in.readString();
         id=in.readString();
+        status = in.readString();
     }
 
 
@@ -67,6 +62,13 @@ public class FilmModel implements Parcelable {
             return new FilmModel[size];
         }
     };
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public  String getDurationTime(){return  durationTime;}
     public String getPrimaryImage() {
@@ -127,5 +129,6 @@ public class FilmModel implements Parcelable {
         parcel.writeString(PosterImage);
         parcel.writeString(durationTime);
         parcel.writeString(id);
+        parcel.writeString(status);
     }
 }

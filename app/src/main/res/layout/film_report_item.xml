@@ -96,8 +96,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Revenue : 100"
-                android:background="@color/main_color"
                 android:paddingHorizontal="5dp"
+                android:background="@color/main_color"
                 android:paddingVertical="5dp"
                 android:gravity="center"
                 />

@@ -3,6 +3,7 @@ package com.example.movieticketapp.Activity.Ticket;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -157,7 +158,7 @@ public class MyTicketAllActivity extends AppCompatActivity {
                         String timeBooked = dateFormat.format(time.toDate());
                         a.putExtra("name", value.get("name").toString());
                         a.putExtra("time",timeBooked );
-                        a.putExtra("cinema", ((Ticket) o).getCinema());
+                        a.putExtra("cinemaID", ((Ticket) o).getCinemaID());
                         a.putExtra("poster", value.get("PosterImage").toString());
                         a.putExtra("rate", value.get("vote").toString());
                         a.putExtra("kind", value.get("genre").toString());
@@ -174,12 +175,12 @@ public class MyTicketAllActivity extends AppCompatActivity {
     }
 
     void loadListTicket(String type) {
-        firestore.collection("Ticket").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        firestore.collection("Ticket").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                if (!queryDocumentSnapshots.isEmpty()) {
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (!value.isEmpty()) {
 
-                    List<DocumentSnapshot> listDoc = queryDocumentSnapshots.getDocuments();
+                    List<DocumentSnapshot> listDoc = value.getDocuments();
                     Calendar calendar = Calendar.getInstance();
                     Date currentTime= calendar.getTime();
                     switch(type){
@@ -219,7 +220,9 @@ public class MyTicketAllActivity extends AppCompatActivity {
                     adapter = new TicketListAdapter(getApplicationContext(), R.layout.list_ticket_view, arrayList);
                     listView.setAdapter(adapter);
                 }
+
             }
         });
+
     }
 }

@@ -72,7 +72,6 @@ public class SplashActivity extends AppCompatActivity {
         {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             final DocumentReference docRef = db.collection("Users").document(id);
-            Log.d("ID",id);
             docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
                 public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException error) { if (error != null) {
@@ -80,7 +79,6 @@ public class SplashActivity extends AppCompatActivity {
                 }
                     if (snapshot != null && snapshot.exists()) {
                         Users.currentUser = snapshot.toObject(Users.class);
-                        Log.d("Email",Users.currentUser.getEmail());
                     }
                 }
             });

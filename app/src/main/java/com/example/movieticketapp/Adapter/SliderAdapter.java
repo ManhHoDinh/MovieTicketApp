@@ -73,9 +73,10 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.sliderView
             itemView.findViewById(R.id.sliderItem).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
                     Intent i = new Intent(itemView.getContext(), InformationFilmActivity.class);
                     i.putExtra(ExtraIntent.film, f);
-                    InforBooked.getInstance().nameFilm = f.getName();
+                    InforBooked.getInstance().film= f;
                     itemView.getContext().startActivity(i);
                 }
             });

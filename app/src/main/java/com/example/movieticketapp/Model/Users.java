@@ -20,6 +20,14 @@ public class Users {
     }
     public  Users(){}
 
+    public String getUserID() {
+        return UserID;
+    }
+
+    public void setUserID(String userID) {
+        UserID = userID;
+    }
+
     public Map<String, Object> toJson()
     {
         Map<String, Object> json = new HashMap<>();

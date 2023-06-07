@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.movieticketapp.Activity.Discount.AddDiscount;
+import com.example.movieticketapp.Model.Cinema;
 import com.example.movieticketapp.Model.Discount;
 import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.Model.FilmModel;
@@ -34,6 +35,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -42,45 +44,78 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 
 public class FilmReportAdapter extends RecyclerView.Adapter<FilmReportAdapter.ViewHolder> {
-    FirebaseFirestore firestore ;
+    FirebaseFirestore firestore;
+    List<Cinema> cinemas= new ArrayList<>();
+    String CinemaName;
+    int Month;
+    int Year;
 
     @Override
     public void onBindViewHolder(@NonNull FilmReportAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        holder.IndexTV.setText(String.valueOf(position));
+        holder.IndexTV.setText(String.valueOf(position+1));
         Picasso.get().load(Films.get(position).getPosterImage()).into(holder.Poster);
         holder.FilmName.setText(Films.get(position).getName());
-        GetTotalTick(holder.TotalTicket,Films.get(position));
+        GetTotalTick(holder.TotalTicket,holder.TotalPrice, Films.get(position));
     }
+
     List<FilmModel> Films;
 
-    public FilmReportAdapter(List<FilmModel> Films) {
+    public FilmReportAdapter(List<FilmModel> Films,String CinemaName, int Month, int Year) {
         this.Films = Films;
         firestore = FirebaseFirestore.getInstance();
-    }
+        this.CinemaName = CinemaName;
+        this.Month = Month;
+        this.Year=Year;
+        firestore.collection("Cinema").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    return;
+                }
+
+                for (QueryDocumentSnapshot documentSnapshot : value) {
+                    Cinema c = documentSnapshot.toObject(Cinema.class);
+                    if(CinemaName.equals("All Cinema"))
+                        cinemas.add(c);
+                    else if(c.getName().equals(CinemaName))
+                        cinemas.add(c);
+                }
+            }
+        }); }
 
     @Override
     public int getItemCount() {
         return Films.size();
     }
-    public class ViewHolder extends RecyclerView.ViewHolder{
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
         TextView IndexTV;
         ImageView Poster;
         TextView FilmName;
         TextView TotalTicket;
+        TextView TotalPrice;
+
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             // imageView = itemView.findViewById(R.id.posterItem);
-            Poster=itemView.findViewById(R.id.PosterImage);
-            IndexTV=itemView.findViewById(R.id.IndexTV);
-            FilmName =itemView.findViewById(R.id.filmNameTV);
-            TotalTicket=itemView.findViewById(R.id.TotalTicketTV);
+            Poster = itemView.findViewById(R.id.PosterImage);
+            IndexTV = itemView.findViewById(R.id.IndexTV);
+            FilmName = itemView.findViewById(R.id.filmNameTV);
+            TotalTicket = itemView.findViewById(R.id.TotalTicketTV);
+            TotalPrice = itemView.findViewById(R.id.TotalPriceTV);
         }
     }
+
     @NonNull
     @Override
     public FilmReportAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -88,29 +123,68 @@ public class FilmReportAdapter extends RecyclerView.Adapter<FilmReportAdapter.Vi
         itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.film_report_item, parent, false);
         return new FilmReportAdapter.ViewHolder(itemView);
     }
-    int result = 0;
 
-    void GetTotalTick(TextView textView,FilmModel film) {
-        firestore.collection("Ticket").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            result=0;
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Ticket s = document.toObject(Ticket.class);
-                                if ((s.getFilmID()).equals(film.getName()))
+
+    void GetTotalTick(TextView ticketTV,TextView totalTV, FilmModel film) {
+        final int[] ticket = {0};
+        final int[] totalPrice = {0};
+
+        firestore.collection("Ticket").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    return;
+                }
+
+                for (QueryDocumentSnapshot documentSnapshot : value) {
+                    Ticket s = documentSnapshot.toObject(Ticket.class);
+                    if ((s.getFilmID()).equals(film.getId())) {
+                        String seat = s.getSeat();
+                        int count = 1;
+                        count += seat.length() - s.getSeat().replace(",", "").length();
+                        Log.d(s.getFilmID(), s.getFilmID());
+                        //Initialize your Date however you like it.
+                        Date date = s.getTime().toDate();
+                        Calendar calendar = new GregorianCalendar();
+                        calendar.setTime(date);
+                        int TicketYear = calendar.get(Calendar.YEAR);
+                        int TicketMonth = calendar.get(Calendar.MONTH) + 1;
+
+                        for (int i = 0; i < cinemas.size(); i++)
+                            if (cinemas.get(i).getCinemaID().equals(s.getCinemaID())) {
+                                if(Month==0)
                                 {
-                                    String seat= s.getSeat();
-                                    int count = 1;
-                                    count +=seat.length() - s.getSeat().replace(",", "").length();
-                                    result += count;
+                                    if(Year == 0)
+                                    {
+                                        ticket[0] += count;
+                                        totalPrice[0] += cinemas.get(i).getPrice() * count;
+                                    }
+                                    else if(TicketYear==Year)
+                                    {
+                                        ticket[0] += count;
+                                        totalPrice[0] += cinemas.get(i).getPrice() * count;
+                                    }
                                 }
-                                textView.setText("Ticket: "+String.valueOf(result));
+                                else if(TicketMonth==Month)
+                                {
+                                    if(Year == 0)
+                                    {
+                                        ticket[0] += count;
+                                        totalPrice[0] += cinemas.get(i).getPrice() * count;
+                                    }
+                                    else if(TicketYear==Year)
+                                    {
+                                        ticket[0] += count;
+                                        totalPrice[0] += cinemas.get(i).getPrice() * count;
+                                    }
+                                }
                             }
-                        } else {
-                        }
                     }
-                });
-    }
+                }
+                NumberFormat numberFormat = new DecimalFormat("#,###");
+                ticketTV.setText("Ticket: " + numberFormat.format(ticket[0]));
+                totalTV.setText("Revenue: " + numberFormat.format(totalPrice[0]));
+            }
+        });
+       }
 }

@@ -149,7 +149,6 @@ public class SignInActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             //Check Exist
-                            getUser(user.getUid());
                             FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
                             DocumentReference docIdRef = rootRef.collection("Users").document(user.getUid());
                             docIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -167,7 +166,7 @@ public class SignInActivity extends AppCompatActivity {
                                     }
                                 }
                             });
-
+                            getUser(user.getUid());
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -258,11 +257,12 @@ public class SignInActivity extends AppCompatActivity {
         final DocumentReference docRef = db.collection("Users").document(id);
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException error) { if (error != null) {
+            public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
                 return;
             }
                 if (snapshot != null && snapshot.exists()) {
-                   Users.currentUser = snapshot.toObject(Users.class);
+                    Users.currentUser = snapshot.toObject(Users.class);
                 }
             }
         });

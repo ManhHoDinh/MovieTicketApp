@@ -105,7 +105,7 @@
                             android:text="Now Playing"
                             style="@style/titleStyle"/>
                         <TextView
-                            android:id="@+id/viewAllBtn"
+                            android:id="@+id/viewAllPlayingBtn"
                             app:layout_constraintEnd_toEndOf="parent"
                             android:text="View all"
                             android:textSize="14dp"
@@ -131,6 +131,7 @@
                             android:text="Coming soon"
                             style="@style/titleStyle"/>
                         <TextView
+                            android:id="@+id/viewAllComingBtn"
                             app:layout_constraintEnd_toEndOf="parent"
                             android:text="View all"
                             android:textSize="14dp"
@@ -166,7 +167,8 @@
                             android:textColor="@color/sub_text_color"
                             style="@style/titleStyle"/>
                     </androidx.constraintlayout.widget.ConstraintLayout>
-                    <androidx.recyclerview.widget.RecyclerView
+                    <ListView
+                        android:dividerHeight="16dp"
                         android:id="@+id/promotionView"
                         android:layout_width="match_parent"
                         android:layout_marginTop="30dp"

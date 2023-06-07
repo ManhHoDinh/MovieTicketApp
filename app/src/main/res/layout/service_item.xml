@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="match_parent"
+    android:paddingVertical="12dp"
+    android:paddingHorizontal="12dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ImageView
+        android:id="@+id/primaryImg"
+        android:layout_width="120dp"
+        android:layout_height="140dp"/>
+    <LinearLayout
+
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+
+                android:textSize="16dp"
+                android:fontFamily="@font/montserrat600"
+                android:textColor="@color/black"
+                android:id="@+id/nameService"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:text=" - "
+                android:textSize="16dp"
+                android:fontFamily="@font/montserrat600"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:textSize="16dp"
+                android:fontFamily="@font/montserrat600"
+                android:textColor="@color/black"
+                android:id="@+id/priceService"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <TextView
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/montserrat400"
+            android:textColor="@color/black"
+            android:id="@+id/detailService"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_marginTop="30dp"
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:id="@+id/subBtn"
+                android:src="@drawable/btn_sub_unable"
+                android:background="@drawable/adjust_unable_btn"
+                 android:layout_width="30dp"
+                android:layout_height="30dp"/>
+            <TextView
+                android:textColor="@color/black"
+                android:text="0"
+                android:textSize="16dp"
+                android:textAlignment="center"
+                android:paddingTop="4dp"
+                android:fontFamily="@font/montserrat500"
+                android:background="@drawable/background_transparent"
+                android:id="@+id/countTv"
+                android:layout_marginHorizontal="24dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"/>
+            <ImageButton
+                android:id="@+id/addBtn"
+                android:src="@drawable/btn_add_able"
+                android:background="@drawable/adjust_able_btn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -32,6 +32,7 @@ import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.movieticketapp.Activity.Booking.ShowTimeScheduleActivity;
 import com.example.movieticketapp.Activity.HomeActivity;
@@ -41,10 +42,13 @@ import com.example.movieticketapp.Adapter.CinameNameAdapter;
 import com.example.movieticketapp.Adapter.FilmReportAdapter;
 import com.example.movieticketapp.Adapter.Helper;
 import com.example.movieticketapp.Adapter.PromotionAdapter;
+import com.example.movieticketapp.Adapter.TimeScheduleAdapter;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
+import com.example.movieticketapp.Model.Cinema;
 import com.example.movieticketapp.Model.City;
 import com.example.movieticketapp.Model.Discount;
 import com.example.movieticketapp.Model.FilmModel;
+import com.example.movieticketapp.Model.ShowTime;
 import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -65,10 +69,18 @@ import java.util.List;
 public class ReportActivity extends AppCompatActivity {
     private  BottomNavigationView bottomNavigationView;
     private AutoCompleteTextView CinemaAutoTv;
+    private AutoCompleteTextView MonthAutoTv;
+    private AutoCompleteTextView YearAutoTv;
     private FirebaseFirestore firestore;
     private CollectionReference MovieRef;
     private List<FilmModel> films= new ArrayList<>();
     ImageButton control;
+    List<String> cinemaNames = new ArrayList<>();
+    String selectedCinema="All Cinema";
+    int SelectedMonth = 0;
+    int SelectedYear = 0;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,8 +90,10 @@ public class ReportActivity extends AppCompatActivity {
         MovieRef = firestore.collection("Movies");
         ControlButton();
         LoadCinema();
-        BottomNavigation();
         LoadFilms();
+        LoadMonth();
+        LoadYear();
+        BottomNavigation();
     }
 
     private void ControlButton() {
@@ -111,17 +125,83 @@ public class ReportActivity extends AppCompatActivity {
 
     void LoadCinema()
     {
-        List<String> l = new ArrayList<>();
-        l.add("Manh");
-        l.add("Ho");
-        l.add("Dinh");
+        cinemaNames.add("All Cinema");
         CinemaAutoTv = findViewById(R.id.CinemaFilter);
-        CinemaAutoTv.setAdapter(new ArrayAdapter<String>(ReportActivity.this, R.layout.dropdown_item, l));
-        CinemaAutoTv.setDropDownBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.background_color)));
-        CinemaAutoTv.setOnClickListener(new View.OnClickListener() {
+
+        FirebaseRequest.database.collection("Cinema").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onClick(View view) {
-                Log.d(CinemaAutoTv.getText().toString(),CinemaAutoTv.getText().toString());
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                List<DocumentSnapshot> listDocs = value.getDocuments();
+                for(DocumentSnapshot doc : listDocs){
+                    Cinema cinema = doc.toObject(Cinema.class);
+                    cinemaNames.add(cinema.getName());
+                   }
+                CinemaAutoTv.setAdapter(new ArrayAdapter<String>(ReportActivity.this, R.layout.dropdown_item, cinemaNames));
+                CinemaAutoTv.setDropDownBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.background_color)));
+            }
+        });
+
+        CinemaAutoTv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectedCinema = parent.getItemAtPosition(position).toString();
+                Toast.makeText(ReportActivity.this, "Selected cinema: " +selectedCinema + cinemaNames.indexOf(selectedCinema), Toast.LENGTH_SHORT).show();
+                LoadFilms();
+            }
+        });
+    }
+    void LoadMonth()
+    {
+        List<String> months =new ArrayList<>();
+        months.add("Month");
+        months.add("January");
+        months.add("February");
+        months.add("March");
+        months.add("April");
+        months.add("May");
+        months.add("June");
+        months.add("July");
+        months.add("August");
+        months.add("September");
+        months.add("October");
+        months.add("November");
+        months.add("December");
+
+        MonthAutoTv = findViewById(R.id.MonthFilter);
+        MonthAutoTv.setAdapter(new ArrayAdapter<String>(ReportActivity.this, R.layout.dropdown_item, months));
+        MonthAutoTv.setDropDownBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.background_color)));
+        MonthAutoTv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String selectMonth = parent.getItemAtPosition(position).toString();
+                Toast.makeText(ReportActivity.this, "Selected cinema: " +selectedCinema + cinemaNames.indexOf(selectedCinema), Toast.LENGTH_SHORT).show();
+                SelectedMonth= months.indexOf(selectMonth);
+                LoadFilms();
+            }
+        });
+    }
+    void LoadYear()
+    {
+        List<String> Years =new ArrayList<>();
+        Years.add("Year");
+        Years.add("2022");
+        Years.add("2023");
+        Years.add("2024");
+
+        YearAutoTv = findViewById(R.id.YearFilter);
+        YearAutoTv.setAdapter(new ArrayAdapter<String>(ReportActivity.this, R.layout.dropdown_item, Years));
+        YearAutoTv.setDropDownBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.background_color)));
+        YearAutoTv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String selectYear = parent.getItemAtPosition(position).toString();
+                Toast.makeText(ReportActivity.this, "Selected Year: " +selectYear, Toast.LENGTH_SHORT).show();
+
+                if(selectYear.equals("Year"))
+                    SelectedYear=0;
+                else
+                    SelectedYear= Integer.parseInt(selectYear);
+                LoadFilms();
             }
         });
     }
@@ -139,11 +219,10 @@ public class ReportActivity extends AppCompatActivity {
                 for (QueryDocumentSnapshot documentSnapshot : value) {
                     FilmModel f = documentSnapshot.toObject(FilmModel.class);
                     films.add(f);
-                    Log.d(String.valueOf(films.size()),String.valueOf(films.size()));
                 }
                 LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
                 filmReports.setLayoutManager(VerLayoutManager);
-                filmReports.setAdapter(new FilmReportAdapter(films));
+                filmReports.setAdapter(new FilmReportAdapter(films, selectedCinema,SelectedMonth, SelectedYear));
             }
         });
     }

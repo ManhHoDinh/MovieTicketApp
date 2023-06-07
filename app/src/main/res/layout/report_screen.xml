@@ -144,6 +144,7 @@
             android:layout_height="wrap_content"
             android:textSize="10dp"
             android:text="All Cinema"
+            android:paddingLeft="20dp"
             />
     </com.google.android.material.textfield.TextInputLayout>
 
