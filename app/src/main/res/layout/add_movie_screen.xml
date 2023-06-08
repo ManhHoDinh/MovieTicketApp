@@ -195,20 +195,23 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:orientation="horizontal">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
                         android:text="Status: "/>
-                    <EditText
+
+                    <Button
+                        android:id="@+id/btnstatus"
                         android:layout_width="250dp"
                         android:layout_height="wrap_content"
-                        android:hint="(playing or coming soon)"
-                        android:textSize="13dp"
-                        android:textColorHint="@color/hint_color"
-                        android:textColor="@color/white"
-                        android:id="@+id/moviestatus"/>
+                        android:backgroundTint="@color/background_color"
+                        android:gravity="center"
+                        android:text="Choose status of movie"
+                        android:textColor="@color/white" />
+
                 </LinearLayout>
                 <View
                     android:layout_width="match_parent"
@@ -303,12 +306,12 @@
                     android:textFontWeight="900"
                     android:textStyle="bold"/>
                 <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_width="245dp"
+                    android:layout_height="134dp">
                     <VideoView
                         android:id="@+id/movietrailer"
-                        android:layout_width="245dp"
-                        android:layout_height="134dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
                         android:background="@drawable/background_add_movie2"/>
                     <LinearLayout
                         android:layout_width="wrap_content"
