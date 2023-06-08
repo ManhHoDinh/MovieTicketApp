@@ -9,18 +9,14 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 public class Helper {
-    public static void getListViewSize(ListView myListView, Activity activity) {
+    public static void getListViewSize(ListView myListView) {
         ListAdapter myListAdapter=myListView.getAdapter();
         if (myListAdapter==null) {
             //do nothing return null
             return;
         }
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int height = displayMetrics.heightPixels;
-        int width = displayMetrics.widthPixels;
         //set listAdapter in loop for getting final size
-        int totalHeight=height - 40;
+        int totalHeight= 0;
         for (int size=0; size < myListAdapter.getCount(); size++) {
 
             View listItem=myListAdapter.getView(size, null, myListView);
@@ -34,6 +30,7 @@ public class Helper {
         myListView.setLayoutParams(params);
 
     }
+    static int heightInformation;
 
 
 }

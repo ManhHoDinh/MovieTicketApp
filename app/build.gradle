@@ -54,4 +54,8 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.8'
     implementation 'com.firebaseui:firebase-ui-firestore:8.0.2'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.2'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'com.google.firebase:firebase-ml-model-interpreter:22.0.1'
 }

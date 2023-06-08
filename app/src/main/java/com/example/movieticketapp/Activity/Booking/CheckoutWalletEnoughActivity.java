@@ -46,6 +46,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import org.w3c.dom.Document;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -195,7 +196,8 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
         priceTv.setText(initPrice + " x " + seats.size());
         seatTv.setText(listSeat);
         totalTv.setText(String.valueOf(Math.round(total)) + " VNĐ");
-        movie.add(new CheckoutFilmModel(film.getName(),film.getVote(), film.getGenre(),film.getDurationTime(), film.getPosterImage()));
+        DecimalFormat df = new DecimalFormat("0.0");
+        movie.add(new CheckoutFilmModel(film.getName(), df.format(film.getVote()), film.getGenre(),film.getDurationTime(), film.getPosterImage()));
         adapter = new MovieCheckoutAdapter(getApplicationContext(), R.layout.checkout_movie_view, movie);
         movieInfoView.setAdapter(adapter);
         BtnBack.setOnClickListener(new View.OnClickListener() {

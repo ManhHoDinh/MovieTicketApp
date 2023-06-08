@@ -112,7 +112,6 @@ public class BookedActivity extends AppCompatActivity {
         }
         cinemaLv = (ListView) findViewById(R.id.cinemaLv);
         TimeBookedAdapter timeBookedAdapter = new TimeBookedAdapter(listDate, listTime,null, null, null, cinemaLv, BookedActivity.this);
-
         dayRecycleView.setAdapter(new TimeBookedAdapter(listDate, listTime, null,null, null, cinemaLv, BookedActivity.this));
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         dayRecycleView.setLayoutManager(layoutManager);
@@ -182,7 +181,6 @@ public class BookedActivity extends AppCompatActivity {
 
                                         }
                                     }
-
                                         CinameNameAdapter cinameNameAdapter = new CinameNameAdapter(BookedActivity.this, R.layout.cinema_booked_item,listCinema, selectedFilm);
                                         cinemaLv.setAdapter(cinameNameAdapter);
 

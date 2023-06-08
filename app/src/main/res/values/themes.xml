@@ -28,6 +28,10 @@
 
 
     </style>
+    <style name="dialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
+    </style>
     <style name="Theme.MovieProject.Main" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="editTextColor">@color/white</item>
         <item name="fontFamily">@font/montserrat500</item>
