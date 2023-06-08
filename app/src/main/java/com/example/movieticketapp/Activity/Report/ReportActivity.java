@@ -3,10 +3,12 @@ package com.example.movieticketapp.Activity.Report;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -23,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -32,9 +35,9 @@ import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.movieticketapp.Activity.Booking.ShowTimeScheduleActivity;
+import com.example.movieticketapp.Activity.Discount.DiscountViewAll;
 import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Activity.Ticket.MyTicketAllActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
@@ -75,6 +78,7 @@ public class ReportActivity extends AppCompatActivity {
     private CollectionReference MovieRef;
     private List<FilmModel> films= new ArrayList<>();
     ImageButton control;
+    TextView TotalPrice;
     List<String> cinemaNames = new ArrayList<>();
     String selectedCinema="All Cinema";
     int SelectedMonth = 0;
@@ -88,12 +92,14 @@ public class ReportActivity extends AppCompatActivity {
         firestore = FirebaseFirestore.getInstance();
         control = findViewById(R.id.controlBtn);
         MovieRef = firestore.collection("Movies");
+        TotalPrice=findViewById(R.id.totalPrice);
         ControlButton();
         LoadCinema();
         LoadFilms();
         LoadMonth();
         LoadYear();
         BottomNavigation();
+        Search();
     }
 
     private void ControlButton() {
@@ -145,7 +151,7 @@ public class ReportActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectedCinema = parent.getItemAtPosition(position).toString();
-                Toast.makeText(ReportActivity.this, "Selected cinema: " +selectedCinema + cinemaNames.indexOf(selectedCinema), Toast.LENGTH_SHORT).show();
+
                 LoadFilms();
             }
         });
@@ -174,7 +180,6 @@ public class ReportActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectMonth = parent.getItemAtPosition(position).toString();
-                Toast.makeText(ReportActivity.this, "Selected cinema: " +selectedCinema + cinemaNames.indexOf(selectedCinema), Toast.LENGTH_SHORT).show();
                 SelectedMonth= months.indexOf(selectMonth);
                 LoadFilms();
             }
@@ -195,7 +200,6 @@ public class ReportActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectYear = parent.getItemAtPosition(position).toString();
-                Toast.makeText(ReportActivity.this, "Selected Year: " +selectYear, Toast.LENGTH_SHORT).show();
 
                 if(selectYear.equals("Year"))
                     SelectedYear=0;
@@ -222,7 +226,15 @@ public class ReportActivity extends AppCompatActivity {
                 }
                 LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
                 filmReports.setLayoutManager(VerLayoutManager);
-                filmReports.setAdapter(new FilmReportAdapter(films, selectedCinema,SelectedMonth, SelectedYear));
+                FilmReportAdapter filmReportAdapter = new FilmReportAdapter(films, selectedCinema,SelectedMonth, SelectedYear);
+                filmReports.setAdapter(filmReportAdapter);
+
+                filmReportAdapter.setOnDataChangedListener(new FilmReportAdapter.OnDataChangedListener() {
+                    @Override
+                    public void onDataChanged(int totalPrice) {
+                        TotalPrice.setText(String.valueOf(totalPrice));
+                    }
+                });
             }
         });
     }
@@ -254,5 +266,56 @@ public class ReportActivity extends AppCompatActivity {
             return true;
         });
     }
+    void Search()
+    {
+        SearchView Search = findViewById(R.id.searchField);
 
+        Search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // inside on query text change method we are
+                // calling a method to filter our recycler view.
+                filter(newText);
+                return false;
+            }
+        });
+        LinearLayout layoutElement = findViewById(R.id.ReportLayout); // Replace with your actual layout element ID
+
+        layoutElement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Hide the keyboard
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
+        });
+    }
+    private void filter(String text) {
+        // creating a new array list to filter our data.
+        RecyclerView filmReports=findViewById(R.id.FilmReports);
+        //filmReports.setAdapter();
+        MovieRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    return;
+                }
+                films.clear();
+                for (QueryDocumentSnapshot documentSnapshot : value) {
+                    FilmModel f = documentSnapshot.toObject(FilmModel.class);
+                    if (f.getName().toLowerCase().contains(text.toLowerCase()))
+                        films.add(f);
+                }
+                LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+                filmReports.setLayoutManager(VerLayoutManager);
+                filmReports.setAdapter(new FilmReportAdapter(films, selectedCinema,SelectedMonth, SelectedYear));
+            }
+        });
+
+    }
 }

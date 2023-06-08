@@ -19,10 +19,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.movieticketapp.Activity.Discount.AddDiscount;
+import com.example.movieticketapp.Activity.Movie.InformationFilmActivity;
 import com.example.movieticketapp.Model.Cinema;
 import com.example.movieticketapp.Model.Discount;
 import com.example.movieticketapp.Model.ExtraIntent;
@@ -65,6 +67,14 @@ public class FilmReportAdapter extends RecyclerView.Adapter<FilmReportAdapter.Vi
         Picasso.get().load(Films.get(position).getPosterImage()).into(holder.Poster);
         holder.FilmName.setText(Films.get(position).getName());
         GetTotalTick(holder.TotalTicket,holder.TotalPrice, Films.get(position));
+        holder.filmItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(holder.itemView.getContext(), InformationFilmActivity.class);
+                i.putExtra(ExtraIntent.film, Films.get(position));
+                holder.itemView.getContext().startActivity(i);
+            }
+        });
     }
 
     List<FilmModel> Films;
@@ -103,6 +113,7 @@ public class FilmReportAdapter extends RecyclerView.Adapter<FilmReportAdapter.Vi
         TextView FilmName;
         TextView TotalTicket;
         TextView TotalPrice;
+        ConstraintLayout filmItem;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -113,6 +124,7 @@ public class FilmReportAdapter extends RecyclerView.Adapter<FilmReportAdapter.Vi
             FilmName = itemView.findViewById(R.id.filmNameTV);
             TotalTicket = itemView.findViewById(R.id.TotalTicketTV);
             TotalPrice = itemView.findViewById(R.id.TotalPriceTV);
+            filmItem= itemView.findViewById(R.id.filmItem);
         }
     }
 
@@ -123,8 +135,19 @@ public class FilmReportAdapter extends RecyclerView.Adapter<FilmReportAdapter.Vi
         itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.film_report_item, parent, false);
         return new FilmReportAdapter.ViewHolder(itemView);
     }
+    public interface OnDataChangedListener {
+        void onDataChanged(int totalPrice);
+    }
 
+    private OnDataChangedListener onDataChangedListener;
 
+    public void setOnDataChangedListener(OnDataChangedListener listener) {
+        this.onDataChangedListener = listener;
+    }
+    int TotalPrice=0;
+    public int getTotalPrice() {
+        return TotalPrice;
+    }
     void GetTotalTick(TextView ticketTV,TextView totalTV, FilmModel film) {
         final int[] ticket = {0};
         final int[] totalPrice = {0};
@@ -142,7 +165,6 @@ public class FilmReportAdapter extends RecyclerView.Adapter<FilmReportAdapter.Vi
                         String seat = s.getSeat();
                         int count = 1;
                         count += seat.length() - s.getSeat().replace(",", "").length();
-                        Log.d(s.getFilmID(), s.getFilmID());
                         //Initialize your Date however you like it.
                         Date date = s.getTime().toDate();
                         Calendar calendar = new GregorianCalendar();
@@ -184,7 +206,12 @@ public class FilmReportAdapter extends RecyclerView.Adapter<FilmReportAdapter.Vi
                 NumberFormat numberFormat = new DecimalFormat("#,###");
                 ticketTV.setText("Ticket: " + numberFormat.format(ticket[0]));
                 totalTV.setText("Revenue: " + numberFormat.format(totalPrice[0]));
+                TotalPrice+= totalPrice[0];
+                if (onDataChangedListener != null) {
+                    onDataChangedListener.onDataChanged(TotalPrice);
+                }
             }
         });
-       }
+    }
+
 }

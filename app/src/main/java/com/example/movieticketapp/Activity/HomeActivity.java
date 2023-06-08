@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -91,11 +94,12 @@ public class HomeActivity extends AppCompatActivity {
         viewAllComingBtn = findViewById(R.id.viewAllComingBtn);
         promotionView =(ListView) findViewById(R.id.promotionView);
         searchView=findViewById(R.id.searchField);
-
         searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
                 if (b) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     startActivity(new Intent(HomeActivity.this, SearchActivity.class));
                 }
             }
@@ -154,7 +158,13 @@ public class HomeActivity extends AppCompatActivity {
         });
         checkAccountType();
     }
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        searchView.clearFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT);
+    }
     void checkAccountType() {
         try {
             if (Users.currentUser != null)
