@@ -30,6 +30,7 @@ import com.example.movieticketapp.Activity.Discount.AddDiscount;
 import com.example.movieticketapp.Activity.Discount.DiscountViewAll;
 import com.example.movieticketapp.Activity.Movie.SearchActivity;
 import com.example.movieticketapp.Activity.Movie.ViewAllActivity;
+import com.example.movieticketapp.Activity.Notification.NotificationActivity;
 import com.example.movieticketapp.Activity.Report.ReportActivity;
 import com.example.movieticketapp.Activity.Ticket.MyTicketAllActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
@@ -134,6 +135,11 @@ public class HomeActivity extends AppCompatActivity {
                     startActivity(new Intent(HomeActivity.this, ReportActivity.class));
                     overridePendingTransition(0, 0);
                     break;
+                case R.id.NotificationPage:
+                    startActivity(new Intent(HomeActivity.this, NotificationActivity.class));
+                    overridePendingTransition(0, 0);
+                    break;
+
                 case R.id.ticketPage:
                     startActivity(new Intent(HomeActivity.this, MyTicketAllActivity.class));
                     overridePendingTransition(0, 0);
@@ -211,8 +217,6 @@ public class HomeActivity extends AppCompatActivity {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        Log.e("binh", FirebaseRequest.mAuth.getUid());
-        Log.e("ffff", Users.currentUser.getUserID());
         if(Users.currentUser!=null){
             FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override

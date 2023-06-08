@@ -39,6 +39,7 @@ import android.widget.TextView;
 import com.example.movieticketapp.Activity.Booking.ShowTimeScheduleActivity;
 import com.example.movieticketapp.Activity.Discount.DiscountViewAll;
 import com.example.movieticketapp.Activity.HomeActivity;
+import com.example.movieticketapp.Activity.Notification.NotificationActivity;
 import com.example.movieticketapp.Activity.Ticket.MyTicketAllActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
 import com.example.movieticketapp.Adapter.CinameNameAdapter;
@@ -261,6 +262,10 @@ public class ReportActivity extends AppCompatActivity {
                 case R.id.ticketPage:
                     startActivity(new Intent(ReportActivity.this, MyTicketAllActivity.class));
                     overridePendingTransition(0,0);
+                    break;
+                case R.id.NotificationPage:
+                    startActivity(new Intent(ReportActivity.this, NotificationActivity.class));
+                    overridePendingTransition(0, 0);
                     break;
             }
             return true;

@@ -14,6 +14,11 @@
         android:id="@+id/ReportPage"
         android:visible="false"/>
     <item
+        android:icon="@drawable/notification"
+        android:title="Notification"
+        android:id="@+id/NotificationPage"
+        />
+    <item
         android:icon="@drawable/ticket"
         android:title="My ticket"
         android:id="@+id/ticketPage"/>

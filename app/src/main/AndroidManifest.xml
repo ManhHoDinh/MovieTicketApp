@@ -15,16 +15,17 @@
         android:theme="@style/Theme.MovieTicketApp"
         tools:targetApi="31">
         <activity
+            android:name=".Activity.Notification.NotificationActivity"
+            android:theme="@style/Theme.MovieProject.Main"
+            android:exported="false" />
+        <activity
             android:name=".Activity.Report.ReportActivity"
             android:exported="false"
             android:theme="@style/Theme.MovieProject.Main" />
         <activity android:name=".Activity.Discount.DiscountViewAll" />
         <activity
-
             android:name=".Activity.Booking.ServiceActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".Activity.ConfirmDialogActivity"
             android:exported="false" />

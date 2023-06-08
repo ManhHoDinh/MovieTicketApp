@@ -17,6 +17,7 @@ import android.widget.ListView;
 //import com.example.movieticketapp.databinding.ActivityHomeBinding;
 
 import com.example.movieticketapp.Activity.HomeActivity;
+import com.example.movieticketapp.Activity.Notification.NotificationActivity;
 import com.example.movieticketapp.Activity.Report.ReportActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
 import com.example.movieticketapp.Adapter.TicketListAdapter;
@@ -139,6 +140,11 @@ public class MyTicketAllActivity extends AppCompatActivity {
                     startActivity(new Intent(MyTicketAllActivity.this, ReportActivity.class));
                     overridePendingTransition(0,0);
                     break;
+                case R.id.NotificationPage:
+                    startActivity(new Intent(MyTicketAllActivity.this, NotificationActivity.class));
+                    overridePendingTransition(0, 0);
+                    break;
+
             }
             return true;
         });
