@@ -8,7 +8,11 @@ import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.R;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
@@ -36,7 +40,14 @@ public class TicketDetailActivity extends AppCompatActivity {
         filmRatingText.setText("(" + getIntent().getExtras().getDouble("rate") + ")");
         filmKind.setText(getIntent().getExtras().getString("kind"));
         filmDuration.setText(getIntent().getExtras().getString("duration"));
-        cinema.setText(getIntent().getExtras().getString("cinema"));
+        String cinemaID = getIntent().getExtras().getString("cinemaID");
+        FirebaseRequest.database.collection("Cinema").document(cinemaID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                cinema.setText(documentSnapshot.get("Name").toString());
+            }
+        });
+
         bookDay.setText(getIntent().getExtras().getString("time"));
         seatPositon.setText(getIntent().getExtras().getString("seat"));
         paidBill.setText(getIntent().getExtras().getString("paid"));

@@ -3,6 +3,7 @@ package com.example.movieticketapp.Activity.Discount;
 import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -15,16 +16,22 @@ import android.widget.TextView;
 import com.example.movieticketapp.Model.Discount;
 import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.Model.FilmModel;
+import com.example.movieticketapp.Model.UserAndDiscount;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Document;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AddDiscount extends AppCompatActivity {
@@ -112,12 +119,16 @@ public class AddDiscount extends AppCompatActivity {
 
     private void CreateDiscountToDatabase() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+        Log.e("d", "binh");
         DocumentReference doc ;
+        boolean isDocNull = false;
         if (discount!=null)
          doc = db.collection(Discount.CollectionName).document(discount.getID());
-        else
+        else{
             doc = db.collection(Discount.CollectionName).document();
+            isDocNull = true;
+        }
+
         Discount discount = new Discount(doc.getId(), Name.getText().toString(), Description.getText().toString(), Double.valueOf(DiscountPercent.getText().toString()));
         doc.set(discount.toJson())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -140,8 +151,33 @@ public class AddDiscount extends AppCompatActivity {
                         Log.w(TAG, "Error writing document", e);
                     }
                 });
-    }
+        if(isDocNull == true){
+            addUserAndDiscountToDb(doc);
+        }
 
+    }
+    void addUserAndDiscountToDb(DocumentReference documentReference){
+        FirebaseFirestore.getInstance().collection("Users").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
+                for(DocumentSnapshot doc : listDocs){
+                    UserAndDiscount userAndDiscount = new UserAndDiscount(doc.getId(), documentReference.getId());
+                    FirebaseFirestore.getInstance().collection("UserAndDiscount").document().set(userAndDiscount);
+                }
+            }
+        });
+//        FirebaseFirestore.getInstance().collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+//                List<DocumentSnapshot> listDocs = value.getDocuments();
+//                for(DocumentSnapshot doc : listDocs){
+//                    UserAndDiscount userAndDiscount = new UserAndDiscount(doc.getId(), documentReference.getId());
+//                    FirebaseFirestore.getInstance().collection("UserAndDiscount").document().set(userAndDiscount);
+//                }
+//            }
+//        });
+    }
     void IncreasingDiscountPercent()
     {
         try {

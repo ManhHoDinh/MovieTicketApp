@@ -32,4 +32,5 @@
     <color name="playing">#4D08FC4D</color>
     <color name="coming">#4DF7FC08</color>
     <color name="text_input">#CAE4FF</color>
+    <color name="notification_edittext_background">#CAE4FF</color>
 </resources>

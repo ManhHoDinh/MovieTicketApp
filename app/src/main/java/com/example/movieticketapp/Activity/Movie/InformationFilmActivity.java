@@ -49,6 +49,7 @@ public class InformationFilmActivity extends FragmentActivity {
         setContentView(R.layout.information_film_screen);
         Intent intent = getIntent();
         f = intent.getParcelableExtra(ExtraIntent.film);
+
         backgroundImage = findViewById(R.id.backgroundImage);
         nameTV= findViewById(R.id.filmName);
         PosterImage= findViewById(R.id.PosterImage);
@@ -63,12 +64,13 @@ public class InformationFilmActivity extends FragmentActivity {
         pager.setAdapter(filmDetailPagerAdapter);
         pager.setOffscreenPageLimit(3);
         getFilm(f.getId());
+       // Log.e("fdf", f.getStatus());
 
         refreshScreen();
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                finish();
             }
         });
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

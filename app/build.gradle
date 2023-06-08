@@ -16,7 +16,9 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -56,5 +58,5 @@ dependencies {
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation 'com.google.api-client:google-api-client:1.33.0'
     implementation 'com.google.oauth-client:google-oauth-client-jetty:1.32.1'
-    implementation 'com.google.api:google-api-services-youtube:v3-rev20210616-1.31.0'
+   // implementation 'com.google.api:google-api-services-youtube:v3-rev20210616-1.31.0'
 }

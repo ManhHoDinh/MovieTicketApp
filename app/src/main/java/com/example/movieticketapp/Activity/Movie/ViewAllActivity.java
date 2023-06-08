@@ -38,6 +38,8 @@ public class ViewAllActivity extends AppCompatActivity {
         filmGridview = findViewById(R.id.filmGridView);
         backBtn = findViewById(R.id.backbutton);
        List<FilmModel> listFilm = new ArrayList<FilmModel>();
+       Intent intent = getIntent();
+       String status = intent.getStringExtra("status");
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,13 +56,16 @@ public class ViewAllActivity extends AppCompatActivity {
                 listFilm.clear();
                 for (QueryDocumentSnapshot documentSnapshot : value) {
                     FilmModel f = documentSnapshot.toObject(FilmModel.class);
-                    if(InforBooked.getInstance().typeFilm.equals("All")){
-                        listFilm.add(f);
+                    if(f.getStatus().equals(status)){
+                        if(InforBooked.getInstance().typeFilm.equals("All")){
+                            listFilm.add(f);
+                        }
+                        else if (f.getGenre().contains(InforBooked.getInstance().typeFilm)) {
+                            listFilm.add(f);
+                        } else {
+                        }
                     }
-                    else if (f.getGenre().contains(InforBooked.getInstance().typeFilm)) {
-                        listFilm.add(f);
-                    } else {
-                    }
+
                 }
                 filmGridview.setAdapter(new ViewAllAdapter(listFilm, ViewAllActivity.this));
             }

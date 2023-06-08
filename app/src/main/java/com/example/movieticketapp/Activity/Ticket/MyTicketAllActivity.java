@@ -3,8 +3,11 @@ package com.example.movieticketapp.Activity.Ticket;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -14,10 +17,13 @@ import android.widget.ListView;
 //import com.example.movieticketapp.databinding.ActivityHomeBinding;
 
 import com.example.movieticketapp.Activity.HomeActivity;
+import com.example.movieticketapp.Activity.Notification.NotificationActivity;
+import com.example.movieticketapp.Activity.Report.ReportActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
 import com.example.movieticketapp.Adapter.TicketListAdapter;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Ticket;
+import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
 import com.example.movieticketapp.databinding.HomeScreenBinding;
 import com.example.movieticketapp.databinding.MyTicketAllScreenBinding;
@@ -53,15 +59,12 @@ public class MyTicketAllActivity extends AppCompatActivity {
         Button newTicket = (Button) findViewById(R.id.buttonNewsTicket);
         Button expiredTicket = (Button) findViewById(R.id.buttonExpiredTicket);
         Button allTicket = (Button) findViewById(R.id.buttonAllTicket);
-        BottomNavigationView abc = (BottomNavigationView)findViewById(R.id.bottomNavigation);
-        abc.getMenu().getItem(2).setChecked(true);
         firestore = FirebaseFirestore.getInstance();
 
         allTicket.setText("All");
         allTicket.setSelected(true);
 
         loadListTicket("all");
-
 
         allTicket.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,7 +115,17 @@ public class MyTicketAllActivity extends AppCompatActivity {
             }
         });
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
-        bottomNavigationView.getMenu().getItem(2).setChecked(true);
+        bottomNavigationView.getMenu().findItem(R.id.ticketPage).setChecked(true);
+        try{if (Users.currentUser != null)
+            if (((Users.currentUser.getAccountType().toString()).equals("admin"))) {
+                Menu menu = bottomNavigationView.getMenu();
+                MenuItem ReportPage = menu.findItem(R.id.ReportPage);
+                MenuItem WalletPage = menu.findItem(R.id.walletPage);
+                WalletPage.setVisible(false);
+                ReportPage.setVisible(true);
+            }
+        }
+        catch (Exception e){}
         bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.homePage:
@@ -122,7 +135,16 @@ public class MyTicketAllActivity extends AppCompatActivity {
                 case R.id.walletPage:
                     startActivity(new Intent(MyTicketAllActivity.this, MyWalletActivity.class));
                     overridePendingTransition(0,0);
+                    break; 
+                case R.id.ReportPage:
+                    startActivity(new Intent(MyTicketAllActivity.this, ReportActivity.class));
+                    overridePendingTransition(0,0);
                     break;
+                case R.id.NotificationPage:
+                    startActivity(new Intent(MyTicketAllActivity.this, NotificationActivity.class));
+                    overridePendingTransition(0, 0);
+                    break;
+
             }
             return true;
         });
@@ -142,7 +164,7 @@ public class MyTicketAllActivity extends AppCompatActivity {
                         String timeBooked = dateFormat.format(time.toDate());
                         a.putExtra("name", value.get("name").toString());
                         a.putExtra("time",timeBooked );
-                        a.putExtra("cinema", ((Ticket) o).getCinema());
+                        a.putExtra("cinemaID", ((Ticket) o).getCinemaID());
                         a.putExtra("poster", value.get("PosterImage").toString());
                         a.putExtra("rate", value.get("vote").toString());
                         a.putExtra("kind", value.get("genre").toString());
@@ -159,12 +181,12 @@ public class MyTicketAllActivity extends AppCompatActivity {
     }
 
     void loadListTicket(String type) {
-        firestore.collection("Ticket").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        firestore.collection("Ticket").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                if (!queryDocumentSnapshots.isEmpty()) {
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (!value.isEmpty()) {
 
-                    List<DocumentSnapshot> listDoc = queryDocumentSnapshots.getDocuments();
+                    List<DocumentSnapshot> listDoc = value.getDocuments();
                     Calendar calendar = Calendar.getInstance();
                     Date currentTime= calendar.getTime();
                     switch(type){
@@ -204,7 +226,9 @@ public class MyTicketAllActivity extends AppCompatActivity {
                     adapter = new TicketListAdapter(getApplicationContext(), R.layout.list_ticket_view, arrayList);
                     listView.setAdapter(adapter);
                 }
+
             }
         });
+
     }
 }

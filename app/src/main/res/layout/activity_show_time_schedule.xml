@@ -78,17 +78,21 @@
                 android:id="@+id/cinemaLv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
-            <ImageButton
-                android:id="@+id/btnNext"
-                android:layout_width="64.22923636363636dp"
-                android:layout_height="64.22923636363636dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="80dp"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/roundstyle50"
-                android:backgroundTint="@color/button_background_color"
-                android:rotationY="180"
-                android:src="@drawable/ic_back"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/createShowTimeBtn"
+                style="@android:style/Widget.Button"
+                android:layout_width="255dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="28dp"
+                android:background="@drawable/button_background"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="center"
+                android:text="Create"
+                android:textColor="@color/white_background"
+                android:textFontWeight="500"
+                android:textSize="18dp"
+                android:textStyle="bold" />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.core.widget.NestedScrollView>
 

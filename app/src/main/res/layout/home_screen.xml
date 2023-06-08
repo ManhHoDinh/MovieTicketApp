@@ -113,9 +113,9 @@
                             app:layout_constraintStart_toStartOf="parent" />
 
                         <TextView
-                            android:id="@+id/viewAllBtn"
                             style="@style/titleStyle"
                             android:gravity="center"
+                            android:id="@+id/viewAllPlayingBtn"
                             android:text="View all"
                             android:textColor="@color/sub_text_color"
                             android:textSize="14dp"
@@ -143,6 +143,8 @@
                         <TextView
                             style="@style/titleStyle"
                             android:gravity="center"
+
+                            android:id="@+id/viewAllComingBtn"
                             android:text="View all"
                             android:textColor="@color/sub_text_color"
                             android:textSize="14dp"
