@@ -17,11 +17,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.Toast;
 
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -30,18 +32,32 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.auth.User;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.net.URI;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
 
+    StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+    FirebaseFirestore databaseReference = FirebaseFirestore.getInstance();
+    DocumentReference document;
+    UploadTask uploadTask;
     EditText fullNameET;
     EditText emailET;
     EditText passwordET;
     EditText confirmPasswordET;
+    Uri avataUri = null;
+    String avatarUrl;
 //    @Override
 //    public void onStart() {
 //        super.onStart();
@@ -66,6 +82,7 @@ public class SignUpActivity extends AppCompatActivity {
                 registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
                     if (uri != null) {
                         imageAvatar.setImageURI(uri);
+                        avataUri = uri;
                     } else {
                         Log.d("PhotoPicker", "No media selected");
                     }
@@ -73,11 +90,9 @@ public class SignUpActivity extends AppCompatActivity {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Intent intent =  new Intent(Intent.ACTION_PICK);
-                //intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                pickMedia.launch(new PickVisualMediaRequest.Builder()
-//                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-//                        .build());
+                pickMedia.launch(new PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                        .build());
             }
         });
         Button backBt = findViewById(R.id.backbutton);
@@ -119,7 +134,39 @@ public class SignUpActivity extends AppCompatActivity {
                     error=true;
                 }
                 if(!error){
-                    CreateUser(emailET.getText().toString(), passwordET.getText().toString(), fullNameET.getText().toString());
+                    Calendar calFordData = Calendar.getInstance();
+                    SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-yyyy");
+                    String saveCurrentData = currentDate.format(calFordData.getTime());
+
+                    Calendar calFordTime = Calendar.getInstance();
+                    SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm");
+                    String saveCurrentTime = currentTime.format(calFordData.getTime());
+
+                    String postRandomName = saveCurrentData + saveCurrentTime;
+
+                    storageReference = storageReference.child(postRandomName+"as.jpg");
+                    uploadTask = storageReference.putFile(avataUri);
+                    Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                        @Override
+                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                            if (!task.isSuccessful()) {
+                                throw task.getException();
+                            }
+
+                            // Continue with the task to get the download URL
+                            return storageReference.getDownloadUrl();
+                        }
+                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if (task.isSuccessful()) {
+                                avatarUrl = task.getResult().toString();
+                                CreateUser(emailET.getText().toString(), passwordET.getText().toString(), fullNameET.getText().toString());
+                            } else {
+                                Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 }
             }
         });

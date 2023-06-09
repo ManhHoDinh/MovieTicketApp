@@ -33,28 +33,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.media.MediaHttpUploader;
-import com.google.api.client.googleapis.media.MediaHttpUploaderProgressListener;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.InputStreamContent;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.makeramen.roundedimageview.RoundedImageView;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.youtube.YouTube;
-import com.google.api.services.youtube.YouTubeScopes;
-import com.google.api.services.youtube.model.Video;
-import com.google.api.services.youtube.model.VideoSnippet;
-import com.google.api.services.youtube.model.VideoStatus;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -381,96 +365,6 @@ public class AddMovieActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Add Movie Success!", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private void uploadVideoToYouTube(Uri videoUri) {
-        // Khởi tạo YouTube API client
-        YouTube youtube = null;
-        try {
-            youtube = buildYouTubeClient();
-        } catch (IOException | GeneralSecurityException e) {
-            e.printStackTrace();
-        }
-
-        // Tạo một đối tượng Video để đại diện cho video sẽ được tải lên
-        MediaStore.Video video = new MediaStore.Video();
-
-        // Thiết lập thông tin về video (tiêu đề, mô tả, v.v.)
-        VideoSnippet snippet = new VideoSnippet();
-        snippet.setTitle("Your Video Title");
-        snippet.setDescription("Your Video Description");
-        video.setSnippet(snippet);
-
-        // Thiết lập trạng thái của video (công khai, riêng tư, v.v.)
-        VideoStatus status = new VideoStatus();
-        status.setPrivacyStatus("private"); // Có thể thay đổi giá trị này
-        video.setStatus(status);
-
-        // Tạo nội dung video từ đường dẫn Uri
-        InputStreamContent mediaContent = null;
-        try {
-            InputStream videoInputStream = getContentResolver().openInputStream(videoUri);
-            mediaContent = new InputStreamContent("video/*", videoInputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            // Tạo yêu cầu API để tải lên video
-            YouTube.Videos.Insert videoInsert = youtube.videos()
-                    .insert("snippet,status", video, mediaContent);
-
-            // Thiết lập cấu hình tải lên
-            MediaHttpUploader uploader = videoInsert.getMediaHttpUploader();
-            uploader.setDirectUploadEnabled(false);
-            uploader.setProgressListener(new MediaHttpUploaderProgressListener() {
-                @Override
-                public void progressChanged(MediaHttpUploader uploader) throws IOException {
-                    switch (uploader.getUploadState()) {
-                        case INITIATION_STARTED:
-                            System.out.println("Initiation Started");
-                            break;
-                        case INITIATION_COMPLETE:
-                            System.out.println("Initiation Completed");
-                            break;
-                        case MEDIA_IN_PROGRESS:
-                            System.out.println("Upload in progress: " + uploader.getProgress());
-                            break;
-                        case MEDIA_COMPLETE:
-                            System.out.println("Upload Completed!");
-                            break;
-                        case NOT_STARTED:
-                            System.out.println("Upload Not Started!");
-                            break;
-                    }
-                }
-            });
-
-            // Thực hiện yêu cầu API để tải lên video
-            MediaStore.Video returnedVideo = videoInsert.execute();
-
-            // Lấy ID của video đã tải lên
-            String videoId = returnedVideo.getId();
-            System.out.println("Video upload successful! Video ID: " + videoId);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private YouTube buildYouTubeClient() throws IOException, GeneralSecurityException {
-        HttpTransport httpTransport = new NetHttpTransport();
-        JsonFactory jsonFactory = new JacksonFactory();
-
-        // Đường dẫn đến tệp client_secret.json
-        InputStream in = new FileInputStream(CLIENT_SECRETS_FILE);
-        GoogleCredential credential = GoogleCredential.fromStream(in)
-                .createScoped(Collections.singleton(YouTubeScopes.YOUTUBE_UPLOAD))
-                .createDelegated("your_account@example.com"); // Thay thế bằng email của tài khoản Google
-
-        // Xây dựng YouTube API client
-        return new YouTube.Builder(httpTransport, jsonFactory, credential)
-                .setApplicationName(APPLICATION_NAME)
-                .build();
     }
 }
 

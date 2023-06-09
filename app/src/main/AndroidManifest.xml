@@ -54,7 +54,7 @@
             android:name=".Activity.Booking.SuccessCheckoutActivity"
             android:exported="true" />
         <activity
-            android:name=".Activity.Movie.AddMovieActivity"
+            android:name=".Activity.Account.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.MovieProject.Main">
             <intent-filter>
@@ -67,7 +67,9 @@
             android:name=".Activity.Booking.BookSeatActivity"
             android:exported="false"
             android:theme="@style/Theme.MovieProject.Main" />
-
+        <activity
+            android:name=".Activity.Movie.AddMovieActivity"
+            android:exported="false" />
         <activity
             android:name=".Activity.Booking.BookedActivity"
             android:exported="true"
