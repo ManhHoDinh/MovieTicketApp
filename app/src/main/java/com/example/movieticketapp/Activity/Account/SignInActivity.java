@@ -236,7 +236,6 @@ public class SignInActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             //Check Exist
-                            getUser(user.getUid());
                             FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
                             DocumentReference docIdRef = rootRef.collection("Users").document(user.getUid());
                             docIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -255,7 +254,7 @@ public class SignInActivity extends AppCompatActivity {
                                     }
                                 }
                             });
-
+                            getUser(user.getUid());
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.

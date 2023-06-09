@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.movieticketapp.Adapter.ServiceAdapter;
+import com.example.movieticketapp.Adapter.UseServiceAdapter;
 import com.example.movieticketapp.Model.Service;
 import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
@@ -64,7 +65,7 @@ public class ServiceActivity extends AppCompatActivity {
                     Service service = doc.toObject(Service.class);
                     listService.add(service);
                 }
-                serviceLV.setAdapter(new ServiceAdapter(ServiceActivity.this, R.layout.service_item, listService, totalService));
+                serviceLV.setAdapter(new UseServiceAdapter(ServiceActivity.this, R.layout.service_item, listService, totalService));
 
             }
         });

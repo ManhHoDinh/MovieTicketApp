@@ -80,7 +80,7 @@ public class InformationFilmActivity extends FragmentActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                finish();
             }
         });
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

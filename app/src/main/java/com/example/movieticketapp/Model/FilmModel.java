@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import com.example.movieticketapp.databinding.PosterItemBinding;
 
 public class FilmModel implements Parcelable {
     private String PrimaryImage;

@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -14,16 +15,22 @@
         android:theme="@style/Theme.MovieTicketApp"
         tools:targetApi="31">
         <activity
-            android:name=".Activity.Discount.DiscountViewAll"
-            />
+            android:name=".Activity.Notification.NotificationActivity"
+            android:theme="@style/Theme.MovieProject.Main"
+            android:exported="false" />
         <activity
-
+            android:name=".Activity.Report.ReportActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MovieProject.Main" />
+        <activity android:name=".Activity.Discount.DiscountViewAll" />
+        <activity
             android:name=".Activity.Booking.ServiceActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".Activity.ConfirmDialogActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.Service.AddService"
             android:exported="false" />
         <activity
             android:name=".Activity.Movie.SearchActivity"
@@ -61,6 +68,9 @@
         <activity
             android:name=".Activity.Booking.SuccessCheckoutActivity"
             android:exported="true" />
+        <activity android:name=".Activity.Movie.AddMovieActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MovieProject.Main"></activity>
         <activity
             android:name=".Activity.Account.SplashActivity"
             android:exported="true"
@@ -84,11 +94,6 @@
             android:exported="false" />
         <activity android:name=".Activity.Account.SignUpActivity" />
         <activity android:name=".Activity.Account.SignInActivity" />
-
-        <activity
-            android:name=".Activity.Movie.AddMovieActivity"
-            android:exported="false" />
-
         <activity
             android:name=".Activity.Movie.InformationFilmActivity"
             android:exported="false" />

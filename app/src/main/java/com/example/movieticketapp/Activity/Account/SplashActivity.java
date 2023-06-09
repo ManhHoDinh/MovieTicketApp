@@ -95,7 +95,7 @@ public class SplashActivity extends AppCompatActivity {
                 }
                     if (snapshot != null && snapshot.exists()) {
                         Users.currentUser = snapshot.toObject(Users.class);
-
+                        Log.d("Email",Users.currentUser.getEmail());
                     }
                 }
             });

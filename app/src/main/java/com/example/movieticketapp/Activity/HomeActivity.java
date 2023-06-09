@@ -14,6 +14,8 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -27,14 +29,19 @@ import com.example.movieticketapp.Activity.Discount.AddDiscount;
 import com.example.movieticketapp.Activity.Discount.DiscountViewAll;
 import com.example.movieticketapp.Activity.Movie.SearchActivity;
 import com.example.movieticketapp.Activity.Movie.ViewAllActivity;
+import com.example.movieticketapp.Activity.Notification.NotificationActivity;
+import com.example.movieticketapp.Activity.Report.ReportActivity;
+import com.example.movieticketapp.Activity.Service.AddService;
 import com.example.movieticketapp.Activity.Ticket.MyTicketAllActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
 import com.example.movieticketapp.Adapter.ListTypeAdapter;
 import com.example.movieticketapp.Adapter.PromotionAdapter;
+import com.example.movieticketapp.Adapter.ServiceAdapter;
 import com.example.movieticketapp.Adapter.posterAdapter;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Discount;
 import com.example.movieticketapp.Model.FilmModel;
+import com.example.movieticketapp.Model.Service;
 import com.example.movieticketapp.Model.UserAndDiscount;
 import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.NetworkChangeListener;
@@ -76,7 +83,8 @@ public class HomeActivity extends AppCompatActivity {
     private ImageView addDiscount;
     private TextView viewAllPlayingBtn;
     private TextView viewAllComingBtn;
-
+    private ImageView addService;
+    private RecyclerView serviceView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +100,8 @@ public class HomeActivity extends AppCompatActivity {
         viewAllComingBtn = findViewById(R.id.viewAllComingBtn);
         promotionView =(ListView) findViewById(R.id.promotionView);
         searchView=findViewById(R.id.searchField);
+        serviceView = findViewById(R.id.ServiceView);
+        addService = findViewById(R.id.AddService);
 
         searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -114,12 +124,16 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-        //  GetComingMovies();
-
+        addService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(HomeActivity.this, AddService.class);
+                startActivity(i);
+            }
+        });
         typeListView = (RecyclerView) findViewById(R.id.listTypeMovie);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         typeListView.setLayoutManager(layoutManager);
-        //  typeListView.addItemDecoration(new AddDecoration(10));
         typeListView.setAdapter(new ListTypeAdapter(this, listType));
         binding.bottomNavigation.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
@@ -129,6 +143,14 @@ public class HomeActivity extends AppCompatActivity {
                     break;
                 case R.id.ticketPage:
                     startActivity(new Intent(HomeActivity.this, MyTicketAllActivity.class));
+                    overridePendingTransition(0, 0);
+                    break;
+                case R.id.ReportPage:
+                    startActivity(new Intent(HomeActivity.this, ReportActivity.class));
+                    overridePendingTransition(0, 0);
+                    break;
+                case R.id.NotificationPage:
+                    startActivity(new Intent(HomeActivity.this, NotificationActivity.class));
                     overridePendingTransition(0, 0);
                     break;
             }
@@ -142,6 +164,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
         GetDiscounts();
+        GetServices();
         addDiscount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -156,17 +179,33 @@ public class HomeActivity extends AppCompatActivity {
         try {
             Log.d("account type", Users.currentUser.getAccountType());
             if (Users.currentUser != null)
-                if ((!(Users.currentUser.getAccountType().toString()).equals("admin"))) {
+            {if ((!(Users.currentUser.getAccountType().toString()).equals("admin"))) {
                     ViewGroup.LayoutParams params = binding.AddDiscount.getLayoutParams();
                     params.height = 0;
                     binding.AddDiscount.setLayoutParams(params);
                     addDiscount.setVisibility(View.INVISIBLE);
+                    ViewGroup.LayoutParams serviceParams = binding.AddService.getLayoutParams();
+                    serviceParams.height = 0;
+                    binding.AddService.setLayoutParams(serviceParams);
+                    addService.setVisibility(View.INVISIBLE);
                 }
+            else{
+                Menu menu = binding.bottomNavigation.getMenu();
+                MenuItem ReportPage = menu.findItem(R.id.ReportPage);
+                MenuItem WalletPage = menu.findItem(R.id.walletPage);
+                WalletPage.setVisible(false);
+                ReportPage.setVisible(true);
+            }}
         } catch (Exception e) {
             ViewGroup.LayoutParams params = binding.AddDiscount.getLayoutParams();
             params.height = 0;
             binding.AddDiscount.setLayoutParams(params);
             addDiscount.setVisibility(View.INVISIBLE);
+
+            ViewGroup.LayoutParams serviceParams = binding.AddService.getLayoutParams();
+            serviceParams.height = 0;
+            binding.AddService.setLayoutParams(serviceParams);
+            addService.setVisibility(View.INVISIBLE);
         }
         viewAllPlayingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -344,16 +383,51 @@ public class HomeActivity extends AppCompatActivity {
             });
 
         }
-
-
-
-
-
-
-
-
     }
-
+    void GetServices()
+    {
+        List<Service> services = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference ServiceRef = db.collection("Service");
+        ServiceRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    // this method is called when error is not null
+                    // and we get any error
+                    // in this case we are displaying an error message.
+                    Toast.makeText(HomeActivity.this, "Error found is " + error, Toast.LENGTH_SHORT).show();
+                    return;
+                } else
+                {
+                    services.clear();
+                    for (DocumentSnapshot documentSnapshot : value) {
+                        Service newService = documentSnapshot.toObject(Service.class);
+                        services.add(newService);
+                        Log.d(TAG, "data: " + newService.getName());
+                    }
+                    LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+                    serviceView.setAdapter(new ServiceAdapter(services));
+                    serviceView.setLayoutManager(VerLayoutManager);
+                    if (services.size() == 0) {
+                        ViewGroup.LayoutParams params = serviceView.getLayoutParams();
+                        params.height = 0;
+                        serviceView.setLayoutParams(params);
+                    }
+                    if (services.size() == 1) {
+                        ViewGroup.LayoutParams params = serviceView.getLayoutParams();
+                        params.height = 400;
+                        serviceView.setLayoutParams(params);
+                    }
+                    if (services.size() == 2) {
+                        ViewGroup.LayoutParams params = serviceView.getLayoutParams();
+                        params.height = 800;
+                        serviceView.setLayoutParams(params);
+                    }
+                }
+            }
+        });
+    }
     @Override
     protected void onStart() {
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);

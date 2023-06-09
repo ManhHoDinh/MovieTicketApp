@@ -111,7 +111,6 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                     ComingFilms.clear();
                     for (QueryDocumentSnapshot documentSnapshot : value) {
                         FilmModel f = documentSnapshot.toObject(FilmModel.class);
-                        Log.d(f.getStatus(),f.getStatus());
                         if(f.getStatus().equals("playing"))
                             PlayingFilms.add(f);
                         else
