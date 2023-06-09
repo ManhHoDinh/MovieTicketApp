@@ -108,6 +108,7 @@ public class HomeActivity extends AppCompatActivity {
         accountImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 //FirebaseAuth.getInstance().signOut();
                 Intent i = new Intent(getApplicationContext(), AccountActivity.class);
                 startActivity(i);

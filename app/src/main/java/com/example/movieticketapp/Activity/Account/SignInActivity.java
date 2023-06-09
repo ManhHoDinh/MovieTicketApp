@@ -246,6 +246,7 @@ public class SignInActivity extends AppCompatActivity {
                                         DocumentSnapshot document = task.getResult();
                                         if (document.exists()) {
 
+
                                         } else {
                                             CreateUser(user);
                                         }
