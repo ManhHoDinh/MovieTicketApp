@@ -68,13 +68,6 @@
                             app:layout_constraintBottom_toBottomOf="parent"
 
                             >
-
-                            <ImageView
-                                android:id="@+id/accountImage"
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
-                                android:layout_gravity="end"
-                                android:src="@drawable/avatar" />
                         </androidx.cardview.widget.CardView>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -94,7 +87,7 @@
                             app:layout_constraintEnd_toStartOf="@+id/controlBtn"
                             app:layout_constraintStart_toStartOf="parent"
                             app:queryBackground="@android:color/transparent"
-                            app:queryHint="Search movie"
+                            app:queryHint="Search your voucher"
                             app:searchIcon="@drawable/search_icon" />
 
                         <ImageButton
@@ -108,11 +101,12 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <androidx.recyclerview.widget.RecyclerView
+                    <ListView
                         android:id="@+id/promotionView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="50dp" />
+                        android:layout_marginTop="50dp"
+                        android:dividerHeight="20dp"/>
                 </LinearLayout>
 
             <ImageView

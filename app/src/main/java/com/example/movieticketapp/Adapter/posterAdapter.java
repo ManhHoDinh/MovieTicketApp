@@ -26,8 +26,7 @@ public class posterAdapter extends RecyclerView.Adapter<posterAdapter.ViewHolder
 
     public posterAdapter(List<FilmModel> listPoster) {
         this.listPoster = listPoster;
-        Log.d("Size", String.valueOf(listPoster.size()));
-    }
+      }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView imageView;
@@ -54,7 +53,7 @@ public class posterAdapter extends RecyclerView.Adapter<posterAdapter.ViewHolder
             public void onClick(View view) {
                 Intent i = new Intent(holder.imageView.getContext(), InformationFilmActivity.class);
                 i.putExtra(ExtraIntent.film, f);
-                InforBooked.getInstance().nameFilm = f.getName();
+                InforBooked.getInstance().film = f;
                 holder.imageView.getContext().startActivity(i);
             }
         });

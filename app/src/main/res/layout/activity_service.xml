@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingHorizontal="30dp"
+    android:background="@color/background_color"
+    tools:context=".Activity.Booking.ServiceActivity">
+
+        <androidx.appcompat.widget.AppCompatButton
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="60dp"
+            android:id="@+id/backbutton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/back_icon" />
+        <TextView
+            android:layout_marginTop="60dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:fontFamily="@font/montserrat500"
+            android:text="Popcorn/Drink Combo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <ListView
+            android:layout_marginTop="36dp"
+            app:layout_constraintTop_toBottomOf="@+id/backbutton"
+
+            android:id="@+id/serviceLv"
+            android:background="@drawable/background_service"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/btnNext"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/montserrat400"
+            android:layout_width="wrap_content"
+            android:textSize="16dp"
+            android:layout_height="wrap_content"
+            android:text="Total Price"/>
+        <TextView
+            android:id="@+id/totalService"
+            app:layout_constraintEnd_toStartOf="@+id/vnd"
+            app:layout_constraintBottom_toTopOf="@+id/btnNext"
+            android:layout_marginBottom="8dp"
+
+            android:textSize="20dp"
+            android:fontFamily="@font/montserrat600"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"/>
+        <TextView
+            android:id="@+id/vnd"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/btnNext"
+            android:layout_marginBottom="8dp"
+            android:textSize="20dp"
+            android:fontFamily="@font/montserrat600"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" VNĐ"/>
+        <ImageButton
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/btnNext"
+            android:layout_marginBottom="12dp"
+            android:layout_width="64.22923636363636dp"
+            android:layout_height="64.22923636363636dp"
+            android:text=""
+            android:layout_marginTop="20dp"
+
+
+            android:background="@drawable/roundstyle50"
+            android:backgroundTint="@color/button_background_color"
+            android:rotationY="180"
+            android:src="@drawable/ic_back"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,85 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/background_color"
     tools:context=".Fragment.ReviewFragment"
-    android:layout_gravity="center"
 
     >
     <!-- Main content layout with comment list -->
-        <LinearLayout
-            android:id="@+id/ReviewedLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingBottom="50dp"
-
-            android:layout_below="@+id/commentSectionLayout"
-            android:layout_marginTop="10dp"
-            >
-
-    <!--  Comment List here-->
-            <ListView
-                android:id="@+id/ReviewList"
-                android:layout_marginLeft="12dp"
+<!--        <androidx.appcompat.widget.LinearLayoutCompat-->
+<!--            android:id="@+id/ReviewedLayout"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:orientation="vertical"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            >-->
+            <LinearLayout
+                android:paddingTop="24dp"
+                android:id="@+id/ratingFilm"
                 android:layout_width="match_parent"
-                android:layout_height="670dp"
-                android:paddingBottom="150dp"
-                />
+                android:orientation="vertical"
 
-        </LinearLayout>
-    <LinearLayout
-        android:layout_below="@+id/ReviewedLayout"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:gravity="center"
+                    android:fontFamily="@font/montserrat500"
+                    android:textSize="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Review a movie just watched"/>
+
+                <RatingBar
+                    android:layout_marginTop="20dp"
+                    android:layout_gravity="center"
+                    android:id="@+id/rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numStars="5"
+                    android:isIndicator="false"
+                    android:background="@color/background_color"
+                    android:progressBackgroundTint="@color/white"
+                    android:stepSize="1"
+                    android:progressTint="#FFFFAF34"
+                    />
+
+            </LinearLayout>
+    <ListView
+
+        android:scrollbars="none"
+        android:id="@+id/ReviewList"
+        android:layout_marginLeft="12dp"
         android:layout_width="match_parent"
-        android:layout_height="500dp"></LinearLayout>
+        android:layout_height="match_parent"
+        />
+    <!--  Comment List here-->
+<!--          -->
+<!--       </androidx.appcompat.widget.LinearLayoutCompat>-->
+<!--    <LinearLayout-->
+<!--        android:layout_below="@+id/ReviewedLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="500dp"></LinearLayout>-->
 
     <!-- Comment section at the top -->
-    <RelativeLayout
-        android:id="@+id/commentSectionLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="10dp"
-        >
+<!--    <RelativeLayout-->
+<!--        android:id="@+id/commentSectionLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
 
-        <!-- Profile Image -->
-        <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/profileImgView"
-            android:layout_width="40dp"
-            android:layout_alignParentStart="true"
-            android:layout_height="40dp"
-            android:src="@drawable/avatar"
-            android:layout_marginLeft="8dp"
-            />
-        <!-- Comment input field -->
-        <EditText
-            android:id="@+id/commentEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:padding="10dp"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/profileImgView"
-            android:inputType="textCapSentences|textMultiLine"
-            android:layout_toStartOf="@id/sendBtn"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="10dp"
-            android:textColor="@color/black"
-            android:hint="Add a comment..."
-            android:background="@drawable/roundstyle14_2"
-            app:layout_constraintLeft_toRightOf="@id/profileImgView" />
+<!--        android:layout_marginBottom="10dp"-->
+<!--        android:layout_below="@+id/ratingFilm"-->
+<!--        >-->
 
-        <ImageView
-            android:id="@+id/sendBtn"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginTop="6.5dp"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/sendmessage"
-            android:layout_alignParentEnd="true"
-            />
-    </RelativeLayout>
+<!--        &lt;!&ndash; Profile Image &ndash;&gt;-->
+<!--        <com.makeramen.roundedimageview.RoundedImageView-->
+<!--            android:id="@+id/profileImgView"-->
+<!--            android:layout_width="40dp"-->
+<!--            android:layout_alignParentStart="true"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:src="@drawable/avatar"-->
+<!--            android:layout_marginLeft="8dp"-->
+<!--            />-->
+<!--        &lt;!&ndash; Comment input field &ndash;&gt;-->
 
-</RelativeLayout>
+<!--        <EditText-->
+<!--            android:id="@+id/commentEditText"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:padding="10dp"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:layout_toEndOf="@id/profileImgView"-->
+<!--            android:inputType="textCapSentences|textMultiLine"-->
+<!--            android:layout_toStartOf="@id/sendBtn"-->
+<!--            android:layout_marginLeft="12dp"-->
+<!--            android:layout_marginRight="10dp"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:hint="Add a comment..."-->
+<!--            android:background="@drawable/roundstyle14_2"-->
+<!--            app:layout_constraintLeft_toRightOf="@id/profileImgView" />-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/sendBtn"-->
+<!--            android:layout_width="25dp"-->
+<!--            android:layout_height="25dp"-->
+<!--            android:layout_marginTop="6.5dp"-->
+<!--            android:layout_marginRight="10dp"-->
+<!--            android:src="@drawable/sendmessage"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            />-->
+<!--    </RelativeLayout>-->
+
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/serviceItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/roundstyle14_3"
+        android:layout_marginTop="10dp">
+        <ImageView
+            android:id="@+id/serviceImage"
+            android:layout_width="121dp"
+            android:layout_height="141dp"
+            android:src="@drawable/service_img"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"/>
+
+        <TextView
+            android:id="@+id/serviceName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MY COMBO 1"
+            android:fontFamily="@font/montserrat700"
+            android:textSize="17sp"
+            android:textColor="@color/black"
+            android:layout_toRightOf="@id/serviceImage"
+            android:layout_marginTop="15dp"/>
+
+        <TextView
+            android:id="@+id/serviceDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1 big popcorn + 1 big pepsi"
+            android:textSize="14sp"
+            android:fontFamily="@font/montserrat500"
+            android:layout_below="@id/serviceName"
+            android:textColor="@color/black"
+            android:layout_toRightOf="@id/serviceImage"/>
+
+        <TextView
+            android:id="@+id/servicePrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="89000 VNĐ"
+            android:fontFamily="@font/montserrat600"
+            android:textColor="@color/black"
+            android:layout_below="@id/serviceDetail"
+            android:layout_marginTop="80dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:textSize="17sp"/>
+
+        <ImageView
+            android:id="@+id/serviceMenu"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/promo_edit"
+            android:layout_alignParentRight="true"
+            />
+    </RelativeLayout>
+</RelativeLayout>

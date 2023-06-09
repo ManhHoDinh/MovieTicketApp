@@ -3,6 +3,7 @@ package com.example.movieticketapp.Activity.Movie;
 import static android.content.ContentValues.TAG;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
@@ -16,10 +17,13 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.movieticketapp.Adapter.FilmDetailPagerAdapter;
+import com.example.movieticketapp.Adapter.Helper;
 import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.Model.FilmModel;
+import com.example.movieticketapp.Model.InforBooked;
 import com.example.movieticketapp.R;
 import com.google.android.material.tabs.TabLayout;
+import com.google.api.Distribution;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -28,9 +32,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class InformationFilmActivity extends FragmentActivity {
+    int height = 0;
     ImageView backgroundImage;
     TextView nameTV;
     ImageView PosterImage;
@@ -49,6 +55,7 @@ public class InformationFilmActivity extends FragmentActivity {
         setContentView(R.layout.information_film_screen);
         Intent intent = getIntent();
         f = intent.getParcelableExtra(ExtraIntent.film);
+
         backgroundImage = findViewById(R.id.backgroundImage);
         nameTV= findViewById(R.id.filmName);
         PosterImage= findViewById(R.id.PosterImage);
@@ -64,11 +71,16 @@ public class InformationFilmActivity extends FragmentActivity {
         pager.setOffscreenPageLimit(3);
         getFilm(f.getId());
 
+       // Log.e("fdf", f.getStatus());
+
+
+
+
         refreshScreen();
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                finish();
             }
         });
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -120,10 +132,9 @@ public class InformationFilmActivity extends FragmentActivity {
 
         Picasso.get().load(f.getPosterImage()).fit().centerCrop().into(PosterImage);
 
-        ratingBar.setRating(Float.parseFloat(f.getVote()));
-
-        voteTV.setText("(" + String.valueOf(f.getVote())+")");
-
+        ratingBar.setRating(f.getVote());
+        DecimalFormat df = new DecimalFormat("0.0");
+        voteTV.setText("(" + df.format(f.getVote()) +")");
         genreTV.setText(f.getGenre());
 
         durationTime.setText(f.getDurationTime());

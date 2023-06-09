@@ -1,5 +1,7 @@
 package com.example.movieticketapp.Adapter;
 
+import android.app.Activity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +16,7 @@ public class Helper {
             return;
         }
         //set listAdapter in loop for getting final size
-        int totalHeight=100;
+        int totalHeight= 0;
         for (int size=0; size < myListAdapter.getCount(); size++) {
 
             View listItem=myListAdapter.getView(size, null, myListView);
@@ -28,4 +30,7 @@ public class Helper {
         myListView.setLayoutParams(params);
 
     }
+    static int heightInformation;
+
+
 }
