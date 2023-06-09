@@ -75,7 +75,7 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
         List<String> listTime = new ArrayList<String>();
         InforBooked.getInstance().listCinema = listCinema;
         Cinema item = getItem(position);
-        Log.e("fd", item.getName());
+
 
         try{
             if(Users.currentUser!=null)
@@ -90,10 +90,23 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
                                 listTime.add(formatter.format(i)+":" + formatter.format(j));
                             }
                     }
-                    FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext());
+                    FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext()){
+                        @Override
+                        public boolean canScrollVertically() {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean canScrollHorizontally() {
+                            return false;
+                        }
+
+                    };
                     layoutManager.setFlexDirection(FlexDirection.ROW);
                     layoutManager.setJustifyContent(JustifyContent.FLEX_START);
                     recyclerView.setLayoutManager(layoutManager);
+
+
                     FirebaseRequest.database.collection("Showtime").addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -104,6 +117,7 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
                                 listShowTime.add(showTime);
                       }
                             recyclerView.setAdapter(new TimeScheduleAdapter(listTime, null, film, item, itemView, null, null, listShowTime));
+
 
                         }
                     });
@@ -125,7 +139,18 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
                                     listTime.add(timeFormat.format(time.toDate()));
                                 }
                             }
-                            FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext());
+                            FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext()){
+                                @Override
+                                public boolean canScrollVertically() {
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean canScrollHorizontally() {
+                                    return false;
+                                }
+
+                            };
                             layoutManager.setFlexDirection(FlexDirection.ROW);
                             layoutManager.setJustifyContent(JustifyContent.FLEX_START);
                             recyclerView.setLayoutManager(layoutManager);

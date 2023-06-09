@@ -49,6 +49,7 @@ public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.Vi
     private Activity activity;
     private FilmModel film;
 
+
     private List<Integer> listSelected = new ArrayList<Integer>();
     public TimeBookedAdapter(List<String> listDate, @Nullable List<String> listTime, @Nullable FilmModel film, @Nullable Cinema cinema, @Nullable View view, @Nullable ListView timelistView, @Nullable Activity activity) {
         this.listDate = listDate;
@@ -73,38 +74,19 @@ public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.Vi
                     if(timeView != null){
 
                         if(listTime == null){
-
-
-
-
-
-
-
-
-
-                            if(prevType != cinema.getName()){
-
+                            //if(prevType != cinema.getName()){
                                 if(prevView != null){
-
-
                                     TextView tv = (TextView) prevView.findViewById(R.id.cinemaName);
                                     RecyclerView rv = (RecyclerView) prevView.findViewById(R.id.listTime);
-//                                    Log.e("f",String.valueOf(prevPosition) );
+                                    Log.e("f", tv.getText().toString());
                                     if(InforBooked.getInstance().prevPosition >-1){
                                         View v = rv.getLayoutManager().findViewByPosition(InforBooked.getInstance().prevPosition);
                                         Button btn  = v.findViewById(R.id.dateBtn);
                                         btn.setBackgroundColor(Color.TRANSPARENT);
                                         btn.setBackground(ContextCompat.getDrawable(dateBtn.getContext(), R.drawable.bg_tabview_button));
                                     }
-
-
-
-
                                 }
-
-
-
-                            }
+                           // }
                             InforBooked.getInstance().isTimeSelected = true;
                             InforBooked.getInstance().timeBooked = dateBtn.getText().toString();
                             InforBooked.getInstance().cinema = cinema;
@@ -146,7 +128,7 @@ public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.Vi
                                     timelistView.setAdapter(cinameNameAdapter);
                                     timelistView.setEnabled(false);
 
-                                    Helper.getListViewSize(timelistView);
+                                   // Helper.getListViewSize(timelistView, activity);
                                 }
 
 
@@ -184,12 +166,20 @@ public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.Vi
     public void onBindViewHolder(@NonNull TimeBookedAdapter.ViewHolder holder, int position) {
         if(listTime != null){
             holder.dateBtn.setText(listDate.get(position) + "\n" + listTime.get(position));
+            holder.Binding();
 
         }
         else{
             holder.dateBtn.setText(listDate.get(position));
+
+            if(holder.dateBtn.getText().toString().equals(InforBooked.getInstance().timeBooked) && cinema.getName().equals(prevType) ){
+                holder.dateBtn.setBackgroundColor(Color.TRANSPARENT);
+                holder.dateBtn.setBackground(ContextCompat.getDrawable(holder.dateBtn.getContext(), R.drawable.background_button));
+            }
+            else holder.Binding();
+
         }
-        holder.Binding();
+
 
     }
 

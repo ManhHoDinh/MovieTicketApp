@@ -3,7 +3,9 @@ package com.example.movieticketapp.Activity.Account;
 import static com.example.movieticketapp.Firebase.FirebaseRequest.mAuth;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Users;
+import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -30,7 +33,19 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class SplashActivity extends AppCompatActivity {
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListener, filter);
+        super.onStart();
+    }
 
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListener);
+        super.onStop();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

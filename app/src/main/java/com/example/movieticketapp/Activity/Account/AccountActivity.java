@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,12 +14,14 @@ import android.widget.TextView;
 
 import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
+import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 public class AccountActivity extends AppCompatActivity {
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
     LinearLayoutCompat EditProfile;
     LinearLayoutCompat MyWallet;
     LinearLayoutCompat HelpCentre;
@@ -26,7 +30,18 @@ public class AccountActivity extends AppCompatActivity {
     TextView Email;
     ImageView Avatar;
     ImageView BackBtn;
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListener, filter);
+        super.onStart();
+    }
 
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListener);
+        super.onStop();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

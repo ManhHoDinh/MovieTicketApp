@@ -3,6 +3,8 @@ package com.example.movieticketapp.Activity.Wallet;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.movieticketapp.Adapter.Helper;
 import com.example.movieticketapp.Adapter.PriceGridAdapter;
+import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -21,8 +24,16 @@ public class TopUpActivity extends AppCompatActivity {
     private GridView listPrice;
     private Button backBtn;
     private Button topUpBtn;
-
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
     private TextInputEditText textInputEditText;
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListener, filter);
+        super.onStart();
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

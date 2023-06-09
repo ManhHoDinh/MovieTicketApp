@@ -32,6 +32,7 @@ public class InforBooked {
         }
         return  instance;
     }
+
     public void removeExpireFilm(){
         CollectionReference showtimeCollection= FirebaseRequest.database.collection("Showtime");
         FirebaseRequest.database.collection("Showtime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {

@@ -22,6 +22,7 @@ import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.sliderViewHolder> {
@@ -47,8 +48,11 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.sliderView
     public void onBindViewHolder(@NonNull sliderViewHolder holder, int position) {
         holder.textView.setText(listPosts.get(position).getName());
         holder.SetImage(listPosts.get(position));
-        holder.rating.setRating(Float.parseFloat(listPosts.get(position).getVote()));
-        holder.ratingPoint.setText(listPosts.get(position).getVote()+"");
+        DecimalFormat df = new DecimalFormat("0.0");
+        float vote = listPosts.get(position).getVote();
+
+        holder.rating.setRating(vote);
+        holder.ratingPoint.setText(df.format(vote)+"");
     }
 
     @Override

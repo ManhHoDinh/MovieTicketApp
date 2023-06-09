@@ -9,6 +9,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +31,7 @@ import com.example.movieticketapp.Model.CheckoutFilmModel;
 import com.example.movieticketapp.Model.Cinema;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.Ticket;
+import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,6 +46,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import org.w3c.dom.Document;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -51,6 +55,7 @@ import java.util.Map;
 import java.util.Random;
 
 public class CheckoutWalletEnoughActivity extends AppCompatActivity {
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
     ImageView BtnBack;
     private String idDiscount;
     Button BtnCheckOut;
@@ -191,7 +196,8 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
         priceTv.setText(initPrice + " x " + seats.size());
         seatTv.setText(listSeat);
         totalTv.setText(String.valueOf(Math.round(total)) + " VNĐ");
-        movie.add(new CheckoutFilmModel(film.getName(),film.getVote(), film.getGenre(),film.getDurationTime(), film.getPosterImage()));
+        DecimalFormat df = new DecimalFormat("0.0");
+        movie.add(new CheckoutFilmModel(film.getName(), df.format(film.getVote()), film.getGenre(),film.getDurationTime(), film.getPosterImage()));
         adapter = new MovieCheckoutAdapter(getApplicationContext(), R.layout.checkout_movie_view, movie);
         movieInfoView.setAdapter(adapter);
         BtnBack.setOnClickListener(new View.OnClickListener() {
@@ -265,5 +271,17 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListener, filter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListener);
+        super.onStop();
     }
 }

@@ -12,7 +12,7 @@ public class FilmModel implements Parcelable {
 
     private String id;
     private  String BackGroundImage;
-    private String vote;
+    private float vote;
     private String genre;
     private String description;
 
@@ -24,7 +24,7 @@ public class FilmModel implements Parcelable {
 
 
 
-    public FilmModel(String id, String PrimaryImage, String name, String BackGroundImage, String PosterImage, String vote, String genre, String description, String durationTime, String status) {
+    public FilmModel(String id, String PrimaryImage, String name, String BackGroundImage, String PosterImage, float vote, String genre, String description, String durationTime, String status) {
         this.PrimaryImage = PrimaryImage;
         this.name = name;
         this.BackGroundImage = BackGroundImage;
@@ -41,7 +41,7 @@ public class FilmModel implements Parcelable {
         PrimaryImage = in.readString();
         name = in.readString();
         BackGroundImage = in.readString();
-        vote = in.readString();
+        vote = in.readFloat();
         genre = in.readString();
         description = in.readString();
         PosterImage=in.readString();
@@ -101,7 +101,7 @@ public class FilmModel implements Parcelable {
     public String getDescription() {
         return description;
     }
-    public String getVote() {
+    public float getVote() {
         return vote;
     }
 
@@ -123,7 +123,7 @@ public class FilmModel implements Parcelable {
         parcel.writeString(PrimaryImage);
         parcel.writeString(name);
         parcel.writeString(BackGroundImage);
-        parcel.writeString(vote);
+        parcel.writeFloat(vote);
         parcel.writeString(genre);
         parcel.writeString(description);
         parcel.writeString(PosterImage);
