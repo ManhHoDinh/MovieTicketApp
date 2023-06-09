@@ -40,6 +40,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.grpc.internal.LogExceptionRunnable;
+
 public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHolder> {
     private Activity activity;
     private String[] listType;
@@ -109,7 +111,6 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                     ComingFilms.clear();
                     for (QueryDocumentSnapshot documentSnapshot : value) {
                         FilmModel f = documentSnapshot.toObject(FilmModel.class);
-                        Log.d(f.getStatus(),f.getStatus());
                         if(f.getStatus().equals("playing"))
                             PlayingFilms.add(f);
                         else
@@ -132,8 +133,11 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                     for (QueryDocumentSnapshot documentSnapshot : value) {
                         FilmModel f = documentSnapshot.toObject(FilmModel.class);
                         if (f.getGenre().contains(type)) {
-                            if(f.getStatus().equals("playing"))
+                            if(f.getStatus().equals("playing")){
                                 PlayingFilms.add(f);
+
+                            }
+
                             else
                                 ComingFilms.add(f);
                         } else {
@@ -146,6 +150,7 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
     }
 
     void updateViewPager() {
+
         NowPlaying.setAdapter(new SliderAdapter(PlayingFilms, NowPlaying));
         NowPlaying.setClipToPadding(false);
         NowPlaying.setClipChildren(false);

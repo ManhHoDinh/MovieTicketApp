@@ -13,30 +13,40 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Adapter.PromotionAdapter;
+import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Discount;
+import com.example.movieticketapp.Model.UserAndDiscount;
 import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
 import com.example.movieticketapp.databinding.ActivityDiscountViewAllBinding;
 import com.example.movieticketapp.databinding.HomeScreenBinding;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 public class DiscountViewAll extends AppCompatActivity {
     ActivityDiscountViewAllBinding binding;
-    private RecyclerView promotionView;
+    private ListView promotionView;
     List<Discount> Discounts = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +54,7 @@ public class DiscountViewAll extends AppCompatActivity {
 
         binding = ActivityDiscountViewAllBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-
+        promotionView =(ListView) findViewById(R.id.promotionView);
         // below line is to call set on query text listener method.
         binding.searchField.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -67,35 +76,85 @@ public class DiscountViewAll extends AppCompatActivity {
                 finish();
             }
         });
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference PromoRef = db.collection(Discount.CollectionName);
-        PromoRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error != null) {
-                    // this method is called when error is not null
-                    // and we get any error
-                    // in this case we are displaying an error message.
-                    Toast.makeText(DiscountViewAll.this, "Error found is " + error, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                else
-                {
-                    Discounts.clear();
-                    for (DocumentSnapshot documentSnapshot : value)
-                    {
-                        Discount f = documentSnapshot.toObject(Discount.class);
-                        Discounts.add(f);
-                        Log.d(TAG, "data: " + f.getName());
-                    }
-                    promotionView =(RecyclerView) findViewById(R.id.promotionView);
-                    LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-                    promotionView.setAdapter(new PromotionAdapter(Discounts));
-                    promotionView.setLayoutManager(VerLayoutManager);
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        if(Users.currentUser!=null)
+        {
+            FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    Users currentUser = documentSnapshot.toObject(Users.class);
+                    if(((currentUser.getAccountType().toString()).equals("admin"))){
+                        FirebaseFirestore.getInstance().collection(Discount.CollectionName).addSnapshotListener(new EventListener<QuerySnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                List<Discount> listDiscounts = new ArrayList<Discount>();
+                                for(DocumentSnapshot doc : value){
+                                    Discount f = doc.toObject(Discount.class);
+                                    listDiscounts.add(f);
+
+                                }
+                                PromotionAdapter promotionAdapter = new PromotionAdapter(DiscountViewAll.this,R.layout.promo_item,listDiscounts);
+                                promotionView.setAdapter(promotionAdapter);
+
+                            }
+                        });
+                    }
+                    else{
+                        CollectionReference PromoRef = db.collection(UserAndDiscount.collectionName);
+                        Query query = PromoRef.whereEqualTo("userID", FirebaseRequest.mAuth.getUid());
+
+                        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                                List<String> listDiscountID = new ArrayList<>();
+                                for(DocumentSnapshot doc : value){
+                                    listDiscountID.add(doc.get("discountID").toString());
+                                    // DocumentReference document = FirebaseRequest.database.collection(Discount.CollectionName).document(doc.get("discountID").toString());
+                                }
+                                if(listDiscountID.size() > 0){
+                                    Query query2 = db.collection(Discount.CollectionName).whereIn("ID", listDiscountID);
+                                    query2.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                            for(DocumentSnapshot doc : value){
+                                                Discount f = doc.toObject(Discount.class);
+                                                Discounts.add(f);
+                                            }
+
+                                            //   LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+                                            // promotionView.setLayoutManager(VerLayoutManager);
+                                            Intent intent = getIntent();
+                                            PromotionAdapter promotionAdapter = new PromotionAdapter(DiscountViewAll.this,R.layout.promo_item,Discounts);
+                                            promotionView.setAdapter(promotionAdapter);
+                                            Double totalBook = intent.getDoubleExtra("total", 0);
+                                            if( totalBook != 0){
+                                                promotionView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                                    @Override
+                                                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                                        double finalTotal = totalBook * Discounts.get(i).getDiscountRate() /100;
+                                                        intent.putExtra("total", finalTotal);
+                                                        intent.putExtra("nameDiscount", Discounts.get(i).getName());
+                                                        intent.putExtra("idDiscount", Discounts.get(i).getID());
+                                                        setResult(RESULT_OK, intent);
+                                                        finish();
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    });
+                                }
+
+
+                            }
+                        });
+                    }
                 }
-            }
-        });
+            });
+        }
+
 
         binding.AddDiscount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,16 +190,26 @@ public class DiscountViewAll extends AppCompatActivity {
         // creating a new array list to filter our data.
         ArrayList<Discount> filteredlist = new ArrayList<Discount>();
 
-        // running a for loop to compare elements.
-        for (Discount item : Discounts) {
-            // checking if the entered string matched with any item of our recycler view.
-            if (item.getName().toLowerCase().contains(text.toLowerCase())) {
-                // if the item is matched we are
-                // adding it to our filtered list.
-                filteredlist.add(item);
+        FirebaseRequest.database.collection(Discount.CollectionName).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                List<Discount> list = new ArrayList<Discount>();
+                for(DocumentSnapshot doc : value){
+                    list.add(doc.toObject(Discount.class));
+                }
+                for (Discount item : list) {
+                    // checking if the entered string matched with any item of our recycler view.
+                    if (item.getName().toLowerCase().contains(text.toLowerCase())) {
+                        // if the item is matched we are
+                        // adding it to our filtered list.
+                        filteredlist.add(item);
+                    }
+                }
+                promotionView.setAdapter(new PromotionAdapter(DiscountViewAll.this,R.layout.promo_item, filteredlist));
             }
-        }
-            promotionView.setAdapter(new PromotionAdapter(filteredlist));
+        });
+        // running a for loop to compare elements.
+
 
     }
 }

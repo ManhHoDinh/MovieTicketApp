@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.movieticketapp.Activity.HomeActivity;
+import com.example.movieticketapp.Activity.Notification.NotificationActivity;
 import com.example.movieticketapp.Activity.Ticket.MyTicketAllActivity;
 import com.example.movieticketapp.Adapter.MovieBookedAdapter;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
@@ -45,6 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyWalletActivity extends AppCompatActivity {
+
     private ListView listMovieBooked;
     private FloatingActionButton topUpBtn;
     private BottomNavigationView bottomNavigationView;
@@ -102,6 +104,11 @@ public class MyWalletActivity extends AppCompatActivity {
                     startActivity(new Intent(MyWalletActivity.this, MyTicketAllActivity.class));
                     overridePendingTransition(0,0);
                     break;
+                case R.id.NotificationPage:
+                    startActivity(new Intent(MyWalletActivity.this, NotificationActivity.class));
+                    overridePendingTransition(0, 0);
+                    break;
+
             }
             return true;
         });

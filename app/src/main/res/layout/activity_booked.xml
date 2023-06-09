@@ -7,87 +7,91 @@
     android:layout_height="match_parent"
     android:background="@color/background_color"
     >
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_marginHorizontal="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnNext"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="0dp">
+        <androidx.appcompat.widget.AppCompatButton
+            android:text=""
+            android:layout_marginTop="40dp"
+            android:id="@+id/backbutton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="left"
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_marginHorizontal="24dp"
-            android:orientation="vertical"
+            android:background="@drawable/back_icon" />
+        <TextView
+            android:id="@+id/nameFilmtv"
+            android:layout_marginTop="20dp"
+            android:layout_marginHorizontal="60dp"
+            android:textColor="@color/white"
+            android:textSize="24dp"
+            android:gravity="center"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            app:boxBackgroundColor="@color/background_color"
+            app:boxCornerRadiusBottomEnd="20dp"
+            app:boxCornerRadiusBottomStart="20dp"
+            app:boxCornerRadiusTopEnd="20dp"
+            app:boxCornerRadiusTopStart="20dp"
+            app:hintTextColor="@color/white"
+            app:boxStrokeColor="@drawable/border_input"
+            app:boxStrokeWidth="1dp"
+            android:textColorHint="@color/white"
+            app:startIconDrawable="@drawable/location"
+            app:startIconTint="@color/white"
+
+            app:endIconDrawable="@drawable/down_arrow"
+            app:endIconTint="@color/white"
+            android:hint="@string/selected_item"
             android:layout_height="wrap_content">
-            <androidx.appcompat.widget.AppCompatButton
-                android:text=""
-                android:layout_marginTop="40dp"
-                android:id="@+id/backbutton"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="left"
-
-                android:background="@drawable/back_icon" />
-            <TextView
-                android:id="@+id/nameFilmtv"
-                android:layout_marginTop="20dp"
-                android:layout_marginHorizontal="60dp"
-
+            <AutoCompleteTextView
+                android:inputType="none"
                 android:textColor="@color/white"
-                android:textSize="24dp"
-                android:gravity="center"
+                android:id="@+id/countryAutoTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                app:boxBackgroundColor="@color/background_color"
-                app:boxCornerRadiusBottomEnd="20dp"
-                app:boxCornerRadiusBottomStart="20dp"
-                app:boxCornerRadiusTopEnd="20dp"
-                app:boxCornerRadiusTopStart="20dp"
-                app:hintTextColor="@color/white"
-                app:boxStrokeColor="@drawable/border_input"
-                app:boxStrokeWidth="1dp"
-                android:textColorHint="@color/white"
-                app:startIconDrawable="@drawable/location"
-                app:startIconTint="@color/white"
+        </com.google.android.material.textfield.TextInputLayout>
+        <TextView
+            android:paddingTop="24dp"
+            android:text="Choose date"
+            style="@style/titleStyle"
+            />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/dayRecycleView"
+            android:nestedScrollingEnabled="false"
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-                app:endIconDrawable="@drawable/down_arrow"
-                app:endIconTint="@color/white"
-                android:hint="@string/selected_item"
-                android:layout_height="wrap_content">
-                <AutoCompleteTextView
-                    android:inputType="none"
-                    android:textColor="@color/white"
-                    android:id="@+id/countryAutoTv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </com.google.android.material.textfield.TextInputLayout>
-            <TextView
-                android:paddingTop="24dp"
-                android:text="Choose date"
-                style="@style/titleStyle"
-                />
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/dayRecycleView"
-                android:nestedScrollingEnabled="false"
-                android:layout_marginTop="16dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+
             <ListView
-                android:nestedScrollingEnabled="false"
                 android:scrollbars="none"
                 android:id="@+id/cinemaLv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
-            <ImageButton
-                android:id="@+id/btnNext"
-                android:layout_width="64.22923636363636dp"
-                android:layout_height="64.22923636363636dp"
-                android:text=""
-                android:layout_marginTop="20dp"
 
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/roundstyle50"
-                android:backgroundTint="@color/button_background_color"
-                android:rotationY="180"
-                android:src="@drawable/ic_back"/>
-        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+    <ImageButton
+        android:id="@+id/btnNext"
+        android:layout_width="64.22923636363636dp"
+        android:layout_height="64.22923636363636dp"
+        android:text=""
+        android:layout_marginBottom="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/roundstyle50"
+        android:backgroundTint="@color/button_background_color"
+        android:rotationY="180"
+        android:src="@drawable/ic_back"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,45 +8,69 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.media.Image;
+import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.MediaController;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.example.movieticketapp.Activity.HomeActivity;
-import com.example.movieticketapp.Activity.Ticket.MyTicketAllActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
-import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.firestore.CollectionReference;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.media.MediaHttpUploader;
+import com.google.api.client.googleapis.media.MediaHttpUploaderProgressListener;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.InputStreamContent;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.protobuf.Any;
 import com.makeramen.roundedimageview.RoundedImageView;
-import com.squareup.picasso.Picasso;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 
-import org.w3c.dom.Text;
+//import com.google.api.client.json.jackson2.JacksonFactory;
+//import com.google.api.services.youtube.YouTube;
+//import com.google.api.services.youtube.YouTubeScopes;
+//import com.google.api.services.youtube.model.Video;
+//import com.google.api.services.youtube.model.VideoSnippet;
+//import com.google.api.services.youtube.model.VideoStatus;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.GeneralSecurityException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+
+
+
 public class AddMovieActivity extends AppCompatActivity {
+    private static final String CLIENT_SECRETS_FILE = "client_secret.json";
+    private static final String APPLICATION_NAME = "Your Application Name";
     private BottomNavigationView bottomNavigationView;
     int th;
     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
@@ -64,7 +88,8 @@ public class AddMovieActivity extends AppCompatActivity {
     EditText movieName;
     EditText movieKind;
     EditText movieDurarion;
-    EditText movieStatus;
+    Button statusmovie;
+    String status;
     RoundedImageView movieactor;
     ImageView imcast;
     TextView textcast;
@@ -87,7 +112,6 @@ public class AddMovieActivity extends AppCompatActivity {
     UploadTask uploadTask;
     UploadTask uploadTask2;
     boolean error = false;
-    boolean finish = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +148,7 @@ public class AddMovieActivity extends AppCompatActivity {
         movieName = (EditText) findViewById(R.id.movieName);
         movieKind = (EditText) findViewById(R.id.movieKind);
         movieDurarion =(EditText) findViewById(R.id.movieDuration);
-        movieStatus = (EditText) findViewById(R.id.moviestatus);
+        statusmovie = (Button) findViewById(R.id.btnstatus);
         applyButton = (Button) findViewById(R.id.applybutton);
         cancleButton = (Button) findViewById(R.id.cancelbutton);
 
@@ -138,63 +162,69 @@ public class AddMovieActivity extends AppCompatActivity {
 
         ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
                 registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
-                    if (uri != null) {
-                        switch (th) {
-                            case 0:
-                                moviebackground.setImageURI(uri);
-                                backgrounduri = uri;
-                                break;
-                            case 1:
-                                movieavatar.setImageURI(uri);
-                                avataruri = uri;
-                                break;
-                            case 2:
-                                movieactor.setImageURI(uri);
-                                actoruri = uri;
-                                break;
-                            case 3:
-                                movietrailer.setVideoURI(uri);
-                                traileruri = uri;
-                                break;
-                        }
+                            if (uri != null) {
+                                switch (th) {
+                                    case 0:
+                                        moviebackground.setImageURI(uri);
+                                        backgrounduri = uri;
+                                        break;
+                                    case 1:
+                                        movieavatar.setImageURI(uri);
+                                        avataruri = uri;
+                                        break;
+                                    case 2:
+                                        movieactor.setImageURI(uri);
+                                        actoruri = uri;
+                                        break;
+                                    case 3:
+                                        movietrailer.setBackground(null);
+                                        movietrailer.setVideoURI(uri);
+                                        traileruri = uri;
+                                        movietrailer.start();
 
-                    } else {
-                        Log.d("PhotoPicker", "No media selected");
-                    }
-                }
-            );
+                                        MediaController mediaController = new MediaController(this);
+                                        movietrailer.setMediaController(mediaController);
+                                        mediaController.setAnchorView(movietrailer);
+                                        break;
+                                }
+
+                            } else {
+                                Log.d("PhotoPicker", "No media selected");
+                            }
+                        }
+                );
 
 
         moviebackground.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pickMedia.launch(new PickVisualMediaRequest.Builder()
-                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-                        .build());
+//                pickMedia.launch(new PickVisualMediaRequest.Builder()
+//                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+//                        .build());
                 th = 0;
                 textbg.setText("");
                 imbg.setImageResource(0);
-                 
+
             }
         });
         movieavatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pickMedia.launch(new PickVisualMediaRequest.Builder()
-                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-                        .build());
+//                pickMedia.launch(new PickVisualMediaRequest.Builder()
+//                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+//                        .build());
                 th = 1;
                 textavt.setText("");
                 imavt.setImageResource(0);
-                 
+
             }
         });
         movieactor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pickMedia.launch(new PickVisualMediaRequest.Builder()
-                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-                        .build());
+//                pickMedia.launch(new PickVisualMediaRequest.Builder()
+//                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+//                        .build());
                 th = 2;
                 textcast.setText("");
                 imcast.setImageResource(0);
@@ -203,12 +233,18 @@ public class AddMovieActivity extends AppCompatActivity {
         movietrailer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pickMedia.launch(new PickVisualMediaRequest.Builder()
-                        .setMediaType(ActivityResultContracts.PickVisualMedia.VideoOnly.INSTANCE)
-                        .build());
+//                pickMedia.launch(new PickVisualMediaRequest.Builder()
+//                        .setMediaType(ActivityResultContracts.PickVisualMedia.VideoOnly.INSTANCE)
+//                        .build());
                 th = 3;
                 texttrailer.setText("");
                 imtrailer.setImageResource(0);
+            }
+        });
+        statusmovie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ShowMenu();
             }
         });
         applyButton.setOnClickListener(new View.OnClickListener() {
@@ -226,10 +262,10 @@ public class AddMovieActivity extends AppCompatActivity {
                     movieDurarion.setError("Movie Duration cannot be empty!!!");
                     error = true;
                 }
-                if (movieStatus.length() == 0) {
-                    movieStatus.setError("Movie Status cannot be empty!!!");
+                if (status.length() == 0){
                     error = true;
                 }
+
 
                 if (!error)
                 {
@@ -304,6 +340,27 @@ public class AddMovieActivity extends AppCompatActivity {
             }
         });
     }
+    private void ShowMenu(){
+        PopupMenu pm = new PopupMenu(this, statusmovie);
+        pm.getMenuInflater().inflate(R.menu.status_movie_menu, pm.getMenu());
+        pm.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.itemplaying:
+                        status = "playing";
+                        statusmovie.setText("Now Playing");
+                        break;
+                    case R.id.itemcoming:
+                        status = "coming";
+                        statusmovie.setText("Coming Soon!");
+                        break;
+                }
+                return false;
+            }
+        });
+        pm.show();
+    }
 
     private void SaveDatatoDatabase() {
         document = databaseReference.document("Movies/"+movieName.getText().toString());
@@ -316,14 +373,108 @@ public class AddMovieActivity extends AppCompatActivity {
         data.put("genre", movieKind.getText().toString());
         data.put("id", movieName.getText().toString());
         data.put("name", movieName.getText().toString());
-        data.put("status", movieStatus.getText().toString());
+        data.put("status", status);
         data.put("vote", "0");
         document.set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
                 Toast.makeText(getApplicationContext(), "Add Movie Success!", Toast.LENGTH_SHORT).show();
-
             }
         });
     }
+
+//    private void uploadVideoToYouTube(Uri videoUri) {
+//        // Khởi tạo YouTube API client
+//        YouTube youtube = null;
+//        try {
+//            youtube = buildYouTubeClient();
+//        } catch (IOException | GeneralSecurityException e) {
+//            e.printStackTrace();
+//        }
+//
+//        // Tạo một đối tượng Video để đại diện cho video sẽ được tải lên
+//        MediaStore.Video video = new MediaStore.Video();
+//
+//        // Thiết lập thông tin về video (tiêu đề, mô tả, v.v.)
+//        VideoSnippet snippet = new VideoSnippet();
+//        snippet.setTitle("Your Video Title");
+//        snippet.setDescription("Your Video Description");
+//        video.setSnippet(snippet);
+//
+//        // Thiết lập trạng thái của video (công khai, riêng tư, v.v.)
+//        VideoStatus status = new VideoStatus();
+//        status.setPrivacyStatus("private"); // Có thể thay đổi giá trị này
+//        video.setStatus(status);
+//
+//        // Tạo nội dung video từ đường dẫn Uri
+//        InputStreamContent mediaContent = null;
+//        try {
+//            InputStream videoInputStream = getContentResolver().openInputStream(videoUri);
+//            mediaContent = new InputStreamContent("video/*", videoInputStream);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        try {
+//            // Tạo yêu cầu API để tải lên video
+//            YouTube.Videos.Insert videoInsert = youtube.videos()
+//                    .insert("snippet,status", video, mediaContent);
+//
+//            // Thiết lập cấu hình tải lên
+//            MediaHttpUploader uploader = videoInsert.getMediaHttpUploader();
+//            uploader.setDirectUploadEnabled(false);
+//            uploader.setProgressListener(new MediaHttpUploaderProgressListener() {
+//                @Override
+//                public void progressChanged(MediaHttpUploader uploader) throws IOException {
+//                    switch (uploader.getUploadState()) {
+//                        case INITIATION_STARTED:
+//                            System.out.println("Initiation Started");
+//                            break;
+//                        case INITIATION_COMPLETE:
+//                            System.out.println("Initiation Completed");
+//                            break;
+//                        case MEDIA_IN_PROGRESS:
+//                            System.out.println("Upload in progress: " + uploader.getProgress());
+//                            break;
+//                        case MEDIA_COMPLETE:
+//                            System.out.println("Upload Completed!");
+//                            break;
+//                        case NOT_STARTED:
+//                            System.out.println("Upload Not Started!");
+//                            break;
+//                    }
+//                }
+//            });
+//
+//            // Thực hiện yêu cầu API để tải lên video
+//            MediaStore.Video returnedVideo = videoInsert.execute();
+//
+//            // Lấy ID của video đã tải lên
+//            String videoId = returnedVideo.getId();
+//            System.out.println("Video upload successful! Video ID: " + videoId);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    private YouTube buildYouTubeClient() throws IOException, GeneralSecurityException {
+//        HttpTransport httpTransport = new NetHttpTransport();
+//        JsonFactory jsonFactory = new JacksonFactory();
+//
+//        // Đường dẫn đến tệp client_secret.json
+//        InputStream in = new FileInputStream(CLIENT_SECRETS_FILE);
+//        GoogleCredential credential = GoogleCredential.fromStream(in)
+//                .createScoped(Collections.singleton(YouTubeScopes.YOUTUBE_UPLOAD))
+//                .createDelegated("your_account@example.com"); // Thay thế bằng email của tài khoản Google
+//
+//        // Xây dựng YouTube API client
+//        return new YouTube.Builder(httpTransport, jsonFactory, credential)
+//                .setApplicationName(APPLICATION_NAME)
+//                .build();
+//    }
 }
+
+
+
+
+

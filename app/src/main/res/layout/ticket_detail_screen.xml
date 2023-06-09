@@ -231,11 +231,11 @@
                 android:layout_marginBottom="13dp"
                 />
             <ImageView
-                android:layout_width="199dp"
-                android:layout_height="199dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:id="@+id/QRCode"
-                android:src="@drawable/qrcode"/>
+               />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -255,6 +255,7 @@
                 android:textSize="20dp"
                 android:textColor="@color/white"
                 android:layout_gravity="center"/>
+
         </LinearLayout>
 
     </LinearLayout>

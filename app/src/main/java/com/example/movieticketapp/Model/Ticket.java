@@ -8,7 +8,7 @@ import java.sql.Time;
 public class Ticket {
     //protected String name;
     protected Timestamp time;
-    protected String cinema;
+    protected String cinemaID;
     //protected String poster;
    // protected double rate;
    // protected String kind;
@@ -31,11 +31,11 @@ public class Ticket {
 //        this.duration = duration;
 //        this.rate = rate;
 //    }
-public Ticket( Timestamp time, String cinema, String seat, String paid, String idorder, String filmID, String userID)
+public Ticket( Timestamp time, String cinemaID, String seat, String paid, String idorder, String filmID, String userID)
 {
     this.filmID = filmID;
     this.time = time;
-    this.cinema = cinema;
+    this.cinemaID = cinemaID;
     this.seat = seat;
     this.paid = paid;
     this.idorder = idorder;
@@ -60,8 +60,8 @@ public Ticket( Timestamp time, String cinema, String seat, String paid, String i
 //        return poster;
 //    }
 
-    public String getCinema() {
-        return cinema;
+    public String getCinemaID() {
+        return cinemaID;
     }
 
 //    public String getName() {
@@ -91,7 +91,7 @@ public Ticket( Timestamp time, String cinema, String seat, String paid, String i
     }
 
     public void setCinema(String cinema) {
-        this.cinema = cinema;
+        this.cinemaID = cinema;
     }
 
 //    public void setName(String name) {

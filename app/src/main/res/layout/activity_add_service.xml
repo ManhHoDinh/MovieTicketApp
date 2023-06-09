@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.Discount.AddDiscount"
+    android:background="@color/dark_background_1"
+    >
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="37dp"
+        android:id="@+id/header"
+        >
+        <!--        <ImageView-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:src="@drawable/back_icon"-->
+        <!--            app:layout_constraintTop_toTopOf="parent"-->
+        <!--            app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--            android:layout_marginLeft="26dp"-->
+        <!--            android:id="@+id/backButton"-->
+        <!--            android:layout_marginTop="5dp"-->
+        <!--            />-->
+        <TextView
+            android:id="@+id/titleFoodDrink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Food/Drink"
+            android:layout_gravity="center"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:textColor="@color/white"
+            android:textSize="24dp"
+            android:textFontWeight="600"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintTop_toBottomOf="@+id/header"
+        android:background="@color/white_opacity_70"
+        android:layout_marginTop="20dp"
+        android:id="@+id/headerLine"
+
+        />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/headerLine"
+        android:layout_marginLeft="44dp"
+        android:layout_marginRight="44dp"
+        >
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                >
+                <TextView
+                    android:id="@+id/serviceTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Food/Drink name"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:textSize="20dp"
+                    android:lineHeight="24dp"
+                    />
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/serviceTitle"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:cardCornerRadius="15dp"
+                    android:layout_marginTop="18dp"
+                    >
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:id="@+id/NameOfService"
+                        android:layout_height="50dp"
+                        android:background="@color/text_input"
+                        android:textColor="@color/black"
+                        android:textSize="16dp"
+                        android:textColorHint="@color/black"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="15dp"
+                        android:hint="Name"
+                        android:maxLines="2"
+                        />
+
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                >
+                <TextView
+                    android:id="@+id/ImageTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Food/Drink Image"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:textSize="20dp"
+                    android:lineHeight="24dp"
+                    />
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/ImageTitle"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:cardCornerRadius="15dp"
+                    android:layout_marginTop="18dp"
+                    >
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/ImageOfService"
+                        android:layout_width="174dp"
+                        android:layout_height="148dp"
+                        android:src="@drawable/foodinput"/>
+
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                >
+                <TextView
+                    android:id="@+id/DetailTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Food/Drink Detail"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:textSize="20dp"
+                    android:lineHeight="24dp"
+                    />
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/DetailTitle"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:cardCornerRadius="15dp"
+                    android:layout_marginTop="18dp"
+                    >
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/DetailOfService"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:background="@color/text_input"
+                        android:textSize="16dp"
+                        android:textColor="@color/black"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="15dp"
+                        android:textColorHint="@color/black"
+                        android:hint="Write food/drink detail here..."
+                        android:maxLines="5"
+                        android:gravity="top|left"
+                        />
+
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                >
+                <TextView
+                    android:id="@+id/priceTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Price"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:textSize="20dp"
+                    android:lineHeight="24dp"
+                    />
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/priceTitle"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:cardCornerRadius="15dp"
+                    android:layout_marginTop="18dp"
+                    >
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:id="@+id/PriceOfService"
+                        android:layout_height="50dp"
+                        android:textColor="@color/black"
+                        android:background="@color/text_input"
+                        android:textSize="16dp"
+                        android:textColorHint="@color/black"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="15dp"
+                        android:hint="VNĐ"
+                        android:maxLines="2"
+                        />
+
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp">
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="15dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    >
+                    <TextView
+                        android:id="@+id/ServiceConfirmButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Confirm"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:background="@color/main_color"
+                        android:paddingHorizontal="40dp"
+                        android:paddingVertical="20dp"
+                        android:textSize="20dp"
+                        />
+                </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="15dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    >
+                    <TextView
+                        android:id="@+id/ServiceCancelButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cancel"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:background="@color/grey_background_2"
+                        android:paddingHorizontal="40dp"
+                        android:paddingVertical="20dp"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        />
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="100dp"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

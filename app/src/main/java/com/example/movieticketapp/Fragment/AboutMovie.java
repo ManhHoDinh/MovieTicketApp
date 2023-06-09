@@ -46,18 +46,21 @@ import java.util.List;
 public class AboutMovie extends Fragment {
     FilmModel film;
 
+
     RecyclerView videoListView;
 
     String[] videoList;
     public AboutMovie(FilmModel f) {
         // Required empty public constructor
         film = f;
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_about_movie, container, true);
     }
 
@@ -68,6 +71,13 @@ public class AboutMovie extends Fragment {
         description.setText(film.getDescription());
         Button BookBt = getView().findViewById(R.id.BookBt);
         List<String> videoList = new ArrayList<>();
+
+        if(film.getStatus().equals("coming")) {
+
+            BookBt.setVisibility(View.GONE);
+        }
+            else BookBt.setVisibility(View.VISIBLE);
+
         videoListView = getView().findViewById(R.id.videoList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext(), RecyclerView.HORIZONTAL, false);
         VideoAdapter videoAdapter = new VideoAdapter();
@@ -97,7 +107,7 @@ public class AboutMovie extends Fragment {
 
 
         try{
-            Log.d("account type", Users.currentUser.getAccountType());
+
             if(Users.currentUser!=null)
                 if(((Users.currentUser.getAccountType().toString()).equals("admin")))
                 {
@@ -137,7 +147,8 @@ public class AboutMovie extends Fragment {
         i.putExtra("selectedFilm", film);
         i.putExtra("nameFilm", film.getName());
         getView().getContext().startActivity(i);
-    }void schedule()
+    }
+    void schedule()
     {
         Intent i = new Intent(getView().getContext(), ShowTimeScheduleActivity.class);
         i.putExtra("selectedFilm", film);

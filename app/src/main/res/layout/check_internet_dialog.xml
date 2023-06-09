@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@color/background_color"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/rectangle_5"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/no_intetnet_ic"
+            />
+        <TextView
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No internet Connection!"
+            android:textSize="20dp"
+            android:fontFamily="@font/montserrat500"
+            android:textColor="@color/white"/>
+        <TextView
+            android:layout_marginTop="12dp"
+            android:layout_marginHorizontal="24dp"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="You are not connected to the internet. Check your connection or try again."
+            android:textSize="16dp"
+            android:fontFamily="@font/montserrat500"
+            android:textColor="@color/white"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/retryBtn"
+            style="@android:style/Widget.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="80dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_background"
+            android:fontFamily="@font/montserrat_regular"
+            android:gravity="center"
+            android:text="Try Again"
+            android:textColor="@color/white_background"
+            android:textFontWeight="500"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+    
+</LinearLayout>

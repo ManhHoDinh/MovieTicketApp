@@ -6,8 +6,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,9 +27,11 @@ import com.example.movieticketapp.Adapter.CinameNameAdapter;
 import com.example.movieticketapp.Adapter.Helper;
 import com.example.movieticketapp.Adapter.TimeBookedAdapter;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
+import com.example.movieticketapp.Model.Cinema;
 import com.example.movieticketapp.Model.City;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.InforBooked;
+import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
@@ -41,7 +46,7 @@ import java.util.List;
 import java.util.Queue;
 
 public class BookedActivity extends AppCompatActivity {
-
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
     private List<String> listCity;
     private AutoCompleteTextView countryAutoTv;
     private RecyclerView dayRecycleView;
@@ -53,7 +58,23 @@ public class BookedActivity extends AppCompatActivity {
     private Button backBtn;
     protected static String binhdd;
     private String monthName;
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListener, filter);
+        super.onStart();
+    }
 
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListener);
+        super.onStop();
+        InforBooked.getInstance().isDateSelected = false;
+        InforBooked.getInstance().isTimeSelected = false;
+        InforBooked.getInstance().isCitySelected = false;
+        InforBooked.getInstance().prevPosition = -1;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,7 +112,6 @@ public class BookedActivity extends AppCompatActivity {
         }
         cinemaLv = (ListView) findViewById(R.id.cinemaLv);
         TimeBookedAdapter timeBookedAdapter = new TimeBookedAdapter(listDate, listTime,null, null, null, cinemaLv, BookedActivity.this);
-
         dayRecycleView.setAdapter(new TimeBookedAdapter(listDate, listTime, null,null, null, cinemaLv, BookedActivity.this));
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         dayRecycleView.setLayoutManager(layoutManager);
@@ -106,13 +126,13 @@ public class BookedActivity extends AppCompatActivity {
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            if(InforBooked.getInstance().dateBooked == null || InforBooked.getInstance().timeBooked == null ){
-                Toast.makeText(BookedActivity.this, "Please choote time and date!", Toast.LENGTH_SHORT).show();
+            if(!InforBooked.getInstance().isTimeSelected|| !InforBooked.getInstance().isDateSelected || !InforBooked.getInstance().isCitySelected ){
+                Toast.makeText(BookedActivity.this, "Please choose time and date!", Toast.LENGTH_SHORT).show();
             }
             else{
                 Intent intent = new Intent(BookedActivity.this, BookSeatActivity.class);
                 intent.putExtra("selectedFilm", selectedFilm);
-                intent.putExtra("nameCinema", InforBooked.getInstance().nameCinema);
+                intent.putExtra("cinema", (Parcelable) InforBooked.getInstance().cinema);
                 intent.putExtra("dateBooked", InforBooked.getInstance().dateBooked);
                 intent.putExtra("timeBooked", InforBooked.getInstance().timeBooked);
                 startActivity(intent);
@@ -147,25 +167,25 @@ public class BookedActivity extends AppCompatActivity {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+                            InforBooked.getInstance().isCitySelected = true;
 
-
-                            List<String> listCinemaName = new ArrayList<String>();
+                            List<Cinema> listCinema = new ArrayList<Cinema>();
                             FirebaseRequest.database.collection("Cinema").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
                                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                     List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
                                     for(DocumentSnapshot doc : listDocs){
                                         if(doc.get("CityID").equals(list.get(i).getID())){
-                                           listCinemaName.add(String.valueOf(doc.get("Name")));
+                                            Cinema cinemaItem = doc.toObject(Cinema.class);
+                                           listCinema.add(cinemaItem);
 
                                         }
                                     }
-
-                                        CinameNameAdapter cinameNameAdapter = new CinameNameAdapter(BookedActivity.this, R.layout.cinema_booked_item,listCinemaName, selectedFilm.getName());
+                                        CinameNameAdapter cinameNameAdapter = new CinameNameAdapter(BookedActivity.this, R.layout.cinema_booked_item,listCinema, selectedFilm);
                                         cinemaLv.setAdapter(cinameNameAdapter);
-                                        cinemaLv.setEnabled(false);
 
-                                        Helper.getListViewSize(cinemaLv);
+
+                                        //Helper.getListViewSize(cinemaLv, BookedActivity.this);
 
 
 
