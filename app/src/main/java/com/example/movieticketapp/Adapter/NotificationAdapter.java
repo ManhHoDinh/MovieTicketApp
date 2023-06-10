@@ -18,6 +18,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.movieticketapp.Activity.Notification.EditNotificationActivity;
+import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.Model.NotificationModel;
 import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
@@ -25,16 +27,30 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull NotificationAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        holder.NameTV.setText(Notifications.get(position).getHeading());
         Log.d(Notifications.get(position).getHeading(),Notifications.get(position).getHeading());
-        holder.DescriptionTV.setText(Notifications.get(position).getDescription());
+        holder.Description.setText(Notifications.get(position).getDescription());
+        holder.Heading.setText(Notifications.get(position).getHeading());
+        holder.PostAuthor.setText("By : "+Notifications.get(position).getPostAuthor());
+        Date date = Notifications.get(position).getPostTime().toDate();
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+        int Year = calendar.get(Calendar.YEAR);
+        int Month = calendar.get(Calendar.MONTH) + 1;
+        int Minute = calendar.get(Calendar.MINUTE);
+        int Hour = calendar.get(Calendar.HOUR);
+        int Day = calendar.get(Calendar.DATE);
+        String PostTimeString = String.valueOf(Hour)+":"+String.valueOf(Minute)+" - "+String.valueOf(Day)+"/"+String.valueOf(Month)+"/"+String.valueOf(Year);
+        holder.PostTime.setText(PostTimeString);
+
         //if user
         try{
-            Log.d("account type", Users.currentUser.getAccountType());
             if(Users.currentUser!=null)
                 if((!(Users.currentUser.getAccountType().toString()).equals("admin")))
                 {
@@ -64,9 +80,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()) {
                                 case R.id.promo_edit:
-                                    //handle menu1 click
                                 {
-
+                                    Intent i = new Intent(holder.itemView.getContext(), EditNotificationActivity.class);
+                                    i.putExtra(ExtraIntent.notification, Notifications.get(position));
+                                    holder.itemView.getContext().startActivity(i);
                                 }
                                 return true;
                                 case R.id.promo_delete:
@@ -84,7 +101,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                         public void onClick(View view) {
                                             FirebaseFirestore db = FirebaseFirestore.getInstance();
                                             CollectionReference PromoRef = db.collection(NotificationModel.CollectionName);
-                                            //PromoRef.document(Notifications.get(position).getID()).delete();
+                                            PromoRef.document(Notifications.get(position).getID()).delete();
                                             OptionDialog.dismiss();
                                         }
                                     });
@@ -119,17 +136,20 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         return Notifications.size();
     }
     public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView NameTV;
-        TextView DescriptionTV;
+        TextView Heading;
+        TextView Description;
+        TextView PostAuthor;
+        TextView PostTime;
         ImageView PromoMenu;
+
         View view;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            NameTV = itemView.findViewById(R.id.PromoName);
-            DescriptionTV = itemView.findViewById(R.id.PromoDescription);
+            Heading = itemView.findViewById(R.id.Heading);
+            Description = itemView.findViewById(R.id.Description);
             PromoMenu=itemView.findViewById(R.id.PromoMenu);
-
-
+            PostAuthor= itemView.findViewById(R.id.PostAuthor);
+            PostTime= itemView.findViewById(R.id.PostTime);
         }
     }
     @NonNull

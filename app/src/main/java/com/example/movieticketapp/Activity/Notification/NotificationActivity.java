@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,14 +16,20 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.movieticketapp.Activity.HomeActivity;
+import com.example.movieticketapp.Activity.Movie.ViewAllActivity;
 import com.example.movieticketapp.Activity.Report.ReportActivity;
 import com.example.movieticketapp.Activity.Ticket.MyTicketAllActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
 import com.example.movieticketapp.Adapter.NotificationAdapter;
+import com.example.movieticketapp.Adapter.PromotionAdapter;
+import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Discount;
 import com.example.movieticketapp.Model.NotificationModel;
+import com.example.movieticketapp.Model.UserAndDiscount;
 import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,6 +39,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -55,6 +63,7 @@ public class NotificationActivity extends AppCompatActivity {
         BottomNavigation();
         LoadNotification();
         AddNotification();
+        checkAccountType();
     }
     void AddNotification(){
         Description= findViewById(R.id.DescriptionET);
@@ -88,7 +97,7 @@ public class NotificationActivity extends AppCompatActivity {
 
                 FirebaseUser currentUser= FirebaseAuth.getInstance().getCurrentUser();
 
-                NotificationModel notification = new NotificationModel(doc.getId(), Heading.getText().toString(), currentUser.getDisplayName(), Description.getText().toString(), Timestamp.now());
+                NotificationModel notification = new NotificationModel(doc.getId(), Heading.getText().toString(),  Description.getText().toString(),currentUser.getDisplayName(), Timestamp.now());
                 doc.set(notification.toJson())
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -161,6 +170,29 @@ public class NotificationActivity extends AppCompatActivity {
             }
             return true;
         });
+    }
+    void checkAccountType() {
+        try {
+            Log.d("account type", Users.currentUser.getAccountType());
+            if (Users.currentUser != null)
+                if ((!(Users.currentUser.getAccountType().toString()).equals("admin"))) {
+                    HideAddNotificationLayout();
+            }
+
+        } catch (Exception e) {
+            HideAddNotificationLayout();
+        }
+
+    }
+    void HideAddNotificationLayout()
+    {
+        LinearLayoutCompat AddNotificationLayout= findViewById(R.id.AddNotificationLayout);
+        ViewGroup.LayoutParams serviceParams = AddNotificationLayout.getLayoutParams();
+        serviceParams.height = 0;
+        AddNotificationLayout.setLayoutParams(serviceParams);
+        AddNotificationLayout.setVisibility(View.INVISIBLE);
+        TextView NotificationTitle = findViewById(R.id.NotificationTitle);
+        NotificationTitle.setText("From Manager");
     }
 
 }

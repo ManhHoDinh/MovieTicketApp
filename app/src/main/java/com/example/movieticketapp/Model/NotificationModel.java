@@ -1,11 +1,16 @@
 package com.example.movieticketapp.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import com.google.firebase.Timestamp;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class NotificationModel {
+public class NotificationModel implements Parcelable {
     String ID;
     Timestamp PostTime;
     String Heading;
@@ -20,6 +25,27 @@ public class NotificationModel {
         this.PostAuthor=PostAuthor;
         this.PostTime=PostTime;
     }
+
+    protected NotificationModel(Parcel in) {
+        ID = in.readString();
+        PostTime = in.readParcelable(Timestamp.class.getClassLoader());
+        Heading = in.readString();
+        Description = in.readString();
+        PostAuthor = in.readString();
+    }
+
+    public static final Creator<NotificationModel> CREATOR = new Creator<NotificationModel>() {
+        @Override
+        public NotificationModel createFromParcel(Parcel in) {
+            return new NotificationModel(in);
+        }
+
+        @Override
+        public NotificationModel[] newArray(int size) {
+            return new NotificationModel[size];
+        }
+    };
+
     public  void setDescription(String Description)
     {
         this.Description = Description;
@@ -55,5 +81,19 @@ public class NotificationModel {
         json.put("PostAuthor", PostAuthor);
         return  json;
     };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel parcel, int i) {
+        parcel.writeString(ID);
+        parcel.writeParcelable(PostTime, i);
+        parcel.writeString(Heading);
+        parcel.writeString(Description);
+        parcel.writeString(PostAuthor);
+    }
 
 }
