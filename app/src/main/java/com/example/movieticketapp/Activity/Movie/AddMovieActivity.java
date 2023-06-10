@@ -71,7 +71,6 @@ import java.util.Map;
 public class AddMovieActivity extends AppCompatActivity {
     private static final String CLIENT_SECRETS_FILE = "client_secret.json";
     private static final String APPLICATION_NAME = "Your Application Name";
-    private BottomNavigationView bottomNavigationView;
     int th;
     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     StorageReference storageReference2 = FirebaseStorage.getInstance().getReference();
@@ -119,22 +118,6 @@ public class AddMovieActivity extends AppCompatActivity {
         setContentView(R.layout.add_movie_screen);
         TextView cas = (TextView) findViewById(R.id.castCrewTV);
         cas.setText("Cast & Crew");
-
-        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
-        bottomNavigationView.getMenu().getItem(2).setChecked(true);
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.homePage:
-                    startActivity(new Intent(this, HomeActivity.class));
-                    overridePendingTransition(0,0);
-                    break;
-                case R.id.walletPage:
-                    startActivity(new Intent(this, MyWalletActivity.class));
-                    overridePendingTransition(0,0);
-                    break;
-            }
-            return true;
-        });
 
         moviebackground = (ImageView) findViewById(R.id.moviebackground);
         textbg = (TextView) findViewById(R.id.textbackground);
@@ -198,9 +181,9 @@ public class AddMovieActivity extends AppCompatActivity {
         moviebackground.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                pickMedia.launch(new PickVisualMediaRequest.Builder()
-//                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-//                        .build());
+                pickMedia.launch(new PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                        .build());
                 th = 0;
                 textbg.setText("");
                 imbg.setImageResource(0);
@@ -210,9 +193,9 @@ public class AddMovieActivity extends AppCompatActivity {
         movieavatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                pickMedia.launch(new PickVisualMediaRequest.Builder()
-//                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-//                        .build());
+                pickMedia.launch(new PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                        .build());
                 th = 1;
                 textavt.setText("");
                 imavt.setImageResource(0);
@@ -222,9 +205,9 @@ public class AddMovieActivity extends AppCompatActivity {
         movieactor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                pickMedia.launch(new PickVisualMediaRequest.Builder()
-//                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-//                        .build());
+                pickMedia.launch(new PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                        .build());
                 th = 2;
                 textcast.setText("");
                 imcast.setImageResource(0);
@@ -233,9 +216,9 @@ public class AddMovieActivity extends AppCompatActivity {
         movietrailer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                pickMedia.launch(new PickVisualMediaRequest.Builder()
-//                        .setMediaType(ActivityResultContracts.PickVisualMedia.VideoOnly.INSTANCE)
-//                        .build());
+                pickMedia.launch(new PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.VideoOnly.INSTANCE)
+                        .build());
                 th = 3;
                 texttrailer.setText("");
                 imtrailer.setImageResource(0);
