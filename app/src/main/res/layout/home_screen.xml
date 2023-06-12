@@ -137,7 +137,7 @@
 
                         <TextView
                             style="@style/titleStyle"
-                            android:text="Coming soon"
+                            android:text="Coming Soon"
                             app:layout_constraintStart_toStartOf="parent" />
 
                         <TextView

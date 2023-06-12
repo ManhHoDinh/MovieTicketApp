@@ -65,6 +65,7 @@ public class AddCinemaActivity extends AppCompatActivity {
     private LinearLayout addCinemaLayout;
     private EditText priceCinema;
     private EditText addressCinema;
+    private Button backBtn;
 
     private final int PICK_IMAGE_REQUEST = 22;
     String cityID ;
@@ -122,6 +123,13 @@ public class AddCinemaActivity extends AppCompatActivity {
         Intent intent = getIntent();
         cityID = intent.getStringExtra("cityID");
         cinemaEdit = intent.getParcelableExtra("cinema");
+        backBtn = findViewById(R.id.backbutton);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         confirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -148,7 +156,6 @@ public class AddCinemaActivity extends AppCompatActivity {
             }
         });
     }
-
     void initValue(){
         nameCinema = findViewById(R.id.cinemaNameEt);
         imageCinema = findViewById(R.id.cinemaImage);

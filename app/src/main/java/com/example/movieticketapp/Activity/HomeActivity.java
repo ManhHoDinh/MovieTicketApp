@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.example.movieticketapp.Activity.Account.AccountActivity;
 import com.example.movieticketapp.Activity.City.AddCityActivity;
 import com.example.movieticketapp.Activity.City.CinemaOfCity;
+import com.example.movieticketapp.Activity.City.CityViewAllActivity;
 import com.example.movieticketapp.Activity.Discount.AddDiscount;
 import com.example.movieticketapp.Activity.Discount.DiscountViewAll;
 import com.example.movieticketapp.Activity.Movie.SearchActivity;
@@ -188,7 +189,13 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
         GetDiscounts();
-
+        viewAllCity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(HomeActivity.this, CityViewAllActivity.class);
+                startActivity(i);
+            }
+        });
 
 
 
@@ -275,9 +282,7 @@ public class HomeActivity extends AppCompatActivity {
         List<Discount> Discounts = new ArrayList<>();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-
-
+        
             FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {

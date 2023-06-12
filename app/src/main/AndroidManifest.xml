@@ -15,6 +15,9 @@
         android:theme="@style/Theme.MovieTicketApp"
         tools:targetApi="31">
         <activity
+            android:name=".Activity.City.CityViewAllActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.City.CinemaOfCity"
             android:exported="false" />
         <activity

@@ -43,7 +43,7 @@
         android:id="@+id/cityNameEt"
         android:layout_marginTop="24dp"
         style="@style/hintStyle"
-        android:hint="Cinema name"
+        android:hint="City name"
         android:textColorHint="@color/main_color"
         android:textColor="@color/main_color"
         android:paddingVertical="16dp"

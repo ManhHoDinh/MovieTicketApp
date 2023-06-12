@@ -54,6 +54,9 @@ public class AddCityActivity extends AppCompatActivity {
         backBtn = findViewById(R.id.backbutton);
         Intent intent = getIntent();
         city = intent.getParcelableExtra("city");
+        if(city != null){
+            cityNameEt.setText(city.getName());
+        }
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,9 +83,9 @@ public class AddCityActivity extends AppCompatActivity {
         DocumentReference doc ;
 
         if (city!=null)
-            doc = db.collection(Discount.CollectionName).document(city.getID());
+            doc = db.collection("City").document(city.getID());
         else{
-            doc = db.collection(Discount.CollectionName).document();
+            doc = db.collection("City").document();
         }
 
         City cityDoc = new City(doc.getId(), cityNameEt.getText().toString());
@@ -90,11 +93,8 @@ public class AddCityActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        if(city==null)
-                        {
-                            cityNameEt.setText("");
-                        }
-                        else
+
+
                             finish();
                     }
                 })
