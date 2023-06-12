@@ -22,12 +22,11 @@
             android:background="@drawable/back_icon" />
 
         <TextView
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:fontFamily="@font/montserrat600"
             android:gravity="center"
+            android:id="@+id/titleViewAll"
             android:text="Now playing"
             android:textSize="24dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>

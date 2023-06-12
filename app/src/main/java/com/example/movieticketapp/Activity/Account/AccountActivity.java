@@ -54,12 +54,15 @@ public class AccountActivity extends AppCompatActivity {
         Email=findViewById(R.id.email);
         BackBtn=findViewById(R.id.Back);
         FirebaseUser currentUser= FirebaseAuth.getInstance().getCurrentUser();
-        Name.setText(currentUser.getDisplayName());
-        Email.setText(currentUser.getEmail());
-        Avatar= findViewById(R.id.avatar);
-        if (currentUser.getPhotoUrl()!=null)
-        Picasso.get().load(currentUser.getPhotoUrl()).into(Avatar);
-        else Avatar.setImageResource(R.drawable.avatar);
+        if(currentUser != null){
+            Name.setText(currentUser.getDisplayName());
+            Email.setText(currentUser.getEmail());
+            Avatar= findViewById(R.id.avatar);
+            if (currentUser.getPhotoUrl()!=null)
+                Picasso.get().load(currentUser.getPhotoUrl()).into(Avatar);
+            else Avatar.setImageResource(R.drawable.avatar);
+        }
+
         BackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

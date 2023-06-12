@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.movieticketapp.Adapter.ViewAllAdapter;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
@@ -29,6 +30,7 @@ import java.util.List;
 public class ViewAllActivity extends AppCompatActivity {
     GridView filmGridview;
     Button backBtn;
+    TextView title;
 
 
 
@@ -38,9 +40,16 @@ public class ViewAllActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_all);
         filmGridview = findViewById(R.id.filmGridView);
         backBtn = findViewById(R.id.backbutton);
+        title = findViewById(R.id.titleViewAll);
        List<FilmModel> listFilm = new ArrayList<FilmModel>();
        Intent intent = getIntent();
        String status = intent.getStringExtra("status");
+       if(status.equals("playing")){
+           title.setText("Now Playing");
+       }
+       else {
+           title.setText("Coming Soon");
+       }
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -121,7 +121,8 @@
         android:id="@+id/CinemaTIL"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_width="130dp"
+        android:layout_width="wrap_content"
+
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         app:boxBackgroundColor="@color/main_color"
         app:boxCornerRadiusBottomEnd="20dp"
@@ -184,7 +185,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:id="@+id/YearTIL"
-
         android:layout_width="95dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         app:boxBackgroundColor="@color/main_color"

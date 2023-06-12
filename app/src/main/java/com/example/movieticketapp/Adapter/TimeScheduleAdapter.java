@@ -245,7 +245,7 @@ public class TimeScheduleAdapter extends RecyclerView.Adapter<TimeScheduleAdapte
 
                         break;
 
-                    }
+                    } else holder.Binding();
 //                    else {
 
 //                            else {

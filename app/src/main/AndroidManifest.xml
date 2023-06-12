@@ -22,7 +22,23 @@
             android:exported="false" />
         <activity
             android:name=".Activity.Notification.NotificationActivity"
+            android:name=".Activity.City.CityViewAllActivity"
             android:exported="false" />
+        <activity
+            android:name=".Activity.City.CinemaOfCity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.City.AddCityActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MovieProject.Main" />
+        <activity
+            android:name=".Activity.Cinema.AddCinemaActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MovieProject.Main" />
+        <activity
+            android:name=".Activity.Notification.NotificationActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MovieProject.Main" />
         <activity
             android:name=".Activity.Report.ReportActivity"
             android:exported="false"
@@ -74,6 +90,10 @@
             android:name=".Activity.Booking.SuccessCheckoutActivity"
             android:exported="true" />
         <activity
+            android:name=".Activity.Movie.AddMovieActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MovieProject.Main" />
+        <activity
             android:name=".Activity.Account.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.MovieProject.Main" />
@@ -108,7 +128,9 @@
             android:noHistory="true" />
         <activity android:name=".Activity.Account.UserProflingActivity" />
         <activity android:name=".Activity.Ticket.TicketDetailActivity" />
-        <activity android:name=".Activity.HomeActivity" />
+        <activity
+            android:name=".Activity.HomeActivity"
+            android:exported="true" />
         <activity android:name=".Activity.Wallet.MyWalletActivity" />
         <activity android:name=".Activity.Ticket.MyTicketAllActivity" />
     </application>
