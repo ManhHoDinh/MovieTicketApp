@@ -111,6 +111,12 @@
             android:name=".Activity.Booking.BookSeatActivity"
             android:exported="false"
             android:theme="@style/Theme.MovieProject.Main" />
+<<<<<<< HEAD
+        <activity
+            android:name=".Activity.Movie.AddMovieActivity"
+            android:exported="false" />
+=======
+>>>>>>> ea90e9b6ca4cd56459bc583fd56a7fcbcc955ea5
         <activity
             android:name=".Activity.Booking.BookedActivity"
             android:exported="true"
