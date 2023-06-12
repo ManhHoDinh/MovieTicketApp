@@ -1,11 +1,16 @@
 package com.example.movieticketapp.Activity.Movie;
 
+import static androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Image;
 import android.media.MediaPlayer;
@@ -14,11 +19,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -111,259 +119,306 @@ public class AddMovieActivity extends AppCompatActivity {
     UploadTask uploadTask;
     UploadTask uploadTask2;
     boolean error = false;
+    Button calendarButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_movie_screen);
-        TextView cas = (TextView) findViewById(R.id.castCrewTV);
-        cas.setText("Cast & Crew");
-
-        moviebackground = (ImageView) findViewById(R.id.moviebackground);
-        textbg = (TextView) findViewById(R.id.textbackground);
-        imbg = (ImageView) findViewById(R.id.imbackground);
-
-        movieavatar = (RoundedImageView) findViewById(R.id.movieavatar);
-        textavt = (TextView) findViewById(R.id.textavt);
-        imavt = (ImageView) findViewById(R.id.imavt);
-
-        description = (EditText) findViewById(R.id.moviedes);
-        movieName = (EditText) findViewById(R.id.movieName);
-        movieKind = (EditText) findViewById(R.id.movieKind);
-        movieDurarion =(EditText) findViewById(R.id.movieDuration);
-        statusmovie = (Button) findViewById(R.id.btnstatus);
-        applyButton = (Button) findViewById(R.id.applybutton);
-        cancleButton = (Button) findViewById(R.id.cancelbutton);
-
-        movieactor = (RoundedImageView) findViewById(R.id.movieactor);
-        imcast = (ImageView) findViewById(R.id.imcast);
-        textcast = (TextView) findViewById(R.id.textcast);
-
-        movietrailer = (VideoView) findViewById(R.id.movietrailer);
-        imtrailer = (ImageView) findViewById(R.id.imtrailer);
-        texttrailer = (TextView) findViewById(R.id.texttrailer);
-
-        ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
-                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
-                            if (uri != null) {
-                                switch (th) {
-                                    case 0:
-                                        moviebackground.setImageURI(uri);
-                                        backgrounduri = uri;
-                                        break;
-                                    case 1:
-                                        movieavatar.setImageURI(uri);
-                                        avataruri = uri;
-                                        break;
-                                    case 2:
-                                        movieactor.setImageURI(uri);
-                                        actoruri = uri;
-                                        break;
-                                    case 3:
-                                        movietrailer.setBackground(null);
-                                        movietrailer.setVideoURI(uri);
-                                        traileruri = uri;
-                                        movietrailer.start();
-
-                                        MediaController mediaController = new MediaController(this);
-                                        movietrailer.setMediaController(mediaController);
-                                        mediaController.setAnchorView(movietrailer);
-                                        break;
-                                }
-
-                            } else {
-                                Log.d("PhotoPicker", "No media selected");
-                            }
-                        }
-                );
-
-
-        moviebackground.setOnClickListener(new View.OnClickListener() {
+        calendarButton = findViewById(R.id.Calendar);
+       calendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                pickMedia.launch(new PickVisualMediaRequest.Builder()
-                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-                        .build());
-                th = 0;
-                textbg.setText("");
-                imbg.setImageResource(0);
-
+            public void onClick(View v) {
+                // Show calendar dialog
+                showCalendarDialog();
             }
         });
-        movieavatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pickMedia.launch(new PickVisualMediaRequest.Builder()
-                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-                        .build());
-                th = 1;
-                textavt.setText("");
-                imavt.setImageResource(0);
-
-            }
-        });
-        movieactor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pickMedia.launch(new PickVisualMediaRequest.Builder()
-                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-                        .build());
-                th = 2;
-                textcast.setText("");
-                imcast.setImageResource(0);
-            }
-        });
-        movietrailer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pickMedia.launch(new PickVisualMediaRequest.Builder()
-                        .setMediaType(ActivityResultContracts.PickVisualMedia.VideoOnly.INSTANCE)
-                        .build());
-                th = 3;
-                texttrailer.setText("");
-                imtrailer.setImageResource(0);
-            }
-        });
-        statusmovie.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ShowMenu();
-            }
-        });
-        applyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (movieName.length() == 0) {
-                    movieName.setError("Movie Name cannot be empty!!!");
-                    error = true;
-                }
-                if (movieKind.length() == 0) {
-                    movieKind.setError("Movie Kind cannot be empty!!!");
-                    error = true;
-                }
-                if (movieDurarion.length() == 0) {
-                    movieDurarion.setError("Movie Duration cannot be empty!!!");
-                    error = true;
-                }
-                if (status.length() == 0){
-                    error = true;
-                }
-
-
-                if (!error)
-                {
-                    Calendar calFordData = Calendar.getInstance();
-                    SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-yyyy");
-                    String saveCurrentData = currentDate.format(calFordData.getTime());
-
-                    Calendar calFordTime = Calendar.getInstance();
-                    SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm");
-                    String saveCurrentTime = currentTime.format(calFordData.getTime());
-
-                    String postRandomName = saveCurrentData + saveCurrentTime;
-
-                    storageReference = storageReference.child(postRandomName+".jpg");
-                    uploadTask = storageReference.putFile(backgrounduri);
-                    Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                        @Override
-                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                            if (!task.isSuccessful()) {
-                                throw task.getException();
-                            }
-
-                            // Continue with the task to get the download URL
-                            return storageReference.getDownloadUrl();
-                        }
-                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Uri> task) {
-                            if (task.isSuccessful()) {
-                                urlbackground = task.getResult().toString();
-                                SaveDatatoDatabase();
-                            } else {
-                                Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                    storageReference2 = storageReference2.child(postRandomName+"th2.jpg");
-                    uploadTask2 = storageReference2.putFile(avataruri);
-                    Task<Uri> urlTask2 = uploadTask2.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                        @Override
-                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                            if (!task.isSuccessful()) {
-                                throw task.getException();
-                            }
-
-                            // Continue with the task to get the download URL
-                            return storageReference2.getDownloadUrl();
-                        }
-                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Uri> task) {
-                            if (task.isSuccessful()) {
-                                urlavatar = task.getResult().toString();
-                                SaveDatatoDatabase();
-                            } else {
-                                Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                }
-                else
-                {
-                    Toast toast = Toast.makeText(getApplicationContext(), "Have some errors!!!", Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            }
-        });
-        cancleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
+//        TextView cas = (TextView) findViewById(R.id.castCrewTV);
+//        cas.setText("Cast & Crew");
+//
+//        moviebackground = (ImageView) findViewById(R.id.moviebackground);
+//        textbg = (TextView) findViewById(R.id.textbackground);
+//        imbg = (ImageView) findViewById(R.id.imbackground);
+//
+//        movieavatar = (RoundedImageView) findViewById(R.id.movieavatar);
+//        textavt = (TextView) findViewById(R.id.textavt);
+//        imavt = (ImageView) findViewById(R.id.imavt);
+//
+//        description = (EditText) findViewById(R.id.moviedes);
+//        movieName = (EditText) findViewById(R.id.movieName);
+//        movieKind = (EditText) findViewById(R.id.movieKind);
+//        movieDurarion =(EditText) findViewById(R.id.movieDuration);
+//        statusmovie = (Button) findViewById(R.id.btnstatus);
+//        applyButton = (Button) findViewById(R.id.applybutton);
+//        cancleButton = (Button) findViewById(R.id.cancelbutton);
+//
+//        movieactor = (RoundedImageView) findViewById(R.id.movieactor);
+//        imcast = (ImageView) findViewById(R.id.imcast);
+//        textcast = (TextView) findViewById(R.id.textcast);
+//
+//        movietrailer = (VideoView) findViewById(R.id.movietrailer);
+//        imtrailer = (ImageView) findViewById(R.id.imtrailer);
+//        texttrailer = (TextView) findViewById(R.id.texttrailer);
+//
+//        ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
+//                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+//                            if (uri != null) {
+//                                switch (th) {
+//                                    case 0:
+//                                        moviebackground.setImageURI(uri);
+//                                        backgrounduri = uri;
+//                                        break;
+//                                    case 1:
+//                                        movieavatar.setImageURI(uri);
+//                                        avataruri = uri;
+//                                        break;
+//                                    case 2:
+//                                        movieactor.setImageURI(uri);
+//                                        actoruri = uri;
+//                                        break;
+//                                    case 3:
+//                                        movietrailer.setBackground(null);
+//                                        movietrailer.setVideoURI(uri);
+//                                        traileruri = uri;
+//                                        movietrailer.start();
+//
+//                                        MediaController mediaController = new MediaController(this);
+//                                        movietrailer.setMediaController(mediaController);
+//                                        mediaController.setAnchorView(movietrailer);
+//                                        break;
+//                                }
+//
+//                            } else {
+//                                Log.d("PhotoPicker", "No media selected");
+//                            }
+//                        }
+//                );
+//
+//
+//        moviebackground.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                pickMedia.launch(new PickVisualMediaRequest.Builder()
+//                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+//                        .build());
+//                th = 0;
+//                textbg.setText("");
+//                imbg.setImageResource(0);
+//
+//            }
+//        });
+//        movieavatar.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                pickMedia.launch(new PickVisualMediaRequest.Builder()
+//                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+//                        .build());
+//                th = 1;
+//                textavt.setText("");
+//                imavt.setImageResource(0);
+//
+//            }
+//        });
+//        movieactor.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+////                pickMedia.launch(new PickVisualMediaRequest.Builder()
+////                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+////                        .build());
+//                th = 2;
+//                textcast.setText("");
+//                imcast.setImageResource(0);
+//            }
+//        });
+//        movietrailer.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+////                pickMedia.launch(new PickVisualMediaRequest.Builder()
+////                        .setMediaType(ActivityResultContracts.PickVisualMedia.VideoOnly.INSTANCE)
+////                        .build());
+//                th = 3;
+//                texttrailer.setText("");
+//                imtrailer.setImageResource(0);
+//            }
+//        });
+//        statusmovie.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                ShowMenu();
+//            }
+//        });
+//        applyButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (movieName.length() == 0) {
+//                    movieName.setError("Movie Name cannot be empty!!!");
+//                    error = true;
+//                }
+//                if (movieKind.length() == 0) {
+//                    movieKind.setError("Movie Kind cannot be empty!!!");
+//                    error = true;
+//                }
+//                if (movieDurarion.length() == 0) {
+//                    movieDurarion.setError("Movie Duration cannot be empty!!!");
+//                    error = true;
+//                }
+//                if (status.length() == 0){
+//                    error = true;
+//                }
+//
+//
+//                if (!error)
+//                {
+//                    Calendar calFordData = Calendar.getInstance();
+//                    SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-yyyy");
+//                    String saveCurrentData = currentDate.format(calFordData.getTime());
+//
+//                    Calendar calFordTime = Calendar.getInstance();
+//                    SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm");
+//                    String saveCurrentTime = currentTime.format(calFordData.getTime());
+//
+//                    String postRandomName = saveCurrentData + saveCurrentTime;
+//
+//                    storageReference = storageReference.child(postRandomName+".jpg");
+//                    uploadTask = storageReference.putFile(backgrounduri);
+//                    Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+//                        @Override
+//                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+//                            if (!task.isSuccessful()) {
+//                                throw task.getException();
+//                            }
+//
+//                            // Continue with the task to get the download URL
+//                            return storageReference.getDownloadUrl();
+//                        }
+//                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<Uri> task) {
+//                            if (task.isSuccessful()) {
+//                                urlbackground = task.getResult().toString();
+//                                SaveDatatoDatabase();
+//                            } else {
+//                                Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
+//                    storageReference2 = storageReference2.child(postRandomName+"th2.jpg");
+//                    uploadTask2 = storageReference2.putFile(avataruri);
+//                    Task<Uri> urlTask2 = uploadTask2.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+//                        @Override
+//                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+//                            if (!task.isSuccessful()) {
+//                                throw task.getException();
+//                            }
+//
+//                            // Continue with the task to get the download URL
+//                            return storageReference2.getDownloadUrl();
+//                        }
+//                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<Uri> task) {
+//                            if (task.isSuccessful()) {
+//                                urlavatar = task.getResult().toString();
+//                                SaveDatatoDatabase();
+//                            } else {
+//                                Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
+//                }
+//                else
+//                {
+//                    Toast toast = Toast.makeText(getApplicationContext(), "Have some errors!!!", Toast.LENGTH_SHORT);
+//                    toast.show();
+//                }
+//            }
+//        });
+//        cancleButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
+//    }
+//    private void ShowMenu(){
+//        PopupMenu pm = new PopupMenu(this, statusmovie);
+//        pm.getMenuInflater().inflate(R.menu.status_movie_menu, pm.getMenu());
+//        pm.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem menuItem) {
+//                switch (menuItem.getItemId()) {
+//                    case R.id.itemplaying:
+//                        status = "playing";
+//                        statusmovie.setText("Now Playing");
+//                        break;
+//                    case R.id.itemcoming:
+//                        status = "coming";
+//                        statusmovie.setText("Coming Soon!");
+//                        break;
+//                }
+//                return false;
+//            }
+//        });
+//        pm.show();
+//    }
+//
+//    private void SaveDatatoDatabase() {
+//        document = databaseReference.document("Movies/"+movieName.getText().toString());
+//        Map<String, Object> data = new HashMap<String, Object>();
+//        data.put("BackGroundImage", urlbackground);
+//        data.put("PosterImage", urlbackground);
+//        data.put("PrimaryImage", urlavatar);
+//        data.put("description", description.getText().toString());
+//        data.put("durationTime", movieDurarion.getText().toString());
+//        data.put("genre", movieKind.getText().toString());
+//        data.put("id", movieName.getText().toString());
+//        data.put("name", movieName.getText().toString());
+//        data.put("status", status);
+//        data.put("vote", "0");
+//        document.set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+//            @Override
+//            public void onSuccess(Void unused) {
+//                Toast.makeText(getApplicationContext(), "Add Movie Success!", Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
-    private void ShowMenu(){
-        PopupMenu pm = new PopupMenu(this, statusmovie);
-        pm.getMenuInflater().inflate(R.menu.status_movie_menu, pm.getMenu());
-        pm.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.itemplaying:
-                        status = "playing";
-                        statusmovie.setText("Now Playing");
-                        break;
-                    case R.id.itemcoming:
-                        status = "coming";
-                        statusmovie.setText("Coming Soon!");
-                        break;
-                }
-                return false;
-            }
-        });
-        pm.show();
-    }
+    private void showCalendarDialog() {
+        // Create a calendar instance and get the current date
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
-    private void SaveDatatoDatabase() {
-        document = databaseReference.document("Movies/"+movieName.getText().toString());
-        Map<String, Object> data = new HashMap<String, Object>();
-        data.put("BackGroundImage", urlbackground);
-        data.put("PosterImage", urlbackground);
-        data.put("PrimaryImage", urlavatar);
-        data.put("description", description.getText().toString());
-        data.put("durationTime", movieDurarion.getText().toString());
-        data.put("genre", movieKind.getText().toString());
-        data.put("id", movieName.getText().toString());
-        data.put("name", movieName.getText().toString());
-        data.put("status", status);
-        data.put("vote", "0");
-        document.set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+        // Create a custom DatePickerDialog
+        DatePickerDialog datePickerDialog = new DatePickerDialog(AddMovieActivity.this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
+                        // Handle the selected date
+                        // You can update the button text or perform any other actions here
+                        // selectedYear, selectedMonth, and selectedDay contain the selected date
+                    }
+                }, year, month, dayOfMonth) {
             @Override
-            public void onSuccess(Void unused) {
-                Toast.makeText(getApplicationContext(), "Add Movie Success!", Toast.LENGTH_SHORT).show();
+            public void onCreate(Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
+
+                // Get the "OK" button from the dialog's layout
+                Button positiveButton = getButton(DialogInterface.BUTTON_POSITIVE);
+                Button negativeButton = getButton(DialogInterface.BUTTON_NEGATIVE);
+
+                // Set the desired background color for the button
+                positiveButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.green));
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
+                layoutParams.setMarginStart((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics()));
+                positiveButton.setLayoutParams(layoutParams);
+                negativeButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.grey_background_1));
             }
-        });
+        };
+
+        // Show the dialog
+        datePickerDialog.show();
+        calendarButton.setText(String.valueOf(year));
     }
 
 //    private void uploadVideoToYouTube(Uri videoUri) {

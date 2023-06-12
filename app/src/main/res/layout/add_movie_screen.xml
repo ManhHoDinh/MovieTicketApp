@@ -204,18 +204,15 @@
                         android:text="Status: "/>
 
                     <Button
-                        android:id="@+id/btnstatus"
+                        android:id="@+id/Calendar"
                         android:layout_width="250dp"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/background_color"
                         android:gravity="center"
-                        android:text="Choose status of movie"
+                        android:text="Choose Date"
                         android:textColor="@color/white" />
 
                 </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -229,77 +226,38 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <com.makeramen.roundedimageview.RoundedImageView
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="15dp"
+                    >
+                    <EditText
+                        android:id="@+id/MovieDescription"
                         android:layout_width="match_parent"
                         android:layout_height="171dp"
-                        app:riv_corner_radius="20dp"
-                        android:background="@drawable/background_add_movie2"
-                        android:scaleType="fitXY"/>
-
-                    <EditText
-                        android:id="@+id/moviedes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginEnd="5dp"
-                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/background_no_image"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="10dp"
                         android:textColorLink="@color/white"
                         android:fontFamily="@font/montserrat_regular"
                         android:hint="Write movie description here"
-                        android:textColorHint="@color/white"
+                        android:textColorHint="@color/grey_background_1"
+                        android:textAlignment="center"
                         android:textColor="@color/white"
+                        android:overScrollMode="always"
+                        android:scrollbarStyle="insideInset"
+                        android:scrollbars="vertical"
                         android:textSize="14dp" />
-                </RelativeLayout>
-                <TextView
-                    android:layout_marginTop="25dp"
-                    android:layout_marginBottom="15dp"
-                    android:textColor="@color/white"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/castCrewTV"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:textSize="18dp"
-                    android:textFontWeight="900"
-                    android:textStyle="bold"/>
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <com.makeramen.roundedimageview.RoundedImageView
-                        android:layout_width="85dp"
-                        android:layout_height="85dp"
-                        app:riv_corner_radius="16dp"
-                        android:scaleType="fitXY"
-                        android:id="@+id/movieactor"
-                        android:background="@drawable/background_add_movie1"/>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:orientation="horizontal"
-                        >
-                        <ImageView
-                            android:layout_width="10dp"
-                            android:layout_height="10dp"
-                            android:src="@drawable/symbol_image"
-                            android:id="@+id/imcast"/>
-                        <TextView
-                            android:layout_marginLeft="3dp"
-                            android:textColor="@color/white"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Upload actor"
-                            android:textSize="9dp"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:id="@+id/textcast"/>
-                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
                 </RelativeLayout>
                 <TextView
                     android:textColor="@color/white"
-                    android:layout_marginTop="25dp"
                     android:layout_marginBottom="15dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
                     android:text="Trailer and Song"
                     android:fontFamily="@font/montserrat_regular"
                     android:textSize="18dp"
@@ -312,7 +270,7 @@
                         android:id="@+id/movietrailer"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:background="@drawable/background_add_movie2"/>
+                        android:background="@drawable/background_add_movie1"/>
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -336,15 +294,8 @@
                     </LinearLayout>
                 </RelativeLayout>
             </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="@color/background_color"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"/>
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:padding="24dp"
                 android:layout_height="wrap_content"
                 android:background="@color/very_dark_background">
                 <LinearLayout

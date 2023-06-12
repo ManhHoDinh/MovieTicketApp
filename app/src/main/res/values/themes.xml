@@ -10,6 +10,7 @@
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryDark">@color/main_color</item>
         <item name="colorAccent">@color/teal_200</item>
+
         <!-- Customize your theme here. -->
 <!--        <item name="android:autofilledHighlight">@android:color/transparent</item>-->
 <!--        <item name="popupMenuBackground">@drawable/menu_background</item>-->
