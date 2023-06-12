@@ -133,114 +133,94 @@ public class AddMovieActivity extends AppCompatActivity {
                 showCalendarDialog();
             }
         });
-//        TextView cas = (TextView) findViewById(R.id.castCrewTV);
-//        cas.setText("Cast & Crew");
-//
-//        moviebackground = (ImageView) findViewById(R.id.moviebackground);
-//        textbg = (TextView) findViewById(R.id.textbackground);
-//        imbg = (ImageView) findViewById(R.id.imbackground);
-//
-//        movieavatar = (RoundedImageView) findViewById(R.id.movieavatar);
-//        textavt = (TextView) findViewById(R.id.textavt);
-//        imavt = (ImageView) findViewById(R.id.imavt);
-//
-//        description = (EditText) findViewById(R.id.moviedes);
-//        movieName = (EditText) findViewById(R.id.movieName);
-//        movieKind = (EditText) findViewById(R.id.movieKind);
-//        movieDurarion =(EditText) findViewById(R.id.movieDuration);
-//        statusmovie = (Button) findViewById(R.id.btnstatus);
-//        applyButton = (Button) findViewById(R.id.applybutton);
-//        cancleButton = (Button) findViewById(R.id.cancelbutton);
-//
-//        movieactor = (RoundedImageView) findViewById(R.id.movieactor);
-//        imcast = (ImageView) findViewById(R.id.imcast);
-//        textcast = (TextView) findViewById(R.id.textcast);
-//
-//        movietrailer = (VideoView) findViewById(R.id.movietrailer);
-//        imtrailer = (ImageView) findViewById(R.id.imtrailer);
-//        texttrailer = (TextView) findViewById(R.id.texttrailer);
-//
-//        ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
-//                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
-//                            if (uri != null) {
-//                                switch (th) {
-//                                    case 0:
-//                                        moviebackground.setImageURI(uri);
-//                                        backgrounduri = uri;
-//                                        break;
-//                                    case 1:
-//                                        movieavatar.setImageURI(uri);
-//                                        avataruri = uri;
-//                                        break;
-//                                    case 2:
-//                                        movieactor.setImageURI(uri);
-//                                        actoruri = uri;
-//                                        break;
-//                                    case 3:
-//                                        movietrailer.setBackground(null);
-//                                        movietrailer.setVideoURI(uri);
-//                                        traileruri = uri;
-//                                        movietrailer.start();
-//
-//                                        MediaController mediaController = new MediaController(this);
-//                                        movietrailer.setMediaController(mediaController);
-//                                        mediaController.setAnchorView(movietrailer);
-//                                        break;
-//                                }
-//
-//                            } else {
-//                                Log.d("PhotoPicker", "No media selected");
-//                            }
-//                        }
-//                );
-//
-//
-//        moviebackground.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
+        moviebackground = (ImageView) findViewById(R.id.moviebackground);
+        textbg = (TextView) findViewById(R.id.textbackground);
+        imbg = (ImageView) findViewById(R.id.imbackground);
+
+        movieavatar = (RoundedImageView) findViewById(R.id.movieavatar);
+        textavt = (TextView) findViewById(R.id.textavt);
+        imavt = (ImageView) findViewById(R.id.imavt);
+
+        description = (EditText) findViewById(R.id.MovieDescription);
+        movieName = (EditText) findViewById(R.id.movieName);
+        movieKind = (EditText) findViewById(R.id.movieKind);
+        movieDurarion =(EditText) findViewById(R.id.movieDuration);
+        applyButton = (Button) findViewById(R.id.applybutton);
+        cancleButton = (Button) findViewById(R.id.cancelbutton);
+
+        movietrailer = (VideoView) findViewById(R.id.movietrailer);
+        imtrailer = (ImageView) findViewById(R.id.imtrailer);
+        texttrailer = (TextView) findViewById(R.id.texttrailer);
+
+        ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
+                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                            if (uri != null) {
+                                switch (th) {
+                                    case 0:
+                                        moviebackground.setImageURI(uri);
+                                        backgrounduri = uri;
+                                        break;
+                                    case 1:
+                                        movieavatar.setImageURI(uri);
+                                        avataruri = uri;
+                                        break;
+                                    case 2:
+                                        movieactor.setImageURI(uri);
+                                        actoruri = uri;
+                                        break;
+                                    case 3:
+                                        movietrailer.setBackground(null);
+                                        movietrailer.setVideoURI(uri);
+                                        traileruri = uri;
+                                        movietrailer.start();
+
+                                        MediaController mediaController = new MediaController(this);
+                                        movietrailer.setMediaController(mediaController);
+                                        mediaController.setAnchorView(movietrailer);
+                                        break;
+                                }
+
+                            } else {
+                                Log.d("PhotoPicker", "No media selected");
+                            }
+                        }
+                );
+
+        moviebackground.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pickMedia.launch(new PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                        .build());
+                th = 0;
+                textbg.setText("");
+                imbg.setImageResource(0);
+
+            }
+        });
+        movieavatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pickMedia.launch(new PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                        .build());
+                th = 1;
+                textavt.setText("");
+                imavt.setImageResource(0);
+
+            }
+        });
+        movietrailer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 //                pickMedia.launch(new PickVisualMediaRequest.Builder()
-//                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+//                        .setMediaType(ActivityResultContracts.PickVisualMedia.VideoOnly.INSTANCE)
 //                        .build());
-//                th = 0;
-//                textbg.setText("");
-//                imbg.setImageResource(0);
-//
-//            }
-//        });
-//        movieavatar.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                pickMedia.launch(new PickVisualMediaRequest.Builder()
-//                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-//                        .build());
-//                th = 1;
-//                textavt.setText("");
-//                imavt.setImageResource(0);
-//
-//            }
-//        });
-//        movieactor.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-////                pickMedia.launch(new PickVisualMediaRequest.Builder()
-////                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-////                        .build());
-//                th = 2;
-//                textcast.setText("");
-//                imcast.setImageResource(0);
-//            }
-//        });
-//        movietrailer.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-////                pickMedia.launch(new PickVisualMediaRequest.Builder()
-////                        .setMediaType(ActivityResultContracts.PickVisualMedia.VideoOnly.INSTANCE)
-////                        .build());
-//                th = 3;
-//                texttrailer.setText("");
-//                imtrailer.setImageResource(0);
-//            }
-//        });
+                th = 3;
+                texttrailer.setText("");
+                imtrailer.setImageResource(0);
+            }
+        });
 //        statusmovie.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
