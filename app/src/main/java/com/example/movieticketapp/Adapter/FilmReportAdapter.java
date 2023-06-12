@@ -135,19 +135,20 @@ public class FilmReportAdapter extends RecyclerView.Adapter<FilmReportAdapter.Vi
         itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.film_report_item, parent, false);
         return new FilmReportAdapter.ViewHolder(itemView);
     }
-    public interface OnDataChangedListener {
-        void onDataChanged(int totalPrice);
-    }
+//    public interface OnDataChangedListener {
+//        void onDataChanged(int totalPrice);
+//    }
 
-    private OnDataChangedListener onDataChangedListener;
+//    private OnDataChangedListener onDataChangedListener;
+//
+//    public void setOnDataChangedListener(OnDataChangedListener listener) {
+//        this.onDataChangedListener = listener;
+//    }
 
-    public void setOnDataChangedListener(OnDataChangedListener listener) {
-        this.onDataChangedListener = listener;
-    }
-    int TotalPrice=0;
-    public int getTotalPrice() {
-        return TotalPrice;
-    }
+//    public int getTotalPrice() {
+//        return TotalPrice;
+//    }
+
     void GetTotalTick(TextView ticketTV,TextView totalTV, FilmModel film) {
         final int[] ticket = {0};
         final int[] totalPrice = {0};
@@ -206,10 +207,10 @@ public class FilmReportAdapter extends RecyclerView.Adapter<FilmReportAdapter.Vi
                 NumberFormat numberFormat = new DecimalFormat("#,###");
                 ticketTV.setText("Ticket: " + numberFormat.format(ticket[0]));
                 totalTV.setText("Revenue: " + numberFormat.format(totalPrice[0]));
-                TotalPrice+= totalPrice[0];
-                if (onDataChangedListener != null) {
-                    onDataChangedListener.onDataChanged(TotalPrice);
-                }
+//                TotalPrice+= totalPrice[0];
+//                if (onDataChangedListener != null) {
+//                    onDataChangedListener.onDataChanged(TotalPrice);
+//                }
             }
         });
     }

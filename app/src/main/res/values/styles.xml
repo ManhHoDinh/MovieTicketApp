@@ -13,6 +13,14 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize"> 18dp</item>
         <item name="android:textColor">@color/white</item>
+        <item name="fontFamily"> @font/montserrat500</item>
+    </style>
+    <style name="hintStyle" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize"> 14dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="fontFamily"> @font/montserrat500</item>
     </style>
     <style name="Binh" parent="Widget.AppCompat.SearchView">
         <item name="closeIconTint">
@@ -23,6 +31,7 @@
     <style name="PopupMenuListView" parent="@android:style/Widget.Holo.ListView.DropDown">
         <item name="android:divider">#FF0000</item>
     </style>
+
 
     <!-- Change Overflow Menu ListView Text Size and Text Size -->
     <style name="PopupMenuTextView" parent="@style/Theme.MovieProject.Main">

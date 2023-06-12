@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background_color"
+    android:paddingHorizontal="24dp"
+    tools:context=".Activity.City.AddCityActivity">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="60dp"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_marginTop="4dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/backbutton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="left"
+            android:background="@drawable/back_icon" />
+        <TextView
+            android:layout_height="wrap_content"
+            android:text="Add city"
+            android:layout_marginTop="20dp"
+            android:layout_marginHorizontal="60dp"
+            android:textColor="@color/white"
+            android:textSize="24dp"
+            android:fontFamily="@font/montserrat600"
+            android:gravity="center"
+            android:layout_width="match_parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="type city"
+        android:layout_marginTop="24dp"
+        style="@style/titleStyle"/>
+    <EditText
+        android:id="@+id/cityNameEt"
+        android:layout_marginTop="24dp"
+        style="@style/hintStyle"
+        android:hint="City name"
+        android:textColorHint="@color/main_color"
+        android:textColor="@color/main_color"
+        android:paddingVertical="16dp"
+        android:paddingHorizontal="12dp"
+        android:background="@drawable/bg_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_marginTop="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/confirmBtn"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="24dp"
+            android:background="@drawable/button_background"
+            android:text="Confirm"
+            android:paddingVertical="10dp"
+            android:textAllCaps="false"
+            android:paddingHorizontal="40dp"
+            style="@style/titleStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/cancelBtn"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@drawable/background_disable"
+            android:text="Cancel"
+            android:paddingVertical="10dp"
+            android:textAllCaps="false"
+            android:layout_marginRight="24dp"
+            android:paddingHorizontal="40dp"
+            style="@style/titleStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

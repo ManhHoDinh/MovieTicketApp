@@ -53,6 +53,7 @@ import com.example.movieticketapp.Model.City;
 import com.example.movieticketapp.Model.Discount;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.ShowTime;
+import com.example.movieticketapp.Model.Ticket;
 import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -67,7 +68,12 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.sql.Array;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class ReportActivity extends AppCompatActivity {
@@ -84,6 +90,7 @@ public class ReportActivity extends AppCompatActivity {
     String selectedCinema="All Cinema";
     int SelectedMonth = 0;
     int SelectedYear = 0;
+    int total = 0;
 
 
     @Override
@@ -229,16 +236,94 @@ public class ReportActivity extends AppCompatActivity {
                 filmReports.setLayoutManager(VerLayoutManager);
                 FilmReportAdapter filmReportAdapter = new FilmReportAdapter(films, selectedCinema,SelectedMonth, SelectedYear);
                 filmReports.setAdapter(filmReportAdapter);
+                setTotalPrice();
 
-                filmReportAdapter.setOnDataChangedListener(new FilmReportAdapter.OnDataChangedListener() {
-                    @Override
-                    public void onDataChanged(int totalPrice) {
-                        TotalPrice.setText(String.valueOf(totalPrice));
-                    }
-                });
+//                filmReportAdapter.setOnDataChangedListener(new FilmReportAdapter.OnDataChangedListener() {
+//                    @Override
+//                    public void onDataChanged(int totalPrice) {
+//                        TotalPrice.setText(String.valueOf(totalPrice));
+//                    }
+//                });
             }
         });
     }
+    void setTotalPrice(){
+        List<Cinema> cinemas = new ArrayList<>();
+        total = 0;
+        firestore.collection("Cinema").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    return;
+                }
+
+                for (QueryDocumentSnapshot documentSnapshot : value) {
+                    Cinema c = documentSnapshot.toObject(Cinema.class);
+                    if(selectedCinema.equals("All Cinema"))
+                        cinemas.add(c);
+                    else if(c.getName().equals(selectedCinema))
+                        cinemas.add(c);
+                }
+            }
+        });
+
+        firestore.collection("Ticket").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    return;
+                }
+
+                for (QueryDocumentSnapshot documentSnapshot : value) {
+                    Ticket s = documentSnapshot.toObject(Ticket.class);
+                        String seat = s.getSeat();
+                        int count = seat.split(", ").length;
+                      //  count += seat.length() - s.getSeat().replace(",", "").length();
+                        //Initialize your Date however you like it.
+                        Date date = s.getTime().toDate();
+                        Calendar calendar = new GregorianCalendar();
+                        calendar.setTime(date);
+                        int TicketYear = calendar.get(Calendar.YEAR);
+                        int TicketMonth = calendar.get(Calendar.MONTH) + 1;
+
+                        for (int i = 0; i < cinemas.size(); i++)
+                            if (cinemas.get(i).getCinemaID().equals(s.getCinemaID())) {
+                                if(SelectedMonth==0)
+                                {
+                                    if(SelectedYear == 0)
+                                    {
+                                        total += cinemas.get(i).getPrice() * count;
+
+                                    }
+                                    else if(TicketYear==SelectedYear)
+                                    {
+                                        total += cinemas.get(i).getPrice() * count;
+                                    }
+                                }
+                                else if(TicketMonth==SelectedMonth)
+                                {
+                                    if(SelectedYear == 0)
+                                    {
+
+                                        total += cinemas.get(i).getPrice() * count;
+                                    }
+                                    else if(TicketYear==SelectedYear)
+                                    {
+
+                                        total += cinemas.get(i).getPrice() * count;
+                                    }
+                                }
+                            }
+
+                }
+                TotalPrice.setText(String.valueOf(total));
+//                if (onDataChangedListener != null) {
+//                    onDataChangedListener.onDataChanged(TotalPrice);
+//                }
+            }
+        });
+    }
+
     void BottomNavigation()
     {
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
@@ -319,6 +404,7 @@ public class ReportActivity extends AppCompatActivity {
                 LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
                 filmReports.setLayoutManager(VerLayoutManager);
                 filmReports.setAdapter(new FilmReportAdapter(films, selectedCinema,SelectedMonth, SelectedYear));
+                setTotalPrice();
             }
         });
 

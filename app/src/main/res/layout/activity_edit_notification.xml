@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    tools:context=".Activity.Notification.EditNotificationActivity">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/AddNotificationLayout"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        >
+        <androidx.constraintlayout.widget.ConstraintLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="24dp"
+            android:showDividers="middle"
+            android:layout_gravity="center"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Edit Notification"
+                android:textColor="@color/white"
+                android:textSize="24dp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/AccountImageBorder"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/AccountImageBorder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="100dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+
+                >
+
+                <ImageView
+                    android:id="@+id/accountImage"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="end"
+                    android:src="@drawable/avatar" />
+            </androidx.cardview.widget.CardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/grey_background_2"
+            />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            >
+            <TextView
+                android:id="@+id/HeadingTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Heading"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:textSize="18dp"
+                android:lineHeight="24dp"
+                />
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/HeadingTitle"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:cardCornerRadius="15dp"
+                android:layout_marginTop="18dp"
+                >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:id="@+id/HeadingET"
+                    android:textColor="@color/black"
+                    android:layout_height="50dp"
+                    android:background="@color/text_input"
+                    android:textSize="16dp"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="15dp"
+                    android:hint="Heading"
+                    android:maxLines="2"
+                    />
+
+            </androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            >
+            <TextView
+                android:id="@+id/DescriptionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:textSize="18dp"
+                android:lineHeight="24dp"
+                />
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/DescriptionTitle"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:cardCornerRadius="15dp"
+                android:layout_marginTop="18dp"
+                >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/DescriptionET"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@color/text_input"
+                    android:textSize="16dp"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="15dp"
+                    android:hint="Write description here..."
+                    android:maxLines="5"
+                    android:gravity="top|left"
+                    android:textColor="@color/black"
+                    />
+
+            </androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            >
+            <androidx.cardview.widget.CardView
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="20dp"
+                >
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/SaveBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Save"
+                    android:textAllCaps="false"
+                    android:background="@color/main_color"
+                    />
+            </androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

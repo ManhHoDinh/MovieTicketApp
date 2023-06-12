@@ -15,9 +15,30 @@
         android:theme="@style/Theme.MovieTicketApp"
         tools:targetApi="31">
         <activity
-            android:name=".Activity.Notification.NotificationActivity"
-            android:theme="@style/Theme.MovieProject.Main"
+            android:name=".Activity.Notification.EditNotificationActivity"
             android:exported="false" />
+        <activity
+            android:name=".Activity.Notification.NotificationDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.Notification.NotificationActivity"
+            android:name=".Activity.City.CityViewAllActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.City.CinemaOfCity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.City.AddCityActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MovieProject.Main" />
+        <activity
+            android:name=".Activity.Cinema.AddCinemaActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MovieProject.Main" />
+        <activity
+            android:name=".Activity.Notification.NotificationActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MovieProject.Main" />
         <activity
             android:name=".Activity.Report.ReportActivity"
             android:exported="false"
@@ -25,7 +46,7 @@
         <activity android:name=".Activity.Discount.DiscountViewAll" />
         <activity
             android:name=".Activity.Booking.ServiceActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Activity.ConfirmDialogActivity"
             android:exported="false" />
@@ -68,13 +89,18 @@
         <activity
             android:name=".Activity.Booking.SuccessCheckoutActivity"
             android:exported="true" />
-        <activity android:name=".Activity.Movie.AddMovieActivity"
+        <activity
+            android:name=".Activity.Movie.AddMovieActivity"
             android:exported="true"
-            android:theme="@style/Theme.MovieProject.Main"></activity>
+            android:theme="@style/Theme.MovieProject.Main" />
         <activity
             android:name=".Activity.Account.SplashActivity"
             android:exported="true"
-            android:theme="@style/Theme.MovieProject.Main">
+            android:theme="@style/Theme.MovieProject.Main" />
+        <activity
+            android:name=".Activity.Movie.AddMovieActivity"
+            android:exported="true"
+           >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -102,7 +128,9 @@
             android:noHistory="true" />
         <activity android:name=".Activity.Account.UserProflingActivity" />
         <activity android:name=".Activity.Ticket.TicketDetailActivity" />
-        <activity android:name=".Activity.HomeActivity" />
+        <activity
+            android:name=".Activity.HomeActivity"
+            android:exported="true" />
         <activity android:name=".Activity.Wallet.MyWalletActivity" />
         <activity android:name=".Activity.Ticket.MyTicketAllActivity" />
     </application>
