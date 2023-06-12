@@ -182,6 +182,7 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <ListView
+                        android:dividerHeight="12dp"
                         android:id="@+id/promotionView"
                         android:layout_width="match_parent"
                         android:layout_height="250dp"
@@ -227,6 +228,43 @@
 
                     <ImageView
                         android:id="@+id/AddService"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="70dp"
+                        android:src="@drawable/add_promo" />
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cityHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <TextView
+                            style="@style/titleStyle"
+                            android:text="Cities"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/cityViewAll"
+                            style="@style/titleStyle"
+                            android:gravity="center"
+                            android:text="View all"
+                            android:textColor="@color/sub_text_color"
+                            android:textSize="14dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <ListView
+                        android:dividerHeight="12dp"
+                        android:id="@+id/cityView"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        android:layout_marginTop="30dp" />
+
+                    <ImageView
+                        android:id="@+id/addCity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"

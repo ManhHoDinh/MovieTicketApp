@@ -5,6 +5,7 @@ import static android.content.ContentValues.TAG;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -25,6 +26,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.movieticketapp.Activity.Account.AccountActivity;
+import com.example.movieticketapp.Activity.City.AddCityActivity;
+import com.example.movieticketapp.Activity.City.CinemaOfCity;
 import com.example.movieticketapp.Activity.Discount.AddDiscount;
 import com.example.movieticketapp.Activity.Discount.DiscountViewAll;
 import com.example.movieticketapp.Activity.Movie.SearchActivity;
@@ -34,11 +37,14 @@ import com.example.movieticketapp.Activity.Report.ReportActivity;
 import com.example.movieticketapp.Activity.Service.AddService;
 import com.example.movieticketapp.Activity.Ticket.MyTicketAllActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
+import com.example.movieticketapp.Adapter.CityAdapter;
 import com.example.movieticketapp.Adapter.ListTypeAdapter;
 import com.example.movieticketapp.Adapter.PromotionAdapter;
 import com.example.movieticketapp.Adapter.ServiceAdapter;
 import com.example.movieticketapp.Adapter.posterAdapter;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
+import com.example.movieticketapp.Model.Cinema;
+import com.example.movieticketapp.Model.City;
 import com.example.movieticketapp.Model.Discount;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.Service;
@@ -85,6 +91,14 @@ public class HomeActivity extends AppCompatActivity {
     private TextView viewAllComingBtn;
     private ImageView addService;
     private RecyclerView serviceView;
+    private TextView viewAllCity;
+    private ImageView addCity;
+    private ListView cityView;
+
+    ConstraintLayout serviceHeader;
+    ConstraintLayout cityHeader;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +116,13 @@ public class HomeActivity extends AppCompatActivity {
         searchView=findViewById(R.id.searchField);
         serviceView = findViewById(R.id.ServiceView);
         addService = findViewById(R.id.AddService);
+        addCity = findViewById(R.id.addCity);
+        cityView = findViewById(R.id.cityView);
+        viewAllCity = findViewById(R.id.cityViewAll);
+        cityHeader = findViewById(R.id.cityHeader);
+        serviceHeader = findViewById(R.id.ServiceHeader);
+        checkTypeUser();
+
 
         searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -111,9 +132,12 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
-        if (currentUser.getPhotoUrl() != null)
-            Picasso.get().load(currentUser.getPhotoUrl()).into(accountImage);
-        else accountImage.setImageResource(R.drawable.avatar);
+        if(currentUser != null){
+            if (currentUser.getPhotoUrl() != null)
+                Picasso.get().load(currentUser.getPhotoUrl()).into(accountImage);
+            else accountImage.setImageResource(R.drawable.avatar);
+        }
+
 
         accountImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,7 +188,10 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
         GetDiscounts();
-        GetServices();
+
+
+
+
         addDiscount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -172,41 +199,14 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-        checkAccountType();
-    }
-
-    void checkAccountType() {
-        try {
-            Log.d("account type", Users.currentUser.getAccountType());
-            if (Users.currentUser != null)
-            {if ((!(Users.currentUser.getAccountType().toString()).equals("admin"))) {
-                    ViewGroup.LayoutParams params = binding.AddDiscount.getLayoutParams();
-                    params.height = 0;
-                    binding.AddDiscount.setLayoutParams(params);
-                    addDiscount.setVisibility(View.INVISIBLE);
-                    ViewGroup.LayoutParams serviceParams = binding.AddService.getLayoutParams();
-                    serviceParams.height = 0;
-                    binding.AddService.setLayoutParams(serviceParams);
-                    addService.setVisibility(View.INVISIBLE);
-                }
-            else{
-                Menu menu = binding.bottomNavigation.getMenu();
-                MenuItem ReportPage = menu.findItem(R.id.ReportPage);
-                MenuItem WalletPage = menu.findItem(R.id.walletPage);
-                WalletPage.setVisible(false);
-                ReportPage.setVisible(true);
-            }}
-        } catch (Exception e) {
-            ViewGroup.LayoutParams params = binding.AddDiscount.getLayoutParams();
-            params.height = 0;
-            binding.AddDiscount.setLayoutParams(params);
-            addDiscount.setVisibility(View.INVISIBLE);
-
-            ViewGroup.LayoutParams serviceParams = binding.AddService.getLayoutParams();
-            serviceParams.height = 0;
-            binding.AddService.setLayoutParams(serviceParams);
-            addService.setVisibility(View.INVISIBLE);
-        }
+        //checkAccountType();
+        addCity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, AddCityActivity.class);
+                startActivity(intent);
+            }
+        });
         viewAllPlayingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -223,7 +223,52 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
     }
+
+//    void checkAccountType() {
+//        try {
+//                if (isAdmin) {
+//                    Log.e("fd", "binh");
+//                    ViewGroup.LayoutParams params = binding.AddDiscount.getLayoutParams();
+//                    params.height = 0;
+//                    binding.AddDiscount.setLayoutParams(params);
+//                    addDiscount.setVisibility(View.INVISIBLE);
+//                    ViewGroup.LayoutParams serviceParams = binding.AddService.getLayoutParams();
+//                    serviceParams.height = 0;
+//                    binding.AddService.setLayoutParams(serviceParams);
+//                    addService.setVisibility(View.INVISIBLE);
+//                    ViewGroup.LayoutParams cityParams = addCity.getLayoutParams();
+//                    addCity.setLayoutParams(cityParams);
+//                    addCity.setVisibility(View.INVISIBLE);
+//
+//            }
+//            else{
+//                Menu menu = binding.bottomNavigation.getMenu();
+//                MenuItem ReportPage = menu.findItem(R.id.ReportPage);
+//                MenuItem WalletPage = menu.findItem(R.id.walletPage);
+//                WalletPage.setVisible(false);
+//                ReportPage.setVisible(true);
+//
+//            }
+//
+//        } catch (Exception e) {
+//            ViewGroup.LayoutParams params = binding.AddDiscount.getLayoutParams();
+//            params.height = 0;
+//            binding.AddDiscount.setLayoutParams(params);
+//            addDiscount.setVisibility(View.INVISIBLE);
+//
+//            ViewGroup.LayoutParams serviceParams = binding.AddService.getLayoutParams();
+//            serviceParams.height = 0;
+//            binding.AddService.setLayoutParams(serviceParams);
+//            addService.setVisibility(View.INVISIBLE);
+//            addCity.setVisibility(View.VISIBLE);
+//        }
+
+
+
+
+//    }
 
     void GetDiscounts() {
 
@@ -232,12 +277,14 @@ public class HomeActivity extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
-        if(Users.currentUser!=null){
+
             FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     Users currentUser = documentSnapshot.toObject(Users.class);
+
                     if(((currentUser.getAccountType().toString()).equals("admin"))){
+
 //                FirebaseFirestore.getInstance().collection(Discount.CollectionName).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
 //                    @Override
 //                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -260,7 +307,6 @@ public class HomeActivity extends AppCompatActivity {
                                     listDiscounts.add(f);
 
                                 }
-
                                 PromotionAdapter promotionAdapter = new PromotionAdapter(HomeActivity.this,R.layout.promo_item,listDiscounts);
                                 promotionView.setAdapter(promotionAdapter);
 
@@ -316,8 +362,6 @@ public class HomeActivity extends AppCompatActivity {
                                                 params.height = 700;
                                                 promotionView.setLayoutParams(params);
                                             }
-
-
                                         }
                                     });
 
@@ -326,66 +370,54 @@ public class HomeActivity extends AppCompatActivity {
 
                             }
                         });
-//                query.addSnapshotListener(new EventListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-//                        List<String> listDiscountID = new ArrayList<>();
-//                        Log.e("faa", String.valueOf(value.size()));
-//                        for(DocumentSnapshot doc : value){
-//                            listDiscountID.add(doc.get("discountID").toString());
-//                             //DocumentReference document = FirebaseRequest.database.collection(Discount.CollectionName).document(doc.get("discountID").toString());
-//                        }
-//
-//
-//                        if(listDiscountID.size() > 0 ){
-//                            Query query2 = db.collection(Discount.CollectionName).whereIn("ID", listDiscountID);
-//                            query2.addSnapshotListener(new EventListener<QuerySnapshot>() {
-//                                @Override
-//                                public void onEvent(@Nullable QuerySnapshot discountvalue, @Nullable FirebaseFirestoreException error) {
-//                                    for(DocumentSnapshot doc : discountvalue){
-//                                        Discount f = doc.toObject(Discount.class);
-//                                        Discounts.add(f);
-//                                    }
-//
-//                                    //   LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-//                                    // promotionView.setLayoutManager(VerLayoutManager);
-//                                    Intent intent = getIntent();
-//                                    PromotionAdapter promotionAdapter = new PromotionAdapter(HomeActivity.this,R.layout.promo_item,Discounts);
-//                                    promotionView.setAdapter(promotionAdapter);
-//                                    if (Discounts.size() == 0) {
-//                                        ViewGroup.LayoutParams params = promotionView.getLayoutParams();
-//                                        params.height = 0;
-//                                        promotionView.setLayoutParams(params);
-//                                    }
-//                                    if (Discounts.size() == 1) {
-//                                        ViewGroup.LayoutParams params = promotionView.getLayoutParams();
-//                                        params.height = 300;
-//                                        promotionView.setLayoutParams(params);
-//                                    }
-//                                    if (Discounts.size() == 2) {
-//                                        ViewGroup.LayoutParams params = promotionView.getLayoutParams();
-//                                        params.height = 700;
-//                                        promotionView.setLayoutParams(params);
-//                                    }
-//
-//
-//                                }
-//                            });
-//
-//                        }
-//                        else  promotionView.setAdapter( new PromotionAdapter(HomeActivity.this,R.layout.promo_item,new ArrayList<Discount>()));
-//
-//                    }
-//                });
-
                     }
                 }
             });
 
-        }
+
+    }
+    void checkTypeUser(){
+        FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Users currentUser = documentSnapshot.toObject(Users.class);
+                Log.e("fs",  currentUser.getAccountType());
+                if (((currentUser.getAccountType().toString()).equals("admin"))) {
+                    GetServices();
+                    GetCities();
+                    Menu menu = binding.bottomNavigation.getMenu();
+                    MenuItem ReportPage = menu.findItem(R.id.ReportPage);
+                    MenuItem WalletPage = menu.findItem(R.id.walletPage);
+                    WalletPage.setVisible(false);
+                    ReportPage.setVisible(true);
+                }
+                else {
+
+                    ViewGroup.LayoutParams params = binding.AddDiscount.getLayoutParams();
+                    params.height = 0;
+                    binding.AddDiscount.setLayoutParams(params);
+                    addDiscount.setVisibility(View.INVISIBLE);
+//                    ViewGroup.LayoutParams serviceParams = binding.AddService.getLayoutParams();
+//                    serviceParams.height = 0;
+//                    binding.AddService.setLayoutParams(serviceParams);
+                    addService.setVisibility(View.GONE);
+//                    ViewGroup.LayoutParams cityParams = addCity.getLayoutParams();
+//                    addCity.setLayoutParams(cityParams);
+                    addCity.setVisibility(View.GONE);
+                    serviceHeader.setVisibility(View.GONE);
+                    cityHeader.setVisibility(View.GONE);
+                    serviceView.setVisibility(View.GONE);
+                    cityView.setVisibility(View.GONE);
+
+
+                }
+            }
+        });
+
     }
     void GetServices()
     {
+
         List<Service> services = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference ServiceRef = db.collection("Service");
@@ -428,6 +460,61 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
+
+    void GetCities()
+    {
+        List<City> cities = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference cityRef = db.collection("City");
+        cityRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    // this method is called when error is not null
+                    // and we get any error
+                    // in this case we are displaying an error message.
+                    Toast.makeText(HomeActivity.this, "Error found is " + error, Toast.LENGTH_SHORT).show();
+                    return;
+                } else
+                {
+                    cities.clear();
+                    for (DocumentSnapshot documentSnapshot : value) {
+                        City newCity = documentSnapshot.toObject(City.class);
+                        cities.add(newCity);
+                        Log.e("d", newCity.getName());
+
+                    }
+
+                    cityView.setAdapter(new CityAdapter(HomeActivity.this, R.layout.city_item, cities));
+                    cityView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                                    Intent intent = new Intent(HomeActivity.this, CinemaOfCity.class);
+                                    intent.putExtra("city", cities.get(i));
+                                    startActivity(intent);
+
+                        }
+                    });
+                    if (cities.size() == 0) {
+                        ViewGroup.LayoutParams params = cityView.getLayoutParams();
+                        params.height = 0;
+                        cityView.setLayoutParams(params);
+                    }
+                    if (cities.size() == 1) {
+                        ViewGroup.LayoutParams params = cityView.getLayoutParams();
+                        params.height = 400;
+                        cityView.setLayoutParams(params);
+                    }
+                    if (cities.size() == 2) {
+                        ViewGroup.LayoutParams params = cityView.getLayoutParams();
+                        params.height = 800;
+                        cityView.setLayoutParams(params);
+                    }
+                }
+            }
+        });
+    }
     @Override
     protected void onStart() {
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -440,4 +527,8 @@ public class HomeActivity extends AppCompatActivity {
         unregisterReceiver(networkChangeListener);
         super.onStop();
     }
+    void viewCinemaOfCity(){
+
+    }
+
 }

@@ -54,6 +54,7 @@ public class MyWalletActivity extends AppCompatActivity {
     private TextView totalTv;
     private SharedPreferences sharedPreferences;
     private ProgressBar progressBar;
+    private TextView nameUser;
     List<Ticket> listMovie;
     private MovieBookedAdapter movieBookedAdapter;
 
@@ -66,6 +67,7 @@ public class MyWalletActivity extends AppCompatActivity {
         firestore = FirebaseFirestore.getInstance();
         listMovie = new ArrayList<Ticket>();
         totalTv = (TextView) findViewById(R.id.total);
+        nameUser = findViewById(R.id.nameUser);
         DocumentReference docRef = FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -74,7 +76,9 @@ public class MyWalletActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
 //                        InforBooked.getInstance().total += Integer.parseInt(String.valueOf(document.get("wallet")));
-                        totalTv.setText(String.valueOf(document.get("Wallet")));
+                        totalTv.setText(String.valueOf(document.get("Wallet")) + " VNĐ");
+                        nameUser.setText(String.valueOf(document.get("Name")))
+                        ;
 
                     } else {
                         Log.e("c", "No such document");
@@ -84,7 +88,7 @@ public class MyWalletActivity extends AppCompatActivity {
                 }
             }
         });
-        loadListMovieBooked();
+        setListBookedMovie();
         topUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -121,70 +125,22 @@ public class MyWalletActivity extends AppCompatActivity {
 //    }
 
 
-    void loadListMovieBooked(){
 
-
-//        FirestoreRecyclerOptions<MovieBooked> options = new FirestoreRecyclerOptions.Builder<MovieBooked>()
-//                .setQuery(query, MovieBooked.class)
-//                .build();
-//        movieBookedAdapter = new MovieBookedAdapter(options, progressBar);
-//        listMovieBooked.setAdapter(movieBookedAdapter);
-       // listMovieBooked.setLayoutManager(new LinearLayoutManager(MyWalletActivity.this, LinearLayoutManager.VERTICAL, false));
-//        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-//                listMovie = value.toObjects(MovieBooked.class);
-//
-//            }
-//
-//        });
-
-             firestore.collection("BookedMovie").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+    void setListBookedMovie(){
+        firestore.collection("Ticket").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-
-                if(!queryDocumentSnapshots.isEmpty()){
-                    List<DocumentSnapshot> listDoc = queryDocumentSnapshots.getDocuments();
-                    for(DocumentSnapshot doc : listDoc){
-                        if(doc.get("UserID").equals(FirebaseRequest.mAuth.getUid())){
-                            setListBookedMovie(String.valueOf(doc.get("MovieID")));
-//                            Log.e("ff", FirebaseRequest.mAuth.getUid());
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                for(DocumentSnapshot doc : value){
+                    Ticket ticket = doc.toObject(Ticket.class);
+                        if(ticket.getUserID().equals(FirebaseRequest.mAuth.getUid())){
+                            listMovie.add(ticket);
                         }
-
-                    }
-
-
-//                    movieBookedAdapter = new MovieBookedAdapter(getApplicationContext(), R.layout.movie_booked_item, listMovie );
-//                    listMovieBooked.setAdapter(movieBookedAdapter);
-                    //progressBar.setVisibility(View.VISIBLE);
-
                 }
+                movieBookedAdapter = new MovieBookedAdapter(getApplicationContext(), R.layout.movie_booked_item, listMovie );
+                listMovieBooked.setAdapter(movieBookedAdapter);
             }
-
         });
-    }
-    void setListBookedMovie(String movieID){
-        firestore.collection("Ticket").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
-                if(!queryDocumentSnapshots.isEmpty()){
-                    List<DocumentSnapshot> listDoc = queryDocumentSnapshots.getDocuments();
-                    for(DocumentSnapshot doc : listDoc){
-
-                        if(doc.getId().equals(movieID)) {
-
-                            Ticket film = doc.toObject(Ticket.class);
-
-                            listMovie.add(film);
-                        }
-                    }
-                    movieBookedAdapter = new MovieBookedAdapter(getApplicationContext(), R.layout.movie_booked_item, listMovie );
-                    listMovieBooked.setAdapter(movieBookedAdapter);
-                }
-            }
-
-        });
 
 
         }
