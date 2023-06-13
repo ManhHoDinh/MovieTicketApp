@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 //import com.example.movieticketapp.databinding.ActivityHomeBinding;
 
@@ -50,6 +51,7 @@ public class MyTicketAllActivity extends AppCompatActivity {
     FirebaseFirestore firestore;
     ArrayList<Ticket> arrayList = new ArrayList<Ticket>();
     TicketListAdapter adapter;
+
     private BottomNavigationView bottomNavigationView;
 
     @Override
@@ -60,6 +62,7 @@ public class MyTicketAllActivity extends AppCompatActivity {
         Button newTicket = (Button) findViewById(R.id.buttonNewsTicket);
         Button expiredTicket = (Button) findViewById(R.id.buttonExpiredTicket);
         Button allTicket = (Button) findViewById(R.id.buttonAllTicket);
+
         firestore = FirebaseFirestore.getInstance();
 
         allTicket.setText("All");
@@ -160,19 +163,18 @@ public class MyTicketAllActivity extends AppCompatActivity {
                     public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
 
                         Intent a = new Intent(getApplicationContext(),TicketDetailActivity.class);
-                        Timestamp time = ((Ticket) o).getTime();
-                        DateFormat dateFormat = new SimpleDateFormat("hh:mm, E MMM dd");
-                        String timeBooked = dateFormat.format(time.toDate());
-                        a.putExtra("name", value.get("name").toString());
-                        a.putExtra("time",timeBooked );
-                        a.putExtra("cinemaID", ((Ticket) o).getCinemaID());
-                        a.putExtra("poster", value.get("PosterImage").toString());
-                        a.putExtra("rate", value.get("vote").toString());
-                        a.putExtra("kind", value.get("genre").toString());
-                        a.putExtra("duration", value.get("durationTime").toString());
-                        a.putExtra("seat", ((Ticket) o).getSeat());
-                        a.putExtra("paid", ((Ticket) o).getPaid());
-                        a.putExtra("idorder", ((Ticket) o).getIdorder());
+
+                          a.putExtra("ticket",ticket );
+//                        a.putExtra("name", value.get("name").toString());
+//                        a.putExtra("time",timeBooked );
+//                        a.putExtra("cinemaID", ((Ticket) o).getCinemaID());
+//                        a.putExtra("poster", value.get("PosterImage").toString());
+//                        a.putExtra("rate", value.get("vote").toString());
+//                        a.putExtra("kind", value.get("genre").toString());
+//                        a.putExtra("duration", value.get("durationTime").toString());
+//                        a.putExtra("seat", ((Ticket) o).getSeat());
+//                        a.putExtra("paid", ((Ticket) o).getPaid());
+//                        a.putExtra("idorder", ((Ticket) o).getIdorder());
                         startActivity(a);
                     }
                 });
@@ -232,4 +234,5 @@ public class MyTicketAllActivity extends AppCompatActivity {
         });
 
     }
+
 }

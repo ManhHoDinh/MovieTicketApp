@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.example.movieticketapp.Adapter.ServiceAdapter;
 import com.example.movieticketapp.Adapter.UseServiceAdapter;
 import com.example.movieticketapp.Model.Service;
+import com.example.movieticketapp.Model.ServiceInTicket;
 import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.google.firebase.FirebaseCommonRegistrar;
@@ -25,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +35,7 @@ public class ServiceActivity extends AppCompatActivity {
     NetworkChangeListener networkChangeListener = new NetworkChangeListener();
     ListView serviceLV;
     List<Service> listService;
+    List<ServiceInTicket> listServiceInTicket;
     TextView totalService;
     ImageButton nextBtn;
     Button backBtn;
@@ -56,6 +60,8 @@ public class ServiceActivity extends AppCompatActivity {
         nextBtn = findViewById(R.id.btnNext);
         backBtn = findViewById(R.id.backbutton);
         listService = new ArrayList<Service>();
+        listServiceInTicket = new ArrayList<>();
+
 
         FirebaseFirestore.getInstance().collection("Service").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -65,7 +71,7 @@ public class ServiceActivity extends AppCompatActivity {
                     Service service = doc.toObject(Service.class);
                     listService.add(service);
                 }
-                serviceLV.setAdapter(new UseServiceAdapter(ServiceActivity.this, R.layout.service_item, listService, totalService));
+                serviceLV.setAdapter(new UseServiceAdapter(ServiceActivity.this, R.layout.service_item, listService, totalService, listServiceInTicket));
 
             }
         });
@@ -77,6 +83,7 @@ public class ServiceActivity extends AppCompatActivity {
                 Bundle bundle = getIntent.getExtras();
                 bundle.putString("total service", totalService.getText().toString());
                 intent.putExtras(bundle);
+                intent.putExtra("listService", (Serializable) listServiceInTicket);
                 startActivity(intent);
             }
         });

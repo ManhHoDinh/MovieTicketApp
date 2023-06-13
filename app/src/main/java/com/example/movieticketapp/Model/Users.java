@@ -10,6 +10,8 @@ public class Users {
     private int Wallet;
     private String accountType;
     public static Users currentUser;
+
+    public static boolean isExisted;
     public Users(String UserID, String Name, String Email,int Wallet, String accountType)
     {
         this.UserID=UserID;

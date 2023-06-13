@@ -62,7 +62,7 @@
                 app:passwordToggleEnabled="true"
                 app:hintEnabled="false"
                 app:boxBackgroundMode="none"
-                android:paddingLeft="8dp"
+                android:paddingLeft="24dp"
                 app:endIconMode="password_toggle"
                 android:background="@drawable/edittext_boder"
                 app:passwordToggleDrawable="@drawable/show_password_selector"

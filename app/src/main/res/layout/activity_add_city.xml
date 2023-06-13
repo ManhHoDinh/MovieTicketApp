@@ -23,7 +23,7 @@
             android:background="@drawable/back_icon" />
         <TextView
             android:layout_height="wrap_content"
-            android:text="Add city"
+            android:text="Add city/ Province"
             android:layout_marginTop="20dp"
             android:layout_marginHorizontal="60dp"
             android:textColor="@color/white"
@@ -36,21 +36,35 @@
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="type city"
+        android:text="Choose city/ province"
         android:layout_marginTop="24dp"
         style="@style/titleStyle"/>
-    <EditText
-        android:id="@+id/cityNameEt"
-        android:layout_marginTop="24dp"
-        style="@style/hintStyle"
-        android:hint="City name"
-        android:textColorHint="@color/main_color"
-        android:textColor="@color/main_color"
-        android:paddingVertical="16dp"
-        android:paddingHorizontal="12dp"
-        android:background="@drawable/bg_edit_text"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        app:boxBackgroundColor="@color/background_color"
+        app:boxCornerRadiusBottomEnd="20dp"
+        app:boxCornerRadiusBottomStart="20dp"
+        app:boxCornerRadiusTopEnd="20dp"
+        app:boxCornerRadiusTopStart="20dp"
+        app:hintTextColor="@color/white"
+        app:boxStrokeColor="@drawable/border_input"
+        app:boxStrokeWidth="1dp"
+        android:textColorHint="@color/white"
+        app:startIconDrawable="@drawable/location"
+        app:startIconTint="@color/white"
+        app:endIconDrawable="@drawable/down_arrow"
+        app:endIconTint="@color/white"
+        android:hint="@string/selected_item"
+        android:layout_height="wrap_content">
+        <AutoCompleteTextView
+
+            android:textColor="@color/white"
+            android:id="@+id/cityAutoTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_marginTop="24dp"
         android:layout_width="match_parent"
