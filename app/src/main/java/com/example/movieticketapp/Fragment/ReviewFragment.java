@@ -143,19 +143,20 @@ public class ReviewFragment extends Fragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CommentRef = db.collection("Movies").document(film.getId()).collection("Comment");
         if(CommentRef!=null)
-        CommentRef.orderBy("timeStamp", Query.Direction.DESCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error != null) {
-                    Log.w(TAG, "Listen failed.", error);
-                    return;
-                }
+        {
+            CommentRef.orderBy("timeStamp", Query.Direction.DESCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                    if (error != null) {
+                        Log.w(TAG, "Listen failed.", error);
+                        return;
+                    }
 
-                comments.clear();
-                for (QueryDocumentSnapshot doc : value)
+                    comments.clear();
+                    for (QueryDocumentSnapshot doc : value)
 
-                {
-                    comments.add(doc.toObject(Comment.class));
+                    {
+                        comments.add(doc.toObject(Comment.class));
 //                    String profileUrl = doc.getString("profileUrl");
 //                    String name = doc.getString("name");
 //                    String reviewText = doc.getString("reviewText");
@@ -166,34 +167,35 @@ public class ReviewFragment extends Fragment {
 //                    List<String> listReact = doc.get("listReact");
 //                    Comment data = new Comment(profileUrl, name, reviewText, like, dislike, timeStamp, rate);
 //                    comments.add(data);
-                  //  Log.d(TAG, "Added comment from: " + name);
+                        //  Log.d(TAG, "Added comment from: " + name);
+                    }
+                    commentAdapter = new CommentAdapter(getContext(), R.layout.review_comment_view, comments);
+                    int totalHeight= 0;
+                    DisplayMetrics displayMetrics = new DisplayMetrics();
+
+                    int height = displayMetrics.heightPixels;
+                    int width = displayMetrics.widthPixels;
+                    for (int size=0; size < commentAdapter.getCount(); size++) {
+
+                        View listItem = commentAdapter.getView(size, null, commentList);
+                        listItem.measure(0, 0);
+                        totalHeight += listItem.getMeasuredHeight();
+                    }
+                    ViewGroup.LayoutParams params=commentList.getLayoutParams();
+                    DisplayMetrics display = new DisplayMetrics();
+                    getActivity().getWindowManager().getDefaultDisplay().getMetrics(display);
+                    int d = display.heightPixels;
+                    params.height = d/2 - rateLayout.getMeasuredHeight() - 100;
+
+
+                    commentList.setLayoutParams(params);
+                    commentList.setAdapter(commentAdapter);
+
+
+
                 }
-                commentAdapter = new CommentAdapter(getContext(), R.layout.review_comment_view, comments);
-                int totalHeight= 0;
-                DisplayMetrics displayMetrics = new DisplayMetrics();
-
-                int height = displayMetrics.heightPixels;
-                int width = displayMetrics.widthPixels;
-                for (int size=0; size < commentAdapter.getCount(); size++) {
-
-                    View listItem = commentAdapter.getView(size, null, commentList);
-                    listItem.measure(0, 0);
-                    totalHeight += listItem.getMeasuredHeight();
-                }
-                ViewGroup.LayoutParams params=commentList.getLayoutParams();
-                DisplayMetrics display = new DisplayMetrics();
-                getActivity().getWindowManager().getDefaultDisplay().getMetrics(display);
-                int d = display.heightPixels;
-                params.height = d/2 - rateLayout.getMeasuredHeight() - 100;
-
-
-                commentList.setLayoutParams(params);
-                commentList.setAdapter(commentAdapter);
-
-
-
-            }
-        });
+            });
+        }
     }
     void ratingFilm(){
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {

@@ -382,11 +382,11 @@ public class HomeActivity extends AppCompatActivity {
 
     }
     void checkTypeUser(){
-        FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseRequest.database.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Users currentUser = documentSnapshot.toObject(Users.class);
-                Log.e("fs",  currentUser.getAccountType());
                 if (((currentUser.getAccountType().toString()).equals("admin"))) {
                     GetServices();
                     GetCities();

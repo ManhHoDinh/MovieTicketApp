@@ -33,7 +33,6 @@ android {
         viewBinding true
     }
 }
-
 dependencies {
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:12.0.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
@@ -60,7 +59,11 @@ dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.2'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.google.firebase:firebase-ml-model-interpreter:22.0.1'
-    implementation 'com.google.api-client:google-api-client:1.33.0'
-    implementation 'com.google.oauth-client:google-oauth-client-jetty:1.32.1'
-   // implementation 'com.google.api:google-api-services-youtube:v3-rev20210616-1.31.0'
+    implementation 'com.google.api-client:google-api-client:1.31.1'
+    implementation 'com.google.oauth-client:google-oauth-client-jetty:1.31.1'
+    implementation 'com.google.apis:google-api-services-youtube:v3-rev225-1.31.0'
+    implementation 'com.google.api-client:google-api-client-gson:1.31.1'
+    implementation 'com.google.apis:google-api-services-youtube:v3-rev20230521-2.0.0'
+    implementation 'com.google.http-client:google-http-client-jackson2:1.40.0'
+
 }
