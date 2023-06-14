@@ -71,6 +71,8 @@ public class CityAdapter extends ArrayAdapter<City> {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(itemView.getContext(), R.style.CustomAlertDialog);
                 LayoutInflater factory = LayoutInflater.from(itemView.getContext());
                 final View deleteDialogView = factory.inflate(R.layout.yes_no_dialog, null);
+                TextView message = deleteDialogView.findViewById(R.id.message);
+                message.setText("Do you sure to delete the city ?");
                 alertDialog.setView(deleteDialogView);
                 AlertDialog OptionDialog = alertDialog.create();
                 OptionDialog.show();
