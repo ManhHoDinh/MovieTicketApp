@@ -107,10 +107,6 @@ Với sự xuất hiện của ứng dụng quản lí rạp phim, tất cả nh
 ### 5. Tính năng
 
 Quản lý tài khoản
- * Cho phép người dùng tạo mới tài khoản.
- * Cho phép người dùng đổi mật khẩu tài khoản.
- * Cho phép người dùng tìm lại mật khẩu khi bị quên hoặc mất.
- * Cho phép người dùng thêm, xóa, sửa thông tin của mình.
 
 Quản lý vé
 
