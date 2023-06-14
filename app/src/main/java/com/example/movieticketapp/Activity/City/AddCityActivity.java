@@ -111,7 +111,14 @@ public class AddCityActivity extends AppCompatActivity {
                 }
             }
         });
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
+
     private void CreateDiscountToDatabase() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference doc ;

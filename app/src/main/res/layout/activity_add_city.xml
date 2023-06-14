@@ -69,6 +69,7 @@
         android:layout_marginTop="24dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         >
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/confirmBtn"
@@ -78,7 +79,7 @@
             android:text="Confirm"
             android:paddingVertical="10dp"
             android:textAllCaps="false"
-            android:paddingHorizontal="40dp"
+            android:paddingHorizontal="30dp"
             style="@style/titleStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -90,8 +91,8 @@
             android:paddingVertical="10dp"
             android:textAllCaps="false"
             android:layout_marginRight="24dp"
-            android:paddingHorizontal="40dp"
             style="@style/titleStyle"
+            android:paddingHorizontal="30dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
