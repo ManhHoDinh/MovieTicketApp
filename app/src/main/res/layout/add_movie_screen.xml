@@ -296,6 +296,78 @@
             </LinearLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
+                android:layout_height="150dp">
+
+                <VideoView
+                    android:id="@+id/video_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <RelativeLayout
+                    android:id="@+id/media_controller"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:background="#80000000"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:id="@+id/play_button"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:clickable="true" />
+
+                    <SeekBar
+                        android:id="@+id/seek_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/play_button"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp" />
+
+                    <TextView
+                        android:id="@+id/current_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:text="0:00"
+                        android:layout_toRightOf="@id/seek_bar"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_centerVertical="true" />
+
+                    <TextView
+                        android:id="@+id/duration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:text="0:00"
+                        android:layout_toRightOf="@id/current_time"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_centerVertical="true" />
+
+                    <ImageView
+                        android:id="@+id/fullscreen_button"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:clickable="true" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/very_dark_background">
                 <LinearLayout
