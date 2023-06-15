@@ -119,7 +119,7 @@
             android:name=".Activity.Account.OnboardingActivity"
             android:exported="false" />
         <activity android:name=".Activity.Account.SignUpActivity" />
-        <activity android:name=".Activity.Account.SignInActivity" />
+        <activity android:name=".Activity.Account.SignInActivity"  android:theme="@style/Theme.MovieProject.Main"/>
         <activity
             android:name=".Activity.Movie.InformationFilmActivity"
             android:exported="false" />
