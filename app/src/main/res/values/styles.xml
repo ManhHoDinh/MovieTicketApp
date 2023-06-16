@@ -45,4 +45,8 @@
     <style name="PopupMenu" parent="android:Widget.Holo.Light.ListPopupWindow">
         <item name="android:popupBackground">@drawable/menu_background</item>
     </style>
+    <style name="GreenDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@android:color/holo_green_light</item>
+    </style>
+
 </resources>

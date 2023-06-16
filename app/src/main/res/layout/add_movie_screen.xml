@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
-    tools:context=".Activity.Movie.AddMovieActivity">
+    tools:context=".Activity.Movie.AddMovieActivity"
+    >
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,6 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:id="@+id/AddMovieLayout"
             >
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -133,6 +135,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="12dp"
                             android:hint="Movie Name"
+                            android:layout_marginLeft="24dp"
                             android:textColorHint="@color/hint_color"
                             android:textColor="@color/white"
                             android:id="@+id/movieName"/>
@@ -147,13 +150,15 @@
                             android:textColor="@color/white"
                             android:textSize="12dp"
                             android:text="Kind: "/>
-                        <EditText
+                        <TextView
                             android:layout_width="190dp"
                             android:layout_height="wrap_content"
                             android:textColor="@color/white"
-                            android:hint="Kind of movie"
+                            android:text="Chose movie kind"
                             android:textColorHint="@color/hint_color"
                             android:textSize="12dp"
+                           android:paddingRight="20dp"
+                            android:layout_marginLeft="36dp"
                             android:id="@+id/movieKind"/>
                     </LinearLayout>
                     <LinearLayout
@@ -173,6 +178,7 @@
                             android:hint="Duration time of movie"
                             android:textColorHint="@color/hint_color"
                             android:textSize="12dp"
+                            android:layout_marginLeft="10dp"
                             android:textColorLink="@color/white"
                             android:id="@+id/movieDuration"/>
                     </LinearLayout>
@@ -258,43 +264,70 @@
                     android:textSize="18dp"
                     android:textFontWeight="900"
                     android:textStyle="bold"/>
-      <androidx.cardview.widget.CardView
-          android:layout_width="wrap_content"
+      <HorizontalScrollView
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          app:cardCornerRadius="16dp"
+          android:id="@+id/horizontalScrollView"
           >
-          <RelativeLayout
-              android:layout_width="238.5dp"
-              android:layout_height="134dp">
-              <VideoView
-                  android:id="@+id/movietrailer"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:background="@drawable/background_add_movie1"/>
-              <LinearLayout
+          <androidx.appcompat.widget.LinearLayoutCompat
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:gravity="center">
+              <androidx.cardview.widget.CardView
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  android:layout_centerInParent="true"
-                  android:orientation="horizontal"
+                  app:cardCornerRadius="16dp"
                   >
-                  <ImageView
-                      android:layout_width="14dp"
-                      android:layout_height="14dp"
-                      android:src="@drawable/symbol_image"
-                      android:id="@+id/imtrailer"/>
-                  <TextView
-                      android:textColor="@color/white"
-                      android:layout_marginLeft="7dp"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:text="Upload video"
-                      android:textSize="16dp"
-                      android:fontFamily="@font/montserrat_regular"
-                      android:id="@+id/texttrailer"/>
-              </LinearLayout>
-          </RelativeLayout>
+                  <RelativeLayout
+                      android:layout_width="238.5dp"
+                      android:layout_height="134dp">
+                      <VideoView
+                          android:id="@+id/movietrailer"
+                          android:layout_width="match_parent"
+                          android:layout_height="match_parent"
+                          android:background="@drawable/background_add_movie1"/>
+                      <LinearLayout
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_centerInParent="true"
+                          android:orientation="horizontal"
+                          >
+                          <ImageView
+                              android:layout_width="14dp"
+                              android:layout_height="14dp"
+                              android:src="@drawable/symbol_image"
+                              android:id="@+id/imtrailer"/>
+                          <TextView
+                              android:textColor="@color/white"
+                              android:layout_marginLeft="7dp"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:text="Upload video"
+                              android:textSize="16dp"
+                              android:fontFamily="@font/montserrat_regular"
+                              android:id="@+id/texttrailer"/>
+                      </LinearLayout>
+                  </RelativeLayout>
 
-      </androidx.cardview.widget.CardView>
+              </androidx.cardview.widget.CardView>
+
+              <androidx.appcompat.widget.LinearLayoutCompat
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:id="@+id/containerLayout"
+
+              />
+              <Button
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:padding="10dp"
+                  android:text="+"
+                  android:id="@+id/addButton"
+                  />
+
+          </androidx.appcompat.widget.LinearLayoutCompat>
+      </HorizontalScrollView>
             </LinearLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
