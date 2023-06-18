@@ -62,7 +62,7 @@ Với sự xuất hiện của ứng dụng quản lí rạp phim, tất cả nh
 <div id="Congnghe"></div>
 
 ### 2. Công nghệ
-* Hệ thống API: WPF - Mô hình MVVM
+* Hệ thống API: Android API (Application Programming Interface)
 * IDE: Android Studio
 * Database: Firebase 
 * Công cụ quản lý: Git, GitHub
