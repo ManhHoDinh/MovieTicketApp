@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
@@ -21,7 +22,6 @@
             android:name=".Activity.Notification.NotificationDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.Notification.NotificationActivity"
             android:name=".Activity.City.CityViewAllActivity"
             android:exported="false" />
         <activity
@@ -96,11 +96,7 @@
         <activity
             android:name=".Activity.Account.SplashActivity"
             android:exported="true"
-            android:theme="@style/Theme.MovieProject.Main" />
-        <activity
-            android:name=".Activity.Movie.AddMovieActivity"
-            android:exported="true"
-           >
+            android:theme="@style/Theme.MovieProject.Main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
