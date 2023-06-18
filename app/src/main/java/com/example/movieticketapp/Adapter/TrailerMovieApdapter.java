@@ -64,28 +64,27 @@ public class TrailerMovieApdapter extends RecyclerView.Adapter<TrailerMovieApdap
     private AddMovieActivity activity;
     @Override
     public void onBindViewHolder(@NonNull TrailerMovieApdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        if (position == selectedPosition) {
-            // Update the movietrailer element using selectedVideoUri
-            holder.movietrailer.setVideoURI(selectedVideoUri);
-            MediaController mediaController = new MediaController(holder.movietrailer.getContext());
-            holder.movietrailer.setMediaController(mediaController);
-            mediaController.setAnchorView(holder.movietrailer);
-            holder.movietrailer.setBackground(null);
-            if(selectedVideoUri!=null)
+        try {
+            if(AddMovieActivity.videoUris.get(position)!=AddMovieActivity.defaultUri)
             {
-                holder.texttrailer.setText("");
-                holder.imtrailer.setImageResource(0);
-            }
-            // Additional update operations if needed
-        } else {
-            // Reset the movietrailer element to its default state
-            holder.movietrailer.setVideoURI(null);
-            // Additional reset operations if needed
-        }
+                holder.movietrailer.setBackground(null);
+                holder.movietrailer.setVideoURI(AddMovieActivity.videoUris.get(position));
+                holder.movietrailer.start();
+                if(AddMovieActivity.videoUris.get(position)!=null)
+                {
+                    holder.texttrailer.setText("");
+                    holder.imtrailer.setImageResource(0);
+                }
+
+            }        }
+        catch (Exception e)
+        {}
         holder.movietrailer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    activity.pickVideo.launch(new PickVisualMediaRequest.Builder()
+                if(AddMovieActivity.videoUris.get(position)!=AddMovieActivity.defaultUri)
+                    holder.movietrailer.start();
+                activity.pickVideo.launch(new PickVisualMediaRequest.Builder()
                             .setMediaType(ActivityResultContracts.PickVisualMedia.VideoOnly.INSTANCE)
                             .build());
                 setSelectedPosition(position);
@@ -112,7 +111,6 @@ public class TrailerMovieApdapter extends RecyclerView.Adapter<TrailerMovieApdap
             movietrailer = (VideoView) itemView.findViewById(R.id.movietrailer);
             imtrailer = (ImageView) itemView.findViewById(R.id.imtrailer);
             texttrailer = (TextView) itemView.findViewById(R.id.texttrailer);
-
         }
     }
 public int getSelectedPosition()
@@ -131,6 +129,7 @@ public int getSelectedPosition()
     {
         if (position >= 0 && position < Videos.size()) {
             selectedVideoUri = videoUri;
+            AddMovieActivity.videoUris.set(position, videoUri);
             notifyItemChanged(position);
         }
     }

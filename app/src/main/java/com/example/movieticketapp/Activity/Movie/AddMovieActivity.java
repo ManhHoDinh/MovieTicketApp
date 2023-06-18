@@ -112,6 +112,8 @@ import java.util.Map;
 
 public class AddMovieActivity extends AppCompatActivity{
     private static final String APPLICATION_NAME = "M";
+    public static List<Uri> videoUris= new ArrayList<>();
+    public static  Uri defaultUri;
     public  ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
     public  ActivityResultLauncher<PickVisualMediaRequest> pickVideo;
     int th;
@@ -140,14 +142,11 @@ public class AddMovieActivity extends AppCompatActivity{
     Button cancleButton;
     Uri backgrounduri;
     Uri avataruri = null;
-    Uri actoruri = null;
     Uri traileruri = null;
 
     String urlbackground;
 
     String urlavatar;
-    String urlactor;
-    String urltrailer;
     String videoUrl="";
 
     UploadTask uploadTask;
@@ -158,6 +157,7 @@ public class AddMovieActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_movie_screen);
+        defaultUri=Uri.parse("https://example.com/default");;
         calendarButton = findViewById(R.id.Calendar);
 
        calendarButton.setOnClickListener(new View.OnClickListener() {
@@ -208,9 +208,8 @@ public class AddMovieActivity extends AppCompatActivity{
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                videos.add("1");
-                videos.add("2");
-                videos.add("3");
+                videos.add("add");
+                videoUris.add(defaultUri);
                 adapter = new TrailerMovieApdapter(videos, AddMovieActivity.this);
                 containerLayout.setAdapter(adapter);
                 LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -403,27 +402,6 @@ public class AddMovieActivity extends AppCompatActivity{
                 finish();
             }
         });
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == REQUEST_CODE_PICK_VIDEO && resultCode == RESULT_OK) {
-
-            if (data != null) {
-                Uri videoUri = data.getData();
-                int position = data.getIntExtra("position", RecyclerView.NO_POSITION); // Retrieve the position from intent extras
-                Log.d(String.valueOf(position), String.valueOf(position));
-                if (position != RecyclerView.NO_POSITION) {
-                    // Update the desired element in the adapter based on the position
-                    adapter.updateVideoElement(videoUri, position);
-                }
-            }
-            else {
-                Log.d("Error","String.valueOf(position)");
-
-            }
-        }
     }
 
 
