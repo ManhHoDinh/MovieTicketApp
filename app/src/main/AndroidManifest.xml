@@ -132,6 +132,7 @@
             android:exported="true" />
         <activity android:name=".Activity.Wallet.MyWalletActivity" />
         <activity android:name=".Activity.Ticket.MyTicketAllActivity" />
+        <activity android:name="com.example.movieticketapp.Adapter.TrailerMovieApdapter" />
     </application>
 
 </manifest>

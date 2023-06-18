@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -49,6 +51,8 @@ import android.widget.VideoView;
 
 import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
+import com.example.movieticketapp.Adapter.ServiceAdapter;
+import com.example.movieticketapp.Adapter.TrailerMovieApdapter;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -106,8 +110,10 @@ import java.util.Map;
 
 
 
-public class AddMovieActivity extends AppCompatActivity {
+public class AddMovieActivity extends AppCompatActivity{
     private static final String APPLICATION_NAME = "M";
+    public  ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
+    public  ActivityResultLauncher<PickVisualMediaRequest> pickVideo;
     int th;
     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     StorageReference storageReference2 = FirebaseStorage.getInstance().getReference();
@@ -130,9 +136,6 @@ public class AddMovieActivity extends AppCompatActivity {
     ImageView imcast;
     TextView textcast;
     public static Context context;
-    VideoView movietrailer;
-    ImageView imtrailer;
-    TextView texttrailer;
     Button applyButton;
     Button cancleButton;
     Uri backgrounduri;
@@ -150,7 +153,7 @@ public class AddMovieActivity extends AppCompatActivity {
     UploadTask uploadTask;
     UploadTask uploadTask2;
     Button calendarButton;
-
+    TrailerMovieApdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -180,9 +183,6 @@ public class AddMovieActivity extends AppCompatActivity {
         applyButton = (Button) findViewById(R.id.applybutton);
         cancleButton = (Button) findViewById(R.id.cancelbutton);
 
-        movietrailer = (VideoView) findViewById(R.id.movietrailer);
-        imtrailer = (ImageView) findViewById(R.id.imtrailer);
-        texttrailer = (TextView) findViewById(R.id.texttrailer);
         LinearLayout layoutElement = findViewById(R.id.AddMovieLayout); // Replace with your actual layout element ID
 
         layoutElement.setOnClickListener(new View.OnClickListener() {
@@ -201,36 +201,27 @@ public class AddMovieActivity extends AppCompatActivity {
                 dismissKeyboard(view);
             }
         });
-        LinearLayoutCompat containerLayout = findViewById(R.id.containerLayout);
+        RecyclerView containerLayout = findViewById(R.id.containerLayout);
         Button addButton = findViewById(R.id.addButton);
-        HorizontalScrollView horizontalScrollView = findViewById(R.id.horizontalScrollView);
+        List<String> videos=new ArrayList<>();
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LayoutInflater inflater = LayoutInflater.from(AddMovieActivity.this);
-                View layout = inflater.inflate(R.layout.trailer_movie, containerLayout, false);
-                containerLayout.addView(layout);
-                containerLayout.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Set the width of LinearLayoutCompat to its total measured width
-                        containerLayout.getLayoutParams().width = containerLayout.getMeasuredWidth();
-                        containerLayout.requestLayout();
-
-                        // Scroll to the end of the HorizontalScrollView
-                        horizontalScrollView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                horizontalScrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
-                            }
-                        });
-                    }
-                });
+                videos.add("1");
+                videos.add("2");
+                videos.add("3");
+                adapter = new TrailerMovieApdapter(videos, AddMovieActivity.this);
+                containerLayout.setAdapter(adapter);
+                LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+                containerLayout.setLayoutManager(VerLayoutManager);
+                Log.d("Video Length : ",String.valueOf(videos.size()));
             }
         });
 
-        ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
+
+
+        pickMedia =
                 registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
                             if (uri != null) {
                                 switch (th) {
@@ -252,21 +243,7 @@ public class AddMovieActivity extends AppCompatActivity {
                                             imavt.setImageResource(0);
                                         }
                                         break;
-                                    case 2:
-                                        movietrailer.setBackground(null);
-                                        movietrailer.setVideoURI(uri);
-                                        traileruri = uri;
-                                        movietrailer.start();
 
-                                        MediaController mediaController = new MediaController(this);
-                                        movietrailer.setMediaController(mediaController);
-                                        mediaController.setAnchorView(movietrailer);
-                                        if(uri!=null)
-                                        {
-                                            texttrailer.setText("");
-                                            imtrailer.setImageResource(0);
-                                        }
-                                        break;
                                 }
 
                             } else {
@@ -295,22 +272,18 @@ public class AddMovieActivity extends AppCompatActivity {
                 dismissKeyboard(view);
             }
         });
-        movietrailer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismissKeyboard(view);
-                pickMedia.launch(new PickVisualMediaRequest.Builder()
-                        .setMediaType(ActivityResultContracts.PickVisualMedia.VideoOnly.INSTANCE)
-                        .build());
-                th = 2;
-            }
-        });
-//        statusmovie.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                ShowMenu();
-//            }
-//        });
+
+       pickVideo =
+                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                    if (uri != null) {
+                        int position = adapter.getSelectedPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            adapter.updateVideoElement(uri, position);
+                        }
+                    } else {
+                        Log.d("VideoPicker", "No video selected");
+                    }
+                });
 
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -431,7 +404,30 @@ public class AddMovieActivity extends AppCompatActivity {
             }
         });
     }
-//    private void ShowMenu(){
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_PICK_VIDEO && resultCode == RESULT_OK) {
+
+            if (data != null) {
+                Uri videoUri = data.getData();
+                int position = data.getIntExtra("position", RecyclerView.NO_POSITION); // Retrieve the position from intent extras
+                Log.d(String.valueOf(position), String.valueOf(position));
+                if (position != RecyclerView.NO_POSITION) {
+                    // Update the desired element in the adapter based on the position
+                    adapter.updateVideoElement(videoUri, position);
+                }
+            }
+            else {
+                Log.d("Error","String.valueOf(position)");
+
+            }
+        }
+    }
+
+
+    //    private void ShowMenu(){
 //        PopupMenu pm = new PopupMenu(this, statusmovie);
 //        pm.getMenuInflater().inflate(R.menu.status_movie_menu, pm.getMenu());
 //        pm.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -717,6 +713,36 @@ public class AddMovieActivity extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
+    public  ActivityResultLauncher<PickVisualMediaRequest>   pickVideo(TextView text, ImageView img,VideoView video )
+    {
+        ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
+                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                            if (uri != null) {
+                                video.setBackground(null);
+                                video.setVideoURI(uri);
+                                //traileruri = uri;
+                                //movietrailer.start();
+
+                                MediaController mediaController = new MediaController(video.getContext());
+                                video.setMediaController(mediaController);
+                                mediaController.setAnchorView(video);
+                                if(uri!=null)
+                                {
+                                    text.setText("");
+                                    img.setImageResource(0);
+                                }
+                            } else {
+                                Log.d("PhotoPicker", "No media selected");
+                            }
+                        }
+                );
+        return pickMedia;
+    }
+
+
+    private static final int REQUEST_CODE_PICK_VIDEO = 123;
+
+
 }
 
 
