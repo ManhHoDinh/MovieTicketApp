@@ -47,18 +47,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.makeramen.roundedimageview.RoundedImageView;
-<<<<<<< HEAD
-=======
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-
-//import com.google.api.client.json.jackson2.JacksonFactory;
-//import com.google.api.services.youtube.YouTube;
-//import com.google.api.services.youtube.YouTubeScopes;
-//import com.google.api.services.youtube.model.Video;
-//import com.google.api.services.youtube.model.VideoSnippet;
-//import com.google.api.services.youtube.model.VideoStatus;
-
->>>>>>> ea90e9b6ca4cd56459bc583fd56a7fcbcc955ea5
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -416,8 +404,7 @@ public class AddMovieActivity extends AppCompatActivity {
         datePickerDialog.show();
         calendarButton.setText(String.valueOf(year));
     }
-<<<<<<< HEAD
-=======
+
 
 //    private void uploadVideoToYouTube(Uri videoUri) {
 //        // Khởi tạo YouTube API client
@@ -508,7 +495,7 @@ public class AddMovieActivity extends AppCompatActivity {
 //                .setApplicationName(APPLICATION_NAME)
 //                .build();
 //    }
->>>>>>> ea90e9b6ca4cd56459bc583fd56a7fcbcc955ea5
+
 }
 
 

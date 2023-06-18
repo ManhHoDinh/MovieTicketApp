@@ -20,10 +20,9 @@
         <activity
             android:name=".Activity.Notification.NotificationDetailActivity"
             android:exported="false" />
-        <activity
-            android:name=".Activity.Notification.NotificationActivity"
-            android:name=".Activity.City.CityViewAllActivity"
-            android:exported="false" />
+
+        <activity android:name=".Activity.City.CityViewAllActivity"
+            android:exported="false"/>
         <activity
             android:name=".Activity.City.CinemaOfCity"
             android:exported="false" />
@@ -89,16 +88,9 @@
         <activity
             android:name=".Activity.Booking.SuccessCheckoutActivity"
             android:exported="true" />
-        <activity
-            android:name=".Activity.Movie.AddMovieActivity"
-            android:exported="true"
-            android:theme="@style/Theme.MovieProject.Main" />
+
         <activity
             android:name=".Activity.Account.SplashActivity"
-            android:exported="true"
-            android:theme="@style/Theme.MovieProject.Main" />
-        <activity
-            android:name=".Activity.Movie.AddMovieActivity"
             android:exported="true"
            >
             <intent-filter>
@@ -107,16 +99,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Activity.Movie.AddMovieActivity"/>
         <activity
             android:name=".Activity.Booking.BookSeatActivity"
             android:exported="false"
             android:theme="@style/Theme.MovieProject.Main" />
-<<<<<<< HEAD
-        <activity
-            android:name=".Activity.Movie.AddMovieActivity"
-            android:exported="false" />
-=======
->>>>>>> ea90e9b6ca4cd56459bc583fd56a7fcbcc955ea5
         <activity
             android:name=".Activity.Booking.BookedActivity"
             android:exported="true"

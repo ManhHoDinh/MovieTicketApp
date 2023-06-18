@@ -33,6 +33,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.auth.User;
 import com.google.firebase.storage.FirebaseStorage;
@@ -58,6 +59,7 @@ public class SignUpActivity extends AppCompatActivity {
     EditText confirmPasswordET;
     Uri avataUri = null;
     String avatarUrl;
+    String fullname;
 //    @Override
 //    public void onStart() {
 //        super.onStart();
@@ -134,6 +136,7 @@ public class SignUpActivity extends AppCompatActivity {
                     error=true;
                 }
                 if(!error){
+                    fullname = fullNameET.getText().toString();
                     Calendar calFordData = Calendar.getInstance();
                     SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-yyyy");
                     String saveCurrentData = currentDate.format(calFordData.getTime());
@@ -181,9 +184,9 @@ public class SignUpActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = FirebaseRequest.mAuth.getCurrentUser();
-                            UpdateFullName();
+                            UpdatePhotho();
                             user.getUid();
-                            Users u = new Users(user.getUid(), Name, email,0, "user");
+                            Users u = new Users(user.getUid(), Name, email,0, "user", avatarUrl);
                             FirebaseRequest.database.collection("Users").document(user.getUid())
                                     .set(u.toJson())
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -213,10 +216,10 @@ public class SignUpActivity extends AppCompatActivity {
 
 
     }
-    void UpdateFullName()
-    {
+
+    private void UpdatePhotho() {
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(fullNameET.getText().toString())
+                .setPhotoUri(Uri.parse(avatarUrl)).setDisplayName(fullname)
                 .build();
         FirebaseRequest.mAuth.getCurrentUser().updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -229,6 +232,5 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
     }
-
 
 }
