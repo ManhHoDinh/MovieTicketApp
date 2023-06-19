@@ -37,12 +37,14 @@
                 android:textFontWeight="400"
                 />
         <ImageView
-            android:id="@+id/cityMenu"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:id="@+id/deleteCity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:src="@drawable/promo_edit"
+            android:src="@drawable/trash"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

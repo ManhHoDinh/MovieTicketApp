@@ -111,6 +111,7 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                     ComingFilms.clear();
                     for (QueryDocumentSnapshot documentSnapshot : value) {
                         FilmModel f = documentSnapshot.toObject(FilmModel.class);
+
                         if(f.getMovieBeginDate().toDate().before(Helper.getCurrentDate()))
                             PlayingFilms.add(f);
                         else
@@ -133,7 +134,7 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                     for (QueryDocumentSnapshot documentSnapshot : value) {
                         FilmModel f = documentSnapshot.toObject(FilmModel.class);
                         if (f.getGenre().contains(type)) {
-                            if(f.getStatus().equals("playing")){
+                            if(f.getMovieBeginDate().toDate().before(Helper.getCurrentDate())){
                                 PlayingFilms.add(f);
 
                             }

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import com.example.movieticketapp.R;
 
 public class NotificationDetailActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
