@@ -99,6 +99,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -145,7 +146,7 @@ public class AddMovieActivity extends AppCompatActivity{
     Uri traileruri = null;
 
     String urlbackground;
-
+    Timestamp dateStart;
     String urlavatar;
     String videoUrl="";
 
@@ -153,10 +154,13 @@ public class AddMovieActivity extends AppCompatActivity{
     UploadTask uploadTask2;
     Button calendarButton;
     TrailerMovieApdapter adapter;
+    List<String> InStorageVideoUris=new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_movie_screen);
+        InStorageVideoUris.clear();
         defaultUri=Uri.parse("https://example.com/default");;
         calendarButton = findViewById(R.id.Calendar);
 
@@ -352,29 +356,32 @@ public class AddMovieActivity extends AppCompatActivity{
                             }
                         }
                     });
-                    StorageReference VideoStorageReference= FirebaseStorage.getInstance().getReference().child("Movies/"+MovieName+"/"+MovieName+"Video.mp4");
-                    VideoStorageReference.putFile(traileruri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                        @Override
-                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                            if (!task.isSuccessful()) {
-                                throw task.getException();
-                            }
+                     for(int i = 0; i < AddMovieActivity.videoUris.size();i++)
+                    {
+                        StorageReference VideoStorageReference= FirebaseStorage.getInstance().getReference().child("Movies/"+MovieName+"/"+MovieName+"Video"+String.valueOf(i)+".mp4");
+                        VideoStorageReference.putFile(AddMovieActivity.videoUris.get(i)).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                            @Override
+                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                if (!task.isSuccessful()) {
+                                    throw task.getException();
+                                }
 
-                            // Continue with the task to get the download URL
-                            return VideoStorageReference.getDownloadUrl();
-                        }
-                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Uri> task) {
-                            if (task.isSuccessful()) {
-                                videoUrl = task.getResult().toString();
-                                SaveDatatoDatabase();
-                            } else {
-                                Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
+                                // Continue with the task to get the download URL
+                                return VideoStorageReference.getDownloadUrl();
                             }
-                        }
-                    });
+                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                if (task.isSuccessful()) {
+                                    InStorageVideoUris.add(task.getResult().toString());
+                                    SaveDatatoDatabase();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
 
+                    }
                 }
                 else
                 {
@@ -383,17 +390,6 @@ public class AddMovieActivity extends AppCompatActivity{
                 }
             }
 
-//            @Override
-//            public void onClick(View view) {
-//                // Initialize the YouTubeUploader class
-//                final VideoView videoView = findViewById(R.id.Demo); //id in your xml file
-//                videoView.setVideoURI(Uri.parse("https://firebasestorage.googleapis.com/v0/b/movie-ticket-app-0.appspot.com/o/video%2Fvideoplayback.mp4?alt=media&token=4ffbea2f-9a58-435a-94a0-eccc48f09798")); //the string of the URL mentioned above
-//                videoView.requestFocus();
-//                videoView.start();
-//                MediaController mediaController = new MediaController(AddMovieActivity.this);
-//                videoView.setMediaController(mediaController);
-//                mediaController.setAnchorView(videoView);
-//            }
         });
         cancleButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -440,9 +436,9 @@ public class AddMovieActivity extends AppCompatActivity{
         data.put("genre", movieKind.getText().toString());
         data.put("id", movieName.getText().toString());
         data.put("name", movieName.getText().toString());
-        data.put("movieBeginDate", Timestamp.now());
+        data.put("movieBeginDate", dateStart);
         data.put("vote", 0);
-        data.put("trailer",videoUrl);
+        data.put("trailer",InStorageVideoUris);
         document.set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
@@ -450,13 +446,12 @@ public class AddMovieActivity extends AppCompatActivity{
             }
         });
     }
-    int y = 0;
-    int m = 0;
-    int d = 0;
-
+    LocalDate localDate;
     private void showCalendarDialog() {
         // Create a calendar instance and get the current date
         Calendar calendar = Calendar.getInstance();
+        if(localDate!=null)
+            calendar.set(localDate.getYear(),localDate.getMonthValue(),localDate.getDayOfMonth());
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
@@ -488,6 +483,16 @@ public class AddMovieActivity extends AppCompatActivity{
                         int month = datePicker.getMonth();
                         int dayOfMonth = datePicker.getDayOfMonth();
                         String date = String.valueOf(dayOfMonth) + "/" + String.valueOf(month + 1) + "/" + String.valueOf(year);
+                        localDate = LocalDate.of(year, month, dayOfMonth);
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        calendar.set(Calendar.MONTH, month); // Note: Calendar.MONTH is zero-based
+                        calendar.set(Calendar.YEAR, year);
+                        calendar.set(Calendar.HOUR, 0);
+                        calendar.set(Calendar.MINUTE, 0);
+                        calendar.set(Calendar.SECOND, 0);
+
+                        dateStart = new Timestamp(calendar.getTime());
                         calendarButton.setText(date);dismiss();
                     }
                 });
@@ -640,12 +645,12 @@ public class AddMovieActivity extends AppCompatActivity{
         ListView listView = dialogView.findViewById(R.id.dialog_list);
 
         // Set the custom background colors
-        titleTextView.setBackgroundColor(getResources().getColor(android.R.color.holo_green_dark));
-        okButton.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+        titleTextView.setBackgroundColor(getResources().getColor(R.color.main_color));
+        okButton.setBackgroundColor(getResources().getColor(R.color.main_color));
         cancelButton.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
 
         // Define the list of selectable items
-        String[] movieTypes = {"All", "Horror", "Action", "Drama", "War", "Comedy", "Crime"};
+        String[] movieTypes = {"Horror", "Action", "Drama", "War", "Comedy", "Crime"};
 
         // Create the adapter for the ListView
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, movieTypes);
@@ -690,31 +695,6 @@ public class AddMovieActivity extends AppCompatActivity{
     {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-    }
-    public  ActivityResultLauncher<PickVisualMediaRequest>   pickVideo(TextView text, ImageView img,VideoView video )
-    {
-        ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
-                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
-                            if (uri != null) {
-                                video.setBackground(null);
-                                video.setVideoURI(uri);
-                                //traileruri = uri;
-                                //movietrailer.start();
-
-                                MediaController mediaController = new MediaController(video.getContext());
-                                video.setMediaController(mediaController);
-                                mediaController.setAnchorView(video);
-                                if(uri!=null)
-                                {
-                                    text.setText("");
-                                    img.setImageResource(0);
-                                }
-                            } else {
-                                Log.d("PhotoPicker", "No media selected");
-                            }
-                        }
-                );
-        return pickMedia;
     }
 
 
