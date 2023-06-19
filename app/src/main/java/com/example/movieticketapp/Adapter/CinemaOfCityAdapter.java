@@ -14,17 +14,23 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.movieticketapp.Activity.Cinema.AddCinemaActivity;
 import com.example.movieticketapp.Activity.City.AddCityActivity;
+import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Cinema;
 import com.example.movieticketapp.Model.City;
+import com.example.movieticketapp.Model.ShowTime;
 import com.example.movieticketapp.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
@@ -91,8 +97,26 @@ public class CinemaOfCityAdapter extends ArrayAdapter<Cinema> {
                                     public void onClick(View view) {
                                         FirebaseFirestore db = FirebaseFirestore.getInstance();
                                         CollectionReference cinemaRef = db.collection("Cinema");
-                                        cinemaRef.document(cinema.getCinemaID()).delete();
+                                        FirebaseRequest.database.collection("Showtime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                boolean isExisted = false;
+                                                for(DocumentSnapshot documentSnapshot : queryDocumentSnapshots){
+                                                    ShowTime showTime = documentSnapshot.toObject(ShowTime.class);
+                                                    if(showTime.getCinemaID().equals(cinema.getCinemaID())){
+                                                        isExisted = true;
+                                                    }
+                                                }
+                                                if(isExisted){
+                                                    Toast.makeText(getContext(), "Cinema is having showtime!!", Toast.LENGTH_SHORT).show();
+                                                }
+                                                else {
+                                                    cinemaRef.document(cinema.getCinemaID()).delete();
+                                                }
+                                            }
+                                        });
                                         OptionDialog.dismiss();
+
                                     }
                                 });
                                 Cancel.setOnClickListener(new View.OnClickListener() {

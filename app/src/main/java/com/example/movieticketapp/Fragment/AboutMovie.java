@@ -24,6 +24,7 @@ import android.widget.VideoView;
 import com.example.movieticketapp.Activity.Booking.BookedActivity;
 import com.example.movieticketapp.Activity.Booking.ShowTimeScheduleActivity;
 import com.example.movieticketapp.Adapter.AddDecoration;
+import com.example.movieticketapp.Adapter.Helper;
 import com.example.movieticketapp.Adapter.VideoAdapter;
 import com.example.movieticketapp.Model.Comment;
 import com.example.movieticketapp.Model.ExtraIntent;
@@ -72,11 +73,11 @@ public class AboutMovie extends Fragment {
         Button BookBt = getView().findViewById(R.id.BookBt);
         List<String> videoList = new ArrayList<>();
 
-        if(film.getStatus().equals("coming")) {
+        if(film.getMovieBeginDate().toDate().after(Helper.getCurrentDate())) {
 
             BookBt.setVisibility(View.GONE);
         }
-            else BookBt.setVisibility(View.VISIBLE);
+        else BookBt.setVisibility(View.VISIBLE);
 
         videoListView = getView().findViewById(R.id.videoList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext(), RecyclerView.HORIZONTAL, false);
@@ -119,7 +120,7 @@ public class AboutMovie extends Fragment {
                         }
                     });
                 }
-            else {
+                else {
                     BookBt.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {

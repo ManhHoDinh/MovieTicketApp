@@ -25,6 +25,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ViewAllActivity extends AppCompatActivity {
@@ -64,17 +66,34 @@ public class ViewAllActivity extends AppCompatActivity {
                     return;
                 }
                 listFilm.clear();
+                Calendar calendar = Calendar.getInstance();
+                Date currentDate = calendar.getTime();
                 for (QueryDocumentSnapshot documentSnapshot : value) {
                     FilmModel f = documentSnapshot.toObject(FilmModel.class);
-                    if(f.getStatus().equals(status)){
-                        if(InforBooked.getInstance().typeFilm.equals("All")){
-                            listFilm.add(f);
-                        }
-                        else if (f.getGenre().contains(InforBooked.getInstance().typeFilm)) {
-                            listFilm.add(f);
-                        } else {
+                    if(status.equals("playing")){
+                        if(f.getMovieBeginDate().toDate().before(currentDate)){
+                            if(InforBooked.getInstance().typeFilm.equals("All")){
+                                listFilm.add(f);
+                            }
+                            else if (f.getGenre().contains(InforBooked.getInstance().typeFilm)) {
+                                listFilm.add(f);
+                            } else {
+                            }
                         }
                     }
+                    else {
+                        if(f.getMovieBeginDate().toDate().after(currentDate)){
+                            if(InforBooked.getInstance().typeFilm.equals("All")){
+                                listFilm.add(f);
+                            }
+                            else if (f.getGenre().contains(InforBooked.getInstance().typeFilm)) {
+                                listFilm.add(f);
+                            } else {
+                            }
+                        }
+
+                    }
+
 
                 }
                 filmGridview.setAdapter(new ViewAllAdapter(listFilm, ViewAllActivity.this));

@@ -23,7 +23,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.Gravity;
@@ -59,6 +61,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -87,6 +90,9 @@ public class SignInActivity extends AppCompatActivity {
     Button LoginBtn;
     ImageView GoogleLogin;
     ImageView FacebookLogin;
+    TextInputLayout passwordLayout;
+    TextInputLayout emailLayout;
+
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
     private SignInClient oneTapClient;
@@ -104,7 +110,48 @@ public class SignInActivity extends AppCompatActivity {
         GoogleLogin = findViewById(R.id.GoogleLogin);
         FacebookLogin = findViewById(R.id.FacebookLogin);
         forgotPasswordTv = findViewById(R.id.ForgotPassword);
+        passwordLayout = findViewById(R.id.layoutPassword);
+        emailLayout = findViewById(R.id.emailLayout);
+        emailET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                emailLayout.setError("");
+                emailLayout.setHelperText("");
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        passwordET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(passwordET.length() < 8){
+                    passwordLayout.setHelperText("Enter minimum 8 characters");
+                    passwordLayout.setError("");
+                }
+                else{
+                    passwordLayout.setHelperText("");
+                    passwordLayout.setError("");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -275,7 +322,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     void CreateUser(FirebaseUser user){
-        Users u = new Users(user.getUid(),   user.getDisplayName(),user.getEmail(),0, "user");
+        Users u = new Users(user.getUid(),   user.getDisplayName(),user.getEmail(),0, "user", null);
         FirebaseRequest.database.collection("Users").document(user.getUid())
                 .set(u.toJson())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -305,11 +352,15 @@ public class SignInActivity extends AppCompatActivity {
     void LoginWithEmail() {
         boolean error = false;
         if (emailET.length() == 0) {
-            emailET.setError("Email is not empty!!!");
+            emailLayout.setError("Email is not empty!!!");
             error=true;
         }
         if (passwordET.length() == 0) {
-            passwordET.setError("Password is not empty!!!");
+            passwordLayout.setError("Password is not empty!!!");
+            error=true;
+        }
+        else if (passwordET.length() <8){
+            passwordLayout.setError("password is too short!!");
             error=true;
         }
         if(!error)
@@ -328,8 +379,9 @@ public class SignInActivity extends AppCompatActivity {
                         } else {
                             Toast.makeText(SignInActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            emailET.setError("Email or Password is incorrect");
-                            passwordET.setError("Email or Password is incorrect");
+                            emailLayout.setError("Email or Password is incorrect");
+                            passwordLayout.setError("Email or Password is incorrect");
+
                         }
                     }
                 });

@@ -38,7 +38,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:layout_centerHorizontal="true"
-                    android:text="Create New\nYour Account"
+                    android:text="Edit Your Profile"
                     android:textColor="@color/white_background"
                     android:fontFamily="@font/montserrat_regular"
                     android:textFontWeight="600"

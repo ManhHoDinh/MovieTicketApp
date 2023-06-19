@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -92,6 +94,7 @@ public class AddCinemaActivity extends AppCompatActivity {
 
                             imageCinema.setImageURI(filePath);
                             img = UUID.randomUUID().toString();
+                            addCinemaLayout.setVisibility(View.GONE);
                             StorageReference ref
                                     = storageReference
                                     .child(img);
@@ -143,8 +146,16 @@ public class AddCinemaActivity extends AppCompatActivity {
             priceCinema.setText(String.valueOf(cinemaEdit.getPrice()));
             addressCinema.setText(cinemaEdit.getAddress());
             img = cinemaEdit.getImage();
-
+            addCinemaLayout.setVisibility(View.GONE);
         }
+
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
     void updateImage(){
         addCinemaLayout.setOnClickListener(new View.OnClickListener() {
@@ -155,7 +166,16 @@ public class AddCinemaActivity extends AppCompatActivity {
                 activityLauch.launch(imageIntent);
             }
         });
+        imageCinema.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent imageIntent = new Intent(Intent.ACTION_PICK);
+                imageIntent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                activityLauch.launch(imageIntent);
+            }
+        });
     }
+
     void initValue(){
         nameCinema = findViewById(R.id.cinemaNameEt);
         imageCinema = findViewById(R.id.cinemaImage);

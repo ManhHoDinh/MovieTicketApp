@@ -6,27 +6,43 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.media.Image;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.MediaController;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -35,12 +51,19 @@ import android.widget.VideoView;
 
 import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
+import com.example.movieticketapp.Adapter.ServiceAdapter;
+import com.example.movieticketapp.Adapter.TrailerMovieApdapter;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
+import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
+import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.media.MediaHttpUploader;
 import com.google.api.client.googleapis.media.MediaHttpUploaderProgressListener;
@@ -48,6 +71,11 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.util.Value;
+import com.google.api.services.youtube.YouTube;
+import com.google.api.services.youtube.model.VideoSnippet;
+import com.google.api.services.youtube.model.VideoStatus;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -56,29 +84,39 @@ import com.google.firebase.storage.UploadTask;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 
-//import com.google.api.client.json.jackson2.JacksonFactory;
-//import com.google.api.services.youtube.YouTube;
-//import com.google.api.services.youtube.YouTubeScopes;
-//import com.google.api.services.youtube.model.Video;
-//import com.google.api.services.youtube.model.VideoSnippet;
-//import com.google.api.services.youtube.model.VideoStatus;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.youtube.YouTube;
+import com.google.api.services.youtube.YouTubeScopes;
+import com.google.api.services.youtube.model.Video;
+import com.google.api.services.youtube.model.VideoSnippet;
+import com.google.api.services.youtube.model.VideoStatus;
 
+
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
 
 
-public class AddMovieActivity extends AppCompatActivity {
-    private static final String CLIENT_SECRETS_FILE = "client_secret.json";
-    private static final String APPLICATION_NAME = "Your Application Name";
+public class AddMovieActivity extends AppCompatActivity{
+    private static final String APPLICATION_NAME = "M";
+    public static List<Uri> videoUris= new ArrayList<>();
+    public static  Uri defaultUri;
+    public  ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
+    public  ActivityResultLauncher<PickVisualMediaRequest> pickVideo;
     int th;
     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     StorageReference storageReference2 = FirebaseStorage.getInstance().getReference();
@@ -93,254 +131,277 @@ public class AddMovieActivity extends AppCompatActivity {
     ImageView imavt;
     EditText description;
     EditText movieName;
-    EditText movieKind;
+    TextView movieKind;
     EditText movieDurarion;
     Button statusmovie;
     String status;
     RoundedImageView movieactor;
     ImageView imcast;
     TextView textcast;
-
-    VideoView movietrailer;
-    ImageView imtrailer;
-    TextView texttrailer;
+    public static Context context;
     Button applyButton;
     Button cancleButton;
     Uri backgrounduri;
     Uri avataruri = null;
-    Uri actoruri = null;
     Uri traileruri = null;
 
     String urlbackground;
-
+    Timestamp dateStart;
     String urlavatar;
-    String urlactor;
-    String urltrailer;
+    String videoUrl="";
+
     UploadTask uploadTask;
     UploadTask uploadTask2;
-    boolean error = false;
     Button calendarButton;
+    TrailerMovieApdapter adapter;
+    List<String> InStorageVideoUris=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_movie_screen);
+        InStorageVideoUris.clear();
+        defaultUri=Uri.parse("https://example.com/default");;
         calendarButton = findViewById(R.id.Calendar);
+
        calendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Show calendar dialog
                 showCalendarDialog();
+                dismissKeyboard(v);
             }
         });
-//        TextView cas = (TextView) findViewById(R.id.castCrewTV);
-//        cas.setText("Cast & Crew");
-//
-//        moviebackground = (ImageView) findViewById(R.id.moviebackground);
-//        textbg = (TextView) findViewById(R.id.textbackground);
-//        imbg = (ImageView) findViewById(R.id.imbackground);
-//
-//        movieavatar = (RoundedImageView) findViewById(R.id.movieavatar);
-//        textavt = (TextView) findViewById(R.id.textavt);
-//        imavt = (ImageView) findViewById(R.id.imavt);
-//
-//        description = (EditText) findViewById(R.id.moviedes);
-//        movieName = (EditText) findViewById(R.id.movieName);
-//        movieKind = (EditText) findViewById(R.id.movieKind);
-//        movieDurarion =(EditText) findViewById(R.id.movieDuration);
-//        statusmovie = (Button) findViewById(R.id.btnstatus);
-//        applyButton = (Button) findViewById(R.id.applybutton);
-//        cancleButton = (Button) findViewById(R.id.cancelbutton);
-//
-//        movieactor = (RoundedImageView) findViewById(R.id.movieactor);
-//        imcast = (ImageView) findViewById(R.id.imcast);
-//        textcast = (TextView) findViewById(R.id.textcast);
-//
-//        movietrailer = (VideoView) findViewById(R.id.movietrailer);
-//        imtrailer = (ImageView) findViewById(R.id.imtrailer);
-//        texttrailer = (TextView) findViewById(R.id.texttrailer);
-//
-//        ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
-//                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
-//                            if (uri != null) {
-//                                switch (th) {
-//                                    case 0:
-//                                        moviebackground.setImageURI(uri);
-//                                        backgrounduri = uri;
-//                                        break;
-//                                    case 1:
-//                                        movieavatar.setImageURI(uri);
-//                                        avataruri = uri;
-//                                        break;
-//                                    case 2:
-//                                        movieactor.setImageURI(uri);
-//                                        actoruri = uri;
-//                                        break;
-//                                    case 3:
-//                                        movietrailer.setBackground(null);
-//                                        movietrailer.setVideoURI(uri);
-//                                        traileruri = uri;
-//                                        movietrailer.start();
-//
-//                                        MediaController mediaController = new MediaController(this);
-//                                        movietrailer.setMediaController(mediaController);
-//                                        mediaController.setAnchorView(movietrailer);
-//                                        break;
-//                                }
-//
-//                            } else {
-//                                Log.d("PhotoPicker", "No media selected");
-//                            }
-//                        }
-//                );
-//
-//
-//        moviebackground.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                pickMedia.launch(new PickVisualMediaRequest.Builder()
-//                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-//                        .build());
-//                th = 0;
-//                textbg.setText("");
-//                imbg.setImageResource(0);
-//
-//            }
-//        });
-//        movieavatar.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                pickMedia.launch(new PickVisualMediaRequest.Builder()
-//                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-//                        .build());
-//                th = 1;
-//                textavt.setText("");
-//                imavt.setImageResource(0);
-//
-//            }
-//        });
-//        movieactor.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-////                pickMedia.launch(new PickVisualMediaRequest.Builder()
-////                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-////                        .build());
-//                th = 2;
-//                textcast.setText("");
-//                imcast.setImageResource(0);
-//            }
-//        });
-//        movietrailer.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-////                pickMedia.launch(new PickVisualMediaRequest.Builder()
-////                        .setMediaType(ActivityResultContracts.PickVisualMedia.VideoOnly.INSTANCE)
-////                        .build());
-//                th = 3;
-//                texttrailer.setText("");
-//                imtrailer.setImageResource(0);
-//            }
-//        });
-//        statusmovie.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                ShowMenu();
-//            }
-//        });
-//        applyButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (movieName.length() == 0) {
-//                    movieName.setError("Movie Name cannot be empty!!!");
-//                    error = true;
-//                }
-//                if (movieKind.length() == 0) {
-//                    movieKind.setError("Movie Kind cannot be empty!!!");
-//                    error = true;
-//                }
-//                if (movieDurarion.length() == 0) {
-//                    movieDurarion.setError("Movie Duration cannot be empty!!!");
-//                    error = true;
-//                }
-//                if (status.length() == 0){
-//                    error = true;
-//                }
-//
-//
-//                if (!error)
-//                {
-//                    Calendar calFordData = Calendar.getInstance();
-//                    SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-yyyy");
-//                    String saveCurrentData = currentDate.format(calFordData.getTime());
-//
-//                    Calendar calFordTime = Calendar.getInstance();
-//                    SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm");
-//                    String saveCurrentTime = currentTime.format(calFordData.getTime());
-//
-//                    String postRandomName = saveCurrentData + saveCurrentTime;
-//
-//                    storageReference = storageReference.child(postRandomName+".jpg");
-//                    uploadTask = storageReference.putFile(backgrounduri);
-//                    Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-//                        @Override
-//                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-//                            if (!task.isSuccessful()) {
-//                                throw task.getException();
-//                            }
-//
-//                            // Continue with the task to get the download URL
-//                            return storageReference.getDownloadUrl();
-//                        }
-//                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<Uri> task) {
-//                            if (task.isSuccessful()) {
-//                                urlbackground = task.getResult().toString();
-//                                SaveDatatoDatabase();
-//                            } else {
-//                                Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    });
-//                    storageReference2 = storageReference2.child(postRandomName+"th2.jpg");
-//                    uploadTask2 = storageReference2.putFile(avataruri);
-//                    Task<Uri> urlTask2 = uploadTask2.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-//                        @Override
-//                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-//                            if (!task.isSuccessful()) {
-//                                throw task.getException();
-//                            }
-//
-//                            // Continue with the task to get the download URL
-//                            return storageReference2.getDownloadUrl();
-//                        }
-//                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<Uri> task) {
-//                            if (task.isSuccessful()) {
-//                                urlavatar = task.getResult().toString();
-//                                SaveDatatoDatabase();
-//                            } else {
-//                                Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    });
-//                }
-//                else
-//                {
-//                    Toast toast = Toast.makeText(getApplicationContext(), "Have some errors!!!", Toast.LENGTH_SHORT);
-//                    toast.show();
-//                }
-//            }
-//        });
-//        cancleButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
-//    }
-//    private void ShowMenu(){
+        moviebackground = (ImageView) findViewById(R.id.moviebackground);
+        textbg = (TextView) findViewById(R.id.textbackground);
+        imbg = (ImageView) findViewById(R.id.imbackground);
+
+        movieavatar = (RoundedImageView) findViewById(R.id.movieavatar);
+        textavt = (TextView) findViewById(R.id.textavt);
+        imavt = (ImageView) findViewById(R.id.imavt);
+
+        description = (EditText) findViewById(R.id.MovieDescription);
+        movieName = (EditText) findViewById(R.id.movieName);
+        movieKind = (TextView) findViewById(R.id.movieKind);
+        movieDurarion =(EditText) findViewById(R.id.movieDuration);
+        applyButton = (Button) findViewById(R.id.applybutton);
+        cancleButton = (Button) findViewById(R.id.cancelbutton);
+
+        LinearLayout layoutElement = findViewById(R.id.AddMovieLayout); // Replace with your actual layout element ID
+
+        layoutElement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Hide the keyboard
+                dismissKeyboard(v);
+
+            }
+        });
+        movieKind.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Dialog builder= onCreateDialog();
+                builder.show();
+                dismissKeyboard(view);
+            }
+        });
+        RecyclerView containerLayout = findViewById(R.id.containerLayout);
+        Button addButton = findViewById(R.id.addButton);
+        List<String> videos=new ArrayList<>();
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                videos.add("add");
+                videoUris.add(defaultUri);
+                adapter = new TrailerMovieApdapter(videos, AddMovieActivity.this);
+                containerLayout.setAdapter(adapter);
+                LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+                containerLayout.setLayoutManager(VerLayoutManager);
+                Log.d("Video Length : ",String.valueOf(videos.size()));
+            }
+        });
+
+
+
+        pickMedia =
+                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                            if (uri != null) {
+                                switch (th) {
+                                    case 0:
+                                        moviebackground.setImageURI(uri);
+                                        backgrounduri = uri;
+                                        if(uri!=null)
+                                        {
+                                            textbg.setText("");
+                                            imbg.setImageResource(0);
+                                        }
+                                        break;
+                                    case 1:
+                                        movieavatar.setImageURI(uri);
+                                        avataruri = uri;
+                                        if(uri!=null)
+                                        {
+                                            textavt.setText("");
+                                            imavt.setImageResource(0);
+                                        }
+                                        break;
+
+                                }
+
+                            } else {
+                                Log.d("PhotoPicker", "No media selected");
+                            }
+                        }
+                );
+
+        moviebackground.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pickMedia.launch(new PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                        .build());
+                th = 0;
+                dismissKeyboard(view);
+            }
+        });
+        movieavatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pickMedia.launch(new PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                        .build());
+                th = 1;
+                dismissKeyboard(view);
+            }
+        });
+
+       pickVideo =
+                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                    if (uri != null) {
+                        int position = adapter.getSelectedPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            adapter.updateVideoElement(uri, position);
+                        }
+                    } else {
+                        Log.d("VideoPicker", "No video selected");
+                    }
+                });
+
+        applyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismissKeyboard(view);
+                boolean error = false;
+
+                if (movieName.length() == 0) {
+                    movieName.setError("Movie Name cannot be empty!!!");
+                    error = true;
+                }
+                if (movieKind.length() == 0) {
+                    movieKind.setError("Movie Kind cannot be empty!!!");
+                    error = true;
+                }
+                if (movieDurarion.length() == 0) {
+                    movieDurarion.setError("Movie Duration cannot be empty!!!");
+                    error = true;
+                }
+
+                if (!error)
+                {
+                    String MovieName = movieName.getText().toString();
+                    storageReference = storageReference.child("Movies/"+MovieName+"/"+MovieName+"Poster.jpg");
+                    uploadTask = storageReference.putFile(backgrounduri);
+                    uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                        @Override
+                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                            if (!task.isSuccessful()) {
+                                throw task.getException();
+                            }
+
+                            // Continue with the task to get the download URL
+                            return storageReference.getDownloadUrl();
+                        }
+                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if (task.isSuccessful()) {
+                                urlbackground = task.getResult().toString();
+                                SaveDatatoDatabase();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    storageReference2 = storageReference2.child("Movies/"+MovieName+"/"+MovieName+"Primary.jpg");
+                    uploadTask2 = storageReference2.putFile(avataruri);
+                    uploadTask2.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                        @Override
+                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                            if (!task.isSuccessful()) {
+                                throw task.getException();
+                            }
+
+                            // Continue with the task to get the download URL
+                            return storageReference2.getDownloadUrl();
+                        }
+                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if (task.isSuccessful()) {
+                                urlavatar = task.getResult().toString();
+                                SaveDatatoDatabase();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                     for(int i = 0; i < AddMovieActivity.videoUris.size();i++)
+                    {
+                        StorageReference VideoStorageReference= FirebaseStorage.getInstance().getReference().child("Movies/"+MovieName+"/"+MovieName+"Video"+String.valueOf(i)+".mp4");
+                        VideoStorageReference.putFile(AddMovieActivity.videoUris.get(i)).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                            @Override
+                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                if (!task.isSuccessful()) {
+                                    throw task.getException();
+                                }
+
+                                // Continue with the task to get the download URL
+                                return VideoStorageReference.getDownloadUrl();
+                            }
+                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                if (task.isSuccessful()) {
+                                    InStorageVideoUris.add(task.getResult().toString());
+                                    SaveDatatoDatabase();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+                    }
+                }
+                else
+                {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Have some errors!!!", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            }
+
+        });
+        cancleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismissKeyboard(view);
+                finish();
+            }
+        });
+    }
+
+
+    //    private void ShowMenu(){
 //        PopupMenu pm = new PopupMenu(this, statusmovie);
 //        pm.getMenuInflater().inflate(R.menu.status_movie_menu, pm.getMenu());
 //        pm.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -362,42 +423,50 @@ public class AddMovieActivity extends AppCompatActivity {
 //        pm.show();
 //    }
 //
-//    private void SaveDatatoDatabase() {
-//        document = databaseReference.document("Movies/"+movieName.getText().toString());
-//        Map<String, Object> data = new HashMap<String, Object>();
-//        data.put("BackGroundImage", urlbackground);
-//        data.put("PosterImage", urlbackground);
-//        data.put("PrimaryImage", urlavatar);
-//        data.put("description", description.getText().toString());
-//        data.put("durationTime", movieDurarion.getText().toString());
-//        data.put("genre", movieKind.getText().toString());
-//        data.put("id", movieName.getText().toString());
-//        data.put("name", movieName.getText().toString());
-//        data.put("status", status);
-//        data.put("vote", "0");
-//        document.set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
-//            @Override
-//            public void onSuccess(Void unused) {
-//                Toast.makeText(getApplicationContext(), "Add Movie Success!", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+    private void SaveDatatoDatabase() {
+
+
+        document = databaseReference.document("Movies/"+movieName.getText().toString());
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("BackGroundImage", urlbackground);
+        data.put("PosterImage", urlbackground);
+        data.put("PrimaryImage", urlavatar);
+        data.put("description", description.getText().toString());
+        data.put("durationTime", movieDurarion.getText().toString());
+        data.put("genre", movieKind.getText().toString());
+        data.put("id", movieName.getText().toString());
+        data.put("name", movieName.getText().toString());
+        data.put("movieBeginDate", dateStart);
+        data.put("vote", 0);
+        data.put("trailer",InStorageVideoUris);
+        document.set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(getApplicationContext(), "Add Movie Success!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+    LocalDate localDate;
     private void showCalendarDialog() {
         // Create a calendar instance and get the current date
         Calendar calendar = Calendar.getInstance();
+        if(localDate!=null)
+            calendar.set(localDate.getYear(),localDate.getMonthValue(),localDate.getDayOfMonth());
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-
         // Create a custom DatePickerDialog
         DatePickerDialog datePickerDialog = new DatePickerDialog(AddMovieActivity.this,
                 new DatePickerDialog.OnDateSetListener() {
+
                     @Override
                     public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
                         // Handle the selected date
                         // You can update the button text or perform any other actions here
-                        // selectedYear, selectedMonth, and selectedDay contain the selected date
+                        String date = String.valueOf(selectedDay) + "/" + String.valueOf(selectedMonth + 1) + "/" + String.valueOf(selectedYear);
+                        calendarButton.setText(date);
                     }
+
                 }, year, month, dayOfMonth) {
             @Override
             public void onCreate(Bundle savedInstanceState) {
@@ -406,7 +475,27 @@ public class AddMovieActivity extends AppCompatActivity {
                 // Get the "OK" button from the dialog's layout
                 Button positiveButton = getButton(DialogInterface.BUTTON_POSITIVE);
                 Button negativeButton = getButton(DialogInterface.BUTTON_NEGATIVE);
+                positiveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        DatePicker datePicker = getDatePicker();
+                        int year = datePicker.getYear();
+                        int month = datePicker.getMonth();
+                        int dayOfMonth = datePicker.getDayOfMonth();
+                        String date = String.valueOf(dayOfMonth) + "/" + String.valueOf(month + 1) + "/" + String.valueOf(year);
+                        localDate = LocalDate.of(year, month, dayOfMonth);
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        calendar.set(Calendar.MONTH, month); // Note: Calendar.MONTH is zero-based
+                        calendar.set(Calendar.YEAR, year);
+                        calendar.set(Calendar.HOUR, 0);
+                        calendar.set(Calendar.MINUTE, 0);
+                        calendar.set(Calendar.SECOND, 0);
 
+                        dateStart = new Timestamp(calendar.getTime());
+                        calendarButton.setText(date);dismiss();
+                    }
+                });
                 // Set the desired background color for the button
                 positiveButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.green));
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
@@ -418,20 +507,20 @@ public class AddMovieActivity extends AppCompatActivity {
 
         // Show the dialog
         datePickerDialog.show();
-        calendarButton.setText(String.valueOf(year));
     }
 
 //    private void uploadVideoToYouTube(Uri videoUri) {
 //        // Khởi tạo YouTube API client
 //        YouTube youtube = null;
+//
 //        try {
 //            youtube = buildYouTubeClient();
 //        } catch (IOException | GeneralSecurityException e) {
-//            e.printStackTrace();
+//            Log.d("Error"+e.getMessage(),e.getMessage());
 //        }
 //
 //        // Tạo một đối tượng Video để đại diện cho video sẽ được tải lên
-//        MediaStore.Video video = new MediaStore.Video();
+//        Video video = new Video();
 //
 //        // Thiết lập thông tin về video (tiêu đề, mô tả, v.v.)
 //        VideoSnippet snippet = new VideoSnippet();
@@ -450,66 +539,168 @@ public class AddMovieActivity extends AppCompatActivity {
 //            InputStream videoInputStream = getContentResolver().openInputStream(videoUri);
 //            mediaContent = new InputStreamContent("video/*", videoInputStream);
 //        } catch (IOException e) {
-//            e.printStackTrace();
+//            Log.d("Error 2 "+e.getMessage(),e.getMessage());
 //        }
 //
 //        try {
 //            // Tạo yêu cầu API để tải lên video
-//            YouTube.Videos.Insert videoInsert = youtube.videos()
-//                    .insert("snippet,status", video, mediaContent);
+//            YouTube.Videos.Insert videoInsert;
+//            if(youtube!=null)
+//            {
+//                videoInsert = youtube.videos()
+//                        .insert(Collections.singletonList("snippet,status"), video, mediaContent);
 //
-//            // Thiết lập cấu hình tải lên
-//            MediaHttpUploader uploader = videoInsert.getMediaHttpUploader();
-//            uploader.setDirectUploadEnabled(false);
-//            uploader.setProgressListener(new MediaHttpUploaderProgressListener() {
-//                @Override
-//                public void progressChanged(MediaHttpUploader uploader) throws IOException {
-//                    switch (uploader.getUploadState()) {
-//                        case INITIATION_STARTED:
-//                            System.out.println("Initiation Started");
-//                            break;
-//                        case INITIATION_COMPLETE:
-//                            System.out.println("Initiation Completed");
-//                            break;
-//                        case MEDIA_IN_PROGRESS:
-//                            System.out.println("Upload in progress: " + uploader.getProgress());
-//                            break;
-//                        case MEDIA_COMPLETE:
-//                            System.out.println("Upload Completed!");
-//                            break;
-//                        case NOT_STARTED:
-//                            System.out.println("Upload Not Started!");
-//                            break;
+//                // Thiết lập cấu hình tải lên
+//                MediaHttpUploader uploader = videoInsert.getMediaHttpUploader();
+//                uploader.setDirectUploadEnabled(false);
+//                uploader.setProgressListener(new MediaHttpUploaderProgressListener() {
+//                    @Override
+//                    public void progressChanged(MediaHttpUploader uploader) throws IOException {
+//                        switch (uploader.getUploadState()) {
+//                            case INITIATION_STARTED:
+//                                System.out.println("Initiation Started");
+//                                break;
+//                            case INITIATION_COMPLETE:
+//                                System.out.println("Initiation Completed");
+//                                break;
+//                            case MEDIA_IN_PROGRESS:
+//                                System.out.println("Upload in progress: " + uploader.getProgress());
+//                                break;
+//                            case MEDIA_COMPLETE:
+//                                System.out.println("Upload Completed!");
+//                                break;
+//                            case NOT_STARTED:
+//                                System.out.println("Upload Not Started!");
+//                                break;
+//                        }
 //                    }
-//                }
-//            });
+//                });
 //
-//            // Thực hiện yêu cầu API để tải lên video
-//            MediaStore.Video returnedVideo = videoInsert.execute();
+//                // Thực hiện yêu cầu API để tải lên video
+//                Video returnedVideo = videoInsert.execute();
 //
-//            // Lấy ID của video đã tải lên
-//            String videoId = returnedVideo.getId();
-//            System.out.println("Video upload successful! Video ID: " + videoId);
+//                // Lấy ID của video đã tải lên
+//                String videoId = returnedVideo.getId();
+//                System.out.println("Video upload successful! Video ID: " + videoId);
+//            }
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
 //    }
 //
-//    private YouTube buildYouTubeClient() throws IOException, GeneralSecurityException {
-//        HttpTransport httpTransport = new NetHttpTransport();
-//        JsonFactory jsonFactory = new JacksonFactory();
+//    private void buildYouTubeClient() {
+//        new AsyncTask<Void, Void, YouTube>() {
+//            @Override
+//            protected YouTube doInBackground(Void... voids) {
+//                try {
+//                    HttpTransport httpTransport = new NetHttpTransport();
+//                    JsonFactory jsonFactory = new JacksonFactory();
+//                    Resources res = getResources();
+//                    InputStream in = res.openRawResource(R.raw.client_secret);
 //
-//        // Đường dẫn đến tệp client_secret.json
-//        InputStream in = new FileInputStream(CLIENT_SECRETS_FILE);
-//        GoogleCredential credential = GoogleCredential.fromStream(in)
-//                .createScoped(Collections.singleton(YouTubeScopes.YOUTUBE_UPLOAD))
-//                .createDelegated("your_account@example.com"); // Thay thế bằng email của tài khoản Google
+//                    Log.d("Not Error", "Not Error");
 //
-//        // Xây dựng YouTube API client
-//        return new YouTube.Builder(httpTransport, jsonFactory, credential)
-//                .setApplicationName(APPLICATION_NAME)
-//                .build();
+//                    GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(jsonFactory, new InputStreamReader(in));
+//
+//                    GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
+//                            httpTransport, jsonFactory, clientSecrets, Collections.singleton(YouTubeScopes.YOUTUBE))
+//                            .build();
+//
+//                    // Perform the OAuth2 authorization process
+//                    Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
+//
+//                    // Build YouTube API client
+//                    Log.d("Not Error", "Not Error");
+//                    return new YouTube.Builder(httpTransport, jsonFactory, credential)
+//                            .setApplicationName(APPLICATION_NAME)
+//                            .build();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    return null;
+//                }
+//            }
+//
+//            @Override
+//            protected void onPostExecute(YouTube youTube) {
+//                if (youTube != null) {
+//                    // Use the YouTube client here
+//                } else {
+//                    // Handle the case when YouTube client creation fails
+//                }
+//            }
+//        }.execute();
 //    }
+
+    public Dialog onCreateDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddMovieActivity.this);
+
+        // Inflate the custom layout
+        View dialogView = getLayoutInflater().inflate(R.layout.custom_layout_dialog, null);
+        builder.setView(dialogView);
+
+        // Retrieve the views from the custom layout
+        TextView titleTextView = dialogView.findViewById(R.id.dialog_title);
+        Button okButton = dialogView.findViewById(R.id.dialog_ok_button);
+        Button cancelButton = dialogView.findViewById(R.id.dialog_cancel_button);
+        ListView listView = dialogView.findViewById(R.id.dialog_list);
+
+        // Set the custom background colors
+        titleTextView.setBackgroundColor(getResources().getColor(R.color.main_color));
+        okButton.setBackgroundColor(getResources().getColor(R.color.main_color));
+        cancelButton.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
+
+        // Define the list of selectable items
+        String[] movieTypes = {"Horror", "Action", "Drama", "War", "Comedy", "Crime"};
+
+        // Create the adapter for the ListView
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, movieTypes);
+        listView.setAdapter(adapter);
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        AlertDialog optionDialog = builder.create();
+
+        // Set the action buttons
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get the selected items
+                SparseBooleanArray checkedPositions = listView.getCheckedItemPositions();
+                List<String> selectedItems = new ArrayList<>();
+                for (int i = 0; i < checkedPositions.size(); i++) {
+                    int position = checkedPositions.keyAt(i);
+                    if (checkedPositions.valueAt(i)) {
+                        selectedItems.add(movieTypes[position]);
+                    }
+                }
+
+                // Handle selected items
+                String movieKinds = selectedItems.get(0);
+                for (int i = 1;i< selectedItems.size();i++) {
+                    movieKinds+=',' +selectedItems.get(i);
+                }
+                movieKind.setText(movieKinds);
+                optionDialog.dismiss();
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle Cancel button click
+                optionDialog.dismiss();
+            }
+        });
+        return optionDialog;
+    }
+    void dismissKeyboard(View v)
+    {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+    }
+
+
+    private static final int REQUEST_CODE_PICK_VIDEO = 123;
+
+
 }
 
 

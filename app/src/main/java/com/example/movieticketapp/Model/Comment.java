@@ -16,12 +16,13 @@ public class Comment {
 
     private String reviewText;
 
-    private String like;
+    private int like;
 
-    private String dislike;
+    private int dislike;
 
     private Timestamp timeStamp;
     private List<String> listReact;
+    private String ID;
 
     public Timestamp getTimeStamp() {
         return timeStamp;
@@ -43,7 +44,7 @@ public class Comment {
 //        return getDateTime().compareTo(o.getDateTime());
 //    }
     public Comment(){}
-    public Comment(String profileUrl, String name, String reviewText, String like, String dislike, Timestamp timeStamp, int rating, List<String> listReact) {
+    public Comment(String profileUrl, String name, String reviewText, int like, int dislike, Timestamp timeStamp, int rating, List<String> listReact, String ID) {
         this.profileUrl = profileUrl;
         this.name = name;
         this.reviewText = reviewText;
@@ -52,6 +53,15 @@ public class Comment {
         this.timeStamp = timeStamp;
         this.rating = rating;
         this.listReact = listReact;
+        this.ID = ID;
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
     }
 
     public List<String> getListReact() {
@@ -94,19 +104,19 @@ public class Comment {
         this.reviewText = reviewText;
     }
 
-    public String getLike() {
+    public int getLike() {
         return like;
     }
 
-    public void setLike(String like) {
+    public void setLike(int like) {
         this.like = like;
     }
 
-    public String getDislike() {
+    public int getDislike() {
         return dislike;
     }
 
-    public void setDislike(String dislike) {
+    public void setDislike(int dislike) {
         this.dislike = dislike;
     }
 //    protected Comment(Parcel in) {
