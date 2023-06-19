@@ -77,7 +77,7 @@ public class AboutMovie extends Fragment {
 
             BookBt.setVisibility(View.GONE);
         }
-            else BookBt.setVisibility(View.VISIBLE);
+        else BookBt.setVisibility(View.VISIBLE);
 
         videoListView = getView().findViewById(R.id.videoList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext(), RecyclerView.HORIZONTAL, false);
@@ -120,7 +120,7 @@ public class AboutMovie extends Fragment {
                         }
                     });
                 }
-            else {
+                else {
                     BookBt.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
