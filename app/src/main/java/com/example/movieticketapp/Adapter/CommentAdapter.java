@@ -1,10 +1,12 @@
 package com.example.movieticketapp.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Comment;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.Ticket;
@@ -19,6 +22,15 @@ import com.example.movieticketapp.R;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
@@ -27,6 +39,7 @@ import org.w3c.dom.Text;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.SimpleFormatter;
 
@@ -34,12 +47,14 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
     Context context;
     private int resource;
     List<Comment> commentList;
+    FilmModel film;
     int cellHeight = -1;
-    public CommentAdapter (Context context, int resource, List<Comment> commentList)
+    public CommentAdapter (Context context, int resource, List<Comment> commentList, FilmModel film)
     {
         super(context, resource, commentList);
         this.resource = resource;
         this.commentList = commentList;
+        this.film = film;
     }
 
     void SetImage(Comment postItem, RoundedImageView imageView){
@@ -62,9 +77,131 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
             v = vi.inflate(this.resource, null);
         }
 
+
+        ImageView likeBtn = v.findViewById(R.id.likeBtn);
+        ImageView dislikeBtn = v.findViewById(R.id.dislikeBtn);
+        DocumentReference userRef = FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid());
         Comment comment = getItem(position);
         if (comment != null)
         {
+            userRef.collection("LikeComment").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                    for(DocumentSnapshot doc : queryDocumentSnapshots){
+                        if(doc.get("commentID").toString().equals(comment.getID())){
+                            likeBtn.setImageResource(R.drawable.heart_fill_icon);
+                            likeBtn.setTag(R.drawable.heart_fill_icon);
+                        }
+                    }
+                }
+            });
+            userRef.collection("DisLikeComment").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    for(DocumentSnapshot doc : queryDocumentSnapshots){
+                        if(doc.get("commentID").toString().equals(comment.getID())){
+                            dislikeBtn.setImageResource(R.drawable.dislike_fill_icon);
+                            dislikeBtn.setTag(R.drawable.dislike_fill_icon);
+                        }
+                    }
+                }
+            });
+            DocumentReference commentDoc =  FirebaseRequest.database.collection("Movies")
+                    .document(film.getId()).collection("Comment")
+                    .document(comment.getID());
+            likeBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.e("f", "fsdc");
+                    if(likeBtn.getTag().equals("bg")){
+                        likeBtn.setImageResource(R.drawable.heart_fill_icon);
+                        likeBtn.setTag(R.drawable.heart_fill_icon);
+                        HashMap<String, String> likeComment = new HashMap<>();
+                        DocumentReference doc = userRef.collection("LikeComment").document(comment.getID());
+                        likeComment.put("commentID", comment.getID());
+                        doc.set(likeComment);
+                        commentDoc.update("like", comment.getLike() + 1);
+                        if(dislikeBtn.getTag().equals(R.drawable.dislike_fill_icon)){
+                            dislikeBtn.setImageResource(R.drawable.dislike_icon);
+                            dislikeBtn.setTag("cg");
+                            userRef.collection("DisLikeComment").document(comment.getID()).delete();
+                            commentDoc.update("dislike", comment.getDislike() - 1);
+                        }
+                    }else {
+                        likeBtn.setImageResource(R.drawable.heart_icon);
+                        likeBtn.setTag("bg");
+                        userRef.collection("LikeComment").document(comment.getID()).delete();
+                        commentDoc.update("like", comment.getLike() - 1);
+                    }
+//                    commentDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//                        @Override
+//                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                            Comment comment = documentSnapshot.toObject(Comment.class);
+//                            int countLike = comment.getLike();
+//                            int countDisLike = comment.getDislike();
+//
+//                            if(likeBtn.getTag().equals("bg")){
+//                                countLike -= 1;
+//                            }
+//                            else countLike +=1;
+//                            commentDoc.update("like", countLike).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<Void> task) {
+//
+//                                }
+//                            });
+//
+//
+//                        }
+//                    });
+
+                }
+            });
+            dislikeBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    if(dislikeBtn.getTag().equals("cg")){
+                        dislikeBtn.setImageResource(R.drawable.dislike_fill_icon);
+                        dislikeBtn.setTag(R.drawable.dislike_icon);
+                        HashMap<String, String> disLikeComment = new HashMap<>();
+                        DocumentReference doc = userRef.collection("DisLikeComment").document(comment.getID());
+                        disLikeComment.put("commentID", comment.getID());
+                        doc.set(disLikeComment);
+                        commentDoc.update("dislike", comment.getDislike() + 1);
+                        if(likeBtn.getTag().equals(R.drawable.heart_fill_icon)){
+                            likeBtn.setImageResource(R.drawable.heart_icon);
+                            likeBtn.setTag("bg");
+                            Log.e("d","1");
+                            userRef.collection("LikeComment").document(comment.getID()).delete();
+                            commentDoc.update("like", comment.getLike() - 1);
+                        }
+                    }else {
+                        Log.e("d","2");
+
+                        dislikeBtn.setImageResource(R.drawable.dislike_icon);
+                        dislikeBtn.setTag("cg");
+                        userRef.collection("DisLikeComment").document(comment.getID()).delete();
+                        commentDoc.update("dislike", comment.getDislike() - 1);
+                    }
+//                    commentDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//                        @Override
+//                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                            Comment comment = documentSnapshot.toObject(Comment.class);
+//                            int countDislike = comment.getDislike();
+//                            int countLike = comment.getLike();
+//
+//                            if(dislikeBtn.getTag().equals("cg")){
+//                                countDislike -= 1;
+//                            }
+//                            else countDislike +=1;
+//                            commentDoc.update("dislike", countDislike);
+//                        }
+//                    });
+
+                }
+            });
             String messager = "";
             RoundedImageView profile = v.findViewById(R.id.profile);
             TextView name = v.findViewById(R.id.name);
@@ -93,8 +230,8 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
             SetImage(comment, profile);
             name.setText(comment.getName());
             reviewText.setText(comment.getReviewText());
-            likeNumber.setText(comment.getLike());
-            dislikeNumber.setText(comment.getDislike());
+            likeNumber.setText(String.valueOf(comment.getLike()));
+            dislikeNumber.setText(String.valueOf(comment.getDislike()));
             SimpleDateFormat formatter =new SimpleDateFormat("dd/MM/yyyy");
             timeStamp.setText(formatter.format(comment.getTimeStamp().toDate()));
             switch (comment.getRating()){

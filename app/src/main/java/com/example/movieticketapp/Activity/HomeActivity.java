@@ -36,6 +36,7 @@ import com.example.movieticketapp.Activity.Movie.ViewAllActivity;
 import com.example.movieticketapp.Activity.Notification.NotificationActivity;
 import com.example.movieticketapp.Activity.Report.ReportActivity;
 import com.example.movieticketapp.Activity.Service.AddService;
+import com.example.movieticketapp.Activity.Service.ServiceViewAll;
 import com.example.movieticketapp.Activity.Ticket.MyTicketAllActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
 import com.example.movieticketapp.Adapter.CityAdapter;
@@ -184,6 +185,13 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(HomeActivity.this, DiscountViewAll.class);
+                startActivity(i);
+            }
+        });
+        binding.ServiceViewAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(HomeActivity.this, ServiceViewAll.class);
                 startActivity(i);
             }
         });

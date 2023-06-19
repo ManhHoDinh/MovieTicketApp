@@ -55,7 +55,6 @@ public class InformationFilmActivity extends FragmentActivity {
         setContentView(R.layout.information_film_screen);
         Intent intent = getIntent();
         f = intent.getParcelableExtra(ExtraIntent.film);
-
         backgroundImage = findViewById(R.id.backgroundImage);
         nameTV= findViewById(R.id.filmName);
         PosterImage= findViewById(R.id.PosterImage);

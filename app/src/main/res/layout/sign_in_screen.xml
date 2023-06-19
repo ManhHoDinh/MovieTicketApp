@@ -35,57 +35,81 @@
                  android:textFontWeight="500"
                 style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
                 android:textColor="@color/white_background"/>
-
-            <EditText
-                android:id="@+id/EmailET"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="41dp"
-                android:background="@drawable/edittext_boder"
-                android:hint="Email Address"
-                android:defaultFocusHighlightEnabled="true"
-                android:inputType="textEmailAddress"
-                android:paddingLeft="24dp"
-                android:singleLine="true"
-                android:textColor="@color/white_background"
-                android:textColorHint="@color/hint_color"
-                android:fontFamily="@font/montserrat_regular"
-                android:textFontWeight="400"
-                android:textSize="14dp"
-                android:paddingRight="20dp"
-                />
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layoutTextInput"
+                android:id="@+id/emailLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_marginTop="40dp"
+                app:hintTextColor="@color/white"
+                app:boxStrokeWidth="1dp"
+                app:boxCornerRadiusBottomStart="20dp"
+                app:boxCornerRadiusBottomEnd="20dp"
+                app:boxCornerRadiusTopEnd="20dp"
+                app:boxCornerRadiusTopStart="20dp"
+                app:boxStrokeColor="@drawable/border_input"
+                android:hint="Email Address"
+                android:textColorHint="@color/white"
+                app:startIconDrawable="@drawable/email_icon"
+                app:startIconTint="@color/white"
+                app:boxBackgroundMode="outline"
+                app:errorEnabled="true"
+
+
+                >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:paddingTop="20dp"
+                    android:id="@+id/EmailET"
+
+                    android:textColor="@color/white_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/hint_color"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:textSize="14dp"
+                    android:defaultFocusHighlightEnabled="true"
+                    android:singleLine="true"
+                    android:inputType="textEmailAddress"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_marginTop="44dp"
                 app:passwordToggleEnabled="true"
-                app:hintEnabled="false"
-                app:boxBackgroundMode="none"
-                android:paddingLeft="8dp"
+                app:hintTextColor="@color/white"
+                app:boxStrokeWidth="1dp"
+                app:boxCornerRadiusBottomStart="20dp"
+                app:boxCornerRadiusBottomEnd="20dp"
+                app:boxCornerRadiusTopEnd="20dp"
+                app:boxCornerRadiusTopStart="20dp"
+                app:boxStrokeColor="@drawable/border_input"
+                android:hint="Password"
+                android:textColorHint="@color/white"
+                app:startIconDrawable="@drawable/lock_icon"
+                app:startIconTint="@color/white"
+                app:boxBackgroundMode="outline"
                 app:endIconMode="password_toggle"
-                android:background="@drawable/edittext_boder"
+                app:helperTextEnabled="true"
+                app:helperTextTextColor="@color/main_color"
                 app:passwordToggleDrawable="@drawable/show_password_selector"
               >
                 <com.google.android.material.textfield.TextInputEditText
+                    android:paddingTop="20dp"
                     android:id="@+id/PasswordET"
                     android:textColor="@color/white_background"
-                    android:background="@android:color/transparent"
-                    android:singleLine="true"
-                    android:imeOptions="actionNext"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:textColorHint="@color/hint_color"
                     android:fontFamily="@font/montserrat_regular"
-                    android:textFontWeight="400"
                     android:textSize="14dp"
-                    android:hint="Password"
-                    android:padding="0dp"
                     android:inputType="textPassword"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="right"
@@ -95,6 +119,7 @@
                 android:layout_marginTop="12dp"
                 android:textColor="@color/white_background"
                 android:textSize="12dp"
+
                 android:id="@+id/ForgotPassword"
                 />
 

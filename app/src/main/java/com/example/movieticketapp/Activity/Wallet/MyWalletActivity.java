@@ -42,6 +42,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,7 +78,8 @@ public class MyWalletActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
 //                        InforBooked.getInstance().total += Integer.parseInt(String.valueOf(document.get("wallet")));
-                        totalTv.setText(String.valueOf(document.get("Wallet")) + " VNĐ");
+                        NumberFormat formatter = new DecimalFormat("#,###");
+                        totalTv.setText(formatter.format(document.get("Wallet")) + " VNĐ");
                         nameUser.setText(String.valueOf(document.get("Name")))
                         ;
 
