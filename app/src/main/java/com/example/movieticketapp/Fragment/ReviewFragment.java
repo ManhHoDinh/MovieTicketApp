@@ -54,7 +54,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.AggregateQuerySnapshot;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -154,49 +153,59 @@ public class ReviewFragment extends Fragment {
         ratingFilm();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CommentRef = db.collection("Movies").document(film.getId()).collection("Comment");
-        if(CommentRef!=null){
-            CommentRef.orderBy("timeStamp", Query.Direction.DESCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                    if (error != null) {
-                        Log.w(TAG, "Listen failed.", error);
-                        return;
+        CommentRef.get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().isEmpty()) {
+                            System.out.println("Comment collection not found");
+                        } else {
+                            CommentRef.orderBy("timeStamp", Query.Direction.DESCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                    if (error != null) {
+                                        Log.w(TAG, "Listen failed.", error);
+                                        return;
+                                    }
+
+                                    comments.clear();
+                                    for (QueryDocumentSnapshot doc : value)
+
+                                    {
+                                        comments.add(doc.toObject(Comment.class));
+
+                                    }
+                                    commentAdapter = new CommentAdapter(myActivity, R.layout.review_comment_view, comments, film);
+                                    int totalHeight= 0;
+                                    DisplayMetrics displayMetrics = new DisplayMetrics();
+
+                                    int height = displayMetrics.heightPixels;
+                                    int width = displayMetrics.widthPixels;
+                                    for (int size=0; size < commentAdapter.getCount(); size++) {
+
+                                        View listItem = commentAdapter.getView(size, null, commentList);
+                                        listItem.measure(0, 0);
+                                        totalHeight += listItem.getMeasuredHeight();
+                                    }
+                                    ViewGroup.LayoutParams params=commentList.getLayoutParams();
+                                    DisplayMetrics display = new DisplayMetrics();
+                                    myActivity.getWindowManager().getDefaultDisplay().getMetrics(display);
+                                    int d = display.heightPixels;
+                                    params.height = d/2 - rateLayout.getMeasuredHeight() - 100;
+
+
+                                    commentList.setLayoutParams(params);
+                                    commentList.setAdapter(commentAdapter);
+
+
+
+                                }
+                            });
+                            // Perform further operations on the Comment collection if needed
+                        }
+                    } else {
+                        System.out.println("Error checking Comment collection: " + task.getException());
                     }
-
-                    comments.clear();
-                    for (QueryDocumentSnapshot doc : value)
-
-                    {
-                        comments.add(doc.toObject(Comment.class));
-
-                    }
-                    commentAdapter = new CommentAdapter(myActivity, R.layout.review_comment_view, comments, film);
-                    int totalHeight= 0;
-                    DisplayMetrics displayMetrics = new DisplayMetrics();
-
-                    int height = displayMetrics.heightPixels;
-                    int width = displayMetrics.widthPixels;
-                    for (int size=0; size < commentAdapter.getCount(); size++) {
-
-                        View listItem = commentAdapter.getView(size, null, commentList);
-                        listItem.measure(0, 0);
-                        totalHeight += listItem.getMeasuredHeight();
-                    }
-                    ViewGroup.LayoutParams params=commentList.getLayoutParams();
-                    DisplayMetrics display = new DisplayMetrics();
-                    myActivity.getWindowManager().getDefaultDisplay().getMetrics(display);
-                    int d = display.heightPixels;
-                    params.height = d/2 - rateLayout.getMeasuredHeight() - 100;
-
-
-                    commentList.setLayoutParams(params);
-                    commentList.setAdapter(commentAdapter);
-
-
-
-                }
-            });
-        }
+                });
 
     }
     void ratingFilm(){

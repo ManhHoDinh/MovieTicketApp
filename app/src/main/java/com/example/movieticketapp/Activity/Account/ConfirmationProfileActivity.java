@@ -9,10 +9,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 
 public class ConfirmationProfileActivity extends AppCompatActivity {
     NetworkChangeListener networkChangeListener = new NetworkChangeListener();
@@ -32,7 +36,20 @@ public class ConfirmationProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.confirmation_profile_screen);
-
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        ImageView avatar = (ImageView) findViewById(R.id.profilePic);
+        if (currentUser!= null)
+        {
+            if (currentUser.getPhotoUrl() != null)
+                Picasso.get().load(currentUser.getPhotoUrl()).into(avatar);
+            else avatar.setImageResource(R.drawable.avatar);
+        }
+        TextView name = (TextView) findViewById(R.id.txtExampleName);
+        if (currentUser!= null)
+        {
+            if (currentUser.getDisplayName()!=null)
+                name.setText(currentUser.getDisplayName());
+        }
         Button btnCreateAccount= findViewById(R.id.btnCreateAccount);
         btnCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override

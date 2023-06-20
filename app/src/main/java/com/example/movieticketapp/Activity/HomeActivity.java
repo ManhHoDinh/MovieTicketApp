@@ -94,7 +94,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity implements OnMapReadyCallback{
+public class HomeActivity extends AppCompatActivity {
     //private ViewPager2 viewPager;
     NetworkChangeListener networkChangeListener = new NetworkChangeListener();
 
@@ -126,40 +126,21 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     ConstraintLayout cityHeader;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = HomeScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         String[] listType = {"All", "Horror", "Action", "Drama", "War", "Comedy", "Crime"};
-//        smf = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.ggmap);
-//        client = LocationServices.getFusedLocationProviderClient(this);
-//        smf.getMapAsync(this);
-//        Dexter.withContext(getApplicationContext()).withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-//                .withListener(new PermissionListener() {
-//                    @Override
-//                    public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-//                        getMyLocation();
-//                    }
-//
-//                    @Override
-//                    public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
-//
-//                    }
-//                }).check();
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         accountImage = findViewById(R.id.accountImage);
         addDiscount = findViewById(R.id.AddDiscount);
         addDiscount = findViewById(R.id.AddDiscount);
         viewAllPlayingBtn = findViewById(R.id.viewAllPlayingBtn);
         viewAllComingBtn = findViewById(R.id.viewAllComingBtn);
-        promotionView = (ListView) findViewById(R.id.promotionView);
-        searchView = findViewById(R.id.searchField);
+        promotionView =(ListView) findViewById(R.id.promotionView);
+        searchView=findViewById(R.id.searchField);
         serviceView = findViewById(R.id.ServiceView);
         addService = findViewById(R.id.AddService);
         addCity = findViewById(R.id.addCity);
@@ -178,7 +159,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         });
-        if (currentUser != null) {
+        if(currentUser != null){
             if (currentUser.getPhotoUrl() != null)
                 Picasso.get().load(currentUser.getPhotoUrl()).into(accountImage);
             else accountImage.setImageResource(R.drawable.avatar);
@@ -248,6 +229,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(i);
             }
         });
+
 
 
         addDiscount.setOnClickListener(new View.OnClickListener() {
@@ -324,6 +306,8 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        }
 
 
+
+
 //    }
 
     void GetDiscounts() {
@@ -337,7 +321,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Users currentUser = documentSnapshot.toObject(Users.class);
 
-                if (((currentUser.getAccountType().toString()).equals("admin"))) {
+                    if(((currentUser.getAccountType().toString()).equals("admin"))){
 
 //                FirebaseFirestore.getInstance().collection(Discount.CollectionName).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
 //                    @Override
@@ -433,7 +417,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Users currentUser = documentSnapshot.toObject(Users.class);
-                Log.e("fs", currentUser.getAccountType());
+                Log.e("fs",  currentUser.getAccountType());
                 if (((currentUser.getAccountType().toString()).equals("admin"))) {
                     GetServices();
                     GetCities();
@@ -563,7 +547,6 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
-
     @Override
     protected void onStart() {
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -577,31 +560,8 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onStop();
     }
 
-    public void getMyLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Task<Location> task = client.getLastLocation();
-            task.addOnSuccessListener(new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    smf.getMapAsync(new OnMapReadyCallback() {
-                        @Override
-                        public void onMapReady(@NonNull GoogleMap googleMap) {
-                            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                            MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("you here...");
-                            googleMap.addMarker(markerOptions);
-                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-                        }
-                    });
-                }
-            });
-            return;
-        }
-
-    }
 
 
-    @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
 
-    }
+
 }

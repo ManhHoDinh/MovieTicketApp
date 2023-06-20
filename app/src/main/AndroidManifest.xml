@@ -7,6 +7,11 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="com.google.android.providers.gsf.permission" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -27,6 +32,18 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDLVRBV69nurSKIEg0tU1k65es6uT82RFs" />
+
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+
+        <service
+            android:name=".Activity.Notification.FirebaseMessagingService"
+            android:permission="TODO"
+            tools:ignore="ExportedService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
         <activity
             android:name=".Activity.Notification.EditNotificationActivity"
@@ -105,7 +122,7 @@
         <activity
             android:name=".Activity.Movie.AddMovieActivity"
             android:exported="true"
-            android:theme="@style/Theme.MovieProject.Main" />
+             />
         <activity
             android:name=".Activity.Account.SplashActivity"
             android:exported="true"
@@ -120,6 +137,7 @@
             android:name=".Activity.Service.ServiceViewAll"
             android:exported="false"
             android:theme="@style/Theme.MovieProject.Main" />
+
         <activity
             android:name=".Activity.Booking.BookSeatActivity"
             android:exported="false"

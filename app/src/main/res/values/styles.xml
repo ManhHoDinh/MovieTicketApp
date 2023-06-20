@@ -51,4 +51,8 @@
         <!-- Hint text color -->
         <item name="android:textColorHint">@color/black</item>
     </style>
+    <style name="GreenDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@android:color/holo_green_light</item>
+    </style>
+
 </resources>
