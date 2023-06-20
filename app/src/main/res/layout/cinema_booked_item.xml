@@ -8,11 +8,63 @@
       android:orientation="vertical"
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
-    <TextView
-        style="@style/titleStyle"
-        android:id="@+id/cinemaName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+      <TextView
+          app:layout_constraintStart_toStartOf="parent"
+          style="@style/titleStyle"
+          android:id="@+id/cinemaName"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+      <TextView
+          android:textSize="12dp"
+          app:layout_constraintEnd_toEndOf="parent"
+          android:id="@+id/distance"
+          android:fontFamily="@font/montserrat500"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Navigate"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+      <TextView
+          app:layout_constraintStart_toStartOf="parent"
+          android:textSize="12dp"
+          android:id="@+id/addressCinema"
+          android:fontFamily="@font/montserrat500"
+          app:layout_constraintEnd_toStartOf="@+id/locationCinema"
+          android:layout_width="0dp"
+          android:layout_marginRight="40dp"
+          android:layout_height="wrap_content"
+          android:text="Navigate"/>
+      <LinearLayout
+          android:orientation="horizontal"
+          android:id="@+id/locationCinema"
+          android:background="@drawable/button_background"
+          app:layout_constraintEnd_toEndOf="parent"
+          android:layout_width="wrap_content"
+          android:paddingHorizontal="8dp"
+          android:paddingVertical="4dp"
+          android:layout_height="wrap_content">
+        <ImageView
+            android:src="@drawable/baseline_near_me_24"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:textSize="12dp"
+            android:fontFamily="@font/montserrat500"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Navigate"/>
+      </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
       <androidx.recyclerview.widget.RecyclerView
           android:layout_marginTop="12dp"
           android:id="@+id/listTime"

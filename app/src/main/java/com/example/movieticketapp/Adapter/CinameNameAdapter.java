@@ -1,20 +1,30 @@
 package com.example.movieticketapp.Adapter;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.movieticketapp.Activity.Booking.BookedActivity;
 import com.example.movieticketapp.Activity.Booking.ShowTimeScheduleActivity;
+import com.example.movieticketapp.Activity.Cinema.CinemaLocationActivity;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Cinema;
 import com.example.movieticketapp.Model.FilmModel;
@@ -26,7 +36,16 @@ import com.example.movieticketapp.R;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -38,24 +57,35 @@ import com.google.firebase.ktx.Firebase;
 
 import org.w3c.dom.Document;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class CinameNameAdapter extends ArrayAdapter<Cinema> {
 
     private FilmModel film;
     private LayoutInflater layoutInflater;
     private List<Cinema> listCinema;
+    private Context context;
+    FusedLocationProviderClient client;
+   Address address;
+   TextView distance;
+
+
+
+
 
     public CinameNameAdapter(@NonNull Context context, int resource, List<Cinema> listCinema, FilmModel film) {
         super(context, resource, listCinema);
         this.film = film;
         this.listCinema = listCinema;
         this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.context = context;
     }
     static  int selectedPosition = 0;
 
@@ -71,13 +101,28 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
         else  itemView = convertView;
 
         TextView cinemaName = (TextView) itemView.findViewById(R.id.cinemaName);
+        LinearLayout locationLayout = itemView.findViewById(R.id.locationCinema);
+        TextView addressCinema = itemView.findViewById(R.id.addressCinema);
         RecyclerView recyclerView = (RecyclerView) itemView.findViewById(R.id.listTime);
+        distance = itemView.findViewById(R.id.distance);
         List<String> listTime = new ArrayList<String>();
         InforBooked.getInstance().listCinema = listCinema;
         Cinema item = getItem(position);
+        client = LocationServices.getFusedLocationProviderClient(context);
+        List<Address> listAddress = null;
+        Geocoder geocoder = new Geocoder(context);
+        try {
+            listAddress = geocoder.getFromLocationName(item.getName(), 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        address = listAddress.get(0);
+
+        getMyLocation(address, distance);
 
 
         try{
+
             if(Users.currentUser!=null)
                 if(((Users.currentUser.getAccountType().toString()).equals("admin")))
                 {
@@ -116,6 +161,7 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
                                 ShowTime showTime = doc.toObject(ShowTime.class);
                                 listShowTime.add(showTime);
                       }
+
                             recyclerView.setAdapter(new TimeScheduleAdapter(listTime, null, film, item, itemView, null, null, listShowTime));
 
 
@@ -123,6 +169,8 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
                     });
 
                     cinemaName.setText(item.getName());
+                    addressCinema.setText(item.getAddress());
+
                 }
             else {
                     Query query = FirebaseRequest.database.collection("Showtime").orderBy("timeBooked");
@@ -132,10 +180,10 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
                             for(DocumentSnapshot doc : value){
                                 Timestamp time = doc.getTimestamp("timeBooked");
 
-                                DateFormat dateFormat = new SimpleDateFormat("EEE\nd");
+                                DateFormat dateFormat = new SimpleDateFormat("EEE\nd", Locale.ENGLISH);
 
                                 if(doc.get("cinemaID").equals(item.getCinemaID()) && doc.get("filmID").equals(film.getId()) && dateFormat.format(time.toDate()).equals(InforBooked.getInstance().dateBooked)){
-                                    DateFormat timeFormat = new SimpleDateFormat("HH:mm");
+                                    DateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
                                     listTime.add(timeFormat.format(time.toDate()));
                                 }
                             }
@@ -159,6 +207,7 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
                             }
                             else recyclerView.setAdapter(new TimeBookedAdapter(listTime, null,null, item, itemView, null, null));
                             cinemaName.setText(item.getName());
+                            addressCinema.setText(item.getAddress());
                         }
                     });
 //                   query.addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -190,6 +239,16 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
 
 
                 }
+
+            locationLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    List<Address> listAddress = new ArrayList<>();
+                    Intent intent = new Intent(context, CinemaLocationActivity.class);
+                    intent.putExtra("cinema", item);
+                    context.startActivity(intent);
+                }
+            });
         }
         catch (Exception e)
         {
@@ -199,9 +258,9 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
                     List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
                     for(DocumentSnapshot doc : listDocs){
                         Timestamp time = doc.getTimestamp("timeBooked");
-                        DateFormat dateFormat = new SimpleDateFormat("EEE\nd");
+                        DateFormat dateFormat = new SimpleDateFormat("EEE\nd", Locale.ENGLISH);
                         if(doc.get("cinemaID").equals(item.getCinemaID()) && doc.get("filmID").equals(film.getId()) && dateFormat.format(time.toDate()).equals(InforBooked.getInstance().dateBooked)){
-                            DateFormat timeFormat = new SimpleDateFormat("HH:mm");
+                            DateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
                             listTime.add(timeFormat.format(time.toDate()));
                         }
                     }
@@ -216,4 +275,31 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
         }
         return itemView;
     }
+    public void getMyLocation(Address address, TextView distance) {
+
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+
+            return;
+        }
+        Task<Location> task = client.getLastLocation();
+
+        task.addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                        float[] results = new float[10];
+                        LatLng source = new LatLng(location.getLatitude(), location.getLongitude());
+                        LatLng destination = new LatLng(address.getLatitude(), address.getLongitude());
+                        Location.distanceBetween(source.latitude, source.longitude, destination.latitude, destination.longitude, results);
+                        distance.setText(String.format("%.1f", results[0]/1000) + " km");
+
+            }
+        });
+
+
+
+
+
+    }
+
 }

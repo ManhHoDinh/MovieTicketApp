@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission" />
 
     <application
         android:allowBackup="true"
@@ -14,6 +17,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MovieTicketApp"
         tools:targetApi="31">
+        <activity
+            android:name=".Activity.Cinema.CinemaLocationActivity"
+            android:theme="@style/Theme.MovieTicketApp.NoActionBar"
+            android:exported="true">
+
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDLVRBV69nurSKIEg0tU1k65es6uT82RFs" />
+
         <activity
             android:name=".Activity.Notification.EditNotificationActivity"
             android:exported="false" />
@@ -95,7 +109,7 @@
         <activity
             android:name=".Activity.Account.SplashActivity"
             android:exported="true"
-            android:theme="@style/Theme.MovieProject.Main" >
+            android:theme="@style/Theme.MovieProject.Main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -106,7 +120,6 @@
             android:name=".Activity.Service.ServiceViewAll"
             android:exported="false"
             android:theme="@style/Theme.MovieProject.Main" />
-
         <activity
             android:name=".Activity.Booking.BookSeatActivity"
             android:exported="false"
@@ -119,7 +132,9 @@
             android:name=".Activity.Account.OnboardingActivity"
             android:exported="false" />
         <activity android:name=".Activity.Account.SignUpActivity" />
-        <activity android:name=".Activity.Account.SignInActivity"  android:theme="@style/Theme.MovieProject.Main"/>
+        <activity
+            android:name=".Activity.Account.SignInActivity"
+            android:theme="@style/Theme.MovieProject.Main" />
         <activity
             android:name=".Activity.Movie.InformationFilmActivity"
             android:exported="false" />

@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.movieticketapp.Activity.Booking.CheckoutWalletEnoughActivity;
+import com.example.movieticketapp.Adapter.Helper;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Cinema;
 import com.example.movieticketapp.Model.FilmModel;
@@ -211,8 +212,8 @@ public class BookSeatActivity extends AppCompatActivity implements View.OnClickL
                 List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
                 for(DocumentSnapshot doc : listDocs){
                     Timestamp time = doc.getTimestamp("timeBooked");
-                    DateFormat dateFormat = new SimpleDateFormat("EEE\nd");
-                    DateFormat timeFormat = new SimpleDateFormat("HH:mm");
+                    DateFormat dateFormat = new SimpleDateFormat("EEE\nd", Locale.ENGLISH);
+                    DateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
                     if(doc.get("cinemaID").equals(cinema.getCinemaID())
                             && timeFormat.format(time.toDate()).equals(timeBooked)
                             && dateFormat.format(time.toDate()).equals(dateBooked)

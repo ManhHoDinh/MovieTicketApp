@@ -2,16 +2,21 @@ package com.example.movieticketapp.Activity;
 
 import static android.content.ContentValues.TAG;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -55,7 +60,16 @@ import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.example.movieticketapp.databinding.HomeScreenBinding;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -69,14 +83,23 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.auth.User;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements OnMapReadyCallback{
     //private ViewPager2 viewPager;
     NetworkChangeListener networkChangeListener = new NetworkChangeListener();
+
+    SupportMapFragment smf;
+    FusedLocationProviderClient client;
 
     private RecyclerView typeListView;
     private RecyclerView posterRecyclerView;
@@ -98,8 +121,9 @@ public class HomeActivity extends AppCompatActivity {
     private ListView cityView;
 
     ConstraintLayout serviceHeader;
-    ConstraintLayout cityHeader;
 
+
+    ConstraintLayout cityHeader;
 
 
     @Override
@@ -108,14 +132,34 @@ public class HomeActivity extends AppCompatActivity {
         binding = HomeScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         String[] listType = {"All", "Horror", "Action", "Drama", "War", "Comedy", "Crime"};
+//        smf = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.ggmap);
+//        client = LocationServices.getFusedLocationProviderClient(this);
+//        smf.getMapAsync(this);
+//        Dexter.withContext(getApplicationContext()).withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+//                .withListener(new PermissionListener() {
+//                    @Override
+//                    public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+//                        getMyLocation();
+//                    }
+//
+//                    @Override
+//                    public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
+//
+//                    }
+//                }).check();
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         accountImage = findViewById(R.id.accountImage);
         addDiscount = findViewById(R.id.AddDiscount);
         addDiscount = findViewById(R.id.AddDiscount);
         viewAllPlayingBtn = findViewById(R.id.viewAllPlayingBtn);
         viewAllComingBtn = findViewById(R.id.viewAllComingBtn);
-        promotionView =(ListView) findViewById(R.id.promotionView);
-        searchView=findViewById(R.id.searchField);
+        promotionView = (ListView) findViewById(R.id.promotionView);
+        searchView = findViewById(R.id.searchField);
         serviceView = findViewById(R.id.ServiceView);
         addService = findViewById(R.id.AddService);
         addCity = findViewById(R.id.addCity);
@@ -134,7 +178,7 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
-        if(currentUser != null){
+        if (currentUser != null) {
             if (currentUser.getPhotoUrl() != null)
                 Picasso.get().load(currentUser.getPhotoUrl()).into(accountImage);
             else accountImage.setImageResource(R.drawable.avatar);
@@ -204,7 +248,6 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-
 
 
         addDiscount.setOnClickListener(new View.OnClickListener() {
@@ -281,8 +324,6 @@ public class HomeActivity extends AppCompatActivity {
 //        }
 
 
-
-
 //    }
 
     void GetDiscounts() {
@@ -290,13 +331,13 @@ public class HomeActivity extends AppCompatActivity {
         List<Discount> Discounts = new ArrayList<>();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        
-            FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    Users currentUser = documentSnapshot.toObject(Users.class);
 
-                    if(((currentUser.getAccountType().toString()).equals("admin"))){
+        FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Users currentUser = documentSnapshot.toObject(Users.class);
+
+                if (((currentUser.getAccountType().toString()).equals("admin"))) {
 
 //                FirebaseFirestore.getInstance().collection(Discount.CollectionName).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
 //                    @Override
@@ -311,90 +352,88 @@ public class HomeActivity extends AppCompatActivity {
 //                        promotionView.setAdapter(promotionAdapter);
 //                    }
 //                });
-                        FirebaseFirestore.getInstance().collection(Discount.CollectionName).addSnapshotListener(new EventListener<QuerySnapshot>() {
-                            @Override
-                            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                                List<Discount> listDiscounts = new ArrayList<Discount>();
-                                for(DocumentSnapshot doc : value){
-                                    Discount f = doc.toObject(Discount.class);
-                                    listDiscounts.add(f);
-
-                                }
-                                PromotionAdapter promotionAdapter = new PromotionAdapter(HomeActivity.this,R.layout.promo_item,listDiscounts);
-                                promotionView.setAdapter(promotionAdapter);
+                    FirebaseFirestore.getInstance().collection(Discount.CollectionName).addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                            List<Discount> listDiscounts = new ArrayList<Discount>();
+                            for (DocumentSnapshot doc : value) {
+                                Discount f = doc.toObject(Discount.class);
+                                listDiscounts.add(f);
 
                             }
-                        });
-                    }
-                    else {
-                        CollectionReference PromoRef = db.collection(UserAndDiscount.collectionName);
+                            PromotionAdapter promotionAdapter = new PromotionAdapter(HomeActivity.this, R.layout.promo_item, listDiscounts);
+                            promotionView.setAdapter(promotionAdapter);
+
+                        }
+                    });
+                } else {
+                    CollectionReference PromoRef = db.collection(UserAndDiscount.collectionName);
 
 
+                    Query query = PromoRef.whereEqualTo("userID", FirebaseRequest.mAuth.getUid());
+
+                    query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            List<String> listDiscountID = new ArrayList<>();
+
+                            for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                                listDiscountID.add(doc.get("discountID").toString());
+                                //DocumentReference document = FirebaseRequest.database.collection(Discount.CollectionName).document(doc.get("discountID").toString());
+                            }
 
 
-                        Query query = PromoRef.whereEqualTo("userID", FirebaseRequest.mAuth.getUid());
-
-                        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                            @Override
-                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                List<String> listDiscountID = new ArrayList<>();
-
-                                for(DocumentSnapshot doc : queryDocumentSnapshots){
-                                    listDiscountID.add(doc.get("discountID").toString());
-                                    //DocumentReference document = FirebaseRequest.database.collection(Discount.CollectionName).document(doc.get("discountID").toString());
-                                }
-
-
-                                if(listDiscountID.size() > 0 ){
-                                    Query query2 = db.collection(Discount.CollectionName).whereIn("ID", listDiscountID);
-                                    query2.addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onEvent(@Nullable QuerySnapshot discountvalue, @Nullable FirebaseFirestoreException error) {
-                                            for(DocumentSnapshot doc : discountvalue){
-                                                Discount f = doc.toObject(Discount.class);
-                                                Discounts.add(f);
-                                            }
-
-                                            //   LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-                                            // promotionView.setLayoutManager(VerLayoutManager);
-                                            Intent intent = getIntent();
-                                            PromotionAdapter promotionAdapter = new PromotionAdapter(HomeActivity.this,R.layout.promo_item,Discounts);
-                                            promotionView.setAdapter(promotionAdapter);
-                                            if (Discounts.size() == 0) {
-                                                ViewGroup.LayoutParams params = promotionView.getLayoutParams();
-                                                params.height = 0;
-                                                promotionView.setLayoutParams(params);
-                                            }
-                                            if (Discounts.size() == 1) {
-                                                ViewGroup.LayoutParams params = promotionView.getLayoutParams();
-                                                params.height = 300;
-                                                promotionView.setLayoutParams(params);
-                                            }
-                                            if (Discounts.size() == 2) {
-                                                ViewGroup.LayoutParams params = promotionView.getLayoutParams();
-                                                params.height = 700;
-                                                promotionView.setLayoutParams(params);
-                                            }
+                            if (listDiscountID.size() > 0) {
+                                Query query2 = db.collection(Discount.CollectionName).whereIn("ID", listDiscountID);
+                                query2.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onEvent(@Nullable QuerySnapshot discountvalue, @Nullable FirebaseFirestoreException error) {
+                                        for (DocumentSnapshot doc : discountvalue) {
+                                            Discount f = doc.toObject(Discount.class);
+                                            Discounts.add(f);
                                         }
-                                    });
 
-                                }
-                                else  promotionView.setAdapter( new PromotionAdapter(HomeActivity.this,R.layout.promo_item,new ArrayList<Discount>()));
+                                        //   LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+                                        // promotionView.setLayoutManager(VerLayoutManager);
+                                        Intent intent = getIntent();
+                                        PromotionAdapter promotionAdapter = new PromotionAdapter(HomeActivity.this, R.layout.promo_item, Discounts);
+                                        promotionView.setAdapter(promotionAdapter);
+                                        if (Discounts.size() == 0) {
+                                            ViewGroup.LayoutParams params = promotionView.getLayoutParams();
+                                            params.height = 0;
+                                            promotionView.setLayoutParams(params);
+                                        }
+                                        if (Discounts.size() == 1) {
+                                            ViewGroup.LayoutParams params = promotionView.getLayoutParams();
+                                            params.height = 300;
+                                            promotionView.setLayoutParams(params);
+                                        }
+                                        if (Discounts.size() == 2) {
+                                            ViewGroup.LayoutParams params = promotionView.getLayoutParams();
+                                            params.height = 700;
+                                            promotionView.setLayoutParams(params);
+                                        }
+                                    }
+                                });
 
-                            }
-                        });
-                    }
+                            } else
+                                promotionView.setAdapter(new PromotionAdapter(HomeActivity.this, R.layout.promo_item, new ArrayList<Discount>()));
+
+                        }
+                    });
                 }
-            });
+            }
+        });
 
 
     }
-    void checkTypeUser(){
+
+    void checkTypeUser() {
         FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Users currentUser = documentSnapshot.toObject(Users.class);
-                Log.e("fs",  currentUser.getAccountType());
+                Log.e("fs", currentUser.getAccountType());
                 if (((currentUser.getAccountType().toString()).equals("admin"))) {
                     GetServices();
                     GetCities();
@@ -403,8 +442,7 @@ public class HomeActivity extends AppCompatActivity {
                     MenuItem WalletPage = menu.findItem(R.id.walletPage);
                     WalletPage.setVisible(false);
                     ReportPage.setVisible(true);
-                }
-                else {
+                } else {
 
                     ViewGroup.LayoutParams params = binding.AddDiscount.getLayoutParams();
                     params.height = 0;
@@ -428,8 +466,8 @@ public class HomeActivity extends AppCompatActivity {
         });
 
     }
-    void GetServices()
-    {
+
+    void GetServices() {
 
         List<Service> services = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -443,8 +481,7 @@ public class HomeActivity extends AppCompatActivity {
                     // in this case we are displaying an error message.
                     Toast.makeText(HomeActivity.this, "Error found is " + error, Toast.LENGTH_SHORT).show();
                     return;
-                } else
-                {
+                } else {
                     services.clear();
                     for (DocumentSnapshot documentSnapshot : value) {
                         Service newService = documentSnapshot.toObject(Service.class);
@@ -474,8 +511,7 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    void GetCities()
-    {
+    void GetCities() {
         List<City> cities = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference cityRef = db.collection("City");
@@ -488,8 +524,7 @@ public class HomeActivity extends AppCompatActivity {
                     // in this case we are displaying an error message.
                     Toast.makeText(HomeActivity.this, "Error found is " + error, Toast.LENGTH_SHORT).show();
                     return;
-                } else
-                {
+                } else {
                     cities.clear();
                     for (DocumentSnapshot documentSnapshot : value) {
                         City newCity = documentSnapshot.toObject(City.class);
@@ -503,9 +538,9 @@ public class HomeActivity extends AppCompatActivity {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                                    Intent intent = new Intent(HomeActivity.this, CinemaOfCity.class);
-                                    intent.putExtra("city", cities.get(i));
-                                    startActivity(intent);
+                            Intent intent = new Intent(HomeActivity.this, CinemaOfCity.class);
+                            intent.putExtra("city", cities.get(i));
+                            startActivity(intent);
 
                         }
                     });
@@ -528,6 +563,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     protected void onStart() {
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -540,8 +576,32 @@ public class HomeActivity extends AppCompatActivity {
         unregisterReceiver(networkChangeListener);
         super.onStop();
     }
-    void viewCinemaOfCity(){
+
+    public void getMyLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Task<Location> task = client.getLastLocation();
+            task.addOnSuccessListener(new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    smf.getMapAsync(new OnMapReadyCallback() {
+                        @Override
+                        public void onMapReady(@NonNull GoogleMap googleMap) {
+                            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                            MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("you here...");
+                            googleMap.addMarker(markerOptions);
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                        }
+                    });
+                }
+            });
+            return;
+        }
 
     }
 
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+
+    }
 }

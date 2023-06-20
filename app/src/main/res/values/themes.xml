@@ -26,6 +26,8 @@
     <style name="Theme.MovieTicketApp.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:editTextColor">@color/black</item>
+
 
 
     </style>
