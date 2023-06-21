@@ -128,7 +128,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                             holder.endTime.setVisibility(View.INVISIBLE);
                         }
                     }, 1*5000); // wait for 5 seconds
-
                 }
             }
         });
