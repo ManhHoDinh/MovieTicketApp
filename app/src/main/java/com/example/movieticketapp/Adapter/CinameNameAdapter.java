@@ -54,6 +54,12 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.ktx.Firebase;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 import org.w3c.dom.Document;
 
@@ -73,7 +79,6 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
     private List<Cinema> listCinema;
     private Context context;
     FusedLocationProviderClient client;
-   Address address;
    TextView distance;
 
 
@@ -105,7 +110,10 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
         TextView addressCinema = itemView.findViewById(R.id.addressCinema);
         RecyclerView recyclerView = (RecyclerView) itemView.findViewById(R.id.listTime);
         distance = itemView.findViewById(R.id.distance);
+        ImageView showHideBtn = itemView.findViewById(R.id.showHideBtn);
+        LinearLayout showHideLayout = itemView.findViewById(R.id.showHideLayout);
         List<String> listTime = new ArrayList<String>();
+
         InforBooked.getInstance().listCinema = listCinema;
         Cinema item = getItem(position);
         client = LocationServices.getFusedLocationProviderClient(context);
@@ -116,9 +124,27 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        address = listAddress.get(0);
+        Address address = listAddress.get(0);
+        Dexter.withContext(context.getApplicationContext()).withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+                        getMyLocation(address, distance);
+                    }
 
-        getMyLocation(address, distance);
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
+                        if(permissionDeniedResponse.isPermanentlyDenied()){
+                            distance.setVisibility(View.GONE);
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
+
+                    }
+                }).check();
+
 
 
         try{
@@ -210,33 +236,6 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
                             addressCinema.setText(item.getAddress());
                         }
                     });
-//                   query.addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//                        @Override
-//                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                            List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
-//
-//                            for(DocumentSnapshot doc : listDocs){
-//                                Timestamp time = doc.getTimestamp("timeBooked");
-//
-//                                DateFormat dateFormat = new SimpleDateFormat("EEE\ndd");
-//
-//                                if(doc.get("nameCinema").equals(item) && doc.get("nameFilm").equals(filmName) && dateFormat.format(time.toDate()).equals(InforBooked.getInstance().dateBooked)){
-//                                    DateFormat timeFormat = new SimpleDateFormat("H:mm");
-//                                    listTime.add(timeFormat.format(time.toDate()));
-//                                }
-//                            }
-//                            FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext());
-//                            layoutManager.setFlexDirection(FlexDirection.ROW);
-//                            layoutManager.setJustifyContent(JustifyContent.FLEX_START);
-//                            recyclerView.setLayoutManager(layoutManager);
-//                            if(InforBooked.getInstance().dateBooked == null){
-//                                recyclerView.setAdapter(new TimeBookedAdapter(new ArrayList<String>(), null,null, item, itemView, null, null));
-//                            }
-//                            else recyclerView.setAdapter(new TimeBookedAdapter(listTime, null,null, item, itemView, null, null));
-//                            cinemaName.setText(item);
-//                        }
-//                    });
-
 
                 }
 
@@ -247,6 +246,23 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
                     Intent intent = new Intent(context, CinemaLocationActivity.class);
                     intent.putExtra("cinema", item);
                     context.startActivity(intent);
+                }
+            });
+            showHideBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(showHideBtn.getTag().equals("hide")){
+                        showHideBtn.setImageResource(R.drawable.arrow_up);
+                        showHideBtn.setTag("show");
+                        showHideLayout.setVisibility(View.VISIBLE);
+
+
+                    }
+                    else {
+                        showHideBtn.setImageResource(R.drawable.arrow_down);
+                        showHideBtn.setTag("hide");
+                        showHideLayout.setVisibility(View.GONE);
+                    }
                 }
             });
         }

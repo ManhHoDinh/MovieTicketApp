@@ -124,24 +124,7 @@ public class CinemaLocationActivity extends FragmentActivity implements OnMapRea
     public void onMapReady(@NonNull GoogleMap googleMap) {
         ggmap = googleMap;
 
-//        Dexter.withContext(getApplicationContext()).withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-//                .withListener(new PermissionListener() {
-//                    @Override
-//                    public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-//                        getMyLocation();
-//
-//                    }
-//
-//                    @Override
-//                    public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
-//
-//                    }
-//                }).check();
+
         List<Address> listAddress = null;
         if(location != null || location.equals("")) {
             Log.e("s", "yes");
