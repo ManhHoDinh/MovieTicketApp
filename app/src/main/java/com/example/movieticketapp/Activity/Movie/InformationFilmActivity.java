@@ -119,6 +119,7 @@ public class InformationFilmActivity extends FragmentActivity {
                 if (snapshot != null && snapshot.exists()) {
                     f = snapshot.toObject(FilmModel.class);
                     refreshScreen();
+                    Log.d("Trailer", String.valueOf(f.getTrailer().size()));
                 }
             }
         });
@@ -137,5 +138,6 @@ public class InformationFilmActivity extends FragmentActivity {
         genreTV.setText(f.getGenre());
 
         durationTime.setText(f.getDurationTime());
+
     }
 }

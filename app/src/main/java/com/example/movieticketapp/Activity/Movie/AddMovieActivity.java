@@ -72,9 +72,6 @@ import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.Value;
-import com.google.api.services.youtube.YouTube;
-import com.google.api.services.youtube.model.VideoSnippet;
-import com.google.api.services.youtube.model.VideoStatus;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -83,15 +80,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.youtube.YouTube;
-import com.google.api.services.youtube.YouTubeScopes;
-import com.google.api.services.youtube.model.Video;
-import com.google.api.services.youtube.model.VideoSnippet;
-import com.google.api.services.youtube.model.VideoStatus;
-
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -155,12 +143,14 @@ public class AddMovieActivity extends AppCompatActivity{
     Button calendarButton;
     TrailerMovieApdapter adapter;
     List<String> InStorageVideoUris=new ArrayList<>();
+    loadingAlert loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_movie_screen);
         InStorageVideoUris.clear();
+        loadingDialog= new loadingAlert(AddMovieActivity.this);
         defaultUri=Uri.parse("https://example.com/default");;
         calendarButton = findViewById(R.id.Calendar);
 
@@ -212,6 +202,11 @@ public class AddMovieActivity extends AppCompatActivity{
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(videos.size()==0)
+                {
+                    InStorageVideoUris.clear();
+                    AddMovieActivity.videoUris.clear();
+                }
                 videos.add("add");
                 videoUris.add(defaultUri);
                 adapter = new TrailerMovieApdapter(videos, AddMovieActivity.this);
@@ -293,22 +288,24 @@ public class AddMovieActivity extends AppCompatActivity{
             public void onClick(View view) {
                 dismissKeyboard(view);
                 boolean error = false;
-
+                loadingDialog.StartAlertDialog();
                 if (movieName.length() == 0) {
                     movieName.setError("Movie Name cannot be empty!!!");
-                    error = true;
-                }
-                if (movieKind.length() == 0) {
-                    movieKind.setError("Movie Kind cannot be empty!!!");
                     error = true;
                 }
                 if (movieDurarion.length() == 0) {
                     movieDurarion.setError("Movie Duration cannot be empty!!!");
                     error = true;
                 }
-
+                if(dateStart==null)
+                {
+                    error=true;
+                    Toast toast = Toast.makeText(getApplicationContext(), "Chose Start Date, Please!!!", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
                 if (!error)
                 {
+                    loadingDialog.StartAlertDialog();
                     String MovieName = movieName.getText().toString();
                     storageReference = storageReference.child("Movies/"+MovieName+"/"+MovieName+"Poster.jpg");
                     uploadTask = storageReference.putFile(backgrounduri);
@@ -359,6 +356,15 @@ public class AddMovieActivity extends AppCompatActivity{
                      for(int i = 0; i < AddMovieActivity.videoUris.size();i++)
                     {
                         StorageReference VideoStorageReference= FirebaseStorage.getInstance().getReference().child("Movies/"+MovieName+"/"+MovieName+"Video"+String.valueOf(i)+".mp4");
+                        if(AddMovieActivity.videoUris.get(i)== AddMovieActivity.defaultUri)
+                        {
+                            if(i==AddMovieActivity.videoUris.size()-1&& uploadTask.isComplete()&&uploadTask2.isComplete())
+                            {
+                                loadingDialog.closeLoadingAlert();
+                            }
+                                continue;
+                        }
+                        int finalI = i;
                         VideoStorageReference.putFile(AddMovieActivity.videoUris.get(i)).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                             @Override
                             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -375,6 +381,11 @@ public class AddMovieActivity extends AppCompatActivity{
                                 if (task.isSuccessful()) {
                                     InStorageVideoUris.add(task.getResult().toString());
                                     SaveDatatoDatabase();
+                                    if(finalI ==AddMovieActivity.videoUris.size()-1)
+                                    {
+                                        loadingDialog.closeLoadingAlert();
+                                    }
+
                                 } else {
                                     Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
                                 }
@@ -382,7 +393,7 @@ public class AddMovieActivity extends AppCompatActivity{
                         });
 
                     }
-                }
+                     }
                 else
                 {
                     Toast toast = Toast.makeText(getApplicationContext(), "Have some errors!!!", Toast.LENGTH_SHORT);
@@ -400,36 +411,11 @@ public class AddMovieActivity extends AppCompatActivity{
         });
     }
 
-
-    //    private void ShowMenu(){
-//        PopupMenu pm = new PopupMenu(this, statusmovie);
-//        pm.getMenuInflater().inflate(R.menu.status_movie_menu, pm.getMenu());
-//        pm.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem menuItem) {
-//                switch (menuItem.getItemId()) {
-//                    case R.id.itemplaying:
-//                        status = "playing";
-//                        statusmovie.setText("Now Playing");
-//                        break;
-//                    case R.id.itemcoming:
-//                        status = "coming";
-//                        statusmovie.setText("Coming Soon!");
-//                        break;
-//                }
-//                return false;
-//            }
-//        });
-//        pm.show();
-//    }
-//
     private void SaveDatatoDatabase() {
-
-
         document = databaseReference.document("Movies/"+movieName.getText().toString());
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("BackGroundImage", urlbackground);
-        data.put("PosterImage", urlbackground);
+        data.put("PosterImage", urlavatar);
         data.put("PrimaryImage", urlavatar);
         data.put("description", description.getText().toString());
         data.put("durationTime", movieDurarion.getText().toString());
@@ -439,12 +425,8 @@ public class AddMovieActivity extends AppCompatActivity{
         data.put("movieBeginDate", dateStart);
         data.put("vote", 0);
         data.put("trailer",InStorageVideoUris);
-        document.set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Toast.makeText(getApplicationContext(), "Add Movie Success!", Toast.LENGTH_SHORT).show();
-            }
-        });
+        document.set(data);
+
     }
     LocalDate localDate;
     private void showCalendarDialog() {
@@ -508,128 +490,6 @@ public class AddMovieActivity extends AppCompatActivity{
         // Show the dialog
         datePickerDialog.show();
     }
-
-//    private void uploadVideoToYouTube(Uri videoUri) {
-//        // Khởi tạo YouTube API client
-//        YouTube youtube = null;
-//
-//        try {
-//            youtube = buildYouTubeClient();
-//        } catch (IOException | GeneralSecurityException e) {
-//            Log.d("Error"+e.getMessage(),e.getMessage());
-//        }
-//
-//        // Tạo một đối tượng Video để đại diện cho video sẽ được tải lên
-//        Video video = new Video();
-//
-//        // Thiết lập thông tin về video (tiêu đề, mô tả, v.v.)
-//        VideoSnippet snippet = new VideoSnippet();
-//        snippet.setTitle("Your Video Title");
-//        snippet.setDescription("Your Video Description");
-//        video.setSnippet(snippet);
-//
-//        // Thiết lập trạng thái của video (công khai, riêng tư, v.v.)
-//        VideoStatus status = new VideoStatus();
-//        status.setPrivacyStatus("private"); // Có thể thay đổi giá trị này
-//        video.setStatus(status);
-//
-//        // Tạo nội dung video từ đường dẫn Uri
-//        InputStreamContent mediaContent = null;
-//        try {
-//            InputStream videoInputStream = getContentResolver().openInputStream(videoUri);
-//            mediaContent = new InputStreamContent("video/*", videoInputStream);
-//        } catch (IOException e) {
-//            Log.d("Error 2 "+e.getMessage(),e.getMessage());
-//        }
-//
-//        try {
-//            // Tạo yêu cầu API để tải lên video
-//            YouTube.Videos.Insert videoInsert;
-//            if(youtube!=null)
-//            {
-//                videoInsert = youtube.videos()
-//                        .insert(Collections.singletonList("snippet,status"), video, mediaContent);
-//
-//                // Thiết lập cấu hình tải lên
-//                MediaHttpUploader uploader = videoInsert.getMediaHttpUploader();
-//                uploader.setDirectUploadEnabled(false);
-//                uploader.setProgressListener(new MediaHttpUploaderProgressListener() {
-//                    @Override
-//                    public void progressChanged(MediaHttpUploader uploader) throws IOException {
-//                        switch (uploader.getUploadState()) {
-//                            case INITIATION_STARTED:
-//                                System.out.println("Initiation Started");
-//                                break;
-//                            case INITIATION_COMPLETE:
-//                                System.out.println("Initiation Completed");
-//                                break;
-//                            case MEDIA_IN_PROGRESS:
-//                                System.out.println("Upload in progress: " + uploader.getProgress());
-//                                break;
-//                            case MEDIA_COMPLETE:
-//                                System.out.println("Upload Completed!");
-//                                break;
-//                            case NOT_STARTED:
-//                                System.out.println("Upload Not Started!");
-//                                break;
-//                        }
-//                    }
-//                });
-//
-//                // Thực hiện yêu cầu API để tải lên video
-//                Video returnedVideo = videoInsert.execute();
-//
-//                // Lấy ID của video đã tải lên
-//                String videoId = returnedVideo.getId();
-//                System.out.println("Video upload successful! Video ID: " + videoId);
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    private void buildYouTubeClient() {
-//        new AsyncTask<Void, Void, YouTube>() {
-//            @Override
-//            protected YouTube doInBackground(Void... voids) {
-//                try {
-//                    HttpTransport httpTransport = new NetHttpTransport();
-//                    JsonFactory jsonFactory = new JacksonFactory();
-//                    Resources res = getResources();
-//                    InputStream in = res.openRawResource(R.raw.client_secret);
-//
-//                    Log.d("Not Error", "Not Error");
-//
-//                    GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(jsonFactory, new InputStreamReader(in));
-//
-//                    GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-//                            httpTransport, jsonFactory, clientSecrets, Collections.singleton(YouTubeScopes.YOUTUBE))
-//                            .build();
-//
-//                    // Perform the OAuth2 authorization process
-//                    Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
-//
-//                    // Build YouTube API client
-//                    Log.d("Not Error", "Not Error");
-//                    return new YouTube.Builder(httpTransport, jsonFactory, credential)
-//                            .setApplicationName(APPLICATION_NAME)
-//                            .build();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                    return null;
-//                }
-//            }
-//
-//            @Override
-//            protected void onPostExecute(YouTube youTube) {
-//                if (youTube != null) {
-//                    // Use the YouTube client here
-//                } else {
-//                    // Handle the case when YouTube client creation fails
-//                }
-//            }
-//        }.execute();
-//    }
 
     public Dialog onCreateDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(AddMovieActivity.this);
@@ -696,10 +556,6 @@ public class AddMovieActivity extends AppCompatActivity{
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
-
-
-    private static final int REQUEST_CODE_PICK_VIDEO = 123;
-
 
 }
 

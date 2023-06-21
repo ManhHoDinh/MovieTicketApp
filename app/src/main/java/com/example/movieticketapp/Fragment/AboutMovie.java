@@ -32,6 +32,8 @@ import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -83,27 +85,45 @@ public class AboutMovie extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext(), RecyclerView.HORIZONTAL, false);
         VideoAdapter videoAdapter = new VideoAdapter();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference VideoRef = db.collection("Movies").document(film.getId()).collection("TrailerAndSongUrls");
-        VideoRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        DocumentReference VideoRef = db.collection("Movies").document(film.getId());
+        VideoRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error != null) {
+            public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e);
                     return;
                 }
 
-                videoList.clear();
-                for (QueryDocumentSnapshot doc : value)
-                {
-                    String videoURL = doc.getString("videoURL");
-
-                    videoList.add(videoURL);
-                    Log.d(TAG, "Added video with url: " + videoURL);
+                if (snapshot != null && snapshot.exists()) {
+                    Log.d(TAG, "Current data: " + snapshot.getData());
+                    FilmModel filmModel = snapshot.toObject(FilmModel.class);
+                    videoAdapter.setVideoIdList(filmModel.getTrailer());
+                    videoListView.setAdapter(videoAdapter);
+                    videoListView.setLayoutManager(linearLayoutManager);
+                } else {
+                    Log.d(TAG, "Current data: null");
                 }
-                videoAdapter.setVideoIdList(videoList);
-                videoListView.setAdapter(videoAdapter);
-                videoListView.setLayoutManager(linearLayoutManager);
             }
         });
+//                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+//                if (error != null) {
+//                    return;
+//                }
+//
+//                videoList.clear();
+//                for (QueryDocumentSnapshot doc : value)
+//                {
+//                    String videoURL = doc.getString("videoURL");
+//
+//                    videoList.add(videoURL);
+//                    Log.d(TAG, "Added video with url: " + videoURL);
+//                }
+//
+//            }
+//        });
 
 
 
