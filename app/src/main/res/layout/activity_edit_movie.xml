@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    tools:context=".Activity.Movie.EditMovieActivity"
+    >
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/AddMovieLayout"
+            >
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/moviebackground"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/topView"
+                    android:layout_width="match_parent"
+                    android:layout_height="337dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/bg_img_shadow"
+                    android:layout_width="match_parent"
+                    android:layout_height="221dp"
+                    android:background="@drawable/background_image_shadow"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <!--            Mau layout phia duoi-->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="750dp"
+                    android:background="@color/main_information_film_screen"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/bg_img_shadow" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/PosterImageLayout"
+                    android:layout_width="120dp"
+                    android:layout_height="172dp"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="24dp"
+                    app:cardCornerRadius="12dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/topView"
+                    app:layout_constraintLeft_toLeftOf="parent">
+
+                    <ImageView
+                        android:id="@+id/movieavatar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY" />
+                    <!--                            android:layout_marginLeft="24dp"-->
+                    <!--                            android:layout_marginRight="24dp"-->
+                </androidx.cardview.widget.CardView>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/infomate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="24dp"
+                    android:gravity="left|top"
+                    android:orientation="vertical"
+                    app:layout_constraintLeft_toRightOf="@id/PosterImageLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/bg_img_shadow"
+
+                    >
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12dp"
+                            android:textColor="@color/white"
+                            android:text="Name: "/>
+                        <EditText
+                            android:layout_width="190dp"
+                            android:layout_height="wrap_content"
+                            android:textSize="12dp"
+                            android:hint="Movie Name"
+                            android:layout_marginLeft="24dp"
+                            android:textColorHint="@color/hint_color"
+                            android:textColor="@color/white"
+                            android:id="@+id/movieName"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:textSize="12dp"
+                            android:text="Kind: "/>
+                        <TextView
+                            android:layout_width="190dp"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:text="Chose movie kind"
+                            android:textColorHint="@color/hint_color"
+                            android:textSize="12dp"
+                            android:paddingRight="20dp"
+                            android:layout_marginLeft="36dp"
+                            android:id="@+id/movieKind"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12dp"
+                            android:textColor="@color/white"
+                            android:text="Duration: "/>
+                        <EditText
+                            android:layout_width="190dp"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:hint="Duration time of movie"
+                            android:textColorHint="@color/hint_color"
+                            android:textSize="12dp"
+                            android:layout_marginLeft="10dp"
+                            android:textColorLink="@color/white"
+                            android:id="@+id/movieDuration"/>
+                    </LinearLayout>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            <LinearLayout
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/PosterImageLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="24dp"
+                    android:paddingRight="24dp"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:textSize="12dp"
+                            android:text="Start Date: "/>
+
+                        <Button
+                            android:id="@+id/Calendar"
+                            android:layout_width="250dp"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@color/background_color"
+                            android:gravity="center"
+                            android:text="Choose Date"
+                            android:textSize="12dp"
+                            android:textColor="@color/white" />
+
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:textColor="@color/white"
+                        android:text="Synopsis"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:textSize="18dp"
+                        android:textFontWeight="900"
+                        android:textStyle="bold"/>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardCornerRadius="15dp"
+                            >
+                            <EditText
+                                android:id="@+id/MovieDescription"
+                                android:layout_width="match_parent"
+                                android:layout_height="171dp"
+                                android:background="@drawable/background_no_image"
+                                android:paddingHorizontal="20dp"
+                                android:paddingVertical="10dp"
+                                android:textColorLink="@color/white"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:hint="Write movie description here"
+                                android:textColorHint="@color/grey_background_1"
+                                android:textAlignment="center"
+                                android:textColor="@color/white"
+                                android:overScrollMode="always"
+                                android:scrollbarStyle="insideInset"
+                                android:scrollbars="vertical"
+                                android:textSize="14dp" />
+
+                        </androidx.cardview.widget.CardView>
+                    </RelativeLayout>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        >
+                        <TextView
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:textColor="@color/white"
+                            android:layout_marginBottom="15dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="40dp"
+                            android:text="Trailer and Song"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:textSize="18dp"
+                            android:textFontWeight="900"
+                            android:gravity="center"
+                            android:textStyle="bold"/>
+                        <androidx.cardview.widget.CardView
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:layout_width="wrap_content"
+                            app:cardCornerRadius="20dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_height="wrap_content">
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="10dp"
+                                android:text="+"
+                                android:id="@+id/addButton"
+                                android:background="@drawable/background_no_image"
+                                />
+                        </androidx.cardview.widget.CardView>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/containerLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/very_dark_background"
+                    android:layout_marginTop="50dp"
+                    >
+                    <LinearLayout
+                        android:layout_centerInParent="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/applybutton"
+                            android:layout_width="143dp"
+                            android:layout_height="56dp"
+                            android:background="@drawable/button_background"
+                            android:text="Apply"
+                            android:textColor="@color/white"
+                            style="@android:style/Widget.Button"
+                            />
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_marginLeft="40dp"
+                            android:id="@+id/cancelbutton"
+                            android:layout_width="143dp"
+                            android:layout_height="56dp"
+                            android:background="@drawable/background_button_add_movie"
+                            android:text="Cancel"
+                            android:textColor="@color/white"
+                            style="@android:style/Widget.Button"
+                            />
+                    </LinearLayout>
+                </RelativeLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"/>
+
+            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

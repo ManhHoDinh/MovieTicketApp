@@ -47,6 +47,7 @@ public class InformationFilmActivity extends FragmentActivity {
     TabLayout tabLayout;
     ViewPager2 pager;
     FilmModel f;
+    ImageView EditMovie;
 
     FilmDetailPagerAdapter filmDetailPagerAdapter;
     @Override
@@ -69,10 +70,18 @@ public class InformationFilmActivity extends FragmentActivity {
         pager.setAdapter(filmDetailPagerAdapter);
         pager.setOffscreenPageLimit(3);
         getFilm(f.getId());
+        EditMovie=findViewById(R.id.EditMovie);
 
        // Log.e("fdf", f.getStatus());
 
-
+        EditMovie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(InformationFilmActivity.this, EditMovieActivity.class);
+                i.putExtra(ExtraIntent.film, f);
+                startActivity(i);
+            }
+        });
 
 
         refreshScreen();

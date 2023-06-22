@@ -1,15 +1,11 @@
 package com.example.movieticketapp.Activity.Movie;
 
-import static androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,90 +15,55 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.AssetManager;
-import android.content.res.Resources;
-import android.media.Image;
-import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.MediaController;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
-import com.example.movieticketapp.Activity.HomeActivity;
-import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
-import com.example.movieticketapp.Adapter.ServiceAdapter;
+import com.example.movieticketapp.Adapter.EditTrailerAdapter;
 import com.example.movieticketapp.Adapter.TrailerMovieApdapter;
+import com.example.movieticketapp.Model.ExtraIntent;
+import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.media.MediaHttpUploader;
-import com.google.api.client.googleapis.media.MediaHttpUploaderProgressListener;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.InputStreamContent;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.util.Value;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.type.DateTime;
 import com.makeramen.roundedimageview.RoundedImageView;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.security.GeneralSecurityException;
-import java.text.SimpleDateFormat;
+import com.squareup.picasso.Picasso;
+
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
-
-
-public class AddMovieActivity extends AppCompatActivity{
+public class EditMovieActivity extends AppCompatActivity{
     public static List<Uri> videoUris= new ArrayList<>();
     public static  Uri defaultUri;
-    public  ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
+    public ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
     public  ActivityResultLauncher<PickVisualMediaRequest> pickVideo;
     int th;
     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
@@ -110,12 +71,7 @@ public class AddMovieActivity extends AppCompatActivity{
     FirebaseFirestore databaseReference = FirebaseFirestore.getInstance();
     DocumentReference document;
     ImageView moviebackground;
-    TextView textbg;
-    ImageView imbg;
-
     ImageView movieavatar;
-    TextView textavt;
-    ImageView imavt;
     EditText description;
     EditText movieName;
     TextView movieKind;
@@ -132,20 +88,22 @@ public class AddMovieActivity extends AppCompatActivity{
     UploadTask uploadTask;
     UploadTask uploadTask2;
     Button calendarButton;
-    TrailerMovieApdapter adapter;
+    EditTrailerAdapter adapter;
     List<String> InStorageVideoUris=new ArrayList<>();
     loadingAlert loadingDialog;
+    FilmModel film ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_movie_screen);
+        setContentView(R.layout.activity_edit_movie);
+        Intent intent = getIntent();
+        film = intent.getParcelableExtra(ExtraIntent.film);
         InStorageVideoUris.clear();
-        loadingDialog= new loadingAlert(AddMovieActivity.this);
+        loadingDialog= new loadingAlert(EditMovieActivity.this);
         defaultUri=Uri.parse("https://example.com/default");;
         calendarButton = findViewById(R.id.Calendar);
-
-       calendarButton.setOnClickListener(new View.OnClickListener() {
+        calendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Show calendar dialog
@@ -154,12 +112,8 @@ public class AddMovieActivity extends AppCompatActivity{
             }
         });
         moviebackground = (ImageView) findViewById(R.id.moviebackground);
-        textbg = (TextView) findViewById(R.id.textbackground);
-        imbg = (ImageView) findViewById(R.id.imbackground);
 
-        movieavatar =  findViewById(R.id.movieavatar);
-        textavt = (TextView) findViewById(R.id.textavt);
-        imavt = (ImageView) findViewById(R.id.imavt);
+        movieavatar = (ImageView) findViewById(R.id.movieavatar);
 
         description = (EditText) findViewById(R.id.MovieDescription);
         movieName = (EditText) findViewById(R.id.movieName);
@@ -167,7 +121,24 @@ public class AddMovieActivity extends AppCompatActivity{
         movieDurarion =(EditText) findViewById(R.id.movieDuration);
         applyButton = (Button) findViewById(R.id.applybutton);
         cancleButton = (Button) findViewById(R.id.cancelbutton);
+        if(film!=null)
+        {
+            movieName.setText(film.getName());
+            Picasso.get().load(film.getBackGroundImage()).into(moviebackground);
+            Picasso.get().load(film.getPrimaryImage()).into(movieavatar);
+            description.setText(film.getDescription());
+            movieKind.setText(film.getGenre());
+            movieDurarion.setText(film.getDurationTime());
+            Date date= film.getMovieBeginDate().toDate();
+            LocalDate local = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            int year  = local.getYear();
+            int month = local.getMonthValue();
+            int dayOfMonth   = local.getDayOfMonth();
+            String dateString = String.valueOf(dayOfMonth) + "/" + String.valueOf(month) + "/" + String.valueOf(year);
+            localDate = LocalDate.of(year, month-1, dayOfMonth);
 
+            calendarButton.setText(dateString);
+        }
         LinearLayout layoutElement = findViewById(R.id.AddMovieLayout); // Replace with your actual layout element ID
 
         layoutElement.setOnClickListener(new View.OnClickListener() {
@@ -200,7 +171,7 @@ public class AddMovieActivity extends AppCompatActivity{
                 }
                 videos.add("add");
                 videoUris.add(defaultUri);
-                adapter = new TrailerMovieApdapter(videos, AddMovieActivity.this);
+                adapter = new EditTrailerAdapter(videos, EditMovieActivity.this);
                 containerLayout.setAdapter(adapter);
                 LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
                 containerLayout.setLayoutManager(VerLayoutManager);
@@ -217,20 +188,10 @@ public class AddMovieActivity extends AppCompatActivity{
                                     case 0:
                                         moviebackground.setImageURI(uri);
                                         backgrounduri = uri;
-                                        if(uri!=null)
-                                        {
-                                            textbg.setText("");
-                                            imbg.setImageResource(0);
-                                        }
                                         break;
                                     case 1:
                                         movieavatar.setImageURI(uri);
                                         avataruri = uri;
-                                        if(uri!=null)
-                                        {
-                                            textavt.setText("");
-                                            imavt.setImageResource(0);
-                                        }
                                         break;
 
                                 }
@@ -262,7 +223,7 @@ public class AddMovieActivity extends AppCompatActivity{
             }
         });
 
-       pickVideo =
+        pickVideo =
                 registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
                     if (uri != null) {
                         int position = adapter.getSelectedPosition();
@@ -344,7 +305,7 @@ public class AddMovieActivity extends AppCompatActivity{
                             }
                         }
                     });
-                     for(int i = 0; i < AddMovieActivity.videoUris.size();i++)
+                    for(int i = 0; i < AddMovieActivity.videoUris.size();i++)
                     {
                         StorageReference VideoStorageReference= FirebaseStorage.getInstance().getReference().child("Movies/"+MovieName+"/"+MovieName+"Video"+String.valueOf(i)+".mp4");
                         if(AddMovieActivity.videoUris.get(i)== AddMovieActivity.defaultUri)
@@ -353,7 +314,7 @@ public class AddMovieActivity extends AppCompatActivity{
                             {
                                 loadingDialog.closeLoadingAlert();
                             }
-                                continue;
+                            continue;
                         }
                         int finalI = i;
                         VideoStorageReference.putFile(AddMovieActivity.videoUris.get(i)).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
@@ -384,7 +345,7 @@ public class AddMovieActivity extends AppCompatActivity{
                         });
 
                     }
-                     }
+                }
                 else
                 {
                     Toast toast = Toast.makeText(getApplicationContext(), "Have some errors!!!", Toast.LENGTH_SHORT);
@@ -429,7 +390,7 @@ public class AddMovieActivity extends AppCompatActivity{
         int month = calendar.get(Calendar.MONTH);
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
         // Create a custom DatePickerDialog
-        DatePickerDialog datePickerDialog = new DatePickerDialog(AddMovieActivity.this,
+        DatePickerDialog datePickerDialog = new DatePickerDialog(EditMovieActivity.this,
                 new DatePickerDialog.OnDateSetListener() {
 
                     @Override
@@ -483,7 +444,7 @@ public class AddMovieActivity extends AppCompatActivity{
     }
 
     public Dialog onCreateDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(AddMovieActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(EditMovieActivity.this);
 
         // Inflate the custom layout
         View dialogView = getLayoutInflater().inflate(R.layout.custom_layout_dialog, null);

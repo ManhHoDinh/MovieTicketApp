@@ -93,7 +93,7 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
 
     void loadListPost(String type) {
         NowPlaying = activity.findViewById(R.id.typeMovieViewPage);
-        ComingSoon = activity.findViewById(R.id.commingMovieView);
+        ComingSoon = activity.findViewById(R.id.comingMovieView);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference MovieRef = db.collection("Movies");
 
