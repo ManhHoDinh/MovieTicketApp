@@ -36,6 +36,7 @@ import com.example.movieticketapp.Activity.Movie.ViewAllActivity;
 import com.example.movieticketapp.Activity.Notification.NotificationActivity;
 import com.example.movieticketapp.Activity.Report.ReportActivity;
 import com.example.movieticketapp.Activity.Service.AddService;
+import com.example.movieticketapp.Activity.Service.ServiceViewAll;
 import com.example.movieticketapp.Activity.Ticket.MyTicketAllActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
 import com.example.movieticketapp.Adapter.CityAdapter;
@@ -98,7 +99,6 @@ public class HomeActivity extends AppCompatActivity {
 
     ConstraintLayout serviceHeader;
     ConstraintLayout cityHeader;
-
 
 
     @Override
@@ -185,6 +185,13 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(HomeActivity.this, DiscountViewAll.class);
+                startActivity(i);
+            }
+        });
+        binding.ServiceViewAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(HomeActivity.this, ServiceViewAll.class);
                 startActivity(i);
             }
         });
@@ -382,11 +389,11 @@ public class HomeActivity extends AppCompatActivity {
 
     }
     void checkTypeUser(){
-        FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseRequest.database.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Users currentUser = documentSnapshot.toObject(Users.class);
-                Log.e("fs",  currentUser.getAccountType());
                 if (((currentUser.getAccountType().toString()).equals("admin"))) {
                     GetServices();
                     GetCities();

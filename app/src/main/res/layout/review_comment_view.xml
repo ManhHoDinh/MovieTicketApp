@@ -94,10 +94,11 @@
             android:layout_height="20dp"
             android:id="@+id/likeBtn"
             android:layout_below="@id/listReact"
-            android:src="@drawable/heart_unlike"
+            android:src="@drawable/heart_icon"
             android:layout_marginTop="4dp"
             android:layout_toRightOf="@id/profile"
             android:layout_marginLeft="15dp"
+            android:tag="bg"
             />
 
         <TextView
@@ -118,10 +119,11 @@
             android:layout_height="20dp"
             android:id="@+id/dislikeBtn"
             android:layout_below="@id/listReact"
-            android:src="@drawable/dislike"
+            android:src="@drawable/dislike_icon"
             android:layout_marginTop="4dp"
             android:layout_toRightOf="@id/likeNumber"
             android:layout_marginLeft="30dp"
+            android:tag="cg"
             />
 
         <TextView

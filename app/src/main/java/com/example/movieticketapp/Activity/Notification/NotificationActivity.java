@@ -7,9 +7,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.core.app.ComponentActivity;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.movieticketapp.Activity.Account.SplashActivity;
 import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Activity.Movie.ViewAllActivity;
 import com.example.movieticketapp.Activity.Report.ReportActivity;
@@ -47,6 +51,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +97,7 @@ public class NotificationActivity extends AppCompatActivity {
 
             private void AddNotificationToFirebase() {
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+                FirebaseMessaging.getInstance().subscribeToTopic("all");
                 DocumentReference doc = db.collection(NotificationModel.CollectionName).document();;
 
                 FirebaseUser currentUser= FirebaseAuth.getInstance().getCurrentUser();
@@ -112,6 +117,8 @@ public class NotificationActivity extends AppCompatActivity {
                                 Log.w(TAG, "Error writing document", e);
                             }
                         });
+                FcmNotificationsSender notificationsSender = new FcmNotificationsSender("/topics/all", Heading.getText().toString(), Description.getText().toString(),getApplicationContext(), NotificationActivity.this);
+                notificationsSender.SendNotifications();
             }
         });
     }

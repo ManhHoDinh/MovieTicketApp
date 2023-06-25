@@ -4,6 +4,11 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -14,15 +19,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MovieTicketApp"
         tools:targetApi="31">
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+
+        <service
+            android:name=".Activity.Notification.FirebaseMessagingService"
+            android:permission="TODO"
+            tools:ignore="ExportedService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".Activity.Notification.EditNotificationActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.Notification.NotificationDetailActivity"
             android:exported="false" />
-
-        <activity android:name=".Activity.City.CityViewAllActivity"
-            android:exported="false"/>
+        <activity
+            android:name=".Activity.City.CityViewAllActivity"
+            android:exported="false" />
         <activity
             android:name=".Activity.City.CinemaOfCity"
             android:exported="false" />
@@ -88,18 +105,25 @@
         <activity
             android:name=".Activity.Booking.SuccessCheckoutActivity"
             android:exported="true" />
-
+        <activity
+            android:name=".Activity.Movie.AddMovieActivity"
+            android:exported="true"
+             />
         <activity
             android:name=".Activity.Account.SplashActivity"
             android:exported="true"
-           >
+            android:theme="@style/Theme.MovieProject.Main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.Movie.AddMovieActivity"/>
+        <activity
+            android:name=".Activity.Service.ServiceViewAll"
+            android:exported="false"
+            android:theme="@style/Theme.MovieProject.Main" />
+
         <activity
             android:name=".Activity.Booking.BookSeatActivity"
             android:exported="false"
@@ -112,7 +136,7 @@
             android:name=".Activity.Account.OnboardingActivity"
             android:exported="false" />
         <activity android:name=".Activity.Account.SignUpActivity" />
-        <activity android:name=".Activity.Account.SignInActivity" />
+        <activity android:name=".Activity.Account.SignInActivity"  android:theme="@style/Theme.MovieProject.Main"/>
         <activity
             android:name=".Activity.Movie.InformationFilmActivity"
             android:exported="false" />

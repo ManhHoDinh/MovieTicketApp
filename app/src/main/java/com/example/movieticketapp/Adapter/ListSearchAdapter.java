@@ -18,9 +18,11 @@ import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.InforBooked;
 import com.example.movieticketapp.R;
+import com.google.firebase.Timestamp;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class ListSearchAdapter extends RecyclerView.Adapter<ListSearchAdapter.ItemViewHolder> {
@@ -62,8 +64,13 @@ public class ListSearchAdapter extends RecyclerView.Adapter<ListSearchAdapter.It
         holder.timeShow.setText(filmModel.getDurationTime());
         Picasso.get().load(filmModel.getPosterImage()).into(holder.imageFilm);
         holder.nameFilm.setText(filmModel.getName());
-        holder.status.setText(filmModel.getStatus());
-        if(filmModel.getStatus().equals("playing")){
+        Timestamp movieBeginDate = filmModel.getMovieBeginDate();
+        if(movieBeginDate.toDate().before(Helper.getCurrentDate())){
+            holder.status.setText("Playing");
+        }
+        else holder.status.setText("Coming");
+
+        if(filmModel.getMovieBeginDate().toDate().before(Helper.getCurrentDate())){
             holder.status.setBackgroundColor(Color.TRANSPARENT);
             holder.status.setBackground(ContextCompat.getDrawable(holder.status.getContext(), R.drawable.background_playing));
             holder.inforBtn.setText("Book");
