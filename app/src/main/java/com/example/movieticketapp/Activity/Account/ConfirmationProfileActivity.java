@@ -16,6 +16,7 @@ import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
 public class ConfirmationProfileActivity extends AppCompatActivity {
@@ -37,7 +38,7 @@ public class ConfirmationProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.confirmation_profile_screen);
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        ImageView avatar = (ImageView) findViewById(R.id.profilePic);
+        RoundedImageView avatar = (RoundedImageView) findViewById(R.id.profilePic);
         if (currentUser!= null)
         {
             if (currentUser.getPhotoUrl() != null)
