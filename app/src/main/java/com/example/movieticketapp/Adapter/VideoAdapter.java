@@ -151,7 +151,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         if (videoIdList != null) return videoIdList.size();
         return 0;
     }
-    private String convertIntoTime(int ms){
+    public static String convertIntoTime(int ms){
         String time;
         int x, seconds, minutes, hours;
         x = ms / 1000;

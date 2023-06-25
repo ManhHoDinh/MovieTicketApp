@@ -1,9 +1,12 @@
 package com.example.movieticketapp.Activity.Movie;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -42,7 +45,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -63,6 +69,7 @@ import java.util.Map;
 public class EditMovieActivity extends AppCompatActivity{
     public static List<Uri> videoUris= new ArrayList<>();
     public static  Uri defaultUri;
+    public static String defaultAddTrailer = "Add";
     public ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
     public  ActivityResultLauncher<PickVisualMediaRequest> pickVideo;
     int th;
@@ -92,7 +99,8 @@ public class EditMovieActivity extends AppCompatActivity{
     List<String> InStorageVideoUris=new ArrayList<>();
     loadingAlert loadingDialog;
     FilmModel film ;
-
+    List<String> videos=new ArrayList<>();
+    RecyclerView trailerVideos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,11 +144,9 @@ public class EditMovieActivity extends AppCompatActivity{
             int dayOfMonth   = local.getDayOfMonth();
             String dateString = String.valueOf(dayOfMonth) + "/" + String.valueOf(month) + "/" + String.valueOf(year);
             localDate = LocalDate.of(year, month-1, dayOfMonth);
-
             calendarButton.setText(dateString);
         }
         LinearLayout layoutElement = findViewById(R.id.AddMovieLayout); // Replace with your actual layout element ID
-
         layoutElement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -157,26 +163,49 @@ public class EditMovieActivity extends AppCompatActivity{
                 dismissKeyboard(view);
             }
         });
-        RecyclerView containerLayout = findViewById(R.id.containerLayout);
+        trailerVideos = findViewById(R.id.containerLayout);
         Button addButton = findViewById(R.id.addButton);
-        List<String> videos=new ArrayList<>();
+        DocumentReference VideoRef = databaseReference.collection("Movies").document(film.getId());
+        VideoRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e);
+                    return;
+                }
 
+                if (snapshot != null && snapshot.exists()) {
+                    videos.clear();
+                    videoUris.clear();
+                    FilmModel filmModel = snapshot.toObject(FilmModel.class);
+                    videos=filmModel.getTrailer();
+                    for(int i = 0; i < filmModel.getTrailer().size();i++)
+                        videoUris.add(defaultUri);
+                    adapter = new EditTrailerAdapter(videos, EditMovieActivity.this);
+                    trailerVideos.setAdapter(adapter);
+                    LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+                    trailerVideos.setLayoutManager(VerLayoutManager);
+                } else {
+                    Log.d(TAG, "Current data: null");
+                }
+            }
+        });
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(videos.size()==0)
                 {
                     InStorageVideoUris.clear();
-                    AddMovieActivity.videoUris.clear();
+                    EditMovieActivity.videoUris.clear();
                 }
-                videos.add("add");
+                videos.add(defaultAddTrailer);
                 videoUris.add(defaultUri);
                 adapter = new EditTrailerAdapter(videos, EditMovieActivity.this);
-                containerLayout.setAdapter(adapter);
+                trailerVideos.setAdapter(adapter);
                 LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-                containerLayout.setLayoutManager(VerLayoutManager);
-                Log.d("Video Length : ",String.valueOf(videos.size()));
-            }
+                trailerVideos.setLayoutManager(VerLayoutManager);
+                }
         });
 
 
@@ -305,19 +334,19 @@ public class EditMovieActivity extends AppCompatActivity{
                             }
                         }
                     });
-                    for(int i = 0; i < AddMovieActivity.videoUris.size();i++)
+                    for(int i = 0; i < EditMovieActivity.videoUris.size();i++)
                     {
                         StorageReference VideoStorageReference= FirebaseStorage.getInstance().getReference().child("Movies/"+MovieName+"/"+MovieName+"Video"+String.valueOf(i)+".mp4");
-                        if(AddMovieActivity.videoUris.get(i)== AddMovieActivity.defaultUri)
+                        if(EditMovieActivity.videoUris.get(i)== EditMovieActivity.defaultUri)
                         {
-                            if(i==AddMovieActivity.videoUris.size()-1&& uploadTask.isComplete()&&uploadTask2.isComplete())
+                            if(i==EditMovieActivity.videoUris.size()-1&& uploadTask.isComplete()&&uploadTask2.isComplete())
                             {
                                 loadingDialog.closeLoadingAlert();
                             }
                             continue;
                         }
                         int finalI = i;
-                        VideoStorageReference.putFile(AddMovieActivity.videoUris.get(i)).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                        VideoStorageReference.putFile(EditMovieActivity.videoUris.get(i)).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                             @Override
                             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
                                 if (!task.isSuccessful()) {
@@ -333,7 +362,7 @@ public class EditMovieActivity extends AppCompatActivity{
                                 if (task.isSuccessful()) {
                                     InStorageVideoUris.add(task.getResult().toString());
                                     SaveDatatoDatabase();
-                                    if(finalI ==AddMovieActivity.videoUris.size()-1)
+                                    if(finalI ==EditMovieActivity.videoUris.size()-1)
                                     {
                                         loadingDialog.closeLoadingAlert();
                                     }
@@ -364,7 +393,7 @@ public class EditMovieActivity extends AppCompatActivity{
     }
 
     private void SaveDatatoDatabase() {
-        document = databaseReference.document("Movies/"+movieName.getText().toString());
+        document = databaseReference.document("Movies/"+film.getId());
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("BackGroundImage", urlbackground);
         data.put("PosterImage", urlavatar);
@@ -372,7 +401,7 @@ public class EditMovieActivity extends AppCompatActivity{
         data.put("description", description.getText().toString());
         data.put("durationTime", movieDurarion.getText().toString());
         data.put("genre", movieKind.getText().toString());
-        data.put("id", movieName.getText().toString());
+        data.put("id", film.getId());
         data.put("name", movieName.getText().toString());
         data.put("movieBeginDate", dateStart);
         data.put("vote", 0);
