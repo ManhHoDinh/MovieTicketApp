@@ -57,19 +57,20 @@
 
 
                 >
-                <com.google.android.material.textfield.TextInputEditText
-                    android:paddingTop="20dp"
-                    android:id="@+id/EmailET"
 
-                    android:textColor="@color/white_background"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/EmailET"
                     android:layout_width="match_parent"
+
                     android:layout_height="wrap_content"
-                    android:textColorHint="@color/hint_color"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:textSize="14dp"
                     android:defaultFocusHighlightEnabled="true"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:inputType="textEmailAddress"
+                    android:paddingTop="20dp"
                     android:singleLine="true"
-                    android:inputType="textEmailAddress"/>
+                    android:textColor="@color/white_background"
+                    android:textColorHint="@color/hint_color"
+                    android:textSize="14dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout

@@ -74,8 +74,6 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/confirmBtn"
-<<<<<<< HEAD
-=======
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginLeft="24dp"
             android:background="@drawable/button_background"
@@ -83,17 +81,9 @@
             android:paddingVertical="10dp"
             android:textAllCaps="false"
             android:paddingHorizontal="30dp"
->>>>>>> 7a807b2dbfe592261edcb29d65abedad0ecc4340
             style="@style/titleStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
-            android:background="@drawable/button_background"
-            android:paddingHorizontal="40dp"
-            android:paddingVertical="10dp"
-            android:text="Confirm"
-            android:textAllCaps="false"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/cancelBtn"
