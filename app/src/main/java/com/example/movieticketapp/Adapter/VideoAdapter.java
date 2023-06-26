@@ -176,7 +176,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
         public VideoViewHolder(@NonNull View itemView) {
             super(itemView);
-            player = itemView.findViewById(R.id.trailer);
+            player = itemView.findViewById(R.id.movieavatar);
             playButton=itemView.findViewById(R.id.PlayButton);
             videoSeekBar = itemView.findViewById(R.id.videoView_seekbar);
             endTime = itemView.findViewById(R.id.videoView_endtime);

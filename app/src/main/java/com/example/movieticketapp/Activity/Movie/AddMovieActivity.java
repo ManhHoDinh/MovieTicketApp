@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -51,6 +52,7 @@ import android.widget.VideoView;
 
 import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
+import com.example.movieticketapp.Adapter.EditTrailerAdapter;
 import com.example.movieticketapp.Adapter.ServiceAdapter;
 import com.example.movieticketapp.Adapter.TrailerMovieApdapter;
 import com.example.movieticketapp.R;
@@ -95,8 +97,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class AddMovieActivity extends AppCompatActivity{
@@ -135,6 +136,10 @@ public class AddMovieActivity extends AppCompatActivity{
     TrailerMovieApdapter adapter;
     List<String> InStorageVideoUris=new ArrayList<>();
     loadingAlert loadingDialog;
+    public static String defaultAddTrailer = "Add";
+
+    public static List<String> videos=new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,7 +193,10 @@ public class AddMovieActivity extends AppCompatActivity{
         });
         RecyclerView containerLayout = findViewById(R.id.containerLayout);
         Button addButton = findViewById(R.id.addButton);
-        List<String> videos=new ArrayList<>();
+        adapter = new TrailerMovieApdapter(AddMovieActivity.this);
+        containerLayout.setAdapter(adapter);
+        LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+        containerLayout.setLayoutManager(VerLayoutManager);
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,13 +206,9 @@ public class AddMovieActivity extends AppCompatActivity{
                     InStorageVideoUris.clear();
                     AddMovieActivity.videoUris.clear();
                 }
-                videos.add("add");
+                videos.add(defaultAddTrailer);
                 videoUris.add(defaultUri);
-                adapter = new TrailerMovieApdapter(videos, AddMovieActivity.this);
-                containerLayout.setAdapter(adapter);
-                LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-                containerLayout.setLayoutManager(VerLayoutManager);
-                Log.d("Video Length : ",String.valueOf(videos.size()));
+                adapter.notifyDataSetChanged();
             }
         });
 
@@ -279,9 +283,18 @@ public class AddMovieActivity extends AppCompatActivity{
             public void onClick(View view) {
                 dismissKeyboard(view);
                 boolean error = false;
-                loadingDialog.StartAlertDialog();
+                int totalUploadTasks = 2 + AddMovieActivity.videoUris.size();
+                AtomicInteger completedUploadTasks = new AtomicInteger(0);
                 if (movieName.length() == 0) {
                     movieName.setError("Movie Name cannot be empty!!!");
+                    error = true;
+                }
+                if (backgrounduri == null) {
+                    movieName.setError("Chose movie background, please!!!");
+                    error = true;
+                }
+                if (avataruri==null) {
+                    movieName.setError("Chose movie avatar, please!!!");
                     error = true;
                 }
                 if (movieDurarion.length() == 0) {
@@ -297,6 +310,7 @@ public class AddMovieActivity extends AppCompatActivity{
                 if (!error)
                 {
                     loadingDialog.StartAlertDialog();
+
                     String MovieName = movieName.getText().toString();
                     storageReference = storageReference.child("Movies/"+MovieName+"/"+MovieName+"Poster.jpg");
                     uploadTask = storageReference.putFile(backgrounduri);
@@ -316,9 +330,13 @@ public class AddMovieActivity extends AppCompatActivity{
                             if (task.isSuccessful()) {
                                 urlbackground = task.getResult().toString();
                                 SaveDatatoDatabase();
-                            } else {
+                             } else {
                                 Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
                             }
+                            if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
+                                loadingDialog.closeLoadingAlert(); // Dismiss the progress dialog
+                            }
+                            Log.d("Upload background",completedUploadTasks.toString());
                         }
                     });
                     storageReference2 = storageReference2.child("Movies/"+MovieName+"/"+MovieName+"Primary.jpg");
@@ -339,9 +357,16 @@ public class AddMovieActivity extends AppCompatActivity{
                             if (task.isSuccessful()) {
                                 urlavatar = task.getResult().toString();
                                 SaveDatatoDatabase();
+
                             } else {
                                 Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
                             }
+                            if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
+                                loadingDialog.closeLoadingAlert(); // Dismiss the progress dialog
+                                Log.d("Upload avatar","ABC");
+                            }
+
+                            Log.d("Upload avatar",completedUploadTasks.toString());
                         }
                     });
                      for(int i = 0; i < AddMovieActivity.videoUris.size();i++)
@@ -355,7 +380,6 @@ public class AddMovieActivity extends AppCompatActivity{
                             }
                                 continue;
                         }
-                        int finalI = i;
                         VideoStorageReference.putFile(AddMovieActivity.videoUris.get(i)).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                             @Override
                             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -372,24 +396,30 @@ public class AddMovieActivity extends AppCompatActivity{
                                 if (task.isSuccessful()) {
                                     InStorageVideoUris.add(task.getResult().toString());
                                     SaveDatatoDatabase();
-                                    if(finalI ==AddMovieActivity.videoUris.size()-1)
-                                    {
-                                        loadingDialog.closeLoadingAlert();
-                                    }
-
                                 } else {
                                     Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
                                 }
+                                if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
+                                    loadingDialog.closeLoadingAlert(); // Dismiss the progress dialog
+
+                                    Log.d("Upload video","ABC");
+
+                                }
+
+                                Log.d("Upload background",completedUploadTasks.toString());
+
                             }
                         });
-
                     }
                      }
+
+
                 else
                 {
                     Toast toast = Toast.makeText(getApplicationContext(), "Have some errors!!!", Toast.LENGTH_SHORT);
                     toast.show();
                 }
+
             }
 
         });

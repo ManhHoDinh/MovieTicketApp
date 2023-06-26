@@ -82,7 +82,20 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
             holder.videoSeekBar.setVisibility(View.INVISIBLE);
             holder.endTime.setVisibility(View.INVISIBLE);
             holder.EditTrailer.setVisibility(View.INVISIBLE);
-            if(!Videos.get(position).equals(EditMovieActivity.defaultAddTrailer))
+            holder.movietrailer.setBackgroundResource(R.drawable.background_add_movie1);
+            holder.texttrailer.setText("Upload Video");
+            holder.imtrailer.setImageResource(R.drawable.symbol_image);
+
+            holder.movietrailer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    activity.pickVideo.launch(new PickVisualMediaRequest.Builder()
+                            .setMediaType(ActivityResultContracts.PickVisualMedia.VideoOnly.INSTANCE)
+                            .build());
+                    setSelectedPosition(position);
+                }
+            });
+            if(!EditMovieActivity.videos.get(position).equals(EditMovieActivity.defaultAddTrailer))
             {
                 holder.movietrailer.setBackground(null);
                 holder.texttrailer.setText("");
@@ -91,7 +104,7 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
                 holder.videoSeekBar.setVisibility(View.VISIBLE);
                 holder.endTime.setVisibility(View.VISIBLE);
                 holder.EditTrailer.setVisibility(View.VISIBLE);
-                holder.movietrailer.setVideoPath(Videos.get(position));
+                holder.movietrailer.setVideoPath(EditMovieActivity.videos.get(position));
                 holder.videoSeekBar.setProgress(0);
                 holder.endTime.setText(""+VideoAdapter.convertIntoTime(holder.movietrailer.getDuration()-0));
                 holder.movietrailer.setOnClickListener(new View.OnClickListener() {
@@ -145,7 +158,13 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
                         holder.videoSeekBar.setMax(holder.movietrailer.getDuration());
                     }
                 });
-
+                holder.movietrailer.start();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        holder.movietrailer.pause();
+                    }
+                }, 500);
                 holder.playButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -249,9 +268,19 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
                     @Override
                     public void onPrepared(MediaPlayer mp) {
                         holder.videoSeekBar.setMax(holder.movietrailer.getDuration());
+                        if(holder.movietrailer.getDuration()==0)
+                        {
 
+                        }
                     }
                 });
+                holder.movietrailer.start();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        holder.movietrailer.pause();
+                    }
+                }, 500);
 
                 holder.playButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -314,7 +343,6 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.promo_edit:
-                                //handle menu1 click
                             {
                                 activity.pickVideo.launch(new PickVisualMediaRequest.Builder()
                                         .setMediaType(ActivityResultContracts.PickVisualMedia.VideoOnly.INSTANCE)
@@ -326,6 +354,8 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
                                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(holder.itemView.getContext(), R.style.CustomAlertDialog);
                                 LayoutInflater factory = LayoutInflater.from(holder.itemView.getContext());
                                 final View deleteDialogView = factory.inflate(R.layout.yes_no_dialog, null);
+                                TextView textDialog = deleteDialogView.findViewById(R.id.message);
+                                textDialog.setText("Do you sure to delete the trailer video?");
                                 alertDialog.setView(deleteDialogView);
                                 AlertDialog OptionDialog = alertDialog.create();
                                 OptionDialog.show();
@@ -334,6 +364,9 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
                                 Delete.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
+                                        EditMovieActivity.videos.remove(position);
+                                        EditMovieActivity.videoUris.remove(position);
+                                        notifyDataSetChanged();
                                         OptionDialog.dismiss();
                                     }
                                 });
@@ -354,18 +387,15 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
                 popup.show();
             }
         });
-
     }
 
-    List<String> Videos;
-    public EditTrailerAdapter(List<String> videos, EditMovieActivity activity)
+    public EditTrailerAdapter(EditMovieActivity activity)
     {
-        this.Videos=videos;
         this.activity=activity;
     }
     @Override
     public int getItemCount() {
-        return Videos.size();
+        return EditMovieActivity.videos.size();
     }
     public class ViewHolder extends RecyclerView.ViewHolder {
         VideoView movietrailer;
@@ -402,7 +432,7 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
 
     public void updateVideoElement(Uri videoUri, int position)
     {
-        if (position >= 0 && position < Videos.size()) {
+        if (position >= 0 && position < EditMovieActivity.videos.size()) {
             selectedVideoUri = videoUri;
             EditMovieActivity.videoUris.set(position, videoUri);
             notifyItemChanged(position);

@@ -69,7 +69,6 @@ import java.util.Map;
 public class EditMovieActivity extends AppCompatActivity{
     public static List<Uri> videoUris= new ArrayList<>();
     public static  Uri defaultUri;
-    public static String defaultAddTrailer = "Add";
     public ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
     public  ActivityResultLauncher<PickVisualMediaRequest> pickVideo;
     int th;
@@ -99,7 +98,9 @@ public class EditMovieActivity extends AppCompatActivity{
     List<String> InStorageVideoUris=new ArrayList<>();
     loadingAlert loadingDialog;
     FilmModel film ;
-    List<String> videos=new ArrayList<>();
+    public static String defaultAddTrailer = "Add";
+
+    public static List<String> videos=new ArrayList<>();
     RecyclerView trailerVideos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,7 +183,7 @@ public class EditMovieActivity extends AppCompatActivity{
                     videos=filmModel.getTrailer();
                     for(int i = 0; i < filmModel.getTrailer().size();i++)
                         videoUris.add(defaultUri);
-                    adapter = new EditTrailerAdapter(videos, EditMovieActivity.this);
+                    adapter = new EditTrailerAdapter(EditMovieActivity.this);
                     trailerVideos.setAdapter(adapter);
                     LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
                     trailerVideos.setLayoutManager(VerLayoutManager);
@@ -201,10 +202,7 @@ public class EditMovieActivity extends AppCompatActivity{
                 }
                 videos.add(defaultAddTrailer);
                 videoUris.add(defaultUri);
-                adapter = new EditTrailerAdapter(videos, EditMovieActivity.this);
-                trailerVideos.setAdapter(adapter);
-                LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-                trailerVideos.setLayoutManager(VerLayoutManager);
+                adapter.notifyDataSetChanged();
                 }
         });
 
