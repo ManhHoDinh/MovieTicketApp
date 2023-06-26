@@ -37,8 +37,6 @@ public class FcmNotificationsSender  {
         this.body = body;
         this.mContext = mContext;
         this.mActivity = mActivity;
-
-
     }
 
     public void SendNotifications() {
