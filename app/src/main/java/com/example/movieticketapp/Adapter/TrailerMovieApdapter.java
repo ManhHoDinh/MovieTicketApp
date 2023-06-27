@@ -147,19 +147,21 @@ public class TrailerMovieApdapter extends RecyclerView.Adapter<TrailerMovieApdap
 
                     }
                 });
+                holder.movietrailer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        // TODO Auto-generated method stub
+                        holder.playButton.setImageResource(R.drawable.play_icon);
+                        //write your code after complete video play
+                    }
+                });
                 holder.movietrailer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
                         holder.videoSeekBar.setMax(holder.movietrailer.getDuration());
                     }
                 });
-                holder.movietrailer.start();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        holder.movietrailer.pause();
-                    }
-                }, 500);
                 holder.playButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -269,13 +271,6 @@ public class TrailerMovieApdapter extends RecyclerView.Adapter<TrailerMovieApdap
                         }
                     }
                 });
-                holder.movietrailer.start();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        holder.movietrailer.pause();
-                    }
-                }, 500);
 
                 holder.playButton.setOnClickListener(new View.OnClickListener() {
                     @Override

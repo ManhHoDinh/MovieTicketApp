@@ -177,7 +177,7 @@
                             android:id="@+id/Calendar"
                             android:layout_width="250dp"
                             android:layout_height="wrap_content"
-                            android:backgroundTint="@color/background_color"
+                            android:background="@android:color/transparent"
                             android:gravity="center"
                             android:text="Choose Date"
                             android:textSize="12dp"

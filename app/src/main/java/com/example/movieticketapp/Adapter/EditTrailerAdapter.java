@@ -23,6 +23,7 @@ import android.widget.MediaController;
 import android.widget.PopupMenu;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -268,19 +269,17 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
                     @Override
                     public void onPrepared(MediaPlayer mp) {
                         holder.videoSeekBar.setMax(holder.movietrailer.getDuration());
-                        if(holder.movietrailer.getDuration()==0)
-                        {
-
-                        }
                     }
                 });
-                holder.movietrailer.start();
-                new Handler().postDelayed(new Runnable() {
+                holder.movietrailer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
                     @Override
-                    public void run() {
-                        holder.movietrailer.pause();
+                    public void onCompletion(MediaPlayer mp) {
+                        // TODO Auto-generated method stub
+                        holder.playButton.setImageResource(R.drawable.play_icon);
+                        //write your code after complete video play
                     }
-                }, 500);
+                });
 
                 holder.playButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -320,6 +319,15 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
                     }
                 };
                 handler.postDelayed(runnable,500);
+                holder.movietrailer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        // TODO Auto-generated method stub
+                        holder.playButton.setImageResource(R.drawable.play_icon);
+                        //write your code after complete video play
+                    }
+                });
 
             }
         }
@@ -366,6 +374,8 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
                                     public void onClick(View view) {
                                         EditMovieActivity.videos.remove(position);
                                         EditMovieActivity.videoUris.remove(position);
+                                        Toast toast = Toast.makeText(holder.itemView.getContext(),"Delete trailer layout success!!!", Toast.LENGTH_SHORT);
+                                        toast.show();
                                         notifyDataSetChanged();
                                         OptionDialog.dismiss();
                                     }

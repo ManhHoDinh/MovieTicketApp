@@ -64,6 +64,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class EditMovieActivity extends AppCompatActivity{
@@ -146,6 +147,9 @@ public class EditMovieActivity extends AppCompatActivity{
             String dateString = String.valueOf(dayOfMonth) + "/" + String.valueOf(month) + "/" + String.valueOf(year);
             localDate = LocalDate.of(year, month-1, dayOfMonth);
             calendarButton.setText(dateString);
+            dateStart = new Timestamp(date);
+            urlbackground= film.getBackGroundImage();
+            urlavatar=film.getPosterImage();
         }
         LinearLayout layoutElement = findViewById(R.id.AddMovieLayout); // Replace with your actual layout element ID
         layoutElement.setOnClickListener(new View.OnClickListener() {
@@ -203,7 +207,8 @@ public class EditMovieActivity extends AppCompatActivity{
                 videos.add(defaultAddTrailer);
                 videoUris.add(defaultUri);
                 adapter.notifyDataSetChanged();
-                }
+                Toast.makeText(getApplicationContext(),"Add Trailer Layout", Toast.LENGTH_SHORT).show();
+            }
         });
 
 
@@ -215,6 +220,7 @@ public class EditMovieActivity extends AppCompatActivity{
                                     case 0:
                                         moviebackground.setImageURI(uri);
                                         backgrounduri = uri;
+
                                         break;
                                     case 1:
                                         movieavatar.setImageURI(uri);
@@ -266,8 +272,16 @@ public class EditMovieActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 dismissKeyboard(view);
+                int totalUpload =videos.size();
+                if(backgrounduri!=null)
+                    totalUpload++;
+                if(avataruri!=null)
+                    totalUpload++;
+                int totalUploadTasks =totalUpload;
+
+                AtomicInteger completedUploadTasks = new AtomicInteger(0);
+
                 boolean error = false;
-                loadingDialog.StartAlertDialog();
                 if (movieName.length() == 0) {
                     movieName.setError("Movie Name cannot be empty!!!");
                     error = true;
@@ -284,57 +298,91 @@ public class EditMovieActivity extends AppCompatActivity{
                 }
                 if (!error)
                 {
-                    loadingDialog.StartAlertDialog();
+                  //  loadingDialog.StartAlertDialog();
+
+                   loadingDialog.StartAlertDialog();
+                    InStorageVideoUris.clear();
+                    SaveDatatoDatabase();
                     String MovieName = movieName.getText().toString();
                     storageReference = storageReference.child("Movies/"+MovieName+"/"+MovieName+"Poster.jpg");
-                    uploadTask = storageReference.putFile(backgrounduri);
-                    uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                        @Override
-                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                            if (!task.isSuccessful()) {
-                                throw task.getException();
-                            }
+                    if(backgrounduri!=null)
+                    {
+                        uploadTask = storageReference.putFile(backgrounduri);
+                        uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                            @Override
+                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                if (!task.isSuccessful()) {
+                                    throw task.getException();
+                                }
 
-                            // Continue with the task to get the download URL
-                            return storageReference.getDownloadUrl();
-                        }
-                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Uri> task) {
-                            if (task.isSuccessful()) {
-                                urlbackground = task.getResult().toString();
-                                SaveDatatoDatabase();
-                            } else {
-                                Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
+                                // Continue with the task to get the download URL
+                                return storageReference.getDownloadUrl();
                             }
-                        }
-                    });
-                    storageReference2 = storageReference2.child("Movies/"+MovieName+"/"+MovieName+"Primary.jpg");
-                    uploadTask2 = storageReference2.putFile(avataruri);
-                    uploadTask2.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                        @Override
-                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                            if (!task.isSuccessful()) {
-                                throw task.getException();
+                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                if (task.isSuccessful()) {
+                                    urlbackground = task.getResult().toString();
+                                    SaveDatatoDatabase();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
+                                }
+                                if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
+                                    loadingDialog.closeLoadingAlert();
+                                    Toast toast = Toast.makeText(getApplicationContext(),"Edit movie success!!!", Toast.LENGTH_SHORT);
+                                    toast.show();
+                                }
                             }
+                        });
+                    }
+                    if(avataruri!=null)
+                    {
+                        storageReference2 = storageReference2.child("Movies/"+MovieName+"/"+MovieName+"Primary.jpg");
+                        uploadTask2 = storageReference2.putFile(avataruri);
+                        uploadTask2.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                            @Override
+                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                if (!task.isSuccessful()) {
+                                    throw task.getException();
+                                }
 
-                            // Continue with the task to get the download URL
-                            return storageReference2.getDownloadUrl();
-                        }
-                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Uri> task) {
-                            if (task.isSuccessful()) {
-                                urlavatar = task.getResult().toString();
-                                SaveDatatoDatabase();
-                            } else {
-                                Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
+                                // Continue with the task to get the download URL
+                                return storageReference2.getDownloadUrl();
                             }
-                        }
-                    });
-                    for(int i = 0; i < EditMovieActivity.videoUris.size();i++)
+                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                if (task.isSuccessful()) {
+                                    urlavatar = task.getResult().toString();
+                                    SaveDatatoDatabase();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
+                                }
+                                if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
+                                    loadingDialog.closeLoadingAlert();
+                                    Toast toast = Toast.makeText(getApplicationContext(),"Edit movie success!!!", Toast.LENGTH_SHORT);
+                                    toast.show();
+                                }
+
+                            }
+                        });
+                                           }
+                    for(int i = 0; i < EditMovieActivity.videos.size();i++)
                     {
                         StorageReference VideoStorageReference= FirebaseStorage.getInstance().getReference().child("Movies/"+MovieName+"/"+MovieName+"Video"+String.valueOf(i)+".mp4");
+                        completedUploadTasks.incrementAndGet();
+                        Log.d(String.valueOf(totalUploadTasks), completedUploadTasks.toString());
+                        if(!videos.get(i).equals(defaultAddTrailer))
+                        {
+                            InStorageVideoUris.add(videos.get(i));
+                            SaveDatatoDatabase();
+                            if (completedUploadTasks.get() == totalUploadTasks) {
+                                loadingDialog.closeLoadingAlert();
+                                Toast toast = Toast.makeText(getApplicationContext(),"Edit movie success!!!", Toast.LENGTH_SHORT);
+                                toast.show();
+                            }
+                            continue;
+                        }
                         if(EditMovieActivity.videoUris.get(i)== EditMovieActivity.defaultUri)
                         {
                             if(i==EditMovieActivity.videoUris.size()-1&& uploadTask.isComplete()&&uploadTask2.isComplete())
@@ -343,7 +391,6 @@ public class EditMovieActivity extends AppCompatActivity{
                             }
                             continue;
                         }
-                        int finalI = i;
                         VideoStorageReference.putFile(EditMovieActivity.videoUris.get(i)).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                             @Override
                             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -360,14 +407,15 @@ public class EditMovieActivity extends AppCompatActivity{
                                 if (task.isSuccessful()) {
                                     InStorageVideoUris.add(task.getResult().toString());
                                     SaveDatatoDatabase();
-                                    if(finalI ==EditMovieActivity.videoUris.size()-1)
-                                    {
-                                        loadingDialog.closeLoadingAlert();
-                                    }
-
                                 } else {
                                     Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
                                 }
+                                if (completedUploadTasks.get() == totalUploadTasks) {
+                                    loadingDialog.closeLoadingAlert();
+                                    Toast toast = Toast.makeText(getApplicationContext(),"Edit movie success!!!", Toast.LENGTH_SHORT);
+                                    toast.show();
+                                }
+
                             }
                         });
 

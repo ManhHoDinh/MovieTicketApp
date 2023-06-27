@@ -55,6 +55,7 @@ import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
 import com.example.movieticketapp.Adapter.EditTrailerAdapter;
 import com.example.movieticketapp.Adapter.ServiceAdapter;
 import com.example.movieticketapp.Adapter.TrailerMovieApdapter;
+import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -149,6 +150,7 @@ public class AddMovieActivity extends AppCompatActivity{
         loadingDialog= new loadingAlert(AddMovieActivity.this);
         defaultUri=Uri.parse("https://example.com/default");;
         calendarButton = findViewById(R.id.Calendar);
+        document = databaseReference.collection("Movies").document();
 
        calendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -209,6 +211,7 @@ public class AddMovieActivity extends AppCompatActivity{
                 videos.add(defaultAddTrailer);
                 videoUris.add(defaultUri);
                 adapter.notifyDataSetChanged();
+                Toast.makeText(getApplicationContext(),"Add Trailer Layout", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -290,11 +293,13 @@ public class AddMovieActivity extends AppCompatActivity{
                     error = true;
                 }
                 if (backgrounduri == null) {
-                    movieName.setError("Chose movie background, please!!!");
+                    Toast toast = Toast.makeText(getApplicationContext(),"Chose movie background, please!!!", Toast.LENGTH_SHORT);
+                    toast.show();
                     error = true;
                 }
                 if (avataruri==null) {
-                    movieName.setError("Chose movie avatar, please!!!");
+                    Toast toast = Toast.makeText(getApplicationContext(),"Chose movie avatar, please!!!", Toast.LENGTH_SHORT);
+                    toast.show();
                     error = true;
                 }
                 if (movieDurarion.length() == 0) {
@@ -331,13 +336,16 @@ public class AddMovieActivity extends AppCompatActivity{
                                 urlbackground = task.getResult().toString();
                                 SaveDatatoDatabase();
                              } else {
-                                Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "ERROR BACKGROUND UPLOAD!!!", Toast.LENGTH_SHORT).show();
+                                loadingDialog.closeLoadingAlert();
                             }
                             if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
-                                loadingDialog.closeLoadingAlert(); // Dismiss the progress dialog
+                                RefeshScreen();
+                                finish();
+                                Toast toast = Toast.makeText(getApplicationContext(),"Add movie success!!!", Toast.LENGTH_SHORT);
+                                toast.show();
                             }
-                            Log.d("Upload background",completedUploadTasks.toString());
-                        }
+                           }
                     });
                     storageReference2 = storageReference2.child("Movies/"+MovieName+"/"+MovieName+"Primary.jpg");
                     uploadTask2 = storageReference2.putFile(avataruri);
@@ -359,27 +367,33 @@ public class AddMovieActivity extends AppCompatActivity{
                                 SaveDatatoDatabase();
 
                             } else {
-                                Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "ERROR AVATAR UPLOAD!!!", Toast.LENGTH_SHORT).show();
+                                loadingDialog.closeLoadingAlert();
                             }
                             if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
-                                loadingDialog.closeLoadingAlert(); // Dismiss the progress dialog
-                                Log.d("Upload avatar","ABC");
+                               RefeshScreen();
+                               finish();
+                                Toast toast = Toast.makeText(getApplicationContext(),"Add movie success!!!", Toast.LENGTH_SHORT);
+                                toast.show();
                             }
-
-                            Log.d("Upload avatar",completedUploadTasks.toString());
                         }
                     });
                      for(int i = 0; i < AddMovieActivity.videoUris.size();i++)
                     {
                         StorageReference VideoStorageReference= FirebaseStorage.getInstance().getReference().child("Movies/"+MovieName+"/"+MovieName+"Video"+String.valueOf(i)+".mp4");
+                        completedUploadTasks.incrementAndGet();
                         if(AddMovieActivity.videoUris.get(i)== AddMovieActivity.defaultUri)
                         {
                             if(i==AddMovieActivity.videoUris.size()-1&& uploadTask.isComplete()&&uploadTask2.isComplete())
                             {
-                                loadingDialog.closeLoadingAlert();
+                                RefeshScreen();
+                                finish();
+                                Toast toast = Toast.makeText(getApplicationContext(),"Add movie success!!!", Toast.LENGTH_SHORT);
+                                toast.show();
                             }
                                 continue;
                         }
+
                         VideoStorageReference.putFile(AddMovieActivity.videoUris.get(i)).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                             @Override
                             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -397,17 +411,15 @@ public class AddMovieActivity extends AppCompatActivity{
                                     InStorageVideoUris.add(task.getResult().toString());
                                     SaveDatatoDatabase();
                                 } else {
-                                    Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "ERROR VIDEO UPLOAD!!!", Toast.LENGTH_SHORT).show();
+                                    loadingDialog.closeLoadingAlert();
                                 }
-                                if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
-                                    loadingDialog.closeLoadingAlert(); // Dismiss the progress dialog
-
-                                    Log.d("Upload video","ABC");
-
+                                if (completedUploadTasks.get() == totalUploadTasks) {
+                                  RefeshScreen();
+                                  finish();
+                                  Toast toast = Toast.makeText(getApplicationContext(),"Add movie success!!!", Toast.LENGTH_SHORT);
+                                  toast.show();
                                 }
-
-                                Log.d("Upload background",completedUploadTasks.toString());
-
                             }
                         });
                     }
@@ -427,13 +439,25 @@ public class AddMovieActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 dismissKeyboard(view);
+                RefeshScreen();
                 finish();
             }
         });
     }
 
+    void RefeshScreen()
+    {
+        backgrounduri = null;
+        urlbackground=null;
+        avataruri=null;
+        urlavatar=null;
+        videos.clear();
+        videoUris.clear();
+
+        adapter.notifyDataSetChanged();
+        loadingDialog.closeLoadingAlert();
+    }
     private void SaveDatatoDatabase() {
-        document = databaseReference.document("Movies/"+movieName.getText().toString());
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("BackGroundImage", urlbackground);
         data.put("PosterImage", urlavatar);
@@ -441,13 +465,12 @@ public class AddMovieActivity extends AppCompatActivity{
         data.put("description", description.getText().toString());
         data.put("durationTime", movieDurarion.getText().toString());
         data.put("genre", movieKind.getText().toString());
-        data.put("id", movieName.getText().toString());
+        data.put("id", document.getId());
         data.put("name", movieName.getText().toString());
         data.put("movieBeginDate", dateStart);
         data.put("vote", 0);
         data.put("trailer",InStorageVideoUris);
         document.set(data);
-
     }
     LocalDate localDate;
     private void showCalendarDialog() {
@@ -469,7 +492,6 @@ public class AddMovieActivity extends AppCompatActivity{
                         String date = String.valueOf(selectedDay) + "/" + String.valueOf(selectedMonth + 1) + "/" + String.valueOf(selectedYear);
                         calendarButton.setText(date);
                     }
-
                 }, year, month, dayOfMonth) {
             @Override
             public void onCreate(Bundle savedInstanceState) {

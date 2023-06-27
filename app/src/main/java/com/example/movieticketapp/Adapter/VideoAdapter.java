@@ -140,10 +140,20 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                     holder.videoSeekBar.setProgress(currentPosition);
                     holder.endTime.setText(""+convertIntoTime(holder.player.getDuration()-currentPosition));
                 }
-               handler.postDelayed(this,0);
+                handler.postDelayed(this,0);
             }
         };
         handler.postDelayed(runnable,500);
+        holder.player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                // TODO Auto-generated method stub
+                holder.playButton.setImageResource(R.drawable.play_icon);
+                //write your code after complete video play
+            }
+        });
+
     }
 
     @Override
@@ -176,7 +186,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
         public VideoViewHolder(@NonNull View itemView) {
             super(itemView);
-            player = itemView.findViewById(R.id.movieavatar);
+            player = itemView.findViewById(R.id.trailer);
             playButton=itemView.findViewById(R.id.PlayButton);
             videoSeekBar = itemView.findViewById(R.id.videoView_seekbar);
             endTime = itemView.findViewById(R.id.videoView_endtime);
