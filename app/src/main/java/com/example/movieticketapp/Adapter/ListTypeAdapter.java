@@ -151,8 +151,9 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
     }
 
     void updateViewPager() {
+        SliderAdapter sliderAdapter = new SliderAdapter(PlayingFilms, NowPlaying);
 
-        NowPlaying.setAdapter(new SliderAdapter(PlayingFilms, NowPlaying));
+        NowPlaying.setAdapter(sliderAdapter);
         NowPlaying.setClipToPadding(false);
         NowPlaying.setClipChildren(false);
         NowPlaying.setOffscreenPageLimit(3);
