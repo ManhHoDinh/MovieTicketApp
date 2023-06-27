@@ -90,7 +90,7 @@ public class AccountActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
-                Intent i = new Intent(AccountActivity.this, SignInActivity.class);
+                Intent i = new Intent(AccountActivity.this, PrefixSignInActivity.class);
                 startActivity(i);
             }
         });

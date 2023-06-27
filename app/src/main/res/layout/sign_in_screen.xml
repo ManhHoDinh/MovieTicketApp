@@ -27,12 +27,23 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Welcome Back,\nMovie Lover!"
+                android:text="Welcome Back,"
                 android:fontFamily="@font/montserrat_regular"
                 android:textSize="24dp"
                 android:textStyle="bold"
                 android:layout_marginTop="32dp"
-                 android:textFontWeight="500"
+                android:textFontWeight="500"
+                style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
+                android:textColor="@color/white_background"/>
+            <TextView
+                android:id="@+id/kindperson"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Movie Lover!"
+                android:fontFamily="@font/montserrat_regular"
+                android:textSize="24dp"
+                android:textStyle="bold"
+                android:textFontWeight="500"
                 style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
                 android:textColor="@color/white_background"/>
             <com.google.android.material.textfield.TextInputLayout

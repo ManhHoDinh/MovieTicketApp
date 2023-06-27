@@ -125,7 +125,7 @@ public class SignUpActivity extends AppCompatActivity {
         backBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(SignUpActivity.this, SignInActivity.class);
+                Intent i = new Intent(SignUpActivity.this, PrefixSignInActivity.class);
                 startActivity(i);
             }
         });

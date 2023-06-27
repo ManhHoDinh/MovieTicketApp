@@ -92,6 +92,8 @@ public class SignInActivity extends AppCompatActivity {
     ImageView FacebookLogin;
     TextInputLayout passwordLayout;
     TextInputLayout emailLayout;
+    TextView kindperson;
+    String kindlogin;
 
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
@@ -112,6 +114,17 @@ public class SignInActivity extends AppCompatActivity {
         forgotPasswordTv = findViewById(R.id.ForgotPassword);
         passwordLayout = findViewById(R.id.layoutPassword);
         emailLayout = findViewById(R.id.emailLayout);
+        kindperson = (TextView)findViewById(R.id.kindperson);
+        Intent intent = getIntent();
+        kindlogin = intent.getStringExtra("type");
+        if (kindlogin.equals("user"))
+        {
+            kindperson.setText("Movie Lover!");
+        }
+        else
+        {
+            kindperson.setText("Admin!");
+        }
         emailET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -322,7 +335,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     void CreateUser(FirebaseUser user){
-        Users u = new Users(user.getUid(),   user.getDisplayName(),user.getEmail(),0, "user", user.getPhotoUrl().toString());
+        Users u = new Users(user.getUid(),   user.getDisplayName(),user.getEmail(),0, kindlogin, user.getPhotoUrl().toString());
         FirebaseRequest.database.collection("Users").document(user.getUid())
                 .set(u.toJson())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

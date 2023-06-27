@@ -230,7 +230,7 @@ public class UserProflingActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), SignInActivity.class);
+                Intent i = new Intent(getApplicationContext(), PrefixSignInActivity.class);
                 startActivity(i);
             }
         });
