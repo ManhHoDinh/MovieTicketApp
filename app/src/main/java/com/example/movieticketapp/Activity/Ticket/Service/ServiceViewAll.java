@@ -1,4 +1,4 @@
-package com.example.movieticketapp.Activity.Service;
+package com.example.movieticketapp.Activity.Ticket.Service;
 
 import static android.content.ContentValues.TAG;
 
@@ -12,11 +12,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Adapter.ServiceAdapter;
 import com.example.movieticketapp.Model.Service;
 import com.example.movieticketapp.Model.Users;

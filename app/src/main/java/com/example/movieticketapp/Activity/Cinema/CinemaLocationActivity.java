@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.movieticketapp.Model.Cinema;
 import com.example.movieticketapp.R;
@@ -124,21 +125,26 @@ public class CinemaLocationActivity extends FragmentActivity implements OnMapRea
     public void onMapReady(@NonNull GoogleMap googleMap) {
         ggmap = googleMap;
 
-
-        List<Address> listAddress = null;
-        if(location != null || location.equals("")) {
-            Log.e("s", "yes");
-            Geocoder geocoder = new Geocoder(CinemaLocationActivity.this);
-            try {
-                listAddress = geocoder.getFromLocationName(location, 1);
-            } catch (IOException e) {
-                e.printStackTrace();
+        try {
+            List<Address> listAddress = null;
+            if(location != null || location.equals("")) {
+                Log.e("s", "yes");
+                Geocoder geocoder = new Geocoder(CinemaLocationActivity.this);
+                try {
+                    listAddress = geocoder.getFromLocationName(location, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                address = listAddress.get(0);
+                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                ggmap.addMarker(new MarkerOptions().position(latLng).title(location));
+                ggmap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 20));
             }
-            address = listAddress.get(0);
-            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-            ggmap.addMarker(new MarkerOptions().position(latLng).title(location));
-            ggmap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 20));
+        } catch (Exception e){
+            Toast.makeText(this, "Don't find the location!", Toast.LENGTH_SHORT).show();
         }
+
+
     }
 
 

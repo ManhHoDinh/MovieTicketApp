@@ -81,7 +81,7 @@
             android:name=".Activity.ConfirmDialogActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.Service.AddService"
+            android:name=".Activity.Ticket.Service.AddService"
             android:exported="false" />
         <activity
             android:name=".Activity.Movie.SearchActivity"
@@ -134,7 +134,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activity.Service.ServiceViewAll"
+            android:name=".Activity.Ticket.Service.ServiceViewAll"
             android:exported="false"
             android:theme="@style/Theme.MovieProject.Main" />
 

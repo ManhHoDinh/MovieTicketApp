@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -117,33 +118,42 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
         InforBooked.getInstance().listCinema = listCinema;
         Cinema item = getItem(position);
         client = LocationServices.getFusedLocationProviderClient(context);
-        List<Address> listAddress = null;
-        Geocoder geocoder = new Geocoder(context);
-        try {
-            listAddress = geocoder.getFromLocationName(item.getName(), 1);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Address address = listAddress.get(0);
-        Dexter.withContext(context.getApplicationContext()).withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                .withListener(new PermissionListener() {
-                    @Override
-                    public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-                        getMyLocation(address, distance);
-                    }
+        try{
+            List<Address> listAddress = null;
+            Geocoder geocoder = new Geocoder(context);
 
-                    @Override
-                    public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-                        if(permissionDeniedResponse.isPermanentlyDenied()){
-                            distance.setVisibility(View.GONE);
+            try {
+                listAddress = geocoder.getFromLocationName(item.getName(), 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Address address = listAddress.get(0);
+            Dexter.withContext(context.getApplicationContext()).withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                    .withListener(new PermissionListener() {
+                        @Override
+                        public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+                            getMyLocation(address, distance);
                         }
-                    }
 
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
+                        @Override
+                        public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
+                            if(permissionDeniedResponse.isPermanentlyDenied()){
+                                distance.setVisibility(View.GONE);
+                            }
+                        }
 
-                    }
-                }).check();
+                        @Override
+                        public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
+
+                        }
+                    }).check();
+        } catch (Exception e){
+            Toast.makeText(context, "Don't find the location!", Toast.LENGTH_SHORT).show();
+            distance.setVisibility(View.GONE);
+            locationLayout.setVisibility(View.GONE);
+
+        }
+
 
 
 

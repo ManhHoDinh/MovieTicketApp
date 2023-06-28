@@ -181,7 +181,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <ListView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:dividerHeight="12dp"
                         android:id="@+id/promotionView"
                         android:layout_width="match_parent"
@@ -256,7 +256,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
-                    <ListView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:dividerHeight="12dp"
                         android:id="@+id/cityView"
                         android:layout_width="match_parent"

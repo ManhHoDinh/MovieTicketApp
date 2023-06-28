@@ -18,6 +18,7 @@ import com.example.movieticketapp.Activity.Discount.DiscountViewAll;
 import com.example.movieticketapp.Activity.Helper.NlpUtils;
 import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Adapter.CityAdapter;
+import com.example.movieticketapp.Adapter.CityViewAllAdapter;
 import com.example.movieticketapp.Adapter.PromotionAdapter;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.City;
@@ -87,7 +88,7 @@ public class CityViewAllActivity extends AppCompatActivity {
                     City city = doc.toObject(City.class);
                     cities.add(city);
                 }
-                cityView.setAdapter(new CityAdapter(CityViewAllActivity.this, R.layout.city_item, cities));
+                cityView.setAdapter(new CityViewAllAdapter(CityViewAllActivity.this, R.layout.city_item, cities));
                 cityView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -133,7 +134,7 @@ public class CityViewAllActivity extends AppCompatActivity {
 
                     }
                 }
-                cityView.setAdapter(new CityAdapter(CityViewAllActivity.this, R.layout.city_item, filteredlist));
+                cityView.setAdapter(new CityViewAllAdapter(CityViewAllActivity.this, R.layout.city_item, filteredlist));
             }
         });
         // running a for loop to compare elements.
