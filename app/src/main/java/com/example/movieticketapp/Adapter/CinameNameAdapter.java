@@ -153,152 +153,151 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
             locationLayout.setVisibility(View.GONE);
 
         }
+        finally {
+            try{
 
+                if(Users.currentUser!=null)
+                    if(((Users.currentUser.getAccountType().toString()).equals("admin")))
+                    {
+                        if(ScheduleFilm.getInstance().isDateSelected && ScheduleFilm.getInstance().isCitySelected){
+                            for (int i = 10; i <= 20;i++)
+                                for (int j = 0; j <60; j=j+15)
+                                {
+                                    NumberFormat formatter = new DecimalFormat("00");
 
-
-
-        try{
-
-            if(Users.currentUser!=null)
-                if(((Users.currentUser.getAccountType().toString()).equals("admin")))
-                {
-                    if(ScheduleFilm.getInstance().isDateSelected && ScheduleFilm.getInstance().isCitySelected){
-                        for (int i = 10; i <= 20;i++)
-                            for (int j = 0; j <60; j=j+15)
-                            {
-                                NumberFormat formatter = new DecimalFormat("00");
-
-                                listTime.add(formatter.format(i)+":" + formatter.format(j));
-                            }
-                    }
-                    FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext()){
-                        @Override
-                        public boolean canScrollVertically() {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean canScrollHorizontally() {
-                            return false;
-                        }
-
-                    };
-                    layoutManager.setFlexDirection(FlexDirection.ROW);
-                    layoutManager.setJustifyContent(JustifyContent.FLEX_START);
-                    recyclerView.setLayoutManager(layoutManager);
-
-
-                    FirebaseRequest.database.collection("Showtime").addSnapshotListener(new EventListener<QuerySnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                            List<DocumentSnapshot> listDocs = value.getDocuments();
-                            List<ShowTime> listShowTime = new ArrayList<ShowTime>();
-                            for(DocumentSnapshot doc : listDocs){
-                                ShowTime showTime = doc.toObject(ShowTime.class);
-                                listShowTime.add(showTime);
-                      }
-
-                            recyclerView.setAdapter(new TimeScheduleAdapter(listTime, null, film, item, itemView, null, null, listShowTime));
-
-
-                        }
-                    });
-
-                    cinemaName.setText(item.getName());
-                    addressCinema.setText(item.getAddress());
-
-                }
-            else {
-                    Query query = FirebaseRequest.database.collection("Showtime").orderBy("timeBooked");
-                    query.addSnapshotListener(new EventListener<QuerySnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                            for(DocumentSnapshot doc : value){
-                                Timestamp time = doc.getTimestamp("timeBooked");
-
-                                DateFormat dateFormat = new SimpleDateFormat("EEE\nd", Locale.ENGLISH);
-
-                                if(doc.get("cinemaID").equals(item.getCinemaID()) && doc.get("filmID").equals(film.getId()) && dateFormat.format(time.toDate()).equals(InforBooked.getInstance().dateBooked)){
-                                    DateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
-                                    listTime.add(timeFormat.format(time.toDate()));
+                                    listTime.add(formatter.format(i)+":" + formatter.format(j));
                                 }
+                        }
+                        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext()){
+                            @Override
+                            public boolean canScrollVertically() {
+                                return false;
                             }
-                            FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext()){
-                                @Override
-                                public boolean canScrollVertically() {
-                                    return false;
+
+                            @Override
+                            public boolean canScrollHorizontally() {
+                                return false;
+                            }
+
+                        };
+                        layoutManager.setFlexDirection(FlexDirection.ROW);
+                        layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+                        recyclerView.setLayoutManager(layoutManager);
+
+
+                        FirebaseRequest.database.collection("Showtime").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                List<DocumentSnapshot> listDocs = value.getDocuments();
+                                List<ShowTime> listShowTime = new ArrayList<ShowTime>();
+                                for(DocumentSnapshot doc : listDocs){
+                                    ShowTime showTime = doc.toObject(ShowTime.class);
+                                    listShowTime.add(showTime);
                                 }
 
-                                @Override
-                                public boolean canScrollHorizontally() {
-                                    return false;
-                                }
+                                recyclerView.setAdapter(new TimeScheduleAdapter(listTime, null, film, item, itemView, null, null, listShowTime));
 
-                            };
-                            layoutManager.setFlexDirection(FlexDirection.ROW);
-                            layoutManager.setJustifyContent(JustifyContent.FLEX_START);
-                            recyclerView.setLayoutManager(layoutManager);
-                            if(!InforBooked.getInstance().isCitySelected || !InforBooked.getInstance().isDateSelected){
-                                recyclerView.setAdapter(new TimeBookedAdapter(new ArrayList<String>(), null,null, item, itemView, null, null));
+
                             }
-                            else recyclerView.setAdapter(new TimeBookedAdapter(listTime, null,null, item, itemView, null, null));
-                            cinemaName.setText(item.getName());
-                            addressCinema.setText(item.getAddress());
-                        }
-                    });
+                        });
 
-                }
-
-            locationLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    List<Address> listAddress = new ArrayList<>();
-                    Intent intent = new Intent(context, CinemaLocationActivity.class);
-                    intent.putExtra("cinema", item);
-                    context.startActivity(intent);
-                }
-            });
-            showHideBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(showHideBtn.getTag().equals("hide")){
-                        showHideBtn.setImageResource(R.drawable.arrow_up);
-                        showHideBtn.setTag("show");
-                        showHideLayout.setVisibility(View.VISIBLE);
-
+                        cinemaName.setText(item.getName());
+                        addressCinema.setText(item.getAddress());
 
                     }
                     else {
-                        showHideBtn.setImageResource(R.drawable.arrow_down);
-                        showHideBtn.setTag("hide");
-                        showHideLayout.setVisibility(View.GONE);
+                        Query query = FirebaseRequest.database.collection("Showtime").orderBy("timeBooked");
+                        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                for(DocumentSnapshot doc : value){
+                                    Timestamp time = doc.getTimestamp("timeBooked");
+
+                                    DateFormat dateFormat = new SimpleDateFormat("EEE\nd", Locale.ENGLISH);
+
+                                    if(doc.get("cinemaID").equals(item.getCinemaID()) && doc.get("filmID").equals(film.getId()) && dateFormat.format(time.toDate()).equals(InforBooked.getInstance().dateBooked)){
+                                        DateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+                                        listTime.add(timeFormat.format(time.toDate()));
+                                    }
+                                }
+                                FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext()){
+                                    @Override
+                                    public boolean canScrollVertically() {
+                                        return false;
+                                    }
+
+                                    @Override
+                                    public boolean canScrollHorizontally() {
+                                        return false;
+                                    }
+
+                                };
+                                layoutManager.setFlexDirection(FlexDirection.ROW);
+                                layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+                                recyclerView.setLayoutManager(layoutManager);
+                                if(!InforBooked.getInstance().isCitySelected || !InforBooked.getInstance().isDateSelected){
+                                    recyclerView.setAdapter(new TimeBookedAdapter(new ArrayList<String>(), null,null, item, itemView, null, null));
+                                }
+                                else recyclerView.setAdapter(new TimeBookedAdapter(listTime, null,null, item, itemView, null, null));
+                                cinemaName.setText(item.getName());
+                                addressCinema.setText(item.getAddress());
+                            }
+                        });
+
                     }
-                }
-            });
-        }
-        catch (Exception e)
-        {
-            FirebaseRequest.database.collection("Showtime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                @Override
-                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                    List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
-                    for(DocumentSnapshot doc : listDocs){
-                        Timestamp time = doc.getTimestamp("timeBooked");
-                        DateFormat dateFormat = new SimpleDateFormat("EEE\nd", Locale.ENGLISH);
-                        if(doc.get("cinemaID").equals(item.getCinemaID()) && doc.get("filmID").equals(film.getId()) && dateFormat.format(time.toDate()).equals(InforBooked.getInstance().dateBooked)){
-                            DateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
-                            listTime.add(timeFormat.format(time.toDate()));
+
+                locationLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        List<Address> listAddress = new ArrayList<>();
+                        Intent intent = new Intent(context, CinemaLocationActivity.class);
+                        intent.putExtra("cinema", item);
+                        context.startActivity(intent);
+                    }
+                });
+                showHideBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(showHideBtn.getTag().equals("hide")){
+                            showHideBtn.setImageResource(R.drawable.arrow_up);
+                            showHideBtn.setTag("show");
+                            showHideLayout.setVisibility(View.VISIBLE);
+
+
+                        }
+                        else {
+                            showHideBtn.setImageResource(R.drawable.arrow_down);
+                            showHideBtn.setTag("hide");
+                            showHideLayout.setVisibility(View.GONE);
                         }
                     }
-                    FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext());
-                    layoutManager.setFlexDirection(FlexDirection.ROW);
-                    layoutManager.setJustifyContent(JustifyContent.FLEX_START);
-                    recyclerView.setLayoutManager(layoutManager);
-                    recyclerView.setAdapter(new TimeBookedAdapter(listTime, null,null, item, itemView, null, null));
-                    cinemaName.setText(item.getName());
-                }
-            });
+                });
+            }
+            catch (Exception e)
+            {
+                FirebaseRequest.database.collection("Showtime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
+                        for(DocumentSnapshot doc : listDocs){
+                            Timestamp time = doc.getTimestamp("timeBooked");
+                            DateFormat dateFormat = new SimpleDateFormat("EEE\nd", Locale.ENGLISH);
+                            if(doc.get("cinemaID").equals(item.getCinemaID()) && doc.get("filmID").equals(film.getId()) && dateFormat.format(time.toDate()).equals(InforBooked.getInstance().dateBooked)){
+                                DateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+                                listTime.add(timeFormat.format(time.toDate()));
+                            }
+                        }
+                        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext());
+                        layoutManager.setFlexDirection(FlexDirection.ROW);
+                        layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+                        recyclerView.setLayoutManager(layoutManager);
+                        recyclerView.setAdapter(new TimeBookedAdapter(listTime, null,null, item, itemView, null, null));
+                        cinemaName.setText(item.getName());
+                    }
+                });
+            }
         }
+
         return itemView;
     }
     public void getMyLocation(Address address, TextView distance) {
