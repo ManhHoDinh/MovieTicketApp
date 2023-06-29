@@ -125,7 +125,7 @@ public class SignUpActivity extends AppCompatActivity {
         backBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(SignUpActivity.this, PrefixSignInActivity.class);
+                Intent i = new Intent(SignUpActivity.this, SignInActivity.class);
                 startActivity(i);
             }
         });
@@ -178,8 +178,8 @@ public class SignUpActivity extends AppCompatActivity {
                                     if (document.exists()) {
                                         isAd = true;
                                     } else {
-                                        isAd = false;
                                         error = true;
+                                        isAd = false;
                                         Toast.makeText(getApplicationContext(), "This code is not exists!!!", Toast.LENGTH_SHORT).show();
                                     }
                                 } else {
