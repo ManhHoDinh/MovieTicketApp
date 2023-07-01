@@ -66,6 +66,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.auth.User;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -128,7 +130,26 @@ public class HomeActivity extends AppCompatActivity {
         serviceHeader = findViewById(R.id.ServiceHeader);
         checkTypeUser();
 
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful())
+                    {
+                        Log.w(TAG, "Fetching FCM token failed", task.getException());
+                        return;
+                    }
 
+                    String token = task.getResult();
+                    Log.d(TAG, "FCM token: " + token);
+
+                    FirebaseMessaging.getInstance().subscribeToTopic("all")
+                            .addOnCompleteListener(subscribeTask -> {
+                                if (subscribeTask.isSuccessful()) {
+                                    Log.d(TAG, "Subscribed to topic 'all'");
+                                } else {
+                                    Log.w(TAG, "Subscription to topic 'all' failed", subscribeTask.getException());
+                                }
+                            });
+                });
         searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
