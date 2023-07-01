@@ -92,6 +92,7 @@ public class SignInActivity extends AppCompatActivity {
     ImageView FacebookLogin;
     TextInputLayout passwordLayout;
     TextInputLayout emailLayout;
+    String acType;
 
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
@@ -322,7 +323,29 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     void CreateUser(FirebaseUser user){
-        Users u = new Users(user.getUid(),   user.getDisplayName(),user.getEmail(),0, "user", null);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("User").document(user.getUid())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            if (documentSnapshot.contains("accountType")) {
+                                acType = documentSnapshot.getString("accountType");
+                            }
+                        } else {
+
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(), "Lỗi khi truy vấn database!!!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        Users u = new Users(user.getUid(),   user.getDisplayName(),user.getEmail(),0, acType, user.getPhotoUrl().toString());
         FirebaseRequest.database.collection("Users").document(user.getUid())
                 .set(u.toJson())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

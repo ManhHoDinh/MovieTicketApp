@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/dark_background_1"
     android:orientation="vertical"
-    tools:context=".Activity.MainActivity">
+    tools:context=".Activity.Account.ConfirmationProfileActivity">
 
     <ImageView
         android:id="@+id/btnBack"
@@ -27,15 +27,15 @@
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="24sp" />
-
-    <ImageView
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/profilePic"
+        app:riv_corner_radius="85dp"
         android:layout_width="170dp"
         android:layout_height="170dp"
         android:scaleType="fitXY"
-        android:src="@drawable/default_profile"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="220dp"
-        android:layout_centerHorizontal="true"/>
+        android:src="@drawable/default_profile"/>
 
     <TextView
         android:id="@+id/txtWelcome"
@@ -51,7 +51,7 @@
         android:textAlignment="center"/>
     <TextView
         android:id="@+id/txtExampleName"
-        android:layout_width="135dp"
+        android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_below="@id/txtWelcome"
         android:text="Arya Wijaya"
