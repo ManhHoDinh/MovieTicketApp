@@ -38,10 +38,10 @@
         app:layout_constraintTop_toBottomOf="@+id/backbutton"
         android:layout_width="match_parent"
         android:layout_marginTop="160dp"
+        android:layout_marginBottom="30dp"
         android:layout_height="match_parent">
         <GridView
-            android:scrollbars="none
-"
+            android:scrollbars="none"
             android:numColumns="2"
             android:gravity="center"
             android:id="@+id/filmGridView"
@@ -50,6 +50,7 @@
             android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+
     </LinearLayout>
     <ImageView
         android:id="@+id/AddMovie"
@@ -62,5 +63,4 @@
         android:src="@drawable/add_promo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

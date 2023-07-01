@@ -153,59 +153,61 @@ public class ReviewFragment extends Fragment {
         ratingFilm();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CommentRef = db.collection("Movies").document(film.getId()).collection("Comment");
-        CommentRef.get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        if (task.getResult().isEmpty()) {
-                            System.out.println("Comment collection not found");
-                        } else {
-                            CommentRef.orderBy("timeStamp", Query.Direction.DESCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                @Override
-                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                                    if (error != null) {
-                                        Log.w(TAG, "Listen failed.", error);
-                                        return;
-                                    }
+        CommentRef.orderBy("timeStamp", Query.Direction.DESCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    Log.w(TAG, "Listen failed.", error);
+                    return;
+                }
 
-                                    comments.clear();
-                                    for (QueryDocumentSnapshot doc : value)
+                comments.clear();
+                for (QueryDocumentSnapshot doc : value)
 
-                                    {
-                                        comments.add(doc.toObject(Comment.class));
+                {
+                    comments.add(doc.toObject(Comment.class));
 
-                                    }
-                                    commentAdapter = new CommentAdapter(myActivity, R.layout.review_comment_view, comments, film);
-                                    int totalHeight= 0;
-                                    DisplayMetrics displayMetrics = new DisplayMetrics();
+                }
+                commentAdapter = new CommentAdapter(myActivity, R.layout.review_comment_view, comments, film);
+                int totalHeight= 0;
+                DisplayMetrics displayMetrics = new DisplayMetrics();
 
-                                    int height = displayMetrics.heightPixels;
-                                    int width = displayMetrics.widthPixels;
-                                    for (int size=0; size < commentAdapter.getCount(); size++) {
+                int height = displayMetrics.heightPixels;
+                int width = displayMetrics.widthPixels;
+                for (int size=0; size < commentAdapter.getCount(); size++) {
 
-                                        View listItem = commentAdapter.getView(size, null, commentList);
-                                        listItem.measure(0, 0);
-                                        totalHeight += listItem.getMeasuredHeight();
-                                    }
-                                    ViewGroup.LayoutParams params=commentList.getLayoutParams();
-                                    DisplayMetrics display = new DisplayMetrics();
-                                    myActivity.getWindowManager().getDefaultDisplay().getMetrics(display);
-                                    int d = display.heightPixels;
-                                    params.height = d/2 - rateLayout.getMeasuredHeight() - 100;
+                    View listItem = commentAdapter.getView(size, null, commentList);
+                    listItem.measure(0, 0);
+                    totalHeight += listItem.getMeasuredHeight();
+                }
+                ViewGroup.LayoutParams params=commentList.getLayoutParams();
+                DisplayMetrics display = new DisplayMetrics();
+                myActivity.getWindowManager().getDefaultDisplay().getMetrics(display);
+                int d = display.heightPixels;
+                params.height = d/2 - rateLayout.getMeasuredHeight() - 100;
 
 
-                                    commentList.setLayoutParams(params);
-                                    commentList.setAdapter(commentAdapter);
+                commentList.setLayoutParams(params);
+                commentList.setAdapter(commentAdapter);
 
 
 
-                                }
-                            });
-                            // Perform further operations on the Comment collection if needed
-                        }
-                    } else {
-                        System.out.println("Error checking Comment collection: " + task.getException());
-                    }
-                });
+            }
+        });
+//        CommentRef.get()
+//                .addOnCompleteListener(task -> {
+//                    if (task.isSuccessful()) {
+//                        if (task.getResult().isEmpty()) {
+//                            System.out.println("Comment collection not found");
+//                        } else {
+//
+//
+//                            // Perform further operations on the Comment collection if needed
+//                        }
+//                    } else {
+//                        System.out.println("Error checking Comment collection: " + task.getException());
+//                    }
+//                });
 
     }
     void ratingFilm(){
@@ -276,27 +278,30 @@ public class ReviewFragment extends Fragment {
                 Comment comment = new Comment("https://firebasestorage.googleapis.com/v0/b/movie-ticket-app-0.appspot.com/o/avatar.png?alt=media&token=23a1d250-ca27-414b-a46b-bbef69dac7da"
                 ,currentUser.getDisplayName(), yourComment.getText().toString(), 0, 0, timestamp,(int) rateBar.getRating(), listReact, doc.getId());
                 doc.set(comment);
-//                Map<String, Object> comment = new HashMap<>();
-//                comment.put("like", 0);
-//                comment.put("dislike", "0");
-//                comment.put("name", currentUser.getDisplayName());
-//                comment.put("profileUrl", "https://firebasestorage.googleapis.com/v0/b/movie-ticket-app-0.appspot.com/o/avatar.png?alt=media&token=23a1d250-ca27-414b-a46b-bbef69dac7da");
-//                comment.put("reviewText", yourComment.getText().toString());
-//                comment.put("timeStamp", timestamp);
-//                comment.put("rating", rateBar.getRating());
-//                comment.put("listReact", listReact);
-           //     FirebaseRequest.database.collection("Movies").document(film.getId()).collection("Comment").add(comment);
-             //   commentEditText.setText("");
-               // rate = 0;
 
-               CommentRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-                   @Override
-                   public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                       int count = value.size();
-                       updateRateFilm(count, rateBar.getRating());
+//                    CommentRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+//                   @Override
+//                   public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+//                       int count = value.size();
+//                       Log.e("fds", count + "");
+//                       updateRateFilm(count, rateBar.getRating());
+//
+//                   }
+//               });
+//                }
+//                else {
+//
+                    CommentRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            int count = queryDocumentSnapshots.size();
+                            Log.e("fd", count + "");
+                            updateRateFilm(count, rateBar.getRating());
+                        }
+                    });
+//                }
 
-                   }
-               });
+
                 ratingBar.setRating(0);
                // rateBar.setRating(0);
                 dialog.dismiss();
@@ -340,8 +345,16 @@ public class ReviewFragment extends Fragment {
     }
     void updateRateFilm(int countComment, float rate){
         DocumentReference doc =  FirebaseRequest.database.collection("Movies").document(film.getId());
-        float vote = film.getVote();
-        vote = (vote * (countComment - 1) + rate)/ countComment;
-        doc.update("vote", vote);
+        doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                FilmModel film = documentSnapshot.toObject(FilmModel.class);
+                float vote = film.getVote();
+                Log.e("binh", vote + " " + countComment + " " + rate);
+                vote = (vote * (countComment - 1) + rate)/ countComment;
+                doc.update("vote", vote);
+            }
+        });
+
     }
 }

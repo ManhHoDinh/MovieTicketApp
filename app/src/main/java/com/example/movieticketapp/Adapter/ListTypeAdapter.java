@@ -93,7 +93,7 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
 
     void loadListPost(String type) {
         NowPlaying = activity.findViewById(R.id.typeMovieViewPage);
-        ComingSoon = activity.findViewById(R.id.commingMovieView);
+        ComingSoon = activity.findViewById(R.id.comingMovieView);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference MovieRef = db.collection("Movies");
 
@@ -151,8 +151,9 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
     }
 
     void updateViewPager() {
+        SliderAdapter sliderAdapter = new SliderAdapter(PlayingFilms, NowPlaying);
 
-        NowPlaying.setAdapter(new SliderAdapter(PlayingFilms, NowPlaying));
+        NowPlaying.setAdapter(sliderAdapter);
         NowPlaying.setClipToPadding(false);
         NowPlaying.setClipChildren(false);
         NowPlaying.setOffscreenPageLimit(3);

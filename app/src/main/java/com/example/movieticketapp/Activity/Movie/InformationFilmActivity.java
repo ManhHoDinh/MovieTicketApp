@@ -47,6 +47,7 @@ public class InformationFilmActivity extends FragmentActivity {
     TabLayout tabLayout;
     ViewPager2 pager;
     FilmModel f;
+    ImageView EditMovie;
 
     FilmDetailPagerAdapter filmDetailPagerAdapter;
     @Override
@@ -59,6 +60,7 @@ public class InformationFilmActivity extends FragmentActivity {
         nameTV= findViewById(R.id.filmName);
         PosterImage= findViewById(R.id.PosterImage);
         ratingBar = findViewById(R.id.rating);
+        ratingBar.setIsIndicator(true);
         voteTV = findViewById(R.id.vote);
         genreTV = findViewById(R.id.genre);
         durationTime = findViewById(R.id.durationTime);
@@ -69,10 +71,18 @@ public class InformationFilmActivity extends FragmentActivity {
         pager.setAdapter(filmDetailPagerAdapter);
         pager.setOffscreenPageLimit(3);
         getFilm(f.getId());
+        EditMovie=findViewById(R.id.EditMovie);
 
        // Log.e("fdf", f.getStatus());
 
-
+        EditMovie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(InformationFilmActivity.this, EditMovieActivity.class);
+                i.putExtra(ExtraIntent.film, f);
+                startActivity(i);
+            }
+        });
 
 
         refreshScreen();
@@ -119,6 +129,7 @@ public class InformationFilmActivity extends FragmentActivity {
                 if (snapshot != null && snapshot.exists()) {
                     f = snapshot.toObject(FilmModel.class);
                     refreshScreen();
+                    Log.d("Trailer", String.valueOf(f.getTrailer().size()));
                 }
             }
         });
@@ -137,5 +148,6 @@ public class InformationFilmActivity extends FragmentActivity {
         genreTV.setText(f.getGenre());
 
         durationTime.setText(f.getDurationTime());
+
     }
 }

@@ -8,7 +8,9 @@ import androidx.annotation.NonNull;
 import com.example.movieticketapp.Adapter.TimeScheduleAdapter;
 import com.google.firebase.Timestamp;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 public class FilmModel implements Parcelable {
@@ -20,16 +22,19 @@ public class FilmModel implements Parcelable {
     private float vote;
     private String genre;
     private String description;
-
-
-
     private String PosterImage;
     private String durationTime;
     public FilmModel(){}
 
-
-
-    public FilmModel(String id, String PrimaryImage, String name, String BackGroundImage, String PosterImage, float vote, String genre, String description, String durationTime, Timestamp movieBeginDate) {
+    private List<String> trailer=new ArrayList<>();
+    public List<String> getTrailer()
+    {
+        return  trailer;
+    }public void setTrailer(List<String> trailer)
+    {
+        this.trailer = trailer;
+    }
+    public FilmModel(String id, String PrimaryImage, String name, String BackGroundImage, String PosterImage, float vote, String genre, String description, String durationTime, Timestamp movieBeginDate, List<String> trailer) {
         this.PrimaryImage = PrimaryImage;
         this.name = name;
         this.BackGroundImage = BackGroundImage;
@@ -39,8 +44,8 @@ public class FilmModel implements Parcelable {
         this.PosterImage = PosterImage;
         this.durationTime = durationTime;
         this.id = id;
-
         this.movieBeginDate = movieBeginDate;
+        this.trailer=trailer;
     }
 
     protected FilmModel(Parcel in) {
@@ -53,9 +58,9 @@ public class FilmModel implements Parcelable {
         PosterImage=in.readString();
         durationTime=in.readString();
         id=in.readString();
-
         Date date = (Date)in.readSerializable();
         movieBeginDate = new Timestamp(date);
+
     }
 
     public Timestamp getMovieBeginDate() {
@@ -138,7 +143,6 @@ public class FilmModel implements Parcelable {
         parcel.writeString(PosterImage);
         parcel.writeString(durationTime);
         parcel.writeString(id);
-
         parcel.writeSerializable(movieBeginDate.toDate());
-    }
+        }
 }

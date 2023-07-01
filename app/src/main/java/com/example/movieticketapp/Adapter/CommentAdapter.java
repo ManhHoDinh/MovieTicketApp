@@ -41,6 +41,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.SimpleFormatter;
 
 public class CommentAdapter extends ArrayAdapter<Comment> {
@@ -232,7 +233,7 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
             reviewText.setText(comment.getReviewText());
             likeNumber.setText(String.valueOf(comment.getLike()));
             dislikeNumber.setText(String.valueOf(comment.getDislike()));
-            SimpleDateFormat formatter =new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat formatter =new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
             timeStamp.setText(formatter.format(comment.getTimeStamp().toDate()));
             switch (comment.getRating()){
                 case 1:

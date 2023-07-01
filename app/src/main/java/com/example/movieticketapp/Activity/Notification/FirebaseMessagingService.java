@@ -62,20 +62,17 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             builder.setSmallIcon(R.drawable.notification_icon);
         }
 
-        Intent notificationIntent = new Intent(this, NotificationDetailActivity.class);
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
         collapsedView.setTextViewText(R.id.titleCollapsed, remoteMessage.getNotification().getTitle());
         collapsedView.setTextViewText(R.id.contentCollapsed, remoteMessage.getNotification().getBody());
 
         expandedView.setTextViewText(R.id.titleExpanded, remoteMessage.getNotification().getTitle());
         expandedView.setTextViewText(R.id.contentExpanded, remoteMessage.getNotification().getBody());
+        builder.setSmallIcon(R.drawable.notification_icon);
         builder.setContentTitle(remoteMessage.getNotification().getTitle());
         builder.setCustomContentView(collapsedView);
         builder.setCustomBigContentView(expandedView);
         builder.setContentText(remoteMessage.getNotification().getBody());
-        builder.setContentIntent(contentIntent);
 //        builder.setStyle(new NotificationCompat.BigTextStyle().bigText(remoteMessage.getNotification().getBody()));
         builder.setStyle(new NotificationCompat.DecoratedCustomViewStyle());
         builder.setAutoCancel(false);

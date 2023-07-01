@@ -18,8 +18,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.movieticketapp.Activity.Service.AddService;
-import com.example.movieticketapp.Model.ExtraIntent;
+import com.example.movieticketapp.Activity.Ticket.Service.AddService;
 import com.example.movieticketapp.Model.Service;
 import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;

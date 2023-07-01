@@ -27,6 +27,7 @@ import com.squareup.picasso.Picasso;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class TicketListAdapter extends ArrayAdapter<Ticket> {
     private Context context;
@@ -63,7 +64,7 @@ public class TicketListAdapter extends ArrayAdapter<Ticket> {
                         nameTextView.setText(value.get("name").toString());
                     if (timeTextView != null){
                         Timestamp time = ve.getTime();
-                        DateFormat dateFormat = new SimpleDateFormat("hh:mm, E MMM dd");
+                        DateFormat dateFormat = new SimpleDateFormat("hh:mm, E MMM dd", Locale.ENGLISH);
                         timeTextView.setText(dateFormat.format(time.toDate()));
 
                     }
