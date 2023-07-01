@@ -3,6 +3,7 @@ package com.example.movieticketapp.Adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.example.movieticketapp.Model.Service;
+import com.example.movieticketapp.Model.ServiceInTicket;
 import com.example.movieticketapp.R;
 import com.squareup.picasso.Picasso;
 
@@ -24,10 +26,12 @@ import java.util.List;
 public class UseServiceAdapter extends ArrayAdapter<Service> {
     private List<Service> listService;
     private TextView totalService;
+    private List<ServiceInTicket> listServiceInTicket;
     private int total;
-    public UseServiceAdapter(@NonNull Context context, int resource, List<Service> listService, TextView totalService) {
+    public UseServiceAdapter(@NonNull Context context, int resource, List<Service> listService, TextView totalService, List<ServiceInTicket> listServiceInTicket) {
         super(context, resource, listService);
         this.totalService = totalService;
+        this.listServiceInTicket = listServiceInTicket;
     }
     @NonNull
     @Override
@@ -66,6 +70,9 @@ public class UseServiceAdapter extends ArrayAdapter<Service> {
                         addBtn.setBackground(ContextCompat.getDrawable(addBtn.getContext(), R.drawable.adjust_unable_btn));
                         addBtn.setImageResource(R.drawable.btn_add_unable);
                     }
+                    updateServiceInticket(service, count);
+
+
                 }
 
 
@@ -88,13 +95,30 @@ public class UseServiceAdapter extends ArrayAdapter<Service> {
                         subBtn.setBackground(ContextCompat.getDrawable(subBtn.getContext(), R.drawable.adjust_unable_btn));
                         subBtn.setImageResource(R.drawable.btn_sub_unable);
                     }
+                    updateServiceInticket(service, count);
+
                 }
+
 
 
             }
         });
 
         return itemView;
+
+    }
+    void updateServiceInticket(Service service, int count){
+        boolean isExisted = false;
+
+        for(ServiceInTicket serviceInTicket : listServiceInTicket){
+            if(serviceInTicket.getServiceID().equals(service.getID())){
+                serviceInTicket.setCount(count);
+                isExisted = true;
+            }
+        }
+        if(!isExisted){
+            listServiceInTicket.add(new ServiceInTicket(count, service.getID()));
+        }
 
     }
 }

@@ -7,12 +7,14 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -24,12 +26,15 @@ import android.widget.Toast;
 
 import com.example.movieticketapp.Activity.Booking.SuccessCheckoutActivity;
 import com.example.movieticketapp.Activity.Discount.DiscountViewAll;
+import com.example.movieticketapp.Adapter.Helper;
 import com.example.movieticketapp.Adapter.MovieCheckoutAdapter;
 import com.example.movieticketapp.Adapter.TicketListAdapter;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.CheckoutFilmModel;
 import com.example.movieticketapp.Model.Cinema;
 import com.example.movieticketapp.Model.FilmModel;
+import com.example.movieticketapp.Model.Service;
+import com.example.movieticketapp.Model.ServiceInTicket;
 import com.example.movieticketapp.Model.Ticket;
 import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
@@ -37,13 +42,17 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.ktx.Firebase;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -51,12 +60,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
 public class CheckoutWalletEnoughActivity extends AppCompatActivity {
     NetworkChangeListener networkChangeListener = new NetworkChangeListener();
     ImageView BtnBack;
+    LinearLayout checkoutInfo;
     private String idDiscount;
     Button BtnCheckOut;
     TextView totalTv;
@@ -79,6 +90,8 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
     String[] listDate;
     String listSeat;
     String price;
+
+    List<ServiceInTicket> listService;
     MovieCheckoutAdapter adapter;
     List<String> seats;
     ArrayList<CheckoutFilmModel> movie = new ArrayList<>();
@@ -120,10 +133,14 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
         yourWallet = (TextView) findViewById(R.id.YourWalletValue) ;
         idOrder = (TextView) findViewById(R.id.IDOrderValue);
         selectVoucherBtn = findViewById(R.id.selectVoucherBtn);
-        totalService = findViewById(R.id.totalService);
+       // totalService = findViewById(R.id.totalService);
         selectTv = findViewById(R.id.selectTv);
         movieInfoView = findViewById(R.id.movieInfoView);
         checkoutinforView = findViewById(R.id.checkoutinfo);
+        checkoutInfo = findViewById(R.id.infoLayout);
+
+
+
         selectVoucherBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -142,6 +159,9 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
         });
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
+        listService =(List<ServiceInTicket>) bundle.getSerializable("listService");
+        addServiceToLayout();
+
         film = bundle.getParcelable("selectedFilm");
        // film = intent.getParcelableExtra("selectedFilm");
         cinema =bundle.getParcelable("cinema");
@@ -150,14 +170,15 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
         date = bundle.getString("dateBooked");
        // date = intent.getStringExtra("dateBooked");
         timeBooked = bundle.getString("timeBooked");
-        totalService.setText(bundle.getString("total service"));
+       // totalService.setText(bundle.getString("total service"));
        // timeBooked = intent.getStringExtra("timeBooked");
         listDate = date.split("\n");
         Calendar cal=Calendar.getInstance();
-        SimpleDateFormat month_date = new SimpleDateFormat("MMM");
+        SimpleDateFormat month_date = new SimpleDateFormat("MMM", Locale.ENGLISH);
         String month_name = month_date.format(cal.getTime());
         dateTimeTv.setText( listDate[0] + " "+month_name+" " + listDate[1]+", " + timeBooked);
         Random rdn = new Random();
+
 
         FirebaseRequest.database.collection("Ticket").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -235,9 +256,9 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
                                     List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
                                     for(DocumentSnapshot doc : listDocs){
                                         Timestamp time = doc.getTimestamp("timeBooked");
-                                        DateFormat dateFormat = new SimpleDateFormat("EEE\nd");
-                                        DateFormat timeFormat = new SimpleDateFormat("HH:mm");
-                                        DateFormat monthformat = new SimpleDateFormat("MMM");
+                                        DateFormat dateFormat = new SimpleDateFormat("EEE\nd", Locale.ENGLISH);
+                                        DateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+                                        DateFormat monthformat = new SimpleDateFormat("MMM",Locale.ENGLISH);
                                         String month_name = monthformat.format(time.toDate());
                                       //  String timeBook = timeBooked + ", " + listDate[0] + " "+month_name+" " + listDate[1];
 
@@ -250,12 +271,16 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
 
                                             }
                                             FirebaseRequest.database.collection("Showtime").document(doc.getId()).update("bookedSeat", listSeats);
-//                                            Ticket ticket = new Ticket(film.getName(),time,
-//                                                    cinemaName,film.getPosterImage(),
-//                                                    Double.parseDouble(film.getVote()),
-//                                                    film.getGenre(), film.getDurationTime(), listSeat, price, idOrder.getText().toString() );
-                                            Ticket ticket = new Ticket(time, cinema.getCinemaID(), listSeat, String.valueOf(Math.round(total)) + " VNĐ", idOrder.getText().toString(), film.getId(), FirebaseRequest.mAuth.getUid());
-                                            FirebaseRequest.database.collection("Ticket").document().set(ticket);
+                                            Ticket ticket;
+                                            DocumentReference ticketDoc = FirebaseRequest.database.collection("Ticket").document();
+                                            if(idDiscount != null){
+                                                ticket = new Ticket(time, cinema.getCinemaID(), listSeat, String.valueOf(Math.round(total)) + " VNĐ", idOrder.getText().toString(), film.getId(), FirebaseRequest.mAuth.getUid(), idDiscount, ticketDoc.getId());
+                                            }
+                                            else ticket = new Ticket(time, cinema.getCinemaID(), listSeat, String.valueOf(Math.round(total)) + " VNĐ", idOrder.getText().toString(), film.getId(), FirebaseRequest.mAuth.getUid(), "", ticketDoc.getId());
+
+                                            ticketDoc.set(ticket);
+                                            addServiceToDb(ticketDoc);
+
 
                                         }
                                     }
@@ -283,5 +308,30 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
     protected void onStop() {
         unregisterReceiver(networkChangeListener);
         super.onStop();
+    }
+    void addServiceToDb(DocumentReference doc){
+       CollectionReference serviceRef = doc.collection("ServiceInTicket");
+       for(ServiceInTicket service : listService){
+           serviceRef.document().set(service);
+       }
+    }
+    void addServiceToLayout(){
+        for(ServiceInTicket serviceInTicket : listService){
+            View con = LayoutInflater.from(this).inflate(R.layout.service_ticket_item, null);
+            TextView name = con.findViewById(R.id.name);
+            TextView value = con.findViewById(R.id.value);
+            FirebaseRequest.database.collection("Service").document(serviceInTicket.getServiceID()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    Service service = documentSnapshot.toObject(Service.class);
+                    name.setText(service.getDetail());
+                    value.setText(service.getPrice()  + " x " + String.valueOf(serviceInTicket.getCount()));
+
+                }
+            });
+
+
+            checkoutInfo.addView(con);
+        }
     }
 }

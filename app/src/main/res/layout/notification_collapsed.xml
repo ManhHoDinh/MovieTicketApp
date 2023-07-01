@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+>
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginLeft="7dp"
+        android:src="@drawable/notification_icon"/>
+
+    <TextView
+        android:id="@+id/titleCollapsed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Notification from"
+        android:textColor="@color/black"
+        android:fontFamily="@font/montserrat600"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="7dp"
+        android:textSize="14sp"
+        android:layout_toRightOf="@id/image"
+        />
+
+    <TextView
+        android:id="@+id/contentCollapsed"
+        android:layout_width="320dp"
+        android:layout_height="24dp"
+        android:layout_below="@id/titleCollapsed"
+        android:layout_marginTop="6dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="@color/black"
+        android:text="Day la thong bao moi den tu ad min, mong moi nguoi "
+        android:fontFamily="@font/montserrat300"
+        android:textSize="13sp"
+        android:layout_toRightOf="@id/image"
+        android:layout_marginLeft="10dp"/>
+</RelativeLayout>

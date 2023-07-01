@@ -53,6 +53,17 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.sliderView
 
         holder.rating.setRating(vote);
         holder.ratingPoint.setText(df.format(vote)+"");
+        FilmModel f =listPosts.get(position);
+        holder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+             //   Log.e("fd", position + "f");
+                Intent i = new Intent(holder.view.getContext(), InformationFilmActivity.class);
+                i.putExtra(ExtraIntent.film, f);
+                InforBooked.getInstance().film= f;
+                holder.view.getContext().startActivity(i);
+            }
+        });
     }
 
     @Override
@@ -65,25 +76,28 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.sliderView
         private TextView textView;
         private RatingBar rating;
         private TextView ratingPoint;
+        private  View view;
         /////ADD Film TO Film Information
-        public sliderViewHolder(@NonNull View itemView, int postion) {
+        public sliderViewHolder(@NonNull View itemView, int position) {
             super(itemView);
             imageView = (RoundedImageView) itemView.findViewById(R.id.postSlider);
             textView = (TextView) itemView.findViewById(R.id.namePost);
             rating = (RatingBar) itemView.findViewById(R.id.rating);
             ratingPoint = (TextView) itemView.findViewById(R.id.ratingPoint);
-            FilmModel f =listPosts.get(postion);
+            view = itemView;
+            FilmModel f =listPosts.get(position);
             i++;
-            itemView.findViewById(R.id.sliderItem).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
 
-                    Intent i = new Intent(itemView.getContext(), InformationFilmActivity.class);
-                    i.putExtra(ExtraIntent.film, f);
-                    InforBooked.getInstance().film= f;
-                    itemView.getContext().startActivity(i);
-                }
-            });
+//            itemView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    Log.e("fd", listPosts.size()+"");
+//                    Intent i = new Intent(itemView.getContext(), InformationFilmActivity.class);
+//                    i.putExtra(ExtraIntent.film, f);
+//                    InforBooked.getInstance().film= f;
+//                    itemView.getContext().startActivity(i);
+//                }
+//            });
         }
         void SetImage(FilmModel postItem){
             Picasso.get()

@@ -18,8 +18,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.movieticketapp.Activity.Service.AddService;
-import com.example.movieticketapp.Model.ExtraIntent;
+import com.example.movieticketapp.Activity.Ticket.Service.AddService;
 import com.example.movieticketapp.Model.Service;
 import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
@@ -93,6 +92,8 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ViewHold
                                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(holder.itemView.getContext(), R.style.CustomAlertDialog);
                                     LayoutInflater factory = LayoutInflater.from(holder.itemView.getContext());
                                     final View deleteDialogView = factory.inflate(R.layout.yes_no_dialog, null);
+                                    TextView message = deleteDialogView.findViewById(R.id.message);
+                                    message.setText("Do you sure to delete the service ?");
                                     alertDialog.setView(deleteDialogView);
                                     AlertDialog OptionDialog = alertDialog.create();
                                     OptionDialog.show();

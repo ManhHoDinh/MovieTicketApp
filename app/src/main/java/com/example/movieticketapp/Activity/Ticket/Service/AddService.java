@@ -1,28 +1,20 @@
-package com.example.movieticketapp.Activity.Service;
+package com.example.movieticketapp.Activity.Ticket.Service;
 
 import static android.content.ContentValues.TAG;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.drawable.DrawableContainer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.movieticketapp.Adapter.PriceGridAdapter;
-import com.example.movieticketapp.Model.Discount;
-import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.Model.Service;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,7 +24,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 

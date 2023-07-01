@@ -24,6 +24,7 @@ import android.widget.VideoView;
 import com.example.movieticketapp.Activity.Booking.BookedActivity;
 import com.example.movieticketapp.Activity.Booking.ShowTimeScheduleActivity;
 import com.example.movieticketapp.Adapter.AddDecoration;
+import com.example.movieticketapp.Adapter.Helper;
 import com.example.movieticketapp.Adapter.VideoAdapter;
 import com.example.movieticketapp.Model.Comment;
 import com.example.movieticketapp.Model.ExtraIntent;
@@ -31,6 +32,8 @@ import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -72,37 +75,55 @@ public class AboutMovie extends Fragment {
         Button BookBt = getView().findViewById(R.id.BookBt);
         List<String> videoList = new ArrayList<>();
 
-        if(film.getStatus().equals("coming")) {
+        if(film.getMovieBeginDate().toDate().after(Helper.getCurrentDate())) {
 
             BookBt.setVisibility(View.GONE);
         }
-            else BookBt.setVisibility(View.VISIBLE);
+        else BookBt.setVisibility(View.VISIBLE);
 
         videoListView = getView().findViewById(R.id.videoList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext(), RecyclerView.HORIZONTAL, false);
         VideoAdapter videoAdapter = new VideoAdapter();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference VideoRef = db.collection("Movies").document(film.getId()).collection("TrailerAndSongUrls");
-        VideoRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        DocumentReference VideoRef = db.collection("Movies").document(film.getId());
+        VideoRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error != null) {
+            public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e);
                     return;
                 }
 
-                videoList.clear();
-                for (QueryDocumentSnapshot doc : value)
-                {
-                    String videoURL = doc.getString("videoURL");
-
-                    videoList.add(videoURL);
-                    Log.d(TAG, "Added video with url: " + videoURL);
+                if (snapshot != null && snapshot.exists()) {
+                    Log.d(TAG, "Current data: " + snapshot.getData());
+                    FilmModel filmModel = snapshot.toObject(FilmModel.class);
+                    videoAdapter.setVideoIdList(filmModel.getTrailer());
+                    videoListView.setAdapter(videoAdapter);
+                    videoListView.setLayoutManager(linearLayoutManager);
+                } else {
+                    Log.d(TAG, "Current data: null");
                 }
-                videoAdapter.setVideoIdList(videoList);
-                videoListView.setAdapter(videoAdapter);
-                videoListView.setLayoutManager(linearLayoutManager);
             }
         });
+//                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+//                if (error != null) {
+//                    return;
+//                }
+//
+//                videoList.clear();
+//                for (QueryDocumentSnapshot doc : value)
+//                {
+//                    String videoURL = doc.getString("videoURL");
+//
+//                    videoList.add(videoURL);
+//                    Log.d(TAG, "Added video with url: " + videoURL);
+//                }
+//
+//            }
+//        });
 
 
 
@@ -119,7 +140,7 @@ public class AboutMovie extends Fragment {
                         }
                     });
                 }
-            else {
+                else {
                     BookBt.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {

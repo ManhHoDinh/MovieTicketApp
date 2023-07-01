@@ -8,7 +8,18 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 public class Helper {
+    public static Date getCurrentDate(){
+        Calendar calendar = Calendar.getInstance();
+        return calendar.getTime();
+    }
+    public static Locale getLocale(){
+        return Locale.ENGLISH;
+    }
     public static void getListViewSize(ListView myListView) {
         ListAdapter myListAdapter=myListView.getAdapter();
         if (myListAdapter==null) {

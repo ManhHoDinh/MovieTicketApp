@@ -8,13 +8,25 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    app:layout_constraintTop_toTopOf="parent"
     android:gravity="center"
     >
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/imgFilm"
-        app:riv_corner_radius="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="184dp"/>
+    <androidx.cardview.widget.CardView
+        android:layout_width="125dp"
+        android:layout_height="184dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:cardCornerRadius="12dp"
+        >
+        <ImageView
+            android:id="@+id/imgFilm"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </androidx.cardview.widget.CardView>
+
     <TextView
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"

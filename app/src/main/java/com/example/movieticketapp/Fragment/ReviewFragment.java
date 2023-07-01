@@ -2,7 +2,9 @@ package com.example.movieticketapp.Fragment;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -44,6 +46,7 @@ import com.example.movieticketapp.Model.Comment;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.Ticket;
 import com.example.movieticketapp.R;
+import com.example.movieticketapp.databinding.ActivityCityViewAllBinding;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
@@ -51,7 +54,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.AggregateQuerySnapshot;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -97,19 +99,28 @@ public class ReviewFragment extends Fragment {
 
     List<String> listFeel;
     LinearLayout rateLayout;
+
     List<String> listReact = new ArrayList<>();
 
     FirebaseUser currentUser;
     int height = 0;
     int rate = 0;
+    Activity myActivity;
     public ReviewFragment(FilmModel f) {
         // Required empty public constructor
         film = f;
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        myActivity =(Activity) context;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_review, container, false);
     }
@@ -142,7 +153,6 @@ public class ReviewFragment extends Fragment {
         ratingFilm();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CommentRef = db.collection("Movies").document(film.getId()).collection("Comment");
-        if(CommentRef!=null)
         CommentRef.orderBy("timeStamp", Query.Direction.DESCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -156,19 +166,9 @@ public class ReviewFragment extends Fragment {
 
                 {
                     comments.add(doc.toObject(Comment.class));
-//                    String profileUrl = doc.getString("profileUrl");
-//                    String name = doc.getString("name");
-//                    String reviewText = doc.getString("reviewText");
-//                    String like = doc.getString("like");
-//                    String dislike = doc.getString("dislike");
-//                    String timeStamp = doc.getString("timeStamp");
-//                    int rating = doc.get("rating");
-//                    List<String> listReact = doc.get("listReact");
-//                    Comment data = new Comment(profileUrl, name, reviewText, like, dislike, timeStamp, rate);
-//                    comments.add(data);
-                  //  Log.d(TAG, "Added comment from: " + name);
+
                 }
-                commentAdapter = new CommentAdapter(getContext(), R.layout.review_comment_view, comments);
+                commentAdapter = new CommentAdapter(myActivity, R.layout.review_comment_view, comments, film);
                 int totalHeight= 0;
                 DisplayMetrics displayMetrics = new DisplayMetrics();
 
@@ -182,7 +182,7 @@ public class ReviewFragment extends Fragment {
                 }
                 ViewGroup.LayoutParams params=commentList.getLayoutParams();
                 DisplayMetrics display = new DisplayMetrics();
-                getActivity().getWindowManager().getDefaultDisplay().getMetrics(display);
+                myActivity.getWindowManager().getDefaultDisplay().getMetrics(display);
                 int d = display.heightPixels;
                 params.height = d/2 - rateLayout.getMeasuredHeight() - 100;
 
@@ -194,6 +194,21 @@ public class ReviewFragment extends Fragment {
 
             }
         });
+//        CommentRef.get()
+//                .addOnCompleteListener(task -> {
+//                    if (task.isSuccessful()) {
+//                        if (task.getResult().isEmpty()) {
+//                            System.out.println("Comment collection not found");
+//                        } else {
+//
+//
+//                            // Perform further operations on the Comment collection if needed
+//                        }
+//                    } else {
+//                        System.out.println("Error checking Comment collection: " + task.getException());
+//                    }
+//                });
+
     }
     void ratingFilm(){
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
@@ -259,29 +274,34 @@ public class ReviewFragment extends Fragment {
                 Calendar calendar = Calendar.getInstance();
                 Date current = calendar.getTime();
                 Timestamp timestamp = new Timestamp(current);
-                Log.e("fd", timestamp.toDate().toString());
+                DocumentReference doc =  FirebaseRequest.database.collection("Movies").document(film.getId()).collection("Comment").document();
+                Comment comment = new Comment("https://firebasestorage.googleapis.com/v0/b/movie-ticket-app-0.appspot.com/o/avatar.png?alt=media&token=23a1d250-ca27-414b-a46b-bbef69dac7da"
+                ,currentUser.getDisplayName(), yourComment.getText().toString(), 0, 0, timestamp,(int) rateBar.getRating(), listReact, doc.getId());
+                doc.set(comment);
 
-                Map<String, Object> comment = new HashMap<>();
-                comment.put("like", "0");
-                comment.put("dislike", "0");
-                comment.put("name", currentUser.getDisplayName());
-                comment.put("profileUrl", "https://firebasestorage.googleapis.com/v0/b/movie-ticket-app-0.appspot.com/o/avatar.png?alt=media&token=23a1d250-ca27-414b-a46b-bbef69dac7da");
-                comment.put("reviewText", yourComment.getText().toString());
-                comment.put("timeStamp", timestamp);
-                comment.put("rating", rateBar.getRating());
-                comment.put("listReact", listReact);
-                FirebaseRequest.database.collection("Movies").document(film.getId()).collection("Comment").add(comment);
-             //   commentEditText.setText("");
-               // rate = 0;
+//                    CommentRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+//                   @Override
+//                   public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+//                       int count = value.size();
+//                       Log.e("fds", count + "");
+//                       updateRateFilm(count, rateBar.getRating());
+//
+//                   }
+//               });
+//                }
+//                else {
+//
+                    CommentRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            int count = queryDocumentSnapshots.size();
+                            Log.e("fd", count + "");
+                            updateRateFilm(count, rateBar.getRating());
+                        }
+                    });
+//                }
 
-               CommentRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-                   @Override
-                   public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                       int count = value.size();
-                       updateRateFilm(count, rateBar.getRating());
 
-                   }
-               });
                 ratingBar.setRating(0);
                // rateBar.setRating(0);
                 dialog.dismiss();
@@ -325,8 +345,16 @@ public class ReviewFragment extends Fragment {
     }
     void updateRateFilm(int countComment, float rate){
         DocumentReference doc =  FirebaseRequest.database.collection("Movies").document(film.getId());
-        float vote = film.getVote();
-        vote = (vote * (countComment - 1) + rate)/ countComment;
-        doc.update("vote", vote);
+        doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                FilmModel film = documentSnapshot.toObject(FilmModel.class);
+                float vote = film.getVote();
+                Log.e("binh", vote + " " + countComment + " " + rate);
+                vote = (vote * (countComment - 1) + rate)/ countComment;
+                doc.update("vote", vote);
+            }
+        });
+
     }
 }

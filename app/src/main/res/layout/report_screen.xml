@@ -113,16 +113,15 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/Filter"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="60dp"
     android:visibility="invisible"
-    android:paddingTop="10dp"
+    android:layout_marginTop="10dp"
     >
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/CinemaTIL"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_width="wrap_content"
-
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         app:boxBackgroundColor="@color/main_color"
         app:boxCornerRadiusBottomEnd="20dp"
@@ -134,6 +133,7 @@
         app:boxStrokeWidth="1dp"
         android:textColorHint="@color/white"
         app:startIconTint="@color/white"
+
         app:endIconDrawable="@drawable/down_arrow"
         app:endIconTint="@color/white"
         android:layout_height="wrap_content"
@@ -215,6 +215,7 @@
 </androidx.constraintlayout.widget.ConstraintLayout>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/FilmReports"
+            android:layout_marginTop="24dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="105dp"
