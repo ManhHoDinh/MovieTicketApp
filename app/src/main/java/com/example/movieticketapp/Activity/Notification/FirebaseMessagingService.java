@@ -62,6 +62,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             builder.setSmallIcon(R.drawable.notification_icon);
         }
 
+
         collapsedView.setTextViewText(R.id.titleCollapsed, remoteMessage.getNotification().getTitle());
         collapsedView.setTextViewText(R.id.contentCollapsed, remoteMessage.getNotification().getBody());
 
