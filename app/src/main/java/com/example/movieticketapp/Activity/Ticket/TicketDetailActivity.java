@@ -43,6 +43,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class TicketDetailActivity extends AppCompatActivity {
     private ImageView qrCode;
@@ -103,7 +104,7 @@ public class TicketDetailActivity extends AppCompatActivity {
             }
         });
         Timestamp time = ticket.getTime();
-        DateFormat dateFormat = new SimpleDateFormat("hh:mm, E MMM dd");
+        DateFormat dateFormat = new SimpleDateFormat("hh:mm, E MMM dd", Locale.ENGLISH);
         String timeBooked = dateFormat.format(time.toDate());
         bookDay.setText(timeBooked);
         seatPositon.setText(ticket.getSeat());

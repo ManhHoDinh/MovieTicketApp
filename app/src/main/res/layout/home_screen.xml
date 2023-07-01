@@ -17,7 +17,7 @@
             android:background="@color/background_color"
             tools:context=".HomeActivity">
 
-            <ScrollView
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="none"
@@ -181,7 +181,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <ListView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:dividerHeight="12dp"
                         android:id="@+id/promotionView"
                         android:layout_width="match_parent"
@@ -256,7 +256,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
-                    <ListView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:dividerHeight="12dp"
                         android:id="@+id/cityView"
                         android:layout_width="match_parent"
@@ -273,7 +273,7 @@
                         android:src="@drawable/add_promo" />
 
                 </LinearLayout>
-            </ScrollView>
+            </androidx.core.widget.NestedScrollView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

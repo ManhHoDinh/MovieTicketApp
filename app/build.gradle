@@ -68,4 +68,8 @@ dependencies {
     implementation 'com.google.oauth-client:google-oauth-client-jetty:1.32.1'
     implementation "androidx.activity:activity:1.7.2"
    // implementation 'com.google.api:google-api-services-youtube:v3-rev20210616-1.31.0'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+    implementation 'com.karumi:dexter:6.2.1'
+    // implementation 'com.google.api:google-api-services-youtube:v3-rev20210616-1.31.0'
 }

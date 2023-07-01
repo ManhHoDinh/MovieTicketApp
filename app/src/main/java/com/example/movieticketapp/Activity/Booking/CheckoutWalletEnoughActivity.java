@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.example.movieticketapp.Activity.Booking.SuccessCheckoutActivity;
 import com.example.movieticketapp.Activity.Discount.DiscountViewAll;
+import com.example.movieticketapp.Adapter.Helper;
 import com.example.movieticketapp.Adapter.MovieCheckoutAdapter;
 import com.example.movieticketapp.Adapter.TicketListAdapter;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
@@ -59,6 +60,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
@@ -172,7 +174,7 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
        // timeBooked = intent.getStringExtra("timeBooked");
         listDate = date.split("\n");
         Calendar cal=Calendar.getInstance();
-        SimpleDateFormat month_date = new SimpleDateFormat("MMM");
+        SimpleDateFormat month_date = new SimpleDateFormat("MMM", Locale.ENGLISH);
         String month_name = month_date.format(cal.getTime());
         dateTimeTv.setText( listDate[0] + " "+month_name+" " + listDate[1]+", " + timeBooked);
         Random rdn = new Random();
@@ -254,9 +256,9 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
                                     List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
                                     for(DocumentSnapshot doc : listDocs){
                                         Timestamp time = doc.getTimestamp("timeBooked");
-                                        DateFormat dateFormat = new SimpleDateFormat("EEE\nd");
-                                        DateFormat timeFormat = new SimpleDateFormat("HH:mm");
-                                        DateFormat monthformat = new SimpleDateFormat("MMM");
+                                        DateFormat dateFormat = new SimpleDateFormat("EEE\nd", Locale.ENGLISH);
+                                        DateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+                                        DateFormat monthformat = new SimpleDateFormat("MMM",Locale.ENGLISH);
                                         String month_name = monthformat.format(time.toDate());
                                       //  String timeBook = timeBooked + ", " + listDate[0] + " "+month_name+" " + listDate[1];
 

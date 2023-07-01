@@ -60,6 +60,7 @@ public class InformationFilmActivity extends FragmentActivity {
         nameTV= findViewById(R.id.filmName);
         PosterImage= findViewById(R.id.PosterImage);
         ratingBar = findViewById(R.id.rating);
+        ratingBar.setIsIndicator(true);
         voteTV = findViewById(R.id.vote);
         genreTV = findViewById(R.id.genre);
         durationTime = findViewById(R.id.durationTime);

@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -25,6 +28,18 @@
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
+        <activity
+            android:name=".Activity.Cinema.CinemaLocationActivity"
+            android:theme="@style/Theme.MovieTicketApp.NoActionBar"
+            android:exported="true">
+
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDLVRBV69nurSKIEg0tU1k65es6uT82RFs" />
+
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
 
         <service
             android:name=".Activity.Notification.FirebaseMessagingService"
@@ -72,7 +87,7 @@
             android:name=".Activity.ConfirmDialogActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.Service.AddService"
+            android:name=".Activity.Ticket.Service.AddService"
             android:exported="false" />
         <activity
             android:name=".Activity.Movie.SearchActivity"
@@ -124,7 +139,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activity.Service.ServiceViewAll"
+            android:name=".Activity.Ticket.Service.ServiceViewAll"
             android:exported="false"
             android:theme="@style/Theme.MovieProject.Main" />
         <activity

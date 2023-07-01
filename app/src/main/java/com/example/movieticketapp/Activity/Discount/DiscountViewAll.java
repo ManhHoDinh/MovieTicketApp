@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.movieticketapp.Activity.HomeActivity;
+import com.example.movieticketapp.Adapter.DiscountAdapter;
 import com.example.movieticketapp.Adapter.PromotionAdapter;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Discount;
@@ -95,8 +96,8 @@ public class DiscountViewAll extends AppCompatActivity {
                                     listDiscounts.add(f);
 
                                 }
-                                PromotionAdapter promotionAdapter = new PromotionAdapter(DiscountViewAll.this,R.layout.promo_item,listDiscounts);
-                                promotionView.setAdapter(promotionAdapter);
+                                DiscountAdapter discountAdapter = new DiscountAdapter(DiscountViewAll.this,R.layout.promo_item,listDiscounts);
+                                promotionView.setAdapter(discountAdapter);
 
                             }
                         });
@@ -127,8 +128,8 @@ public class DiscountViewAll extends AppCompatActivity {
                                             //   LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
                                             // promotionView.setLayoutManager(VerLayoutManager);
                                             Intent intent = getIntent();
-                                            PromotionAdapter promotionAdapter = new PromotionAdapter(DiscountViewAll.this,R.layout.promo_item,Discounts);
-                                            promotionView.setAdapter(promotionAdapter);
+                                            DiscountAdapter discountAdapter = new DiscountAdapter(DiscountViewAll.this,R.layout.promo_item,Discounts);
+                                            promotionView.setAdapter(discountAdapter);
                                             Double totalBook = intent.getDoubleExtra("total", 0);
                                             if( totalBook != 0){
                                                 promotionView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -205,7 +206,7 @@ public class DiscountViewAll extends AppCompatActivity {
                         filteredlist.add(item);
                     }
                 }
-                promotionView.setAdapter(new PromotionAdapter(DiscountViewAll.this,R.layout.promo_item, filteredlist));
+                promotionView.setAdapter(new DiscountAdapter(DiscountViewAll.this,R.layout.promo_item, filteredlist));
             }
         });
         // running a for loop to compare elements.

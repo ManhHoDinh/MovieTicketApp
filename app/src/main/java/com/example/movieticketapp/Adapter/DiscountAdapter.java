@@ -1,38 +1,25 @@
 package com.example.movieticketapp.Adapter;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.NonUiContext;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.movieticketapp.Activity.Account.SignInActivity;
 import com.example.movieticketapp.Activity.Discount.AddDiscount;
-import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Model.Discount;
 import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.Model.Users;
@@ -40,47 +27,45 @@ import com.example.movieticketapp.R;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.w3c.dom.Text;
-
 import java.text.DecimalFormat;
 import java.util.List;
 
-
-public class PromotionAdapter extends RecyclerView.Adapter<PromotionAdapter.ViewHolder> {
+public class DiscountAdapter extends ArrayAdapter<Discount> {
+    private List<Discount> Discounts;
+    public DiscountAdapter(@NonNull Context context, int resource, List<Discount> Discounts) {
+        super(context, resource, Discounts);
+    }
+    @NonNull
     @Override
-    public void onBindViewHolder(@NonNull PromotionAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        holder.NameTV.setText(Discounts.get(position).getName());
-        holder.DescriptionTV.setText(Discounts.get(position).getDescription());
-        holder.DiscountRateTV.setText("OFF "+new DecimalFormat("#.0#").format(Discounts.get(position).getDiscountRate())+ "%");
-        if(total != null){
-            holder.view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Double finalTital = Double.parseDouble(total);
-                    finalTital = finalTital / Discounts.get(position).getDiscountRate();
-                    total = String.valueOf(finalTital);
-
-                }
-            });
-        }
-        //if user
-        try{
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        View itemView;
+        itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.promo_item, null);
+        TextView NameTv;
+        TextView DescriptionTV;
+        TextView DiscountRateTV;
+        ImageView PromoMenu;
+        // imageView = itemView.findViewById(R.id.posterItem);
+        NameTv = (TextView) itemView.findViewById(R.id.PromoName);
+        DescriptionTV = itemView.findViewById(R.id.PromoDescription);
+        DiscountRateTV = itemView.findViewById(R.id.PromoRate);
+        PromoMenu = itemView.findViewById(R.id.PromoMenu);
+        Discount discount = getItem(position);
+        NameTv.setText(discount.getName());
+        DescriptionTV.setText(discount.getDescription());
+        DiscountRateTV.setText("OFF" + new DecimalFormat("#.0#").format(discount.getDiscountRate()) + "%");
+        try {
             Log.d("account type", Users.currentUser.getAccountType());
-            if(Users.currentUser!=null)
-                if((!(Users.currentUser.getAccountType().toString()).equals("admin")))
-                {
-                   holder.PromoMenu.setVisibility(View.INVISIBLE);
+            if (Users.currentUser != null)
+                if ((!(Users.currentUser.getAccountType().toString()).equals("admin"))) {
+                    PromoMenu.setVisibility(View.INVISIBLE);
                 }
-        }
-        catch (Exception e)
-        {
-            holder.PromoMenu.setVisibility(View.INVISIBLE);
-        }
-        finally {
-            holder.PromoMenu.setOnClickListener(new View.OnClickListener() {
+        } catch (Exception e) {
+            PromoMenu.setVisibility(View.INVISIBLE);
+        } finally {
+            PromoMenu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    PopupMenu popup = new PopupMenu(view.getContext(), holder.PromoMenu);
+                    PopupMenu popup = new PopupMenu(view.getContext(), PromoMenu);
                     //inflating menu from xml resource
                     popup.inflate(R.menu.promo_menu);
                     SpannableString s = new SpannableString("Edit");
@@ -97,15 +82,14 @@ public class PromotionAdapter extends RecyclerView.Adapter<PromotionAdapter.View
                                 case R.id.promo_edit:
                                     //handle menu1 click
                                 {
-                                    Intent i = new Intent(holder.itemView.getContext(), AddDiscount.class);
-                                    i.putExtra(ExtraIntent.discount, Discounts.get(position));
-                                    holder.itemView.getContext().startActivity(i);
+                                    Intent i = new Intent(itemView.getContext(), AddDiscount.class);
+                                    i.putExtra(ExtraIntent.discount, discount);
+                                    itemView.getContext().startActivity(i);
                                 }
                                 return true;
-                                case R.id.promo_delete:
-                                {
-                                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(holder.itemView.getContext(), R.style.CustomAlertDialog);
-                                    LayoutInflater factory = LayoutInflater.from(holder.itemView.getContext());
+                                case R.id.promo_delete: {
+                                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(itemView.getContext(), R.style.CustomAlertDialog);
+                                    LayoutInflater factory = LayoutInflater.from(itemView.getContext());
                                     final View deleteDialogView = factory.inflate(R.layout.yes_no_dialog, null);
                                     alertDialog.setView(deleteDialogView);
                                     AlertDialog OptionDialog = alertDialog.create();
@@ -117,7 +101,7 @@ public class PromotionAdapter extends RecyclerView.Adapter<PromotionAdapter.View
                                         public void onClick(View view) {
                                             FirebaseFirestore db = FirebaseFirestore.getInstance();
                                             CollectionReference PromoRef = db.collection(Discount.CollectionName);
-                                            PromoRef.document(Discounts.get(position).getID()).delete();
+                                            PromoRef.document(discount.getID()).delete();
                                             OptionDialog.dismiss();
                                         }
                                     });
@@ -139,41 +123,9 @@ public class PromotionAdapter extends RecyclerView.Adapter<PromotionAdapter.View
                 }
             });
         }
-     }
-    List<Discount> Discounts;
-    String total;
-
-    public PromotionAdapter(List<Discount> Discounts,@Nullable String total) {
-        this.Discounts = Discounts;
-        this.total = total;
+        return itemView;
     }
 
-    @Override
-    public int getItemCount() {
-        return Discounts.size();
-    }
-    public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView NameTV;
-        TextView DescriptionTV;
-        TextView DiscountRateTV;
-        ImageView PromoMenu;
-        View view;
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-           // imageView = itemView.findViewById(R.id.posterItem);
-            NameTV = itemView.findViewById(R.id.PromoName);
-            DescriptionTV = itemView.findViewById(R.id.PromoDescription);
-            DiscountRateTV = itemView.findViewById(R.id.PromoRate);
-            PromoMenu=itemView.findViewById(R.id.PromoMenu);
 
 
-        }
-    }
-    @NonNull
-    @Override
-    public PromotionAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView;
-        itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.promo_item, parent, false);
-        return new PromotionAdapter.ViewHolder(itemView);
-    }
 }

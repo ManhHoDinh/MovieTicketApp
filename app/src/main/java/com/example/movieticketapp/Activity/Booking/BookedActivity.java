@@ -2,11 +2,14 @@ package com.example.movieticketapp.Activity.Booking;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -84,6 +87,13 @@ public class BookedActivity extends AppCompatActivity {
         countryAutoTv = (AutoCompleteTextView) findViewById(R.id.countryAutoTv);
         listCity = new ArrayList<String>();
         loadListCity();
+        try {
+            if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 
         dayRecycleView = (RecyclerView) findViewById(R.id.dayRecycleView);
         Calendar calendar = Calendar.getInstance();

@@ -137,14 +137,14 @@ public class SignInActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(passwordET.length() < 8){
+               /* if(passwordET.length() < 8){
                     passwordLayout.setHelperText("Enter minimum 8 characters");
                     passwordLayout.setError("");
                 }
                 else{
                     passwordLayout.setHelperText("");
                     passwordLayout.setError("");
-                }
+                }*/
             }
 
             @Override
@@ -359,10 +359,7 @@ public class SignInActivity extends AppCompatActivity {
             passwordLayout.setError("Password is not empty!!!");
             error=true;
         }
-        else if (passwordET.length() <8){
-            passwordLayout.setError("password is too short!!");
-            error=true;
-        }
+
         if(!error)
             SignIn(emailET.getText().toString(), passwordET.getText().toString());
     }
