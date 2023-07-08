@@ -67,9 +67,6 @@ public class InformationFilmActivity extends FragmentActivity {
         ImageView btnBack = findViewById(R.id.btnBack);
         pager=findViewById(R.id.pager);
         tabLayout=findViewById(R.id.tab_layout);
-        filmDetailPagerAdapter = new FilmDetailPagerAdapter(this, f);
-        pager.setAdapter(filmDetailPagerAdapter);
-        pager.setOffscreenPageLimit(3);
         getFilm(f.getId());
         EditMovie=findViewById(R.id.EditMovie);
 
@@ -148,6 +145,8 @@ public class InformationFilmActivity extends FragmentActivity {
         genreTV.setText(f.getGenre());
 
         durationTime.setText(f.getDurationTime());
-
+        filmDetailPagerAdapter = new FilmDetailPagerAdapter(this, f);
+        pager.setAdapter(filmDetailPagerAdapter);
+        pager.setOffscreenPageLimit(3);
     }
 }
