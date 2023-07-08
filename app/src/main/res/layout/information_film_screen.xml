@@ -118,6 +118,7 @@
                 android:isIndicator="false"
                 android:numStars="5"
                 android:progressTint="#FFFFAF34"
+                android:progressBackgroundTint="@color/white"
                 android:rating="4.7" />
 
             <TextView
