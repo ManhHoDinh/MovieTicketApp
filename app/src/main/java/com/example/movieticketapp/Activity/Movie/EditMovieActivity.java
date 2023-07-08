@@ -450,7 +450,7 @@ public class EditMovieActivity extends AppCompatActivity{
         data.put("id", film.getId());
         data.put("name", movieName.getText().toString());
         data.put("movieBeginDate", dateStart);
-        data.put("vote", 0);
+        data.put("vote", film.getVote());
         data.put("trailer",InStorageVideoUris);
         document.set(data);
 
