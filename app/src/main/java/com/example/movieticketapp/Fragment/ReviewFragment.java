@@ -141,7 +141,7 @@ public class ReviewFragment extends Fragment {
 //        commentLayout.setVisibility(View.GONE);
 //        ratioRate = getView().findViewById(R.id.ratio);
 //        ratioRate.setVisibility(View.GONE);
-
+        ratingBar.setRating(film.getVote());
         listFeel = new ArrayList<>();
         listFeel.add(getEmoji(0x1F917) + " empathetic");
         listFeel.add(getEmoji(0x1F970) + " satisfied");

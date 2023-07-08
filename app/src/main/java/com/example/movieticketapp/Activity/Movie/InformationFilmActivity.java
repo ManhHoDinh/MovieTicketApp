@@ -21,6 +21,7 @@ import com.example.movieticketapp.Adapter.Helper;
 import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.InforBooked;
+import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.api.Distribution;
@@ -72,7 +73,10 @@ public class InformationFilmActivity extends FragmentActivity {
         pager.setOffscreenPageLimit(3);
         getFilm(f.getId());
         EditMovie=findViewById(R.id.EditMovie);
-
+        if(Users.currentUser.getAccountType().equals("admin")){
+            EditMovie.setVisibility(View.VISIBLE);
+        }
+        else EditMovie.setVisibility(View.GONE);
        // Log.e("fdf", f.getStatus());
 
         EditMovie.setOnClickListener(new View.OnClickListener() {

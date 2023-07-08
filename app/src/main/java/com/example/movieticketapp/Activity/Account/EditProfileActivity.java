@@ -117,6 +117,7 @@ public class EditProfileActivity extends AppCompatActivity {
                         // User has been successfully re-authenticated
                         // You can update the password now
                         Update();
+
                     } else {
                         // An error occurred while re-authenticating the user
                         // Handle the error
@@ -124,6 +125,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     }
                 }
             });
+            finish();
 
         }
     }
@@ -131,15 +133,14 @@ public class EditProfileActivity extends AppCompatActivity {
     {
         String name = "new_password";
         if(!CurrentPasswordET.getText().toString().equals(passwordET.getText().toString()))
-            UpdatePassword();
+            UpdatePassword(passwordET.getText().toString());
         if(!emailET.getText().toString().equals(FirebaseRequest.mAuth.getCurrentUser().getEmail()))
             UpdateEmail();
         if(!fullNameET.getText().toString().equals(FirebaseRequest.mAuth.getCurrentUser().getDisplayName()))
             UpdateFullName();
     }
-    void UpdatePassword()
+    void UpdatePassword(String newPassword)
     {
-        String newPassword = "new_password";
         FirebaseRequest.mAuth.getCurrentUser().updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

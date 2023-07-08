@@ -353,15 +353,11 @@ public class HomeActivity extends AppCompatActivity {
                     });
                 } else {
                     CollectionReference PromoRef = db.collection(UserAndDiscount.collectionName);
-
-
                     Query query = PromoRef.whereEqualTo("userID", FirebaseRequest.mAuth.getUid());
-
                     query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                             List<String> listDiscountID = new ArrayList<>();
-
                             for (DocumentSnapshot doc : queryDocumentSnapshots) {
                                 listDiscountID.add(doc.get("discountID").toString());
                                 //DocumentReference document = FirebaseRequest.database.collection(Discount.CollectionName).document(doc.get("discountID").toString());
@@ -373,6 +369,7 @@ public class HomeActivity extends AppCompatActivity {
                                 query2.addSnapshotListener(new EventListener<QuerySnapshot>() {
                                     @Override
                                     public void onEvent(@Nullable QuerySnapshot discountvalue, @Nullable FirebaseFirestoreException error) {
+
                                         for (DocumentSnapshot doc : discountvalue) {
                                             Discount f = doc.toObject(Discount.class);
                                             Discounts.add(f);
@@ -382,6 +379,7 @@ public class HomeActivity extends AppCompatActivity {
                                         // promotionView.setLayoutManager(VerLayoutManager);
                                         Intent intent = getIntent();
                                         PromotionAdapter promotionAdapter = new PromotionAdapter(Discounts, null);
+                                        promotionView.setLayoutManager(new LinearLayoutManager(HomeActivity.this, LinearLayoutManager.VERTICAL, false));
                                         promotionView.setAdapter(promotionAdapter);
                                         if (Discounts.size() == 0) {
                                             ViewGroup.LayoutParams params = promotionView.getLayoutParams();
@@ -444,8 +442,6 @@ public class HomeActivity extends AppCompatActivity {
                     cityHeader.setVisibility(View.GONE);
                     serviceView.setVisibility(View.GONE);
                     cityView.setVisibility(View.GONE);
-
-
                 }
             }
         });
