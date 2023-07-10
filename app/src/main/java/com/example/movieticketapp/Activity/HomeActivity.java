@@ -158,13 +158,14 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
-        if(currentUser != null){
-            if (currentUser.getPhotoUrl() != null)
-                Picasso.get().load(currentUser.getPhotoUrl()).into(accountImage);
-            else accountImage.setImageResource(R.drawable.avatar);
-        }
+        FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Users user = documentSnapshot.toObject(Users.class);
 
-
+                Picasso.get().load(user.getAvatar()).into(accountImage);
+            }
+        });
         accountImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

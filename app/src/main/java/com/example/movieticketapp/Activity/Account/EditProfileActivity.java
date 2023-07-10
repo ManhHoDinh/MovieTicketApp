@@ -42,12 +42,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.auth.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.Picasso;
 
 import java.util.UUID;
 
@@ -80,7 +82,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
                             avatarImg.setImageURI(filePath);
                             img = UUID.randomUUID().toString();
-                            addImage.setVisibility(View.GONE);
+
                             StorageReference ref
                                     = storageReference
                                     .child(img);
@@ -126,9 +128,18 @@ public class EditProfileActivity extends AppCompatActivity {
         passwordET=findViewById(R.id.password);
         confirmPasswordET=findViewById(R.id.confirmpassword);
         CurrentPasswordET=findViewById(R.id.currentPassword);
-        fullNameET.setText(FirebaseRequest.mAuth.getCurrentUser().getDisplayName());
-        emailET.setText(FirebaseRequest.mAuth.getCurrentUser().getEmail());
-
+        FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Users user = documentSnapshot.toObject(Users.class);
+                fullNameET.setText(user.getName());
+                emailET.setText(user.getEmail());
+                Picasso.get().load(user.getAvatar()).into(avatarImg);
+            }
+        });
+//        fullNameET.setText(FirebaseRequest.mAuth.getCurrentUser().getDisplayName());
+//        emailET.setText(FirebaseRequest.mAuth.getCurrentUser().getEmail());
+//        Picasso.get().load(currentUser.getPhotoUrl()).into(avatarImg);
         addImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -213,7 +224,8 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-
+                    FirebaseRequest.mAuth.signOut();
+                    startActivity(new Intent(EditProfileActivity.this, SignInActivity.class));
                 } else {
                     // An error occurred while updating the user password
                     // Handle the error
@@ -293,11 +305,13 @@ public class EditProfileActivity extends AppCompatActivity {
                         FirebaseStorage.getInstance().getReferenceFromUrl(cinemaImg).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
+                                Log.e("fd", uri.toString());
                                 UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder()
-
                                         .setPhotoUri(uri)
                                         .build();
                                 FirebaseAuth.getInstance().getCurrentUser().updateProfile(userProfileChangeRequest);
+
+                                Log.e("fdd", currentUser.getPhotoUrl().toString());
                             }
                         });
                     }
