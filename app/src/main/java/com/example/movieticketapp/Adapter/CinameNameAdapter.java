@@ -163,7 +163,6 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
         }
         finally {
             try{
-
                 if(Users.currentUser!=null)
                     if(((Users.currentUser.getAccountType().toString()).equals("admin")))
                     {
@@ -254,34 +253,35 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
                                     addressCinema.setText(item.getAddress());
                                 }
                             });
-                            locationLayout.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    List<Address> listAddress = new ArrayList<>();
-                                    Intent intent = new Intent(context, CinemaLocationActivity.class);
-                                    intent.putExtra("cinema", item);
-                                    context.startActivity(intent);
-                                }
-                            });
-                            showHideBtn.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    if(showHideBtn.getTag().equals("hide")){
-                                        showHideBtn.setImageResource(R.drawable.arrow_up);
-                                        showHideBtn.setTag("show");
-                                        showHideLayout.setVisibility(View.VISIBLE);
 
-
-                                    }
-                                    else {
-                                        showHideBtn.setImageResource(R.drawable.arrow_down);
-                                        showHideBtn.setTag("hide");
-                                        showHideLayout.setVisibility(View.GONE);
-                                    }
-                                }
-                            });
                         }
                     }
+                locationLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        List<Address> listAddress = new ArrayList<>();
+                        Intent intent = new Intent(context, CinemaLocationActivity.class);
+                        intent.putExtra("cinema", item);
+                        context.startActivity(intent);
+                    }
+                });
+                showHideBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(showHideBtn.getTag().equals("hide")){
+                            showHideBtn.setImageResource(R.drawable.arrow_up);
+                            showHideBtn.setTag("show");
+                            showHideLayout.setVisibility(View.VISIBLE);
+
+
+                        }
+                        else {
+                            showHideBtn.setImageResource(R.drawable.arrow_down);
+                            showHideBtn.setTag("hide");
+                            showHideLayout.setVisibility(View.GONE);
+                        }
+                    }
+                });
 
 
             }

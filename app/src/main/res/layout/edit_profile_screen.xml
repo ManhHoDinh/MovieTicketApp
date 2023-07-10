@@ -45,11 +45,13 @@
                     android:textSize="24dp"
                     android:textStyle="bold" />
             </RelativeLayout>
-            <ImageView
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/avatarImg"
                 android:layout_width="92dp"
                 android:layout_height="92dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="40dp"
+
                 android:src="@drawable/profile"/>
 
             <ImageView
