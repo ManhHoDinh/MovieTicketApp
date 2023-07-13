@@ -63,10 +63,6 @@ public class SignUpActivity extends AppCompatActivity {
     Uri avataUri = null;
     String avatarUrl;
     String fullname;
-    CheckBox checkad;
-    EditText adminET;
-    boolean isAd = false;
-    boolean error = false;
 //    @Override
 //    public void onStart() {
 //        super.onStart();
@@ -86,23 +82,6 @@ public class SignUpActivity extends AppCompatActivity {
         emailET=findViewById(R.id.emailaddress);
         passwordET=findViewById(R.id.password);
         confirmPasswordET=findViewById(R.id.confirmpassword);
-        checkad = (CheckBox)findViewById(R.id.checkadmin);
-        adminET = (EditText) findViewById(R.id.admincode);
-        adminET.setVisibility(View.INVISIBLE);
-
-        checkad.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b)
-                {
-                    adminET.setVisibility(View.VISIBLE);
-                }
-                else
-                {
-                    adminET.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
 
         ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
                 registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
@@ -133,6 +112,7 @@ public class SignUpActivity extends AppCompatActivity {
         signUpBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                boolean error = false;
                 if(fullNameET.length()==0)
                 {
                     fullNameET.setError("Full Name is not empty!!!");
@@ -158,37 +138,10 @@ public class SignUpActivity extends AppCompatActivity {
                     confirmPasswordET.setError("Password and confirmation passwords are not equals !!!");
                     error=true;
                 }
-
-                if(checkad.isChecked() == true)
+                if(avataUri ==  null)
                 {
-                    if(adminET.length()==0)
-                    {
-                        adminET.setError("Admin code cannot be empty!!!");
-                        error= true;
-                    }
-                    else
-                    {
-                        String adcode = adminET.getText().toString();
-                        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-                        DocumentReference userRef = firebaseFirestore.collection("IdForAdmin").document(adcode);
-                        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    DocumentSnapshot document = task.getResult();
-                                    if (document.exists()) {
-                                        isAd = true;
-                                    } else {
-                                        error = true;
-                                        isAd = false;
-                                        Toast.makeText(getApplicationContext(), "This code is not exists!!!", Toast.LENGTH_SHORT).show();
-                                    }
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "Lỗi khi truy vấn Firestore", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                    }
+                    error = true;
+                    Toast.makeText(getApplicationContext(), "Please choose your avatar!", Toast.LENGTH_SHORT).show();
                 }
                 if(!error){
                     fullname = fullNameET.getText().toString();
@@ -203,10 +156,7 @@ public class SignUpActivity extends AppCompatActivity {
                     String postRandomName = saveCurrentData + saveCurrentTime;
 
                     storageReference = storageReference.child(postRandomName+"as.jpg");
-                    if(avataUri != null){
-                        uploadTask = storageReference.putFile(avataUri);
-                    }
-
+                    uploadTask = storageReference.putFile(avataUri);
                     Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                         @Override
                         public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -244,16 +194,7 @@ public class SignUpActivity extends AppCompatActivity {
                             FirebaseUser user = FirebaseRequest.mAuth.getCurrentUser();
                             UpdatePhotho();
                             user.getUid();
-                            String type;
-                            if (isAd)
-                            {
-                                type = "admin";
-                            }
-                            else
-                            {
-                                type = "user";
-                            }
-                            Users u = new Users(user.getUid(), Name, email,0, type, avatarUrl);
+                            Users u = new Users(user.getUid(), Name, email,0, "user", avatarUrl);
                             FirebaseRequest.database.collection("Users").document(user.getUid())
                                     .set(u.toJson())
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
