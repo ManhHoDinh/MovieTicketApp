@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,10 +15,14 @@ import android.widget.TextView;
 
 import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
+import com.example.movieticketapp.Firebase.FirebaseRequest;
+import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.squareup.picasso.Picasso;
 
 public class AccountActivity extends AppCompatActivity {
@@ -54,15 +59,18 @@ public class AccountActivity extends AppCompatActivity {
         Email=findViewById(R.id.email);
         BackBtn=findViewById(R.id.Back);
         FirebaseUser currentUser= FirebaseAuth.getInstance().getCurrentUser();
-        if(currentUser != null){
-            Name.setText(currentUser.getDisplayName());
-            Email.setText(currentUser.getEmail());
-            Avatar= findViewById(R.id.avatar);
-            if (currentUser.getPhotoUrl()!=null)
-                Picasso.get().load(currentUser.getPhotoUrl()).into(Avatar);
-            else Avatar.setImageResource(R.drawable.avatar);
-        }
-
+        FirebaseRequest.database.collection("Users").document(currentUser.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Users user = documentSnapshot.toObject(Users.class);
+                Name.setText(user.getName());
+                Email.setText(user.getEmail());
+                Avatar= findViewById(R.id.avatar);
+                if (currentUser.getPhotoUrl()!=null)
+                    Picasso.get().load(user.getAvatar()).into(Avatar);
+                else Avatar.setImageResource(R.drawable.avatar);
+            }
+        });
         BackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

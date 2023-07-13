@@ -158,6 +158,7 @@ public class SignUpActivity extends AppCompatActivity {
                     confirmPasswordET.setError("Password and confirmation passwords are not equals !!!");
                     error=true;
                 }
+
                 if(checkad.isChecked() == true)
                 {
                     if(adminET.length()==0)
@@ -202,7 +203,10 @@ public class SignUpActivity extends AppCompatActivity {
                     String postRandomName = saveCurrentData + saveCurrentTime;
 
                     storageReference = storageReference.child(postRandomName+"as.jpg");
-                    uploadTask = storageReference.putFile(avataUri);
+                    if(avataUri != null){
+                        uploadTask = storageReference.putFile(avataUri);
+                    }
+
                     Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                         @Override
                         public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {

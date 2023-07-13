@@ -45,6 +45,7 @@ import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Comment;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.Ticket;
+import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
 import com.example.movieticketapp.databinding.ActivityCityViewAllBinding;
 import com.google.android.flexbox.FlexDirection;
@@ -124,8 +125,6 @@ public class ReviewFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_review, container, false);
     }
-
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -275,9 +274,15 @@ public class ReviewFragment extends Fragment {
                 Date current = calendar.getTime();
                 Timestamp timestamp = new Timestamp(current);
                 DocumentReference doc =  FirebaseRequest.database.collection("Movies").document(film.getId()).collection("Comment").document();
-                Comment comment = new Comment("https://firebasestorage.googleapis.com/v0/b/movie-ticket-app-0.appspot.com/o/avatar.png?alt=media&token=23a1d250-ca27-414b-a46b-bbef69dac7da"
-                ,currentUser.getDisplayName(), yourComment.getText().toString(), 0, 0, timestamp,(int) rateBar.getRating(), listReact, doc.getId());
-                doc.set(comment);
+                FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Users user = documentSnapshot.toObject(Users.class);
+                        Comment comment = new Comment(user.getAvatar(),user.getName(), yourComment.getText().toString(), 0, 0, timestamp,(int) rateBar.getRating(), listReact, doc.getId());
+                        doc.set(comment);
+                    }
+                });
+
 
 //                    CommentRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
 //                   @Override
