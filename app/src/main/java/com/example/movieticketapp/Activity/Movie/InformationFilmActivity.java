@@ -77,6 +77,8 @@ public class InformationFilmActivity extends FragmentActivity {
             public void onClick(View view) {
                 Intent i = new Intent(InformationFilmActivity.this, EditMovieActivity.class);
                 i.putExtra(ExtraIntent.film, f);
+                EditMovieActivity.videoUris.clear();
+                EditMovieActivity.videos.clear();
                 startActivity(i);
             }
         });

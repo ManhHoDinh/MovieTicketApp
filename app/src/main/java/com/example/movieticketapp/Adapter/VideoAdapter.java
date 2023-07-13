@@ -5,11 +5,13 @@ import static com.example.movieticketapp.Firebase.FirebaseRequest.mAuth;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -50,7 +52,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     public void onBindViewHolder(@NonNull VideoViewHolder holder, int position) {
         String videoUrl = videoIdList.get(position);
         if (videoUrl == null) return;
-        holder.player.setVideoPath(videoUrl);
+        holder.bindVideo(videoUrl);
         holder.videoSeekBar.setProgress(0);
         holder.endTime.setText(""+convertIntoTime(holder.player.getDuration()-0));
 
@@ -97,12 +99,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
-            }
-        });
-        holder.player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                holder.videoSeekBar.setMax(holder.player.getDuration());
             }
         });
 
@@ -183,6 +179,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         private ImageView playButton;
         SeekBar videoSeekBar;
         TextView endTime;
+        private ProgressBar progressBar;
 
         public VideoViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -190,7 +187,37 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             playButton=itemView.findViewById(R.id.PlayButton);
             videoSeekBar = itemView.findViewById(R.id.videoView_seekbar);
             endTime = itemView.findViewById(R.id.videoView_endtime);
+            progressBar = itemView.findViewById(R.id.progressBar);
+        }
+        public void bindVideo(String videoUrl) {
+            showLoading();
 
+            player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    hideLoading();
+                    // Start video playback here if desired
+                   // videoView.start();
+                    videoSeekBar.setMax(player.getDuration());
+                }
+            });
+
+            player.setVideoPath(videoUrl);
+            player.requestFocus();
+        }
+
+        private void showLoading() {
+            progressBar.setVisibility(View.VISIBLE);
+            playButton.setVisibility(View.GONE);
+            videoSeekBar.setVisibility(View.GONE);
+            endTime.setVisibility(View.GONE);
+        }
+
+        private void hideLoading() {
+            progressBar.setVisibility(View.GONE);
+            playButton.setVisibility(View.VISIBLE);
+            videoSeekBar.setVisibility(View.VISIBLE);
+            endTime.setVisibility(View.VISIBLE);
         }
     }
 }
