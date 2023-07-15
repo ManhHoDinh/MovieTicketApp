@@ -77,30 +77,114 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
     }
 
     private EditMovieActivity activity;
+
     @Override
     public void onBindViewHolder(@NonNull EditTrailerAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         try {
-            holder.movietrailer.setBackgroundResource(R.drawable.background_add_movie1);
-            holder.texttrailer.setText("Upload Video");
-            holder.imtrailer.setImageResource(R.drawable.symbol_image);
-            holder.HideTimeLine();
-            holder.EditTrailer.setVisibility(View.INVISIBLE);
-            holder.movietrailer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    activity.pickVideo.launch(new PickVisualMediaRequest.Builder()
-                            .setMediaType(ActivityResultContracts.PickVisualMedia.VideoOnly.INSTANCE)
-                            .build());
-                    setSelectedPosition(position);
-                }
-            });
             //In network
             if(!EditMovieActivity.videos.get(position).equals(EditMovieActivity.defaultAddTrailer))
             {
                 holder.movietrailer.setBackground(null);
                 holder.texttrailer.setText("");
                 holder.imtrailer.setImageResource(0);
-                holder.bindVideo(EditMovieActivity.videos.get(position));
+                if(EditMovieActivity.isVideoLoaded.get(position)==false)
+                    holder.bindVideo(EditMovieActivity.videos.get(position));
+                holder.playButton.setImageResource(R.drawable.play_icon);
+                holder.EditTrailer.setVisibility(View.VISIBLE);
+                holder.deleteTrailer.setVisibility(View.INVISIBLE);
+                holder.videoSeekBar.setProgress(0);
+                EditMovieActivity.isVideoLoaded.set(position,true);
+                holder.endTime.setText(""+VideoAdapter.convertIntoTime(holder.movietrailer.getDuration()-0));
+                holder.movietrailer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        holder.playButton.setVisibility(View.VISIBLE);
+                        holder.videoSeekBar.setVisibility(View.VISIBLE);
+                        holder.endTime.setVisibility(View.VISIBLE);
+                        new Handler().postDelayed(new Runnable() {
+
+                            // Using handler with postDelayed called runnable run method
+                            @Override
+                            public void run() {
+                                if(holder.movietrailer.isPlaying())
+                                {
+                                    holder.playButton.setVisibility(View.INVISIBLE);
+                                    holder.videoSeekBar.setVisibility(View.INVISIBLE);
+                                    holder.endTime.setVisibility(View.INVISIBLE);
+                                }
+                            }
+                        }, 1*5000); // wait for 5 seconds
+
+                    }
+
+                });
+                holder.videoSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        if (fromUser) {
+                            holder.movietrailer.seekTo(progress);
+                            int currentPosition = holder.movietrailer.getCurrentPosition();
+                            holder.endTime.setText("" + VideoAdapter.convertIntoTime(holder.movietrailer.getDuration() - currentPosition));
+                        }
+
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                    }
+                });
+                holder.playButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(holder.movietrailer.isPlaying())
+                        {
+                            holder.movietrailer.pause();
+                            holder.playButton.setImageResource(R.drawable.play_icon);
+                        }
+                        else
+                        {
+                            holder.playButton.setImageResource(R.drawable.pause_icon);
+                            holder.movietrailer.start();
+                            new Handler().postDelayed(new Runnable() {
+
+                                // Using handler with postDelayed called runnable run method
+                                @Override
+                                public void run() {
+                                    holder.playButton.setVisibility(View.INVISIBLE);
+                                    holder.videoSeekBar.setVisibility(View.INVISIBLE);
+                                    holder.endTime.setVisibility(View.INVISIBLE);
+                                }
+                            }, 1*5000); // wait for 5 seconds
+                        }
+                    }
+                });
+                Handler handler = new Handler();
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        if (holder.movietrailer.getDuration()>0){
+                            int currentPosition = holder.movietrailer.getCurrentPosition();
+                            holder.videoSeekBar.setProgress(currentPosition);
+                            holder.endTime.setText(""+VideoAdapter.convertIntoTime(holder.movietrailer.getDuration()-currentPosition));
+                        }
+                        handler.postDelayed(this,0);
+                    }
+                };
+                handler.postDelayed(runnable,500);
+            }
+            //In device
+            else if(EditMovieActivity.videoUris.get(position)!=EditMovieActivity.defaultUri)
+            {
+                holder.movietrailer.setBackground(null);
+                holder.texttrailer.setText("");
+                holder.imtrailer.setImageResource(0);
+                holder.movietrailer.setVideoURI(EditMovieActivity.videoUris.get(position));
                 holder.playButton.setImageResource(R.drawable.play_icon);
                 holder.EditTrailer.setVisibility(View.VISIBLE);
                 holder.deleteTrailer.setVisibility(View.INVISIBLE);
@@ -189,98 +273,36 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
                 };
                 handler.postDelayed(runnable,500);
             }
-            //In device
-            if(EditMovieActivity.videoUris.get(position)!=EditMovieActivity.defaultUri)
-            {
-                holder.movietrailer.setBackground(null);
-                holder.texttrailer.setText("");
-                holder.imtrailer.setImageResource(0);
-                holder.movietrailer.setVideoURI(EditMovieActivity.videoUris.get(position));
-                holder.playButton.setImageResource(R.drawable.play_icon);
-                holder.EditTrailer.setVisibility(View.VISIBLE);
-                holder.deleteTrailer.setVisibility(View.INVISIBLE);
-                holder.videoSeekBar.setProgress(0);
-                holder.endTime.setText(""+VideoAdapter.convertIntoTime(holder.movietrailer.getDuration()-0));
+            else {
+                holder.movietrailer.setBackgroundResource(R.drawable.background_add_movie1);
+                holder.texttrailer.setText("Upload Video");
+                holder.imtrailer.setImageResource(R.drawable.symbol_image);
+                holder.HideTimeLine();
+                holder.EditTrailer.setVisibility(View.INVISIBLE);
+                holder.movietrailer.setVideoURI(null);
+                holder.deleteTrailer.setVisibility(View.VISIBLE);
+                holder.progressBar.setVisibility(View.INVISIBLE);
+                holder.deleteTrailer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        EditMovieActivity.videos.remove(position);
+                        EditMovieActivity.videoUris.remove(position);
+                        Toast toast = Toast.makeText(holder.itemView.getContext(),"Delete trailer layout success!!!", Toast.LENGTH_SHORT);
+                        toast.show();
+                        notifyDataSetChanged();
+                    }
+                });
+
                 holder.movietrailer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        holder.playButton.setVisibility(View.VISIBLE);
-                        holder.videoSeekBar.setVisibility(View.VISIBLE);
-                        holder.endTime.setVisibility(View.VISIBLE);
-                        new Handler().postDelayed(new Runnable() {
-
-                            // Using handler with postDelayed called runnable run method
-                            @Override
-                            public void run() {
-                                if(holder.movietrailer.isPlaying())
-                                {
-                                    holder.playButton.setVisibility(View.INVISIBLE);
-                                    holder.videoSeekBar.setVisibility(View.INVISIBLE);
-                                    holder.endTime.setVisibility(View.INVISIBLE);
-                                }
-                            }
-                        }, 1*5000); // wait for 5 seconds
+                        activity.pickVideo.launch(new PickVisualMediaRequest.Builder()
+                                .setMediaType(ActivityResultContracts.PickVisualMedia.VideoOnly.INSTANCE)
+                                .build());
+                        setSelectedPosition(position);
                     }
                 });
-                holder.videoSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        if (fromUser) {
-                            holder.movietrailer.seekTo(progress);
-                            int currentPosition = holder.movietrailer.getCurrentPosition();
-                            holder.endTime.setText("" + VideoAdapter.convertIntoTime(holder.movietrailer.getDuration() - currentPosition));
-                        }
 
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-
-                    }
-                });
-                holder.playButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if(holder.movietrailer.isPlaying())
-                        {
-                            holder.movietrailer.pause();
-                            holder.playButton.setImageResource(R.drawable.play_icon);
-                        }
-                        else
-                        {
-                            holder.playButton.setImageResource(R.drawable.pause_icon);
-                            holder.movietrailer.start();
-                            new Handler().postDelayed(new Runnable() {
-
-                                // Using handler with postDelayed called runnable run method
-                                @Override
-                                public void run() {
-                                    holder.playButton.setVisibility(View.INVISIBLE);
-                                    holder.videoSeekBar.setVisibility(View.INVISIBLE);
-                                    holder.endTime.setVisibility(View.INVISIBLE);
-                                }
-                            }, 1*5000); // wait for 5 seconds
-                        }
-                    }
-                });
-                Handler handler = new Handler();
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        if (holder.movietrailer.getDuration()>0){
-                            int currentPosition = holder.movietrailer.getCurrentPosition();
-                            holder.videoSeekBar.setProgress(currentPosition);
-                            holder.endTime.setText(""+VideoAdapter.convertIntoTime(holder.movietrailer.getDuration()-currentPosition));
-                        }
-                        handler.postDelayed(this,0);
-                    }
-                };
-                handler.postDelayed(runnable,500);
             }
 
         }

@@ -22,6 +22,7 @@ import android.widget.MediaController;
 import android.widget.PopupMenu;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -35,6 +36,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.movieticketapp.Activity.Movie.AddMovieActivity;
+import com.example.movieticketapp.Activity.Movie.EditMovieActivity;
 import com.example.movieticketapp.Activity.Movie.InformationFilmActivity;
 import com.example.movieticketapp.Model.Cinema;
 import com.example.movieticketapp.Model.ExtraIntent;
@@ -80,7 +82,18 @@ public class TrailerMovieApdapter extends RecyclerView.Adapter<TrailerMovieApdap
             holder.movietrailer.setBackgroundResource(R.drawable.background_add_movie1);
             holder.texttrailer.setText("Upload Video");
             holder.imtrailer.setImageResource(R.drawable.symbol_image);
-            
+            holder.deleteTrailer.setVisibility(View.VISIBLE);
+            holder.deleteTrailer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AddMovieActivity.videos.remove(position);
+                    AddMovieActivity.videoUris.remove(position);
+                    Toast toast = Toast.makeText(holder.itemView.getContext(),"Delete trailer layout success!!!", Toast.LENGTH_SHORT);
+                    toast.show();
+                    notifyDataSetChanged();
+                }
+            });
+
             holder.movietrailer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

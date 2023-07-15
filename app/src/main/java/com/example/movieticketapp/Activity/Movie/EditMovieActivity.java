@@ -35,6 +35,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cloudinary.android.MediaManager;
+import com.cloudinary.android.callback.ErrorInfo;
+import com.cloudinary.android.callback.UploadCallback;
 import com.example.movieticketapp.Adapter.EditTrailerAdapter;
 import com.example.movieticketapp.Adapter.TrailerMovieApdapter;
 import com.example.movieticketapp.Model.ExtraIntent;
@@ -102,6 +105,8 @@ public class EditMovieActivity extends AppCompatActivity{
     public static String defaultAddTrailer = "Add";
 
     public static List<String> videos=new ArrayList<>();
+    public static List<Boolean> isVideoLoaded = new ArrayList<>();
+
     RecyclerView trailerVideos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,7 +194,10 @@ public class EditMovieActivity extends AppCompatActivity{
                     FilmModel filmModel = snapshot.toObject(FilmModel.class);
                     videos=filmModel.getTrailer();
                     for(int i = 0; i < filmModel.getTrailer().size();i++)
+                    {
                         videoUris.add(defaultUri);
+                        isVideoLoaded.add(false);
+                    }
                     adapter = new EditTrailerAdapter(EditMovieActivity.this);
                     trailerVideos.setAdapter(adapter);
                     LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -199,6 +207,7 @@ public class EditMovieActivity extends AppCompatActivity{
                 }
             }
         });
+
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -207,8 +216,11 @@ public class EditMovieActivity extends AppCompatActivity{
                     InStorageVideoUris.clear();
                     EditMovieActivity.videoUris.clear();
                 }
-                videos.add(defaultAddTrailer);
+               videos.add(defaultAddTrailer);
                 videoUris.add(defaultUri);
+                isVideoLoaded.add(false);
+                Log.d(String.valueOf(videos.size()),String.valueOf(videoUris.size()));
+
                 adapter.notifyDataSetChanged();
                 Toast.makeText(getApplicationContext(),"Add Trailer Layout", Toast.LENGTH_SHORT).show();
             }
@@ -304,80 +316,109 @@ public class EditMovieActivity extends AppCompatActivity{
                     loadingDialog.StartAlertDialog();
                     InStorageVideoUris.clear();
                     SaveDatatoDatabase();
-                    String MovieName = movieName.getText().toString();
-                    storageReference = storageReference.child("Movies/"+MovieName+"/"+MovieName+"Poster.jpg");
+                    String folder = "Movies/"+document.getId(); // Replace "your_folder_name" with the desired folder name
+                    String BackgroundName = folder + "/Background" ;
                     if(backgrounduri!=null)
                     {
-                        uploadTask = storageReference.putFile(backgrounduri);
-                        uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                            @Override
-                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                                if (!task.isSuccessful()) {
-                                    throw task.getException();
-                                }
+                        MediaManager.get().upload(backgrounduri).option("public_id", BackgroundName)
+                                .callback(new UploadCallback() {
+                                    @Override
+                                    public void onStart(String requestId) {
+                                        // your code here
+                                    }
+                                    @Override
+                                    public void onProgress(String requestId, long bytes, long totalBytes) {
+                                        // example code starts here
+                                        Double progress = (double) bytes/totalBytes;
+                                        // post progress to app UI (e.g. progress bar, notification)
+                                        // example code ends here
+                                    }
+                                    @Override
+                                    public void onSuccess(String requestId, Map resultData) {
+                                        // your code here
+                                        String url = (String) resultData.get("secure_url");
+                                        urlbackground = url;
+                                        SaveDatatoDatabase();
+                                        if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
+                                            loadingDialog.closeLoadingAlert();
 
-                                // Continue with the task to get the download URL
-                                return storageReference.getDownloadUrl();
-                            }
-                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Uri> task) {
-                                if (task.isSuccessful()) {
-                                    urlbackground = task.getResult().toString();
-                                    SaveDatatoDatabase();
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
-                                }
-                                if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
-                                    loadingDialog.closeLoadingAlert();
-                                    Toast toast = Toast.makeText(getApplicationContext(),"Edit movie success!!!", Toast.LENGTH_SHORT);
-                                    toast.show();
-                                }
-                            }
-                        });
+                                            Toast toast = Toast.makeText(getApplicationContext(),"Edit movie success!!!", Toast.LENGTH_SHORT);
+                                            toast.show();
+                                        }
+                                    }
+                                    @Override
+                                    public void onError(String requestId, ErrorInfo error) {
+                                        // your code here
+                                            loadingDialog.closeLoadingAlert();
+                                            Toast toast = Toast.makeText(getApplicationContext(),"Error Update movie background!!!", Toast.LENGTH_SHORT);
+                                            toast.show();
+                                            finish();
+                                    }
+                                    @Override
+                                    public void onReschedule(String requestId, ErrorInfo error) {
+                                        // your code here
+                                    }})
+                                .dispatch();
                     }
                     if(avataruri!=null)
                     {
-                        storageReference2 = storageReference2.child("Movies/"+MovieName+"/"+MovieName+"Primary.jpg");
-                        uploadTask2 = storageReference2.putFile(avataruri);
-                        uploadTask2.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                            @Override
-                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                                if (!task.isSuccessful()) {
-                                    throw task.getException();
-                                }
+                        String PrimaryName = folder + "/Primary" ;
+                        MediaManager.get().upload(avataruri).option("public_id", PrimaryName)
+                                .callback(new UploadCallback() {
+                                    @Override
+                                    public void onStart(String requestId) {
+                                        // your code here
+                                    }
+                                    @Override
+                                    public void onProgress(String requestId, long bytes, long totalBytes) {
+                                        // example code starts here
+                                        Double progress = (double) bytes/totalBytes;
+                                        // post progress to app UI (e.g. progress bar, notification)
+                                        // example code ends here
+                                    }
+                                    @Override
+                                    public void onSuccess(String requestId, Map resultData) {
+                                        // your code here
+                                        String url = (String) resultData.get("secure_url");
+                                        urlavatar = url;
+                                        SaveDatatoDatabase();
+                                        if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
+                                                Toast toast = Toast.makeText(getApplicationContext(),"Edit movie success!!!", Toast.LENGTH_SHORT);
+                                                toast.show();
 
-                                // Continue with the task to get the download URL
-                                return storageReference2.getDownloadUrl();
-                            }
-                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Uri> task) {
-                                if (task.isSuccessful()) {
-                                    urlavatar = task.getResult().toString();
-                                    SaveDatatoDatabase();
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
-                                }
-                                if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
-                                    loadingDialog.closeLoadingAlert();
-                                    Toast toast = Toast.makeText(getApplicationContext(),"Edit movie success!!!", Toast.LENGTH_SHORT);
-                                    toast.show();
-                                }
-
-                            }
-                        });
-                                           }
+                                        }}
+                                        @Override
+                                        public void onError(String requestId, ErrorInfo error) {
+                                            // your code here
+                                            loadingDialog.closeLoadingAlert();
+                                            Toast toast = Toast.makeText(getApplicationContext(),"Error Update movie poster!!!", Toast.LENGTH_SHORT);
+                                            toast.show();
+                                            finish();
+                                        }
+                                    @Override
+                                    public void onReschedule(String requestId, ErrorInfo error) {
+                                        // your code here
+                                    }})
+                                .dispatch();
+                    }
 
                     for(int i = 0; i < EditMovieActivity.videos.size();i++)
                     {
-                        StorageReference VideoStorageReference= FirebaseStorage.getInstance().getReference().child("Movies/"+MovieName+"/"+MovieName+"Video"+String.valueOf(i)+".mp4");
-                        Log.d(String.valueOf(totalUploadTasks), completedUploadTasks.toString());
                         if(!videos.get(i).equals(defaultAddTrailer))
                         {
                             InStorageVideoUris.add(videos.get(i));
                             SaveDatatoDatabase();
-                            if (completedUploadTasks.get() == totalUploadTasks) {
+                            if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
+                                loadingDialog.closeLoadingAlert();
+                                Toast toast = Toast.makeText(getApplicationContext(),"Edit movie success!!!", Toast.LENGTH_SHORT);
+                                toast.show();
+                            }
+                            continue;
+                        }
+                        if(EditMovieActivity.videoUris.get(i)== EditMovieActivity.defaultUri)
+                        {
+                            if(i==EditMovieActivity.videoUris.size()-1&& completedUploadTasks.incrementAndGet()==totalUpload-1)
+                            {
                                 loadingDialog.closeLoadingAlert();
                                 Toast toast = Toast.makeText(getApplicationContext(),"Edit movie success!!!", Toast.LENGTH_SHORT);
                                 toast.show();
@@ -385,42 +426,48 @@ public class EditMovieActivity extends AppCompatActivity{
                             completedUploadTasks.incrementAndGet();
                             continue;
                         }
-                        if(EditMovieActivity.videoUris.get(i)== EditMovieActivity.defaultUri)
-                        {
-                            if(i==EditMovieActivity.videoUris.size()-1&& uploadTask.isComplete()&&uploadTask2.isComplete())
-                            {
-                                loadingDialog.closeLoadingAlert();
-                                Toast toast = Toast.makeText(getApplicationContext(),"Edit movie success!!!", Toast.LENGTH_SHORT);
-                                toast.show();
-                            }
-                            continue;
-                        }
-                        VideoStorageReference.putFile(EditMovieActivity.videoUris.get(i)).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                            @Override
-                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                                if (!task.isSuccessful()) {
-                                    throw task.getException();
-                                }
+                        Map<String, Object> options = new HashMap<>();
+                        options.put("public_id", folder + "/video"+String.valueOf(i));
+                        options.put("resource_type", "video");
+                        MediaManager.get().upload(EditMovieActivity.videoUris.get(i)).options(options).option("chunk_size", 10000000)
+                                .callback(new UploadCallback() {
+                                    @Override
+                                    public void onStart(String requestId) {
+                                        // your code here
+                                    }
+                                    @Override
+                                    public void onProgress(String requestId, long bytes, long totalBytes) {
+                                        // example code starts here
+                                        Double progress = (double) bytes/totalBytes;
+                                        // post progress to app UI (e.g. progress bar, notification)
+                                        // example code ends here
+                                    }
+                                    @Override
+                                    public void onSuccess(String requestId, Map resultData) {
+                                        // your code here
+                                        String url = (String) resultData.get("secure_url");
+                                        InStorageVideoUris.add(url);
+                                        SaveDatatoDatabase();
+                                        if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
+                                            loadingDialog.closeLoadingAlert();
+                                            Toast toast = Toast.makeText(getApplicationContext(),"Add movie success!!!", Toast.LENGTH_SHORT);
+                                            toast.show();
+                                        }
+                                    }
+                                    @Override
+                                    public void onError(String requestId, ErrorInfo error) {
+                                        // your code here
+                                        if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
+                                            Toast toast = Toast.makeText(getApplicationContext(),"Error movie trailer!!!", Toast.LENGTH_SHORT);
+                                            toast.show();
+                                        }
+                                    }
+                                    @Override
+                                    public void onReschedule(String requestId, ErrorInfo error) {
+                                        // your code here
+                                    }})
+                                .dispatch();
 
-                                // Continue with the task to get the download URL
-                                return VideoStorageReference.getDownloadUrl();
-                            }
-                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Uri> task) {
-                                if (task.isSuccessful()) {
-                                    InStorageVideoUris.add(task.getResult().toString());
-                                    SaveDatatoDatabase();
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
-                                }
-                                if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
-                                    loadingDialog.closeLoadingAlert();
-                                    Toast toast = Toast.makeText(getApplicationContext(),"Edit movie success!!!", Toast.LENGTH_SHORT);
-                                    toast.show();
-                                }
-                            }
-                        });
                     }
                     if(totalUploadTasks==0)
                     {
@@ -447,7 +494,13 @@ public class EditMovieActivity extends AppCompatActivity{
             }
         });
     }
-
+    @Override
+    public void onBackPressed() {
+        EditMovieActivity.videos.clear();
+        EditMovieActivity.videoUris.clear();
+        EditMovieActivity.isVideoLoaded.clear();
+        super.onBackPressed();
+    }
     private void SaveDatatoDatabase() {
         document = databaseReference.document("Movies/"+film.getId());
         Map<String, Object> data = new HashMap<String, Object>();

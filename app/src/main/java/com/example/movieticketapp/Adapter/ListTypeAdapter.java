@@ -106,12 +106,10 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                     if (error != null) {
                         return;
                     }
-
                     PlayingFilms.clear();
                     ComingFilms.clear();
                     for (QueryDocumentSnapshot documentSnapshot : value) {
                         FilmModel f = documentSnapshot.toObject(FilmModel.class);
-
                         if(f.getMovieBeginDate().toDate().before(Helper.getCurrentDate()))
                             PlayingFilms.add(f);
                         else
@@ -134,13 +132,14 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                     for (QueryDocumentSnapshot documentSnapshot : value) {
                         FilmModel f = documentSnapshot.toObject(FilmModel.class);
                         if (f.getGenre().contains(type)) {
-                            if(f.getMovieBeginDate().toDate().before(Helper.getCurrentDate())){
+                            try{if(f.getMovieBeginDate().toDate().before(Helper.getCurrentDate())){
                                 PlayingFilms.add(f);
 
                             }
 
                             else
-                                ComingFilms.add(f);
+                                ComingFilms.add(f);}
+                            catch (Exception e){}
                         } else {
                         }
                     }

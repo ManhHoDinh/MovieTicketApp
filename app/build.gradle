@@ -72,4 +72,12 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation 'com.karumi:dexter:6.2.1'
     // implementation 'com.google.api:google-api-services-youtube:v3-rev20210616-1.31.0'
+    //For Gradle, add to dependencies section of build.gradle
+//For Gradle, add to dependencies section of build.gradle
+    // All:
+    implementation 'com.cloudinary:cloudinary-android:2.3.1'
+
+// Download + Preprocess:
+    implementation 'com.cloudinary:cloudinary-android-download:2.3.1'
+    implementation 'com.cloudinary:cloudinary-android-preprocess:2.3.1'
 }
