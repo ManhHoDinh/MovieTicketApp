@@ -80,7 +80,7 @@ public class TrailerMovieApdapter extends RecyclerView.Adapter<TrailerMovieApdap
             holder.movietrailer.setBackgroundResource(R.drawable.background_add_movie1);
             holder.texttrailer.setText("Upload Video");
             holder.imtrailer.setImageResource(R.drawable.symbol_image);
-
+            
             holder.movietrailer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -99,6 +99,7 @@ public class TrailerMovieApdapter extends RecyclerView.Adapter<TrailerMovieApdap
                 holder.videoSeekBar.setVisibility(View.VISIBLE);
                 holder.endTime.setVisibility(View.VISIBLE);
                 holder.EditTrailer.setVisibility(View.VISIBLE);
+                holder.deleteTrailer.setVisibility(View.INVISIBLE);
                 holder.movietrailer.setVideoPath(AddMovieActivity.videos.get(position));
                 holder.videoSeekBar.setProgress(0);
                 holder.endTime.setText(""+VideoAdapter.convertIntoTime(holder.movietrailer.getDuration()-0));
@@ -124,7 +125,6 @@ public class TrailerMovieApdapter extends RecyclerView.Adapter<TrailerMovieApdap
                         }, 1*5000); // wait for 5 seconds
 
                     }
-
                 });
                 holder.videoSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @Override
@@ -212,6 +212,7 @@ public class TrailerMovieApdapter extends RecyclerView.Adapter<TrailerMovieApdap
                     holder.videoSeekBar.setVisibility(View.VISIBLE);
                     holder.endTime.setVisibility(View.VISIBLE);
                     holder.EditTrailer.setVisibility(View.VISIBLE);
+                    holder.deleteTrailer.setVisibility(View.INVISIBLE);
                 }
                 holder.movietrailer.setVideoURI(AddMovieActivity.videoUris.get(position));
                 holder.videoSeekBar.setProgress(0);
@@ -393,6 +394,8 @@ public class TrailerMovieApdapter extends RecyclerView.Adapter<TrailerMovieApdap
         TextView texttrailer;
         ImageView EditTrailer;
         ImageView playButton;
+        ImageView deleteTrailer;
+
         SeekBar videoSeekBar;
         TextView endTime;
 
@@ -405,7 +408,7 @@ public class TrailerMovieApdapter extends RecyclerView.Adapter<TrailerMovieApdap
             playButton=itemView.findViewById(R.id.PlayButton);
             videoSeekBar = itemView.findViewById(R.id.videoView_seekbar);
             endTime = itemView.findViewById(R.id.videoView_endtime);
-
+            deleteTrailer= itemView.findViewById(R.id.DeleteTrailer);
         }
     }
 public int getSelectedPosition()

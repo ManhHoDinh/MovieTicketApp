@@ -68,9 +68,6 @@ public class InformationFilmActivity extends FragmentActivity {
         ImageView btnBack = findViewById(R.id.btnBack);
         pager=findViewById(R.id.pager);
         tabLayout=findViewById(R.id.tab_layout);
-        filmDetailPagerAdapter = new FilmDetailPagerAdapter(this, f);
-        pager.setAdapter(filmDetailPagerAdapter);
-        pager.setOffscreenPageLimit(3);
         getFilm(f.getId());
         EditMovie=findViewById(R.id.EditMovie);
         if(Users.currentUser.getAccountType().equals("admin")){
@@ -84,6 +81,8 @@ public class InformationFilmActivity extends FragmentActivity {
             public void onClick(View view) {
                 Intent i = new Intent(InformationFilmActivity.this, EditMovieActivity.class);
                 i.putExtra(ExtraIntent.film, f);
+                EditMovieActivity.videoUris.clear();
+                EditMovieActivity.videos.clear();
                 startActivity(i);
             }
         });
@@ -152,6 +151,8 @@ public class InformationFilmActivity extends FragmentActivity {
         genreTV.setText(f.getGenre());
 
         durationTime.setText(f.getDurationTime());
-
+        filmDetailPagerAdapter = new FilmDetailPagerAdapter(this, f);
+        pager.setAdapter(filmDetailPagerAdapter);
+        pager.setOffscreenPageLimit(3);
     }
 }

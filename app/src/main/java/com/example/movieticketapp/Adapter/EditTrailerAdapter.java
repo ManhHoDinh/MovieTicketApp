@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -79,14 +80,11 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
     @Override
     public void onBindViewHolder(@NonNull EditTrailerAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         try {
-            holder.playButton.setVisibility(View.INVISIBLE);
-            holder.videoSeekBar.setVisibility(View.INVISIBLE);
-            holder.endTime.setVisibility(View.INVISIBLE);
-            holder.EditTrailer.setVisibility(View.INVISIBLE);
             holder.movietrailer.setBackgroundResource(R.drawable.background_add_movie1);
             holder.texttrailer.setText("Upload Video");
             holder.imtrailer.setImageResource(R.drawable.symbol_image);
-
+            holder.HideTimeLine();
+            holder.EditTrailer.setVisibility(View.INVISIBLE);
             holder.movietrailer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -96,16 +94,16 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
                     setSelectedPosition(position);
                 }
             });
+            //In network
             if(!EditMovieActivity.videos.get(position).equals(EditMovieActivity.defaultAddTrailer))
             {
                 holder.movietrailer.setBackground(null);
                 holder.texttrailer.setText("");
                 holder.imtrailer.setImageResource(0);
-                holder.playButton.setVisibility(View.VISIBLE);
-                holder.videoSeekBar.setVisibility(View.VISIBLE);
-                holder.endTime.setVisibility(View.VISIBLE);
+                holder.bindVideo(EditMovieActivity.videos.get(position));
+                holder.playButton.setImageResource(R.drawable.play_icon);
                 holder.EditTrailer.setVisibility(View.VISIBLE);
-                holder.movietrailer.setVideoPath(EditMovieActivity.videos.get(position));
+                holder.deleteTrailer.setVisibility(View.INVISIBLE);
                 holder.videoSeekBar.setProgress(0);
                 holder.endTime.setText(""+VideoAdapter.convertIntoTime(holder.movietrailer.getDuration()-0));
                 holder.movietrailer.setOnClickListener(new View.OnClickListener() {
@@ -114,7 +112,6 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
                         holder.playButton.setVisibility(View.VISIBLE);
                         holder.videoSeekBar.setVisibility(View.VISIBLE);
                         holder.endTime.setVisibility(View.VISIBLE);
-
                         new Handler().postDelayed(new Runnable() {
 
                             // Using handler with postDelayed called runnable run method
@@ -153,19 +150,6 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
 
                     }
                 });
-                holder.movietrailer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mp) {
-                        holder.videoSeekBar.setMax(holder.movietrailer.getDuration());
-                    }
-                });
-                holder.movietrailer.start();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        holder.movietrailer.pause();
-                    }
-                }, 500);
                 holder.playButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -205,19 +189,16 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
                 };
                 handler.postDelayed(runnable,500);
             }
+            //In device
             if(EditMovieActivity.videoUris.get(position)!=EditMovieActivity.defaultUri)
             {
-                if(EditMovieActivity.videoUris.get(position)!=null)
-                {
-                    holder.movietrailer.setBackground(null);
-                    holder.texttrailer.setText("");
-                    holder.imtrailer.setImageResource(0);
-                    holder.playButton.setVisibility(View.VISIBLE);
-                    holder.videoSeekBar.setVisibility(View.VISIBLE);
-                    holder.endTime.setVisibility(View.VISIBLE);
-                    holder.EditTrailer.setVisibility(View.VISIBLE);
-                }
+                holder.movietrailer.setBackground(null);
+                holder.texttrailer.setText("");
+                holder.imtrailer.setImageResource(0);
                 holder.movietrailer.setVideoURI(EditMovieActivity.videoUris.get(position));
+                holder.playButton.setImageResource(R.drawable.play_icon);
+                holder.EditTrailer.setVisibility(View.VISIBLE);
+                holder.deleteTrailer.setVisibility(View.INVISIBLE);
                 holder.videoSeekBar.setProgress(0);
                 holder.endTime.setText(""+VideoAdapter.convertIntoTime(holder.movietrailer.getDuration()-0));
                 holder.movietrailer.setOnClickListener(new View.OnClickListener() {
@@ -226,7 +207,6 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
                         holder.playButton.setVisibility(View.VISIBLE);
                         holder.videoSeekBar.setVisibility(View.VISIBLE);
                         holder.endTime.setVisibility(View.VISIBLE);
-
                         new Handler().postDelayed(new Runnable() {
 
                             // Using handler with postDelayed called runnable run method
@@ -240,9 +220,7 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
                                 }
                             }
                         }, 1*5000); // wait for 5 seconds
-
                     }
-
                 });
                 holder.videoSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @Override
@@ -265,22 +243,6 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
 
                     }
                 });
-                holder.movietrailer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mp) {
-                        holder.videoSeekBar.setMax(holder.movietrailer.getDuration());
-                    }
-                });
-                holder.movietrailer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-
-                    @Override
-                    public void onCompletion(MediaPlayer mp) {
-                        // TODO Auto-generated method stub
-                        holder.playButton.setImageResource(R.drawable.play_icon);
-                        //write your code after complete video play
-                    }
-                });
-
                 holder.playButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -319,17 +281,8 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
                     }
                 };
                 handler.postDelayed(runnable,500);
-                holder.movietrailer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-
-                    @Override
-                    public void onCompletion(MediaPlayer mp) {
-                        // TODO Auto-generated method stub
-                        holder.playButton.setImageResource(R.drawable.play_icon);
-                        //write your code after complete video play
-                    }
-                });
-
             }
+
         }
         catch (Exception e)
         {}
@@ -412,9 +365,11 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
         ImageView imtrailer;
         TextView texttrailer;
         ImageView EditTrailer;
+        ImageView deleteTrailer;
         ImageView playButton;
         SeekBar videoSeekBar;
         TextView endTime;
+        private ProgressBar progressBar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -425,7 +380,47 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
             playButton=itemView.findViewById(R.id.PlayButton);
             videoSeekBar = itemView.findViewById(R.id.videoView_seekbar);
             endTime = itemView.findViewById(R.id.videoView_endtime);
+            progressBar = itemView.findViewById(R.id.progressBar);
+            deleteTrailer=itemView.findViewById(R.id.DeleteTrailer);
+        }
+        public void bindVideo(String videoUrl) {
+            showLoading();
 
+            movietrailer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    hideLoading();
+                    // Start video playback here if desired
+                    // videoView.start();
+                    showTimeLine();
+                    videoSeekBar.setMax(movietrailer.getDuration());
+                }
+            });
+
+            movietrailer.setVideoPath(videoUrl);
+            movietrailer.requestFocus();
+        }
+
+        private void showLoading() {
+            progressBar.setVisibility(View.VISIBLE);
+            HideTimeLine();
+        }
+        private void showTimeLine()
+        {
+            playButton.setVisibility(View.VISIBLE);
+            videoSeekBar.setVisibility(View.VISIBLE);
+            endTime.setVisibility(View.VISIBLE);
+        }
+        private void HideTimeLine()
+        {
+            playButton.setVisibility(View.GONE);
+            videoSeekBar.setVisibility(View.GONE);
+            endTime.setVisibility(View.GONE);
+        }
+
+        private void hideLoading() {
+            progressBar.setVisibility(View.GONE);
+            showTimeLine();
         }
     }
     public int getSelectedPosition()
@@ -449,4 +444,3 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
         }
     }
 }
-
