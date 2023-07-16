@@ -369,26 +369,32 @@ public class HomeActivity extends AppCompatActivity {
                                         PromotionAdapter promotionAdapter = new PromotionAdapter(Discounts, null);
                                         promotionView.setLayoutManager(new LinearLayoutManager(HomeActivity.this, LinearLayoutManager.VERTICAL, false));
                                         promotionView.setAdapter(promotionAdapter);
-//                                        if (Discounts.size() == 0) {
-//                                            ViewGroup.LayoutParams params = promotionView.getLayoutParams();
-//                                            params.height = 0;
-//                                            promotionView.setLayoutParams(params);
-//                                        }
-//                                        if (Discounts.size() == 1) {
-//                                            ViewGroup.LayoutParams params = promotionView.getLayoutParams();
-//                                            params.height = 300;
-//                                            promotionView.setLayoutParams(params);
-//                                        }
-//                                        if (Discounts.size() == 2) {
-//                                            ViewGroup.LayoutParams params = promotionView.getLayoutParams();
-//                                            params.height = 700;
-//                                            promotionView.setLayoutParams(params);
-//                                        }
+
+
                                     }
                                 });
 
                             } else
+                            {
                                 promotionView.setAdapter(new PromotionAdapter(new ArrayList<Discount>(), null));
+
+                                if (Discounts.size() == 0) {
+                                    ViewGroup.LayoutParams params = promotionView.getLayoutParams();
+                                    params.height = 0;
+
+                                    promotionView.setLayoutParams(params);
+                                }
+                                if (Discounts.size() == 1) {
+                                    ViewGroup.LayoutParams params = promotionView.getLayoutParams();
+                                    params.height = 300;
+                                    promotionView.setLayoutParams(params);
+                                }
+                                if (Discounts.size() == 2) {
+                                    ViewGroup.LayoutParams params = promotionView.getLayoutParams();
+                                    params.height = 700;
+                                    promotionView.setLayoutParams(params);
+                                }
+                            }
 
                         }
                     });
@@ -404,7 +410,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Users currentUser = documentSnapshot.toObject(Users.class);
-                Log.e("fs",  currentUser.getAccountType());
+
                 if (((currentUser.getAccountType().toString()).equals("admin"))) {
                     GetServices();
                     GetCities();
@@ -498,7 +504,7 @@ public class HomeActivity extends AppCompatActivity {
                     for (DocumentSnapshot documentSnapshot : value) {
                         City newCity = documentSnapshot.toObject(City.class);
                         cities.add(newCity);
-                        Log.e("d", newCity.getName());
+
 
                     }
                     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(HomeActivity.this, LinearLayoutManager.VERTICAL, false);
