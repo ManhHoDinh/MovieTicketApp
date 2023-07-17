@@ -132,6 +132,10 @@ public class FilmModel implements Parcelable {
         return 0;
     }
 
+    public void setVote(float vote) {
+        this.vote = vote;
+    }
+
     @Override
     public void writeToParcel(@NonNull Parcel parcel, int i) {
         parcel.writeString(PrimaryImage);

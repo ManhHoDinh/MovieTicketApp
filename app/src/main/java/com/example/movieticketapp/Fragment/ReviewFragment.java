@@ -258,7 +258,6 @@ public class ReviewFragment extends Fragment {
                 ratingBar.setRating(0);
                 dialog.dismiss();
                 Toast.makeText(getContext(), "thanks for your comment!", Toast.LENGTH_SHORT).show();
-
             }
         });
         rateBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
@@ -279,11 +278,9 @@ public class ReviewFragment extends Fragment {
                     case 4:
                         messager = "Great!";
                         break;
-
                     case 5:
                         messager = "Excellent!!";
                         break;
-
                 }
                 reviewTv.setText(messager);
             }
@@ -296,6 +293,7 @@ public class ReviewFragment extends Fragment {
         });
     }
     void updateRateFilm(int countComment, float rate){
+
         DocumentReference doc =  FirebaseRequest.database.collection("Movies").document(film.getId());
         doc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override

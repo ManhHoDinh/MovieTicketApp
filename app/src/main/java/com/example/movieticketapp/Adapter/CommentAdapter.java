@@ -229,15 +229,16 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
             flexboxLayoutManager.setJustifyContent(JustifyContent.FLEX_START);
             listReact.setLayoutManager(flexboxLayoutManager);
             listReact.setAdapter(new FeelAdapter(comment.getListReact(), null));
-
             SetImage(comment, profile);
-            FirebaseRequest.database.collection("Users").document(comment.getUserId()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                @Override
-                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                    Users user = value.toObject(Users.class);
-                    name.setText(user.getName());
-                }
-            });
+            if(comment.getUserId()!= null){
+                FirebaseRequest.database.collection("Users").document(comment.getUserId()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                        Users user = value.toObject(Users.class);
+                        name.setText(user.getName());
+                    }
+                });
+            }
             reviewText.setText(comment.getReviewText());
             likeNumber.setText(String.valueOf(comment.getLike()));
             dislikeNumber.setText(String.valueOf(comment.getDislike()));

@@ -23,6 +23,7 @@ import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.InforBooked;
 import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
 import com.google.api.Distribution;
 import com.google.firebase.firestore.CollectionReference;
@@ -123,6 +124,16 @@ public class InformationFilmActivity extends FragmentActivity {
     {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Movies").document(id);
+//        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//            @Override
+//            public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                if (documentSnapshot != null && documentSnapshot.exists()) {
+//                    f = documentSnapshot.toObject(FilmModel.class);
+//                    refreshScreen();
+//                    Log.d("Trailer", String.valueOf(f.getTrailer().size()));
+//                }
+//            }
+//        });
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException error) { if (error != null) {
@@ -131,8 +142,19 @@ public class InformationFilmActivity extends FragmentActivity {
                 }
                 if (snapshot != null && snapshot.exists()) {
                     f = snapshot.toObject(FilmModel.class);
-                    refreshScreen();
-                    Log.d("Trailer", String.valueOf(f.getTrailer().size()));
+                    nameTV.setText(f.getName());
+
+                    Picasso.get().load(f.getBackGroundImage()).fit().centerCrop().into(backgroundImage);
+
+                    Picasso.get().load(f.getPosterImage()).fit().centerCrop().into(PosterImage);
+
+                    ratingBar.setRating(f.getVote());
+                    DecimalFormat df = new DecimalFormat("0.0");
+                    voteTV.setText("(" + df.format(f.getVote()) +")");
+                    genreTV.setText(f.getGenre());
+
+                    durationTime.setText(f.getDurationTime());
+
                 }
             }
         });
@@ -151,8 +173,10 @@ public class InformationFilmActivity extends FragmentActivity {
         genreTV.setText(f.getGenre());
 
         durationTime.setText(f.getDurationTime());
-        filmDetailPagerAdapter = new FilmDetailPagerAdapter(this, f);
+        filmDetailPagerAdapter = new FilmDetailPagerAdapter(this, f, tabLayout.getSelectedTabPosition());
+        Log.e("tab", tabLayout.getSelectedTabPosition()+"");
         pager.setAdapter(filmDetailPagerAdapter);
         pager.setOffscreenPageLimit(3);
+
     }
 }
