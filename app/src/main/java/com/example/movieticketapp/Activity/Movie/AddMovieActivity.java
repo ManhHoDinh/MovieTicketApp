@@ -152,7 +152,7 @@ public class AddMovieActivity extends AppCompatActivity{
         calendarButton = findViewById(R.id.Calendar);
         document = databaseReference.collection("Movies").document();
 
-       calendarButton.setOnClickListener(new View.OnClickListener() {
+        calendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Show calendar dialog
@@ -182,7 +182,6 @@ public class AddMovieActivity extends AppCompatActivity{
             public void onClick(View v) {
                 // Hide the keyboard
                 dismissKeyboard(v);
-
             }
         });
         movieKind.setOnClickListener(new View.OnClickListener() {
@@ -269,7 +268,7 @@ public class AddMovieActivity extends AppCompatActivity{
             }
         });
 
-       pickVideo =
+        pickVideo =
                 registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
                     if (uri != null) {
                         int position = adapter.getSelectedPosition();
@@ -286,7 +285,7 @@ public class AddMovieActivity extends AppCompatActivity{
             public void onClick(View view) {
                 dismissKeyboard(view);
                 boolean error = false;
-                int totalUploadTasks = 2 + AddMovieActivity.videoUris.size();
+                int totalUploadTasks = 2 + videos.size();
                 AtomicInteger completedUploadTasks = new AtomicInteger(0);
                 if (movieName.length() == 0) {
                     movieName.setError("Movie Name cannot be empty!!!");
@@ -335,7 +334,7 @@ public class AddMovieActivity extends AppCompatActivity{
                             if (task.isSuccessful()) {
                                 urlbackground = task.getResult().toString();
                                 SaveDatatoDatabase();
-                             } else {
+                            } else {
                                 Toast.makeText(getApplicationContext(), "ERROR BACKGROUND UPLOAD!!!", Toast.LENGTH_SHORT).show();
                                 loadingDialog.closeLoadingAlert();
                             }
@@ -345,7 +344,7 @@ public class AddMovieActivity extends AppCompatActivity{
                                 Toast toast = Toast.makeText(getApplicationContext(),"Add movie success!!!", Toast.LENGTH_SHORT);
                                 toast.show();
                             }
-                           }
+                        }
                     });
                     storageReference2 = storageReference2.child("Movies/"+MovieName+"/"+MovieName+"Primary.jpg");
                     uploadTask2 = storageReference2.putFile(avataruri);
@@ -371,17 +370,16 @@ public class AddMovieActivity extends AppCompatActivity{
                                 loadingDialog.closeLoadingAlert();
                             }
                             if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
-                               RefeshScreen();
-                               finish();
+                                RefeshScreen();
+                                finish();
                                 Toast toast = Toast.makeText(getApplicationContext(),"Add movie success!!!", Toast.LENGTH_SHORT);
                                 toast.show();
                             }
                         }
                     });
-                     for(int i = 0; i < AddMovieActivity.videoUris.size();i++)
+                    for(int i = 0; i < AddMovieActivity.videoUris.size();i++)
                     {
                         StorageReference VideoStorageReference= FirebaseStorage.getInstance().getReference().child("Movies/"+MovieName+"/"+MovieName+"Video"+String.valueOf(i)+".mp4");
-                        completedUploadTasks.incrementAndGet();
                         if(AddMovieActivity.videoUris.get(i)== AddMovieActivity.defaultUri)
                         {
                             if(i==AddMovieActivity.videoUris.size()-1&& uploadTask.isComplete()&&uploadTask2.isComplete())
@@ -391,7 +389,8 @@ public class AddMovieActivity extends AppCompatActivity{
                                 Toast toast = Toast.makeText(getApplicationContext(),"Add movie success!!!", Toast.LENGTH_SHORT);
                                 toast.show();
                             }
-                                continue;
+                            completedUploadTasks.incrementAndGet();
+                            continue;
                         }
 
                         VideoStorageReference.putFile(AddMovieActivity.videoUris.get(i)).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
@@ -414,18 +413,16 @@ public class AddMovieActivity extends AppCompatActivity{
                                     Toast.makeText(getApplicationContext(), "ERROR VIDEO UPLOAD!!!", Toast.LENGTH_SHORT).show();
                                     loadingDialog.closeLoadingAlert();
                                 }
-                                if (completedUploadTasks.get() == totalUploadTasks) {
-                                  RefeshScreen();
-                                  finish();
-                                  Toast toast = Toast.makeText(getApplicationContext(),"Add movie success!!!", Toast.LENGTH_SHORT);
-                                  toast.show();
+                                if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
+                                    RefeshScreen();
+                                    finish();
+                                    Toast toast = Toast.makeText(getApplicationContext(),"Add movie success!!!", Toast.LENGTH_SHORT);
+                                    toast.show();
                                 }
                             }
                         });
                     }
-                     }
-
-
+                }
                 else
                 {
                     Toast toast = Toast.makeText(getApplicationContext(), "Have some errors!!!", Toast.LENGTH_SHORT);
@@ -601,7 +598,6 @@ public class AddMovieActivity extends AppCompatActivity{
     }
 
 }
-
 
 
 

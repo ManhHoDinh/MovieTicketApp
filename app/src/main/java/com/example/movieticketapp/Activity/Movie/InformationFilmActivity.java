@@ -21,6 +21,7 @@ import com.example.movieticketapp.Adapter.Helper;
 import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.InforBooked;
+import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.api.Distribution;
@@ -67,12 +68,12 @@ public class InformationFilmActivity extends FragmentActivity {
         ImageView btnBack = findViewById(R.id.btnBack);
         pager=findViewById(R.id.pager);
         tabLayout=findViewById(R.id.tab_layout);
-        filmDetailPagerAdapter = new FilmDetailPagerAdapter(this, f);
-        pager.setAdapter(filmDetailPagerAdapter);
-        pager.setOffscreenPageLimit(3);
         getFilm(f.getId());
         EditMovie=findViewById(R.id.EditMovie);
-
+        if(Users.currentUser.getAccountType().equals("admin")){
+            EditMovie.setVisibility(View.VISIBLE);
+        }
+        else EditMovie.setVisibility(View.GONE);
        // Log.e("fdf", f.getStatus());
 
         EditMovie.setOnClickListener(new View.OnClickListener() {
@@ -80,6 +81,8 @@ public class InformationFilmActivity extends FragmentActivity {
             public void onClick(View view) {
                 Intent i = new Intent(InformationFilmActivity.this, EditMovieActivity.class);
                 i.putExtra(ExtraIntent.film, f);
+                EditMovieActivity.videoUris.clear();
+                EditMovieActivity.videos.clear();
                 startActivity(i);
             }
         });
@@ -148,6 +151,8 @@ public class InformationFilmActivity extends FragmentActivity {
         genreTV.setText(f.getGenre());
 
         durationTime.setText(f.getDurationTime());
-
+        filmDetailPagerAdapter = new FilmDetailPagerAdapter(this, f);
+        pager.setAdapter(filmDetailPagerAdapter);
+        pager.setOffscreenPageLimit(3);
     }
 }

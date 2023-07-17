@@ -113,7 +113,6 @@
             android:hint="Address"
             android:textColor="@color/main_color"
             android:textColorHint="@color/main_color"
-
             android:paddingVertical="16dp"
             android:paddingHorizontal="12dp"
             android:background="@drawable/bg_edit_text"
@@ -165,26 +164,28 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/confirmBtn"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/cancelBtn"
                 android:layout_marginLeft="24dp"
+                android:layout_marginRight="10dp"
                 android:background="@drawable/button_background"
                 android:text="Confirm"
                 android:paddingVertical="10dp"
                 android:textAllCaps="false"
-                android:paddingHorizontal="40dp"
                 style="@style/titleStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"/>
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/cancelBtn"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/confirmBtn"
                 android:background="@drawable/background_disable"
                 android:text="Cancel"
                 android:paddingVertical="10dp"
                 android:textAllCaps="false"
                 android:layout_marginRight="24dp"
-                android:paddingHorizontal="40dp"
                 style="@style/titleStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_marginLeft="20dp"
                 android:layout_height="wrap_content"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.LinearLayoutCompat>

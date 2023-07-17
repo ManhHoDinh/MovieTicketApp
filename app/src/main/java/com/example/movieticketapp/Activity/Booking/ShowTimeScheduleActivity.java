@@ -159,8 +159,11 @@ public class ShowTimeScheduleActivity extends AppCompatActivity {
 
                             ScheduleFilm.getInstance().listShowTime = new ArrayList<ShowTime>();
                             loadListCity();
+                            ScheduleFilm.getInstance().isCitySelected = false;
+                            ScheduleFilm.getInstance().isDateSelected = false;
                             Toast.makeText(ShowTimeScheduleActivity.this, "Schedule show time successfully!", Toast.LENGTH_SHORT).show();
                             confirmDialog.dismiss();
+
 
                         }
                     });

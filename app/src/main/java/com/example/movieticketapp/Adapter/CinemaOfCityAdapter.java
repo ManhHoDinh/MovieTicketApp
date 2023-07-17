@@ -90,6 +90,8 @@ public class CinemaOfCityAdapter extends ArrayAdapter<Cinema> {
                                 alertDialog.setView(deleteDialogView);
                                 AlertDialog OptionDialog = alertDialog.create();
                                 OptionDialog.show();
+                                TextView message = deleteDialogView.findViewById(R.id.message);
+                                message.setText("Do you sure to delete the cinema?");
                                 TextView Cancel = deleteDialogView.findViewById(R.id.Cancel_Button);
                                 TextView Delete = deleteDialogView.findViewById(R.id.DeleteButton);
                                 Delete.setOnClickListener(new View.OnClickListener() {

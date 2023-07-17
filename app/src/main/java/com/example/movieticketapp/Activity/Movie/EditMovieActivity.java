@@ -113,6 +113,9 @@ public class EditMovieActivity extends AppCompatActivity{
         loadingDialog= new loadingAlert(EditMovieActivity.this);
         defaultUri=Uri.parse("https://example.com/default");;
         calendarButton = findViewById(R.id.Calendar);
+        EditMovieActivity.videos.clear();
+        EditMovieActivity.videoUris.clear();
+
         calendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,7 +148,7 @@ public class EditMovieActivity extends AppCompatActivity{
             int month = local.getMonthValue();
             int dayOfMonth   = local.getDayOfMonth();
             String dateString = String.valueOf(dayOfMonth) + "/" + String.valueOf(month) + "/" + String.valueOf(year);
-            localDate = LocalDate.of(year, month-1, dayOfMonth);
+            localDate = LocalDate.of(year, month, dayOfMonth);
             calendarButton.setText(dateString);
             dateStart = new Timestamp(date);
             urlbackground= film.getBackGroundImage();
@@ -210,8 +213,6 @@ public class EditMovieActivity extends AppCompatActivity{
                 Toast.makeText(getApplicationContext(),"Add Trailer Layout", Toast.LENGTH_SHORT).show();
             }
         });
-
-
 
         pickMedia =
                 registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
@@ -278,7 +279,7 @@ public class EditMovieActivity extends AppCompatActivity{
                 if(avataruri!=null)
                     totalUpload++;
                 int totalUploadTasks =totalUpload;
-
+                Log.d("Total Upload", String.valueOf(totalUploadTasks));
                 AtomicInteger completedUploadTasks = new AtomicInteger(0);
 
                 boolean error = false;
@@ -300,7 +301,7 @@ public class EditMovieActivity extends AppCompatActivity{
                 {
                   //  loadingDialog.StartAlertDialog();
 
-                   loadingDialog.StartAlertDialog();
+                    loadingDialog.StartAlertDialog();
                     InStorageVideoUris.clear();
                     SaveDatatoDatabase();
                     String MovieName = movieName.getText().toString();
@@ -367,10 +368,10 @@ public class EditMovieActivity extends AppCompatActivity{
                             }
                         });
                                            }
+
                     for(int i = 0; i < EditMovieActivity.videos.size();i++)
                     {
                         StorageReference VideoStorageReference= FirebaseStorage.getInstance().getReference().child("Movies/"+MovieName+"/"+MovieName+"Video"+String.valueOf(i)+".mp4");
-                        completedUploadTasks.incrementAndGet();
                         Log.d(String.valueOf(totalUploadTasks), completedUploadTasks.toString());
                         if(!videos.get(i).equals(defaultAddTrailer))
                         {
@@ -381,6 +382,7 @@ public class EditMovieActivity extends AppCompatActivity{
                                 Toast toast = Toast.makeText(getApplicationContext(),"Edit movie success!!!", Toast.LENGTH_SHORT);
                                 toast.show();
                             }
+                            completedUploadTasks.incrementAndGet();
                             continue;
                         }
                         if(EditMovieActivity.videoUris.get(i)== EditMovieActivity.defaultUri)
@@ -388,6 +390,8 @@ public class EditMovieActivity extends AppCompatActivity{
                             if(i==EditMovieActivity.videoUris.size()-1&& uploadTask.isComplete()&&uploadTask2.isComplete())
                             {
                                 loadingDialog.closeLoadingAlert();
+                                Toast toast = Toast.makeText(getApplicationContext(),"Edit movie success!!!", Toast.LENGTH_SHORT);
+                                toast.show();
                             }
                             continue;
                         }
@@ -410,15 +414,19 @@ public class EditMovieActivity extends AppCompatActivity{
                                 } else {
                                     Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
                                 }
-                                if (completedUploadTasks.get() == totalUploadTasks) {
+                                if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
                                     loadingDialog.closeLoadingAlert();
                                     Toast toast = Toast.makeText(getApplicationContext(),"Edit movie success!!!", Toast.LENGTH_SHORT);
                                     toast.show();
                                 }
-
                             }
                         });
-
+                    }
+                    if(totalUploadTasks==0)
+                    {
+                        loadingDialog.closeLoadingAlert();
+                        Toast toast = Toast.makeText(getApplicationContext(),"Edit movie success!!!", Toast.LENGTH_SHORT);
+                        toast.show();
                     }
                 }
                 else
@@ -433,6 +441,8 @@ public class EditMovieActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 dismissKeyboard(view);
+                EditMovieActivity.videos.clear();
+                EditMovieActivity.videoUris.clear();
                 finish();
             }
         });
@@ -450,17 +460,19 @@ public class EditMovieActivity extends AppCompatActivity{
         data.put("id", film.getId());
         data.put("name", movieName.getText().toString());
         data.put("movieBeginDate", dateStart);
-        data.put("vote", 0);
+        data.put("vote", film.getVote());
         data.put("trailer",InStorageVideoUris);
         document.set(data);
-
     }
     LocalDate localDate;
     private void showCalendarDialog() {
         // Create a calendar instance and get the current date
         Calendar calendar = Calendar.getInstance();
         if(localDate!=null)
-            calendar.set(localDate.getYear(),localDate.getMonthValue(),localDate.getDayOfMonth());
+        {
+            calendar.set(localDate.getYear(),localDate.getMonthValue()-1,localDate.getDayOfMonth());
+            Log.d("DateSelect", localDate.toString());
+        }
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
@@ -492,7 +504,6 @@ public class EditMovieActivity extends AppCompatActivity{
                         int month = datePicker.getMonth();
                         int dayOfMonth = datePicker.getDayOfMonth();
                         String date = String.valueOf(dayOfMonth) + "/" + String.valueOf(month + 1) + "/" + String.valueOf(year);
-                        localDate = LocalDate.of(year, month, dayOfMonth);
                         Calendar calendar = Calendar.getInstance();
                         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                         calendar.set(Calendar.MONTH, month); // Note: Calendar.MONTH is zero-based
@@ -500,7 +511,7 @@ public class EditMovieActivity extends AppCompatActivity{
                         calendar.set(Calendar.HOUR, 0);
                         calendar.set(Calendar.MINUTE, 0);
                         calendar.set(Calendar.SECOND, 0);
-
+                        localDate= LocalDate.of(year,month+1,dayOfMonth);
                         dateStart = new Timestamp(calendar.getTime());
                         calendarButton.setText(date);dismiss();
                     }
