@@ -10,6 +10,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -138,11 +139,7 @@ public class SignUpActivity extends AppCompatActivity {
                     confirmPasswordET.setError("Password and confirmation passwords are not equals !!!");
                     error=true;
                 }
-                if(avataUri ==  null)
-                {
-                    error = true;
-                    Toast.makeText(getApplicationContext(), "Please choose your avatar!", Toast.LENGTH_SHORT).show();
-                }
+
                 if(!error){
                     fullname = fullNameET.getText().toString();
                     Calendar calFordData = Calendar.getInstance();
@@ -154,36 +151,45 @@ public class SignUpActivity extends AppCompatActivity {
                     String saveCurrentTime = currentTime.format(calFordData.getTime());
 
                     String postRandomName = saveCurrentData + saveCurrentTime;
+                    if(avataUri != null){
+                        storageReference = storageReference.child(postRandomName+"as.jpg");
+                        uploadTask = storageReference.putFile(avataUri);
+                        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                            @Override
+                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                if (!task.isSuccessful()) {
+                                    throw task.getException();
+                                }
 
-                    storageReference = storageReference.child(postRandomName+"as.jpg");
-                    uploadTask = storageReference.putFile(avataUri);
-                    Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                        @Override
-                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                            if (!task.isSuccessful()) {
-                                throw task.getException();
+                                // Continue with the task to get the download URL
+                                return storageReference.getDownloadUrl();
                             }
+                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                if (task.isSuccessful()) {
+                                    avatarUrl = task.getResult().toString();
+                                    CreateUser(emailET.getText().toString(), passwordET.getText().toString(), fullNameET.getText().toString(), avatarUrl);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                    else  CreateUser(emailET.getText().toString(), passwordET.getText().toString(), fullNameET.getText().toString(), null);
 
-                            // Continue with the task to get the download URL
-                            return storageReference.getDownloadUrl();
-                        }
-                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Uri> task) {
-                            if (task.isSuccessful()) {
-                                avatarUrl = task.getResult().toString();
-                                CreateUser(emailET.getText().toString(), passwordET.getText().toString(), fullNameET.getText().toString());
-                            } else {
-                                Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
                 }
             }
         });
     }
-    void CreateUser(String email, String password,String Name )
+    void CreateUser(String email, String password,String Name, @Nullable String url)
     {
+        String urlAvatar;
+        if(url == null){
+            urlAvatar = "https://firebasestorage.googleapis.com/v0/b/movie-ticket-app-0.appspot.com/o/avatar.png?alt=media&token=23a1d250-ca27-414b-a46b-bbef69dac7da";
+
+        }
+        else urlAvatar = url;
        FirebaseRequest.mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -192,9 +198,9 @@ public class SignUpActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = FirebaseRequest.mAuth.getCurrentUser();
-                            UpdatePhotho();
+                            UpdatePhotho(urlAvatar);
                             user.getUid();
-                            Users u = new Users(user.getUid(), Name, email,0, "user", avatarUrl);
+                            Users u = new Users(user.getUid(), Name, email,0, "user", urlAvatar);
                             FirebaseRequest.database.collection("Users").document(user.getUid())
                                     .set(u.toJson())
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -225,10 +231,14 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-    private void UpdatePhotho() {
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setPhotoUri(Uri.parse(avatarUrl)).setDisplayName(fullname)
-                .build();
+    private void UpdatePhotho( String urlAvatar) {
+
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setPhotoUri(Uri.parse(urlAvatar)).setDisplayName(fullname)
+                    .build();
+
+
+
         FirebaseRequest.mAuth.getCurrentUser().updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

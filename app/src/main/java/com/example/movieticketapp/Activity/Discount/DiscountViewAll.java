@@ -93,9 +93,9 @@ public class DiscountViewAll extends AppCompatActivity {
                                 List<Discount> listDiscounts = new ArrayList<Discount>();
                                 for(DocumentSnapshot doc : value){
                                     Discount f = doc.toObject(Discount.class);
-                                    listDiscounts.add(f);
+                                    Discounts.add(f);
                                 }
-                                DiscountAdapter discountAdapter = new DiscountAdapter(DiscountViewAll.this,R.layout.promo_item,listDiscounts);
+                                DiscountAdapter discountAdapter = new DiscountAdapter(DiscountViewAll.this,R.layout.promo_item,Discounts);
                                 promotionView.setAdapter(discountAdapter);
 
                             }

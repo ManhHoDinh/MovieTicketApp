@@ -144,6 +144,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".Activity.Ticket.Service.ServiceViewAll"
@@ -163,7 +164,10 @@
         <activity android:name=".Activity.Account.SignUpActivity" />
         <activity
             android:name=".Activity.Account.SignInActivity"
-            android:theme="@style/Theme.MovieProject.Main" />
+            android:theme="@style/Theme.MovieProject.Main"
+            />
+
+
         <activity
             android:name=".Activity.Movie.InformationFilmActivity"
             android:exported="false" />

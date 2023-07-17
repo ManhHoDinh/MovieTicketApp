@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.movieticketapp.Activity.Account.AccountActivity;
+import com.example.movieticketapp.Activity.Account.SignInActivity;
 import com.example.movieticketapp.Activity.City.AddCityActivity;
 import com.example.movieticketapp.Activity.City.CinemaOfCity;
 import com.example.movieticketapp.Activity.City.CityViewAllActivity;
@@ -128,6 +129,7 @@ public class HomeActivity extends AppCompatActivity {
         viewAllCity = findViewById(R.id.cityViewAll);
         cityHeader = findViewById(R.id.cityHeader);
         serviceHeader = findViewById(R.id.ServiceHeader);
+
         checkTypeUser();
 
         FirebaseMessaging.getInstance().getToken()
@@ -406,6 +408,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     void checkTypeUser() {
+
         FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {

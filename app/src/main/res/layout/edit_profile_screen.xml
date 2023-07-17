@@ -10,9 +10,12 @@
     tools:context=".Activity.Account.EditProfileActivity">
 
     <ScrollView
-        android:scrollbars="none"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        tools:layout_editor_absoluteX="24dp"
+        tools:layout_editor_absoluteY="-75dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -25,6 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="68dp">
+
                 <Button
                     android:id="@+id/backbutton"
                     android:layout_width="20dp"
@@ -36,68 +40,81 @@
                     style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
                     android:layout_centerHorizontal="true"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center"
                     android:text="Edit Your Profile"
                     android:textColor="@color/white_background"
-                    android:fontFamily="@font/montserrat_regular"
                     android:textFontWeight="600"
                     android:textSize="24dp"
                     android:textStyle="bold" />
             </RelativeLayout>
+
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/avatarImg"
                 android:layout_width="92dp"
                 android:layout_height="92dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="40dp"
-                app:riv_corner_radius="46dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/profile"/>
+                android:src="@drawable/profile"
+                app:riv_corner_radius="46dp" />
+
             <ImageView
+                android:id="@+id/addimage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:src="@drawable/add"
-                android:translationY="-14dp"
-                android:id="@+id/addimage"/>
+                android:translationY="-14dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:fontFamily="@font/montserrat400"
+                android:text="Change your name" />
 
             <EditText
                 android:id="@+id/fullname"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_marginTop="37dp"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/edittext_boder"
+                android:fontFamily="@font/montserrat_regular"
                 android:hint="Full Name"
                 android:inputType="textPersonName"
-                android:fontFamily="@font/montserrat_regular"
-                android:textFontWeight="400"
                 android:paddingLeft="24dp"
+                android:paddingRight="24dp"
                 android:singleLine="true"
                 android:textColor="@color/white_background"
                 android:textColorHint="@color/hint_color"
-                android:textSize="14sp"
-                android:paddingRight="24dp"
-                />
+                android:textFontWeight="400"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:fontFamily="@font/montserrat400"
+                android:text="Change your email address" />
 
             <EditText
                 android:id="@+id/emailaddress"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_marginTop="42dp"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/edittext_boder"
+                android:fontFamily="@font/montserrat_regular"
                 android:hint="Email Address"
-                android:paddingLeft="24dp"
                 android:inputType="text"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp"
                 android:singleLine="true"
                 android:textColor="@color/white_background"
                 android:textColorHint="@color/hint_color"
-                android:textSize="14dp"
-                android:fontFamily="@font/montserrat_regular"
                 android:textFontWeight="400"
-                android:paddingRight="24dp"/>
-
-
+                android:textSize="14dp" />
 
 
             <Button
@@ -109,10 +126,10 @@
                 android:layout_marginTop="44dp"
                 android:layout_marginBottom="68dp"
                 android:background="@drawable/button_background"
+                android:fontFamily="@font/montserrat_regular"
                 android:gravity="center"
                 android:text="Update My Profile"
                 android:textColor="@color/white_background"
-                android:fontFamily="@font/montserrat_regular"
                 android:textFontWeight="500"
                 android:textSize="18dp"
                 android:textStyle="bold" />
