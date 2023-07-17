@@ -18,6 +18,7 @@ import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Comment;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.Ticket;
+import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
@@ -31,6 +32,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.auth.User;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
@@ -229,7 +231,13 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
             listReact.setAdapter(new FeelAdapter(comment.getListReact(), null));
 
             SetImage(comment, profile);
-            name.setText(comment.getName());
+            FirebaseRequest.database.collection("Users").document(comment.getUserId()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                    Users user = value.toObject(Users.class);
+                    name.setText(user.getName());
+                }
+            });
             reviewText.setText(comment.getReviewText());
             likeNumber.setText(String.valueOf(comment.getLike()));
             dislikeNumber.setText(String.valueOf(comment.getDislike()));

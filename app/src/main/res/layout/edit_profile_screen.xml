@@ -96,56 +96,9 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:textFontWeight="400"
                 android:paddingRight="24dp"/>
-            <EditText
-                android:id="@+id/currentPassword"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="42dp"
-                android:background="@drawable/edittext_boder"
-                android:hint="Current Password"
-                android:inputType="textPassword"
-                android:paddingLeft="24dp"
-                android:singleLine="true"
-                android:textColor="@color/white_background"
-                android:textColorHint="@color/hint_color"
-                android:textSize="14dp"
-                android:fontFamily="@font/montserrat_regular"
-                android:textFontWeight="400"
-                android:paddingRight="24dp"/>
 
-            <EditText
-                android:id="@+id/password"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="42dp"
-                android:background="@drawable/edittext_boder"
-                android:hint="Password"
-                android:inputType="textPassword"
-                android:paddingLeft="24dp"
-                android:singleLine="true"
-                android:textColor="@color/white_background"
-                android:textColorHint="@color/hint_color"
-                android:textSize="14dp"
-                android:fontFamily="@font/montserrat_regular"
-                android:textFontWeight="400"
-                android:paddingRight="24dp"/>
 
-            <EditText
-                android:id="@+id/confirmpassword"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="42dp"
-                android:background="@drawable/edittext_boder"
-                android:hint="Confirm Password"
-                android:inputType="textPassword"
-                android:paddingLeft="24dp"
-                android:singleLine="true"
-                android:textColor="@color/white_background"
-                android:textColorHint="@color/hint_color"
-                android:textSize="14dp"
-                android:fontFamily="@font/montserrat_regular"
-                android:textFontWeight="400"
-                android:paddingRight="24dp"/>
+
 
             <Button
                 android:id="@+id/UpdateBtn"

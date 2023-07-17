@@ -12,8 +12,7 @@ import java.util.List;
 public class Comment {
     private String profileUrl;
     private int rating;
-    private String name;
-
+    private String userId;
     private String reviewText;
 
     private int like;
@@ -43,10 +42,19 @@ public class Comment {
 //    public int compareTo(MyObject o) {
 //        return getDateTime().compareTo(o.getDateTime());
 //    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public Comment(){}
-    public Comment(String profileUrl, String name, String reviewText, int like, int dislike, Timestamp timeStamp, int rating, List<String> listReact, String ID) {
+    public Comment(String profileUrl, String reviewText, int like, int dislike, Timestamp timeStamp, int rating, List<String> listReact, String ID, String userId) {
         this.profileUrl = profileUrl;
-        this.name = name;
+
         this.reviewText = reviewText;
         this.like = like;
         this.dislike = dislike;
@@ -54,6 +62,7 @@ public class Comment {
         this.rating = rating;
         this.listReact = listReact;
         this.ID = ID;
+        this.userId = userId;
     }
 
     public String getID() {
@@ -88,13 +97,7 @@ public class Comment {
         this.profileUrl = profileUrl;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getReviewText() {
         return reviewText;

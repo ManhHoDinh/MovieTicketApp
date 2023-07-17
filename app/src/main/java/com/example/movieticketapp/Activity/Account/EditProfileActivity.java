@@ -57,9 +57,7 @@ public class EditProfileActivity extends AppCompatActivity {
     NetworkChangeListener networkChangeListener = new NetworkChangeListener();
     EditText fullNameET;
     EditText emailET;
-    EditText passwordET;
-    EditText CurrentPasswordET;
-    EditText confirmPasswordET;
+
     ImageView addImage;
     RoundedImageView avatarImg;
     UploadTask uploadTask;
@@ -125,9 +123,7 @@ public class EditProfileActivity extends AppCompatActivity {
         avatarImg = findViewById(R.id.avatarImg);
         fullNameET=findViewById(R.id.fullname);
         emailET=findViewById(R.id.emailaddress);
-        passwordET=findViewById(R.id.password);
-        confirmPasswordET=findViewById(R.id.confirmpassword);
-        CurrentPasswordET=findViewById(R.id.currentPassword);
+
         FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -174,66 +170,20 @@ public class EditProfileActivity extends AppCompatActivity {
         {
             emailET.setError("Email is not empty!!!");
         }
-        else if(CurrentPasswordET.length()==0)
-        {
-            CurrentPasswordET.setError("Current Password is not empty!!!");
-        }
-        else if(passwordET.length()==0)
-        {
-            passwordET.setError("Password is not empty!!!");
-        }
-        else if(!confirmPasswordET.getText().toString().equals(passwordET.getText().toString()))
-        {
-            confirmPasswordET.setError("Password and confirmation passwords are not equals !!!");
-        }
         else{
-            AuthCredential credential = EmailAuthProvider.getCredential(FirebaseRequest.mAuth.getCurrentUser().getEmail(), CurrentPasswordET.getText().toString());
-            FirebaseRequest.mAuth.getCurrentUser().reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) {
-                        // User has been successfully re-authenticated
-                        // You can update the password now
-                        Update();
-
-                    } else {
-                        // An error occurred while re-authenticating the user
-                        // Handle the error
-                        UpdateError("Update");
-                    }
-                }
-            });
+            Update();
             finish();
-
         }
         updateAvatar();
     }
     void Update()
     {
-        String name = "new_password";
-        if(!CurrentPasswordET.getText().toString().equals(passwordET.getText().toString()))
-            UpdatePassword(passwordET.getText().toString());
         if(!emailET.getText().toString().equals(FirebaseRequest.mAuth.getCurrentUser().getEmail()))
             UpdateEmail();
         if(!fullNameET.getText().toString().equals(FirebaseRequest.mAuth.getCurrentUser().getDisplayName()))
             UpdateFullName();
     }
-    void UpdatePassword(String newPassword)
-    {
-        FirebaseRequest.mAuth.getCurrentUser().updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    FirebaseRequest.mAuth.signOut();
-                    startActivity(new Intent(EditProfileActivity.this, SignInActivity.class));
-                } else {
-                    // An error occurred while updating the user password
-                    // Handle the error
-                    UpdateError("Password");
-                }
-            }
-        });
-    }
+
     void UpdateFullName()
     {
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
