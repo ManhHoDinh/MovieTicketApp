@@ -470,10 +470,10 @@ public class ReportActivity extends AppCompatActivity {
     void setListRetry(List<FilmModel> films){
         listEntries = new ArrayList<>();
         listLabels = new ArrayList<>();
-        int[] listColor = {getResources().getColor(R.color.color1),getResources().getColor(R.color.color2),getResources().getColor(R.color.color3),getResources().getColor(R.color.color4), getResources().getColor(R.color.color5),getResources().getColor(R.color.color6),getResources().getColor(R.color.color7),getResources().getColor(R.color.color8),
-                getResources().getColor(R.color.color9),getResources().getColor(R.color.color10),getResources().getColor(R.color.color11),getResources().getColor(R.color.color12), getResources().getColor(R.color.color13),getResources().getColor(R.color.color14),getResources().getColor(R.color.color15),getResources().getColor(R.color.color16),
-                getResources().getColor(R.color.color17),getResources().getColor(R.color.color18),getResources().getColor(R.color.color19),getResources().getColor(R.color.color20)
-        };
+//        int[] listColor = {getResources().getColor(R.color.color1),getResources().getColor(R.color.color2),getResources().getColor(R.color.color3),getResources().getColor(R.color.color4), getResources().getColor(R.color.color5),getResources().getColor(R.color.color6),getResources().getColor(R.color.color7),getResources().getColor(R.color.color8),
+//                getResources().getColor(R.color.color9),getResources().getColor(R.color.color10),getResources().getColor(R.color.color11),getResources().getColor(R.color.color12), getResources().getColor(R.color.color13),getResources().getColor(R.color.color14),getResources().getColor(R.color.color15),getResources().getColor(R.color.color16),
+//                getResources().getColor(R.color.color17),getResources().getColor(R.color.color18),getResources().getColor(R.color.color19),getResources().getColor(R.color.color20)
+//        };
         cinemas = new ArrayList<>();
 
         firestore.collection("Cinema").addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -495,10 +495,11 @@ public class ReportActivity extends AppCompatActivity {
             }
         });
 
-
+        int[] binh = randomColor(films.size());
         ArrayList<LegendEntry> listLegend = new ArrayList<>();
         for(FilmModel film : films){
             index = 0;
+
             firestore.collection("Ticket").addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -549,7 +550,7 @@ public class ReportActivity extends AppCompatActivity {
                     BarEntry barEntry = new BarEntry(index, total_price);
                     listEntries.add(barEntry);
                     BarDataSet barDataSet = new BarDataSet(listEntries, "");
-                    barDataSet.setColors(listColor);
+                    barDataSet.setColors(binh);
                     barDataSet.setDrawValues(false);
                     barDataSet.setValueTextSize(20f);
                     BarData barData = new BarData();
@@ -568,7 +569,7 @@ public class ReportActivity extends AppCompatActivity {
                     if(index < films.size()){
                         LegendEntry legendEntry = new LegendEntry();
                         legendEntry.label = film.getName();
-                        legendEntry.formColor = listColor[index];
+                        legendEntry.formColor = binh[index];
                         listLegend.add(legendEntry);
                     }
                     l.setCustom(listLegend);
@@ -588,5 +589,32 @@ public class ReportActivity extends AppCompatActivity {
         }
 
     }
+    int[] randomColor(int count){
+        int[] listColor = new int[count];
+        int color = 0;
+        for(int i = 0; i < count; i++){
+            Random rnd = new Random();
+            if(i == 0){
+                color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
 
+                listColor[i] = color;
+            }
+            else{
+                for(int j = 0; j < listColor.length; j++){
+                    do{
+                        color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+                    }
+                    while (
+                            color == listColor[j]
+                    );
+                }
+                listColor[i] = color;
+            }
+
+
+
+
+        }
+        return listColor;
+    }
 }
