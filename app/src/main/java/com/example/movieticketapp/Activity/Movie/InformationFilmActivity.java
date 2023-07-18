@@ -174,7 +174,7 @@ public class InformationFilmActivity extends FragmentActivity {
 
         durationTime.setText(f.getDurationTime());
         filmDetailPagerAdapter = new FilmDetailPagerAdapter(this, f, tabLayout.getSelectedTabPosition());
-        Log.e("tab", tabLayout.getSelectedTabPosition()+"");
+        Log.e("binh comment", tabLayout.getSelectedTabPosition()+"");
         pager.setAdapter(filmDetailPagerAdapter);
         pager.setOffscreenPageLimit(3);
 

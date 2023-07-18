@@ -116,7 +116,7 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
             likeBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.e("f", "fsdc");
+
                     if(likeBtn.getTag().equals("bg")){
                         likeBtn.setImageResource(R.drawable.heart_fill_icon);
                         likeBtn.setTag(R.drawable.heart_fill_icon);
@@ -176,12 +176,11 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
                         if(likeBtn.getTag().equals(R.drawable.heart_fill_icon)){
                             likeBtn.setImageResource(R.drawable.heart_icon);
                             likeBtn.setTag("bg");
-                            Log.e("d","1");
+
                             userRef.collection("LikeComment").document(comment.getID()).delete();
                             commentDoc.update("like", comment.getLike() - 1);
                         }
                     }else {
-                        Log.e("d","2");
 
                         dislikeBtn.setImageResource(R.drawable.dislike_icon);
                         dislikeBtn.setTag("cg");

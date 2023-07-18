@@ -36,9 +36,10 @@
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
              android:numStars="5"
-             android:isIndicator="false"
+             android:isIndicator="true"
              android:layout_marginLeft="10dp"
              style="?android:attr/ratingBarStyleSmall"
+             android:rating="4.7"
              android:progressTint="#FFFFAF34"
              android:progressBackgroundTint="@color/white"
 

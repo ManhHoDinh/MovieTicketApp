@@ -145,6 +145,33 @@ public class ReviewFragment extends Fragment {
         ratingFilm();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CommentRef = db.collection("Movies").document(film.getId()).collection("Comment");
+//        CommentRef.orderBy("timeStamp", Query.Direction.DESCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//            @Override
+//            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                comments.clear();
+//                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+//                    comments.add(doc.toObject(Comment.class));
+//                }
+//                commentAdapter = new CommentAdapter(myActivity, R.layout.review_comment_view, comments, film);
+//                int totalHeight= 0;
+//                DisplayMetrics displayMetrics = new DisplayMetrics();
+//                int height = displayMetrics.heightPixels;
+//                int width = displayMetrics.widthPixels;
+//                for (int size=0; size < commentAdapter.getCount(); size++) {
+//                    View listItem = commentAdapter.getView(size, null, commentList);
+//                    listItem.measure(0, 0);
+//                    totalHeight += listItem.getMeasuredHeight();
+//                }
+//                ViewGroup.LayoutParams params=commentList.getLayoutParams();
+//                DisplayMetrics display = new DisplayMetrics();
+//                myActivity.getWindowManager().getDefaultDisplay().getMetrics(display);
+//                int d = display.heightPixels;
+//                params.height = d/2 - rateLayout.getMeasuredHeight() - 100;
+//                commentList.setLayoutParams(params);
+//                commentList.setAdapter(commentAdapter);
+//            }
+//
+//        });
         CommentRef.orderBy("timeStamp", Query.Direction.DESCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
