@@ -50,6 +50,9 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
     Context context;
     private int resource;
     List<Comment> commentList;
+    List<String> likeComments = new ArrayList<>();
+    List<String> dislikeComments = new ArrayList<>();
+
     FilmModel film;
     int cellHeight = -1;
     public CommentAdapter (Context context, int resource, List<Comment> commentList, FilmModel film)
@@ -87,54 +90,126 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
         Comment comment = getItem(position);
         if (comment != null)
         {
-            userRef.collection("LikeComment").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            userRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
-                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                    Users user = value.toObject(Users.class);
+                    likeComments = user.getLikeComments();
+                    dislikeComments = user.getDislikeComments();
 
-                    for(DocumentSnapshot doc : queryDocumentSnapshots){
-                        if(doc.get("commentID").toString().equals(comment.getID())){
+                    for(String id : likeComments){
+                        if(id.equals(comment.getID())){
                             likeBtn.setImageResource(R.drawable.heart_fill_icon);
                             likeBtn.setTag(R.drawable.heart_fill_icon);
+                            break;
+                        }
+                        else{
+                            likeBtn.setImageResource(R.drawable.heart_icon);
+                            likeBtn.setTag("bg");
                         }
                     }
-                }
-            });
-            userRef.collection("DisLikeComment").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                @Override
-                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                    for(DocumentSnapshot doc : queryDocumentSnapshots){
-                        if(doc.get("commentID").toString().equals(comment.getID())){
+                    for(String id: dislikeComments){
+                        if(id.equals(comment.getID())){
+                            Log.e("dfd", comment.getID());
                             dislikeBtn.setImageResource(R.drawable.dislike_fill_icon);
                             dislikeBtn.setTag(R.drawable.dislike_fill_icon);
+                            break;
+                        }
+                        else{
+                            Log.e("false", comment.getID());
+                            dislikeBtn.setImageResource(R.drawable.dislike_icon);
+                            dislikeBtn.setTag("cg");
                         }
                     }
                 }
             });
+//            userRef.collection("LikeComment").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//                @Override
+//                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                    for(DocumentSnapshot doc : queryDocumentSnapshots){
+//                        if(doc.get("commentID").toString().equals(comment.getID())){
+//                            likeBtn.setImageResource(R.drawable.heart_fill_icon);
+//                            likeBtn.setTag(R.drawable.heart_fill_icon);
+//                        }
+//                    }
+//                }
+//            });
+//            userRef.collection("LikeComment").addSnapshotListener(new EventListener<QuerySnapshot>() {
+//                @Override
+//                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+//                    Log.e("binhh", "hu");
+//                    for(DocumentSnapshot doc : value){
+//                        if(doc.get("commentID").toString().equals(comment.getID())){
+//                            likeBtn.setImageResource(R.drawable.heart_fill_icon);
+//                            likeBtn.setTag(R.drawable.heart_fill_icon);
+//                        }
+//                        else{
+//                            likeBtn.setImageResource(R.drawable.heart_icon);
+//                            likeBtn.setTag("bg");
+//                        }
+//                    }
+//                }
+//            });
+//            userRef.collection("DisLikeComment").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//                @Override
+//                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                    for(DocumentSnapshot doc : queryDocumentSnapshots){
+//                        if(doc.get("commentID").toString().equals(comment.getID())){
+//                            dislikeBtn.setImageResource(R.drawable.dislike_fill_icon);
+//                            dislikeBtn.setTag(R.drawable.dislike_fill_icon);
+//                        }
+//                    }
+//                }
+//            });
+//            userRef.collection("DisLikeComment").addSnapshotListener(new EventListener<QuerySnapshot>() {
+//                @Override
+//                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+//                    for(DocumentSnapshot doc : value){
+//                        if(doc.get("commentID").toString().equals(comment.getID())){
+//                            Log.e("dfd", comment.getID());
+//                            dislikeBtn.setImageResource(R.drawable.dislike_fill_icon);
+//                            dislikeBtn.setTag(R.drawable.dislike_fill_icon);
+//                        }
+//                        else{
+//                            Log.e("false", comment.getID());
+//                            dislikeBtn.setImageResource(R.drawable.dislike_icon);
+//                            dislikeBtn.setTag("cg");
+//                        }
+//                    }
+//                }
+//            });
             DocumentReference commentDoc =  FirebaseRequest.database.collection("Movies")
                     .document(film.getId()).collection("Comment")
                     .document(comment.getID());
             likeBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    Log.e("like", "like");
                     if(likeBtn.getTag().equals("bg")){
                         likeBtn.setImageResource(R.drawable.heart_fill_icon);
                         likeBtn.setTag(R.drawable.heart_fill_icon);
                         HashMap<String, String> likeComment = new HashMap<>();
-                        DocumentReference doc = userRef.collection("LikeComment").document(comment.getID());
-                        likeComment.put("commentID", comment.getID());
-                        doc.set(likeComment);
+                        likeComments.add(comment.getID());
+                        userRef.update("likeComments", likeComments);
+//                        DocumentReference doc = userRef.collection("LikeComment").document(comment.getID());
+//                        likeComment.put("commentID", comment.getID());
+//                        doc.set(likeComment);
                         commentDoc.update("like", comment.getLike() + 1);
                         if(dislikeBtn.getTag().equals(R.drawable.dislike_fill_icon)){
                             dislikeBtn.setImageResource(R.drawable.dislike_icon);
                             dislikeBtn.setTag("cg");
-                            userRef.collection("DisLikeComment").document(comment.getID()).delete();
+                            dislikeComments.remove(comment.getID());
+//                            userRef.collection("DisLikeComment").document(comment.getID()).delete();
+                            userRef.update("dislikeComments", dislikeComments);
                             commentDoc.update("dislike", comment.getDislike() - 1);
                         }
                     }else {
+                        Log.e("dislike", "dislike");
                         likeBtn.setImageResource(R.drawable.heart_icon);
                         likeBtn.setTag("bg");
-                        userRef.collection("LikeComment").document(comment.getID()).delete();
+                        likeComments.remove(comment.getID());
+                        userRef.update("likeComments", likeComments);
+                       // userRef.collection("LikeComment").document(comment.getID()).delete();
                         commentDoc.update("like", comment.getLike() - 1);
                     }
 //                    commentDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -168,25 +243,31 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
                     if(dislikeBtn.getTag().equals("cg")){
                         dislikeBtn.setImageResource(R.drawable.dislike_fill_icon);
                         dislikeBtn.setTag(R.drawable.dislike_icon);
-                        HashMap<String, String> disLikeComment = new HashMap<>();
-                        DocumentReference doc = userRef.collection("DisLikeComment").document(comment.getID());
-                        disLikeComment.put("commentID", comment.getID());
-                        doc.set(disLikeComment);
+//                        HashMap<String, String> disLikeComment = new HashMap<>();
+//                        DocumentReference doc = userRef.collection("DisLikeComment").document(comment.getID());
+//                        disLikeComment.put("commentID", comment.getID());
+//                        doc.set(disLikeComment);
+                        dislikeComments.add(comment.getID());
+                        userRef.update("dislikeComments",dislikeComments);
                         commentDoc.update("dislike", comment.getDislike() + 1);
                         if(likeBtn.getTag().equals(R.drawable.heart_fill_icon)){
                             likeBtn.setImageResource(R.drawable.heart_icon);
                             likeBtn.setTag("bg");
-
-                            userRef.collection("LikeComment").document(comment.getID()).delete();
+                            likeComments.remove(comment.getID());
+                            userRef.update("likeComments", likeComments);
+//                            userRef.collection("LikeComment").document(comment.getID()).delete();
                             commentDoc.update("like", comment.getLike() - 1);
                         }
                     }else {
 
                         dislikeBtn.setImageResource(R.drawable.dislike_icon);
                         dislikeBtn.setTag("cg");
-                        userRef.collection("DisLikeComment").document(comment.getID()).delete();
+                        dislikeComments.remove(comment.getID());
+                        userRef.update("dislikeComments", dislikeComments);
+                        //userRef.collection("DisLikeComment").document(comment.getID()).delete();
                         commentDoc.update("dislike", comment.getDislike() - 1);
                     }
+
 //                    commentDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
 //                        @Override
 //                        public void onSuccess(DocumentSnapshot documentSnapshot) {

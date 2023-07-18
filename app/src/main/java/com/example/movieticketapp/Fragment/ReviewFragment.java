@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Message;
+import android.os.Parcelable;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -86,6 +87,7 @@ public class ReviewFragment extends Fragment {
     FilmModel film;
     RatingBar ratingBar;
 
+
     ArrayList<Comment> comments;
 //    RoundedImageView profileImgView;
 //    EditText commentEditText;
@@ -107,6 +109,8 @@ public class ReviewFragment extends Fragment {
     int height = 0;
     int rate = 0;
     Activity myActivity;
+
+
     public ReviewFragment(FilmModel f) {
         // Required empty public constructor
         film = f;
@@ -145,33 +149,6 @@ public class ReviewFragment extends Fragment {
         ratingFilm();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CommentRef = db.collection("Movies").document(film.getId()).collection("Comment");
-//        CommentRef.orderBy("timeStamp", Query.Direction.DESCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//            @Override
-//            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                comments.clear();
-//                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-//                    comments.add(doc.toObject(Comment.class));
-//                }
-//                commentAdapter = new CommentAdapter(myActivity, R.layout.review_comment_view, comments, film);
-//                int totalHeight= 0;
-//                DisplayMetrics displayMetrics = new DisplayMetrics();
-//                int height = displayMetrics.heightPixels;
-//                int width = displayMetrics.widthPixels;
-//                for (int size=0; size < commentAdapter.getCount(); size++) {
-//                    View listItem = commentAdapter.getView(size, null, commentList);
-//                    listItem.measure(0, 0);
-//                    totalHeight += listItem.getMeasuredHeight();
-//                }
-//                ViewGroup.LayoutParams params=commentList.getLayoutParams();
-//                DisplayMetrics display = new DisplayMetrics();
-//                myActivity.getWindowManager().getDefaultDisplay().getMetrics(display);
-//                int d = display.heightPixels;
-//                params.height = d/2 - rateLayout.getMeasuredHeight() - 100;
-//                commentList.setLayoutParams(params);
-//                commentList.setAdapter(commentAdapter);
-//            }
-//
-//        });
         CommentRef.orderBy("timeStamp", Query.Direction.DESCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -199,7 +176,11 @@ public class ReviewFragment extends Fragment {
                 int d = display.heightPixels;
                 params.height = d/2 - rateLayout.getMeasuredHeight() - 100;
                 commentList.setLayoutParams(params);
+                int index = commentList.getFirstVisiblePosition();
                 commentList.setAdapter(commentAdapter);
+                View v = commentList.getChildAt(0);
+                int top = (v == null) ? 0 : (v.getTop() - commentList.getPaddingTop());
+                commentList.setSelectionFromTop(index, top);
             }
         });
     }
@@ -255,6 +236,7 @@ public class ReviewFragment extends Fragment {
         feelView.setLayoutManager(flexboxLayoutManager);
         feelView.setAdapter(new FeelAdapter(listFeel, listReact));
         dialog.show();
+
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().getAttributes().windowAnimations = R.style.dialogAnimation;

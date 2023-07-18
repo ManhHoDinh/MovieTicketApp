@@ -345,7 +345,7 @@ public class SignInActivity extends AppCompatActivity {
                     }
                 });
 
-        Users u = new Users(user.getUid(),   user.getDisplayName(),user.getEmail(),0, acType, user.getPhotoUrl().toString());
+        Users u = new Users(user.getUid(),   user.getDisplayName(),user.getEmail(),0, acType, user.getPhotoUrl().toString(), new ArrayList<>(), new ArrayList<>());
         FirebaseRequest.database.collection("Users").document(user.getUid())
                 .set(u.toJson())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

@@ -47,6 +47,7 @@ import com.google.firebase.storage.UploadTask;
 import java.net.URI;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -200,7 +201,7 @@ public class SignUpActivity extends AppCompatActivity {
                             FirebaseUser user = FirebaseRequest.mAuth.getCurrentUser();
                             UpdatePhotho(urlAvatar);
                             user.getUid();
-                            Users u = new Users(user.getUid(), Name, email,0, "user", urlAvatar);
+                            Users u = new Users(user.getUid(), Name, email,0, "user", urlAvatar, new ArrayList<>(), new ArrayList<>());
                             FirebaseRequest.database.collection("Users").document(user.getUid())
                                     .set(u.toJson())
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
