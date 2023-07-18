@@ -65,16 +65,23 @@ public class ListSearchAdapter extends RecyclerView.Adapter<ListSearchAdapter.It
         Picasso.get().load(filmModel.getPosterImage()).into(holder.imageFilm);
         holder.nameFilm.setText(filmModel.getName());
         Timestamp movieBeginDate = filmModel.getMovieBeginDate();
-        if(movieBeginDate.toDate().before(Helper.getCurrentDate())){
+        if(movieBeginDate.toDate().before(Helper.getCurrentDate())
+                &&filmModel.getMovieEndDate().toDate().after(Helper.getCurrentDate()))
+        {
             holder.status.setText("Playing");
+        }
+        else if (filmModel.getMovieEndDate().toDate().before(Helper.getCurrentDate()) )
+        {
+            holder.status.setText("Expired");
         }
         else holder.status.setText("Coming");
 
-        if(filmModel.getMovieBeginDate().toDate().before(Helper.getCurrentDate())){
+        if(movieBeginDate.toDate().before(Helper.getCurrentDate())
+                &&filmModel.getMovieEndDate().toDate().after(Helper.getCurrentDate()))
+        {
             holder.status.setBackgroundColor(Color.TRANSPARENT);
             holder.status.setBackground(ContextCompat.getDrawable(holder.status.getContext(), R.drawable.background_playing));
             holder.inforBtn.setText("Book");
-
         }
         else{
             holder.status.setBackgroundColor(Color.TRANSPARENT);

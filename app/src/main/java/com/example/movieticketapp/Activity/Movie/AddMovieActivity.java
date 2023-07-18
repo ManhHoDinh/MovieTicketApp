@@ -128,18 +128,17 @@ public class AddMovieActivity extends AppCompatActivity{
     EditText movieName;
     TextView movieKind;
     EditText movieDurarion;
-    public static Context context;
     Button applyButton;
     Button cancleButton;
     Uri backgrounduri;
     Uri avataruri = null;
 
     String urlbackground;
-    Timestamp dateStart;
+    Timestamp BeginDate;
+    Timestamp EndDate;
     String urlavatar;
-    UploadTask uploadTask;
-    UploadTask uploadTask2;
-    Button calendarButton;
+    Button BeginDateCalendarButton;
+    Button EndDateCalendarButton;
     TrailerMovieApdapter adapter;
     List<String> InStorageVideoUris=new ArrayList<>();
     loadingAlert loadingDialog;
@@ -155,14 +154,23 @@ public class AddMovieActivity extends AppCompatActivity{
         InStorageVideoUris.clear();
         loadingDialog= new loadingAlert(AddMovieActivity.this);
         defaultUri=Uri.parse("https://example.com/default");;
-        calendarButton = findViewById(R.id.Calendar);
+        BeginDateCalendarButton = findViewById(R.id.BeginDateCalendar);
+        EndDateCalendarButton= findViewById(R.id.EndDateCalendar);
         document = databaseReference.collection("Movies").document();
 
-        calendarButton.setOnClickListener(new View.OnClickListener() {
+        BeginDateCalendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Show calendar dialog
-                showCalendarDialog();
+                showBeginDateCalendarDialog();
+                dismissKeyboard(v);
+            }
+        });
+        EndDateCalendarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Show calendar dialog
+                showEndDateCalendarDialog();
                 dismissKeyboard(v);
             }
         });
@@ -311,11 +319,26 @@ public class AddMovieActivity extends AppCompatActivity{
                     movieDurarion.setError("Movie Duration cannot be empty!!!");
                     error = true;
                 }
-                if(dateStart==null)
+                if(BeginDate==null)
                 {
                     error=true;
                     Toast toast = Toast.makeText(getApplicationContext(), "Chose Start Date, Please!!!", Toast.LENGTH_SHORT);
                     toast.show();
+                }
+                if(EndDate==null)
+                {
+                    error=true;
+                    Toast toast = Toast.makeText(getApplicationContext(), "Chose End Date, Please!!!", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                if(EndDate!=null && BeginDate!=null)
+                {
+                    if(EndDate.toDate().before(BeginDate.toDate()))
+                    {
+                        error=true;
+                        Toast toast = Toast.makeText(getApplicationContext(), "Begin date must be earlier than end date!!!", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
                 }
                 if (!error)
                 {
@@ -502,17 +525,19 @@ public class AddMovieActivity extends AppCompatActivity{
         data.put("genre", movieKind.getText().toString());
         data.put("id", document.getId());
         data.put("name", movieName.getText().toString());
-        data.put("movieBeginDate", dateStart);
+        data.put("movieBeginDate", BeginDate);
+        data.put("movieEndDate",EndDate);
         data.put("vote", 0);
         data.put("trailer",InStorageVideoUris);
         document.set(data);
     }
-    LocalDate localDate;
-    private void showCalendarDialog() {
+    LocalDate localBeginDate;
+    LocalDate localEndDate;
+    private void showBeginDateCalendarDialog() {
         // Create a calendar instance and get the current date
         Calendar calendar = Calendar.getInstance();
-        if(localDate!=null)
-            calendar.set(localDate.getYear(),localDate.getMonthValue(),localDate.getDayOfMonth());
+        if(localBeginDate!=null)
+            calendar.set(localBeginDate.getYear(),localBeginDate.getMonthValue()-1,localBeginDate.getDayOfMonth());
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
@@ -525,7 +550,7 @@ public class AddMovieActivity extends AppCompatActivity{
                         // Handle the selected date
                         // You can update the button text or perform any other actions here
                         String date = String.valueOf(selectedDay) + "/" + String.valueOf(selectedMonth + 1) + "/" + String.valueOf(selectedYear);
-                        calendarButton.setText(date);
+                        BeginDateCalendarButton.setText(date);
                     }
                 }, year, month, dayOfMonth) {
             @Override
@@ -543,7 +568,7 @@ public class AddMovieActivity extends AppCompatActivity{
                         int month = datePicker.getMonth();
                         int dayOfMonth = datePicker.getDayOfMonth();
                         String date = String.valueOf(dayOfMonth) + "/" + String.valueOf(month + 1) + "/" + String.valueOf(year);
-                        localDate = LocalDate.of(year, month, dayOfMonth);
+                        localBeginDate = LocalDate.of(year, month+1, dayOfMonth);
                         Calendar calendar = Calendar.getInstance();
                         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                         calendar.set(Calendar.MONTH, month); // Note: Calendar.MONTH is zero-based
@@ -552,8 +577,68 @@ public class AddMovieActivity extends AppCompatActivity{
                         calendar.set(Calendar.MINUTE, 0);
                         calendar.set(Calendar.SECOND, 0);
 
-                        dateStart = new Timestamp(calendar.getTime());
-                        calendarButton.setText(date);dismiss();
+                        BeginDate = new Timestamp(calendar.getTime());
+                        BeginDateCalendarButton.setText(date);dismiss();
+                    }
+                });
+                // Set the desired background color for the button
+                positiveButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.green));
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
+                layoutParams.setMarginStart((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics()));
+                positiveButton.setLayoutParams(layoutParams);
+                negativeButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.grey_background_1));
+            }
+        };
+
+        // Show the dialog
+        datePickerDialog.show();
+    }
+    private void showEndDateCalendarDialog() {
+        // Create a calendar instance and get the current date
+        Calendar calendar = Calendar.getInstance();
+        if(localEndDate!=null)
+            calendar.set(localEndDate.getYear(),localEndDate.getMonthValue()-1,localEndDate.getDayOfMonth());
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        // Create a custom DatePickerDialog
+        DatePickerDialog datePickerDialog = new DatePickerDialog(AddMovieActivity.this,
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
+                        // Handle the selected date
+                        // You can update the button text or perform any other actions here
+                        String date = String.valueOf(selectedDay) + "/" + String.valueOf(selectedMonth + 1) + "/" + String.valueOf(selectedYear);
+                        EndDateCalendarButton.setText(date);
+                    }
+                }, year, month, dayOfMonth) {
+            @Override
+            public void onCreate(Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
+
+                // Get the "OK" button from the dialog's layout
+                Button positiveButton = getButton(DialogInterface.BUTTON_POSITIVE);
+                Button negativeButton = getButton(DialogInterface.BUTTON_NEGATIVE);
+                positiveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        DatePicker datePicker = getDatePicker();
+                        int year = datePicker.getYear();
+                        int month = datePicker.getMonth();
+                        int dayOfMonth = datePicker.getDayOfMonth();
+                        String date = String.valueOf(dayOfMonth) + "/" + String.valueOf(month + 1) + "/" + String.valueOf(year);
+                        localEndDate = LocalDate.of(year, month+1, dayOfMonth);
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        calendar.set(Calendar.MONTH, month); // Note: Calendar.MONTH is zero-based
+                        calendar.set(Calendar.YEAR, year);
+                        calendar.set(Calendar.HOUR, 0);
+                        calendar.set(Calendar.MINUTE, 0);
+                        calendar.set(Calendar.SECOND, 0);
+
+                        EndDate = new Timestamp(calendar.getTime());
+                        EndDateCalendarButton.setText(date);dismiss();
                     }
                 });
                 // Set the desired background color for the button

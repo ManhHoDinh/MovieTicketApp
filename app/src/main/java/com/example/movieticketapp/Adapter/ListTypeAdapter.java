@@ -47,15 +47,19 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
     private String[] listType;
     private int checkedPosition = 0;
     private ViewPager2 NowPlaying;
+    private RecyclerView Expired;
+
     private  RecyclerView ComingSoon;
     private List<FilmModel> PlayingFilms;
     private List<FilmModel> ComingFilms;
+    private List<FilmModel> ExpiredFilms;
 
     public ListTypeAdapter(Activity activity, String[] listType) {
         this.activity = activity;
         this.listType = listType;
         this.PlayingFilms = new ArrayList<FilmModel>();
         this.ComingFilms = new ArrayList<FilmModel>();
+        this.ExpiredFilms= new ArrayList<FilmModel>();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -94,12 +98,14 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
     void loadListPost(String type) {
         NowPlaying = activity.findViewById(R.id.typeMovieViewPage);
         ComingSoon = activity.findViewById(R.id.comingMovieView);
+        Expired= activity.findViewById(R.id.ExpiredMovieView);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference MovieRef = db.collection("Movies");
 
         if (type.equals("All")) {
             PlayingFilms.clear();
             ComingFilms.clear();
+            ExpiredFilms.clear();
             MovieRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -108,12 +114,26 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                     }
                     PlayingFilms.clear();
                     ComingFilms.clear();
+                    ExpiredFilms.clear();
                     for (QueryDocumentSnapshot documentSnapshot : value) {
                         FilmModel f = documentSnapshot.toObject(FilmModel.class);
-                        if(f.getMovieBeginDate().toDate().before(Helper.getCurrentDate()))
-                            PlayingFilms.add(f);
-                        else
-                            ComingFilms.add(f);
+                        try{
+                            if(f.getMovieBeginDate().toDate().before(Helper.getCurrentDate()))
+                                PlayingFilms.add(f);
+                            else
+                                ComingFilms.add(f);
+
+                            if (f.getMovieEndDate().toDate().before(Helper.getCurrentDate()))
+                            {
+                                PlayingFilms.remove(f);
+                                ComingFilms.remove(f);
+                                ExpiredFilms.add(f);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Log.d(e.getMessage(),e.getMessage());
+                        }
                     }
                     updateViewPager();
                 }
@@ -121,6 +141,7 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
         } else {
             PlayingFilms.clear();
             ComingFilms.clear();
+            ExpiredFilms.clear();
             MovieRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -129,17 +150,27 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
                     }
                     PlayingFilms.clear();
                     ComingFilms.clear();
+                    ExpiredFilms.clear();
                     for (QueryDocumentSnapshot documentSnapshot : value) {
                         FilmModel f = documentSnapshot.toObject(FilmModel.class);
                         if (f.getGenre().contains(type)) {
-                            try{if(f.getMovieBeginDate().toDate().before(Helper.getCurrentDate())){
-                                PlayingFilms.add(f);
+                            try{
+                                if(f.getMovieBeginDate().toDate().before(Helper.getCurrentDate()))
+                                    PlayingFilms.add(f);
+                                else
+                                    ComingFilms.add(f);
 
+                                if (f.getMovieEndDate().toDate().before(Helper.getCurrentDate()))
+                                {
+                                    PlayingFilms.remove(f);
+                                    ComingFilms.remove(f);
+                                    ExpiredFilms.add(f);
+                                }
                             }
-
-                            else
-                                ComingFilms.add(f);}
-                            catch (Exception e){}
+                            catch (Exception e)
+                            {
+                                Log.d(e.getMessage(),e.getMessage());
+                            }
                         } else {
                         }
                     }
@@ -151,7 +182,6 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
 
     void updateViewPager() {
         SliderAdapter sliderAdapter = new SliderAdapter(PlayingFilms, NowPlaying);
-
         NowPlaying.setAdapter(sliderAdapter);
         NowPlaying.setClipToPadding(false);
         NowPlaying.setClipChildren(false);
@@ -159,6 +189,9 @@ public class ListTypeAdapter extends RecyclerView.Adapter<ListTypeAdapter.ViewHo
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false);
         ComingSoon.setAdapter(new posterAdapter(ComingFilms));
         ComingSoon.setLayoutManager(linearLayoutManager);
+        LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false);
+        Expired.setAdapter(new posterAdapter(ExpiredFilms));
+        Expired.setLayoutManager(linearLayoutManager2);
         // Other transformations and settings
         CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
         compositePageTransformer.addTransformer(new MarginPageTransformer(24));

@@ -335,7 +335,7 @@ public class TrailerMovieApdapter extends RecyclerView.Adapter<TrailerMovieApdap
                 PopupMenu popup = new PopupMenu(view.getContext(), holder.EditTrailer);
                 //inflating menu from xml resource
                 popup.inflate(R.menu.promo_menu);
-                SpannableString s = new SpannableString("Edit");
+                SpannableString s = new SpannableString("Change");
                 s.setSpan(new ForegroundColorSpan(Color.BLACK), 0, s.length(), 0);
                 popup.getMenu().getItem(0).setTitle(s);
                 SpannableString delete = new SpannableString("Delete");

@@ -93,6 +93,7 @@ public class HomeActivity extends AppCompatActivity {
     private ImageView addDiscount;
     private TextView viewAllPlayingBtn;
     private TextView viewAllComingBtn;
+    private TextView viewExpiredBtn;
     private ImageView addService;
     private RecyclerView serviceView;
     private TextView viewAllCity;
@@ -119,6 +120,7 @@ public class HomeActivity extends AppCompatActivity {
         addDiscount = findViewById(R.id.AddDiscount);
         viewAllPlayingBtn = findViewById(R.id.viewAllPlayingBtn);
         viewAllComingBtn = findViewById(R.id.viewAllComingBtn);
+        viewExpiredBtn=findViewById(R.id.viewAllExpiredBtn);
         promotionView = findViewById(R.id.promotionView);
         searchView=findViewById(R.id.searchField);
         serviceView = findViewById(R.id.ServiceView);
@@ -260,6 +262,14 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(HomeActivity.this, ViewAllActivity.class);
                 intent.putExtra("status", "coming");
+                startActivity(intent);
+            }
+        });
+        viewExpiredBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, ViewAllActivity.class);
+                intent.putExtra("status", "expired");
                 startActivity(intent);
             }
         });

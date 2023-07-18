@@ -234,6 +234,12 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
 
                     }
                 });
+                holder.movietrailer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mp) {
+                        holder.videoSeekBar.setMax(holder.movietrailer.getDuration());
+                    }
+                });
                 holder.playButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -314,7 +320,7 @@ public class EditTrailerAdapter extends RecyclerView.Adapter<EditTrailerAdapter.
                 PopupMenu popup = new PopupMenu(view.getContext(), holder.EditTrailer);
                 //inflating menu from xml resource
                 popup.inflate(R.menu.promo_menu);
-                SpannableString s = new SpannableString("Edit");
+                SpannableString s = new SpannableString("Change");
                 s.setSpan(new ForegroundColorSpan(Color.BLACK), 0, s.length(), 0);
                 popup.getMenu().getItem(0).setTitle(s);
                 SpannableString delete = new SpannableString("Delete");
