@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.movieticketapp.Activity.Notification.EditNotificationActivity;
+import com.example.movieticketapp.Activity.Notification.NotificationDetailActivity;
 import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.Model.NotificationModel;
 import com.example.movieticketapp.Model.Users;
@@ -49,6 +50,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         String PostTimeString = String.valueOf(Hour)+":"+String.valueOf(Minute)+" - "+String.valueOf(Day)+"/"+String.valueOf(Month)+"/"+String.valueOf(Year);
         holder.PostTime.setText(PostTimeString);
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(holder.itemView.getContext(), NotificationDetailActivity.class);
+                i.putExtra(ExtraIntent.notification, Notifications.get(position));
+                holder.itemView.getContext().startActivity(i);
+            }
+        });
         //if user
         try{
             if(Users.currentUser!=null)
