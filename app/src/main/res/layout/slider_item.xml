@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         app:riv_corner_radius="12dp"></com.makeramen.roundedimageview.RoundedImageView>
  <LinearLayout
-     android:layout_width="wrap_content"
+     android:layout_width="match_parent"
      android:layout_height="wrap_content"
      app:layout_constraintBottom_toBottomOf="parent"
      android:layout_marginBottom="12dp"
@@ -36,9 +36,10 @@
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
              android:numStars="5"
-             android:isIndicator="false"
+             android:isIndicator="true"
              android:layout_marginLeft="10dp"
              style="?android:attr/ratingBarStyleSmall"
+             android:rating="4.7"
              android:progressTint="#FFFFAF34"
              android:progressBackgroundTint="@color/white"
 

@@ -33,6 +33,7 @@ import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.CheckoutFilmModel;
 import com.example.movieticketapp.Model.Cinema;
 import com.example.movieticketapp.Model.FilmModel;
+import com.example.movieticketapp.Model.InforBooked;
 import com.example.movieticketapp.Model.Service;
 import com.example.movieticketapp.Model.ServiceInTicket;
 import com.example.movieticketapp.Model.Ticket;
@@ -286,6 +287,9 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
                                     }
                                 }
                             });
+                            InforBooked.getInstance().isCitySelected = false;
+                            InforBooked.getInstance().isDateSelected = false;
+                            InforBooked.getInstance().timeBooked = "";
                             Intent i = new Intent(getApplicationContext(), SuccessCheckoutActivity.class);
                             //i.putExtra(ExtraIntent.film, film);
                             startActivity(i);

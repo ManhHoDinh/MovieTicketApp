@@ -22,25 +22,28 @@
         android:theme="@style/Theme.MovieTicketApp"
         tools:targetApi="31">
         <activity
+            android:name=".ChangePasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.Movie.EditMovieActivity"
             android:exported="false" />
 
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
+
         <activity
             android:name=".Activity.Cinema.CinemaLocationActivity"
-            android:theme="@style/Theme.MovieTicketApp.NoActionBar"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"
+            android:theme="@style/Theme.MovieTicketApp.NoActionBar"></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDLVRBV69nurSKIEg0tU1k65es6uT82RFs" />
 
-        <uses-library android:name="org.apache.http.legacy" android:required="false" />
-
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
@@ -95,6 +98,7 @@
             android:exported="false" />
         <activity
             android:name=".Activity.Movie.SearchActivity"
+            android:windowSoftInputMode="stateHidden"
             android:exported="false" />
         <activity
             android:name=".Activity.Movie.ViewAllActivity"
@@ -141,6 +145,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".Activity.Ticket.Service.ServiceViewAll"
@@ -160,7 +165,10 @@
         <activity android:name=".Activity.Account.SignUpActivity" />
         <activity
             android:name=".Activity.Account.SignInActivity"
-            android:theme="@style/Theme.MovieProject.Main" />
+            android:theme="@style/Theme.MovieProject.Main"
+            />
+
+
         <activity
             android:name=".Activity.Movie.InformationFilmActivity"
             android:exported="false" />
@@ -171,6 +179,8 @@
         <activity android:name=".Activity.Ticket.TicketDetailActivity" />
         <activity
             android:name=".Activity.HomeActivity"
+            android:windowSoftInputMode="stateHidden"
+
             android:exported="true" />
         <activity android:name=".Activity.Wallet.MyWalletActivity" />
         <activity android:name=".Activity.Ticket.MyTicketAllActivity" />

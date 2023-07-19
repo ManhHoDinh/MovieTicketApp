@@ -6,6 +6,7 @@ import static com.example.movieticketapp.Firebase.FirebaseRequest.mAuth;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 
 import androidx.activity.result.ActivityResultCallback;
@@ -14,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.IntentFilter;
 import android.content.IntentSender;
@@ -33,9 +35,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -113,6 +117,16 @@ public class SignInActivity extends AppCompatActivity {
         forgotPasswordTv = findViewById(R.id.ForgotPassword);
         passwordLayout = findViewById(R.id.layoutPassword);
         emailLayout = findViewById(R.id.emailLayout);
+        LinearLayout layoutElement = findViewById(R.id.SignInLayout); // Replace with your actual layout element ID
+
+        layoutElement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Hide the keyboard
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
+        });
         emailET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -345,7 +359,7 @@ public class SignInActivity extends AppCompatActivity {
                     }
                 });
 
-        Users u = new Users(user.getUid(),   user.getDisplayName(),user.getEmail(),0, acType, user.getPhotoUrl().toString());
+        Users u = new Users(user.getUid(),   user.getDisplayName(),user.getEmail(),0, acType, user.getPhotoUrl().toString(), new ArrayList<>(), new ArrayList<>());
         FirebaseRequest.database.collection("Users").document(user.getUid())
                 .set(u.toJson())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -428,5 +442,15 @@ public class SignInActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        View focusedView = getCurrentFocus();
+        if (focusedView != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
+            focusedView.clearFocus();
+        }
     }
 }

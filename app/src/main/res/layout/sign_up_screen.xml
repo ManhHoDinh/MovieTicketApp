@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
+            android:id="@+id/SignUpLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="left|center"
@@ -123,30 +124,6 @@
                 android:background="@drawable/edittext_boder"
                 android:hint="Confirm Password"
                 android:inputType="textPassword"
-                android:paddingLeft="24dp"
-                android:singleLine="true"
-                android:textColor="@color/white_background"
-                android:textColorHint="@color/hint_color"
-                android:textSize="14dp"
-                android:fontFamily="@font/montserrat_regular"
-                android:textFontWeight="400"
-                android:paddingRight="24dp"/>
-            <CheckBox
-                android:id="@+id/checkadmin"
-                android:layout_marginTop="42dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sign up as new admin"
-                android:textColor="@color/white"
-                android:buttonTint="@color/white"/>
-
-            <EditText
-                android:id="@+id/admincode"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/edittext_boder"
-                android:hint="Admin code"
                 android:paddingLeft="24dp"
                 android:singleLine="true"
                 android:textColor="@color/white_background"

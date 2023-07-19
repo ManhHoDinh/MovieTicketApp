@@ -11,7 +11,9 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -32,6 +34,7 @@ import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Cinema;
 import com.example.movieticketapp.Model.City;
 import com.example.movieticketapp.Model.InforBooked;
+import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -56,6 +59,20 @@ import java.util.List;
 import java.util.UUID;
 
 public class AddCinemaActivity extends AppCompatActivity {
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListener, filter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListener);
+        super.onStop();
+    }
+
     private EditText nameCinema;
     private RoundedImageView imageCinema;
 

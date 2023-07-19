@@ -2,12 +2,18 @@ package com.example.movieticketapp.Activity.Account;
 
 import static android.content.ContentValues.TAG;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -17,10 +23,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.movieticketapp.Activity.Cinema.AddCinemaActivity;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
+import com.example.movieticketapp.Model.Cinema;
 import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,16 +37,72 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.Picasso;
+
+import java.util.UUID;
 
 public class EditProfileActivity extends AppCompatActivity {
     NetworkChangeListener networkChangeListener = new NetworkChangeListener();
     EditText fullNameET;
     EditText emailET;
-    EditText passwordET;
-    EditText CurrentPasswordET;
-    EditText confirmPasswordET;
+
+    ImageView addImage;
+    RoundedImageView avatarImg;
+    UploadTask uploadTask;
+    String cinemaImg;
+    Uri filePath;
+    String img;
+    FirebaseUser currentUser =  FirebaseRequest.mAuth.getCurrentUser();
+    StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+    FirebaseFirestore databaseReference = FirebaseFirestore.getInstance();
+    ActivityResultLauncher<Intent> activityLauch = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // There are no request codes
+                        Intent data = result.getData();
+                        if(data.getData() != null){
+                            filePath = data.getData();
+
+                            avatarImg.setImageURI(filePath);
+                            img = UUID.randomUUID().toString();
+
+                            StorageReference ref
+                                    = storageReference
+                                    .child(img);
+                            ref.putFile(filePath).addOnSuccessListener(
+                                    new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
+                                        @Override
+                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
+                                        {
+                                            Toast.makeText(EditProfileActivity.this, "Image Uploaded!!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e)
+                                {
+                                    Toast.makeText(EditProfileActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+                }
+            });
     @Override
     protected void onStart() {
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -54,20 +119,29 @@ public class EditProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_profile_screen);
-        ImageView imageView =  findViewById(R.id.addimage);
+        addImage =  findViewById(R.id.addimage);
+        avatarImg = findViewById(R.id.avatarImg);
         fullNameET=findViewById(R.id.fullname);
         emailET=findViewById(R.id.emailaddress);
-        passwordET=findViewById(R.id.password);
-        confirmPasswordET=findViewById(R.id.confirmpassword);
-        CurrentPasswordET=findViewById(R.id.currentPassword);
-        fullNameET.setText(FirebaseRequest.mAuth.getCurrentUser().getDisplayName());
-        emailET.setText(FirebaseRequest.mAuth.getCurrentUser().getEmail());
-        
-        imageView.setOnClickListener(new View.OnClickListener() {
+
+        FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Users user = documentSnapshot.toObject(Users.class);
+                fullNameET.setText(user.getName());
+                emailET.setText(user.getEmail());
+                Picasso.get().load(user.getAvatar()).into(avatarImg);
+            }
+        });
+//        fullNameET.setText(FirebaseRequest.mAuth.getCurrentUser().getDisplayName());
+//        emailET.setText(FirebaseRequest.mAuth.getCurrentUser().getEmail());
+//        Picasso.get().load(currentUser.getPhotoUrl()).into(avatarImg);
+        addImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent =  new Intent(Intent.ACTION_PICK);
                 intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                activityLauch.launch(intent);
             }
         });
         Button backBt = findViewById(R.id.backbutton);
@@ -96,63 +170,20 @@ public class EditProfileActivity extends AppCompatActivity {
         {
             emailET.setError("Email is not empty!!!");
         }
-        else if(CurrentPasswordET.length()==0)
-        {
-            CurrentPasswordET.setError("Current Password is not empty!!!");
-        }
-        else if(passwordET.length()==0)
-        {
-            passwordET.setError("Password is not empty!!!");
-        }
-        else if(!confirmPasswordET.getText().toString().equals(passwordET.getText().toString()))
-        {
-            confirmPasswordET.setError("Password and confirmation passwords are not equals !!!");
-        }
         else{
-            AuthCredential credential = EmailAuthProvider.getCredential(FirebaseRequest.mAuth.getCurrentUser().getEmail(), CurrentPasswordET.getText().toString());
-            FirebaseRequest.mAuth.getCurrentUser().reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) {
-                        // User has been successfully re-authenticated
-                        // You can update the password now
-                        Update();
-                    } else {
-                        // An error occurred while re-authenticating the user
-                        // Handle the error
-                        UpdateError("Update");
-                    }
-                }
-            });
-
+            Update();
+            finish();
         }
+        updateAvatar();
     }
     void Update()
     {
-        String name = "new_password";
-        if(!CurrentPasswordET.getText().toString().equals(passwordET.getText().toString()))
-            UpdatePassword();
         if(!emailET.getText().toString().equals(FirebaseRequest.mAuth.getCurrentUser().getEmail()))
             UpdateEmail();
         if(!fullNameET.getText().toString().equals(FirebaseRequest.mAuth.getCurrentUser().getDisplayName()))
             UpdateFullName();
     }
-    void UpdatePassword()
-    {
-        String newPassword = "new_password";
-        FirebaseRequest.mAuth.getCurrentUser().updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
 
-                } else {
-                    // An error occurred while updating the user password
-                    // Handle the error
-                    UpdateError("Password");
-                }
-            }
-        });
-    }
     void UpdateFullName()
     {
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
@@ -170,6 +201,8 @@ public class EditProfileActivity extends AppCompatActivity {
                 }
             }
         });
+        FirebaseRequest.database.collection("Users").document(currentUser.getUid()).update("Name", fullNameET.getText().toString());
+
     }
     void UpdateEmail()
     {
@@ -182,6 +215,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 }
             }
         });
+        FirebaseRequest.database.collection("Users").document(currentUser.getUid()).update("Email", emailET.getText().toString());
     }
 //    void SuccessUpdate()
 //    {
@@ -192,5 +226,48 @@ public class EditProfileActivity extends AppCompatActivity {
     {
         Toast.makeText(EditProfileActivity.this, "Edit Profile failed : " + error,
                 Toast.LENGTH_SHORT).show();
+    }
+    void updateAvatar(){
+        if(filePath != null){
+            StorageReference ref = storageReference.child(img);
+            uploadTask = ref.putFile(filePath);
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    // Continue with the task to get the download URL
+                    return ref.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        cinemaImg = task.getResult().toString();
+                        CollectionReference cinemaCollection = FirebaseFirestore.getInstance().collection("Users");
+                        DocumentReference doc;
+                        doc = cinemaCollection.document(currentUser.getUid());
+
+                        doc.update("avatar", cinemaImg);
+
+                        FirebaseStorage.getInstance().getReferenceFromUrl(cinemaImg).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                Log.e("fd", uri.toString());
+                                UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder()
+                                        .setPhotoUri(uri)
+                                        .build();
+                                FirebaseAuth.getInstance().getCurrentUser().updateProfile(userProfileChangeRequest);
+
+                                Log.e("fdd", currentUser.getPhotoUrl().toString());
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
     }
 }

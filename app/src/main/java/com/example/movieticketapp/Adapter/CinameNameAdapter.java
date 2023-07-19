@@ -118,6 +118,14 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
         InforBooked.getInstance().listCinema = listCinema;
         Cinema item = getItem(position);
         client = LocationServices.getFusedLocationProviderClient(context);
+        if((InforBooked.getInstance().isCitySelected && InforBooked.getInstance().isDateSelected) || (ScheduleFilm.getInstance().isCitySelected && ScheduleFilm.getInstance().isDateSelected)) {
+            distance.setVisibility(View.VISIBLE);
+            showHideBtn.setVisibility(View.VISIBLE);
+        }
+        else {
+            distance.setVisibility(View.GONE);
+            showHideBtn.setVisibility(View.GONE);
+        }
         try{
             List<Address> listAddress = null;
             Geocoder geocoder = new Geocoder(context);
@@ -155,7 +163,6 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
         }
         finally {
             try{
-
                 if(Users.currentUser!=null)
                     if(((Users.currentUser.getAccountType().toString()).equals("admin")))
                     {
@@ -167,85 +174,89 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
 
                                     listTime.add(formatter.format(i)+":" + formatter.format(j));
                                 }
-                        }
-                        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext()){
-                            @Override
-                            public boolean canScrollVertically() {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean canScrollHorizontally() {
-                                return false;
-                            }
-
-                        };
-                        layoutManager.setFlexDirection(FlexDirection.ROW);
-                        layoutManager.setJustifyContent(JustifyContent.FLEX_START);
-                        recyclerView.setLayoutManager(layoutManager);
-
-
-                        FirebaseRequest.database.collection("Showtime").addSnapshotListener(new EventListener<QuerySnapshot>() {
-                            @Override
-                            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                                List<DocumentSnapshot> listDocs = value.getDocuments();
-                                List<ShowTime> listShowTime = new ArrayList<ShowTime>();
-                                for(DocumentSnapshot doc : listDocs){
-                                    ShowTime showTime = doc.toObject(ShowTime.class);
-                                    listShowTime.add(showTime);
+                            FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext()){
+                                @Override
+                                public boolean canScrollVertically() {
+                                    return false;
                                 }
 
-                                recyclerView.setAdapter(new TimeScheduleAdapter(listTime, null, film, item, itemView, null, null, listShowTime));
+                                @Override
+                                public boolean canScrollHorizontally() {
+                                    return false;
+                                }
+
+                            };
+                            layoutManager.setFlexDirection(FlexDirection.ROW);
+                            layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+                            recyclerView.setLayoutManager(layoutManager);
 
 
-                            }
-                        });
+                            FirebaseRequest.database.collection("Showtime").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                    List<DocumentSnapshot> listDocs = value.getDocuments();
+                                    List<ShowTime> listShowTime = new ArrayList<ShowTime>();
+                                    for(DocumentSnapshot doc : listDocs){
+                                        ShowTime showTime = doc.toObject(ShowTime.class);
+                                        listShowTime.add(showTime);
+                                    }
 
-                        cinemaName.setText(item.getName());
-                        addressCinema.setText(item.getAddress());
+                                    recyclerView.setAdapter(new TimeScheduleAdapter(listTime, null, film, item, itemView, null, null, listShowTime));
+
+
+                                }
+                            });
+
+                            cinemaName.setText(item.getName());
+                            addressCinema.setText(item.getAddress());
+                        }
+
 
                     }
                     else {
                         Query query = FirebaseRequest.database.collection("Showtime").orderBy("timeBooked");
-                        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
-                            @Override
-                            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                                for(DocumentSnapshot doc : value){
-                                    Timestamp time = doc.getTimestamp("timeBooked");
 
-                                    DateFormat dateFormat = new SimpleDateFormat("EEE\nd", Locale.ENGLISH);
+                        if(InforBooked.getInstance().isDateSelected && InforBooked.getInstance().isCitySelected){
 
-                                    if(doc.get("cinemaID").equals(item.getCinemaID()) && doc.get("filmID").equals(film.getId()) && dateFormat.format(time.toDate()).equals(InforBooked.getInstance().dateBooked)){
-                                        DateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
-                                        listTime.add(timeFormat.format(time.toDate()));
+                            query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                    for(DocumentSnapshot doc : value){
+                                        Timestamp time = doc.getTimestamp("timeBooked");
+
+                                        DateFormat dateFormat = new SimpleDateFormat("EEE\nd", Locale.ENGLISH);
+
+                                        if(doc.get("cinemaID").equals(item.getCinemaID()) && doc.get("filmID").equals(film.getId()) && dateFormat.format(time.toDate()).equals(InforBooked.getInstance().dateBooked)){
+                                            DateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+                                            listTime.add(timeFormat.format(time.toDate()));
+                                        }
                                     }
+                                    FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext()){
+                                        @Override
+                                        public boolean canScrollVertically() {
+                                            return false;
+                                        }
+
+                                        @Override
+                                        public boolean canScrollHorizontally() {
+                                            return false;
+                                        }
+
+                                    };
+                                    layoutManager.setFlexDirection(FlexDirection.ROW);
+                                    layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+                                    recyclerView.setLayoutManager(layoutManager);
+                                    if(!InforBooked.getInstance().isCitySelected || !InforBooked.getInstance().isDateSelected){
+                                        recyclerView.setAdapter(new TimeBookedAdapter(new ArrayList<String>(), null,null, item, itemView, null, null));
+                                    }
+                                    else recyclerView.setAdapter(new TimeBookedAdapter(listTime, null,null, item, itemView, null, null));
+                                    cinemaName.setText(item.getName());
+                                    addressCinema.setText(item.getAddress());
                                 }
-                                FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext()){
-                                    @Override
-                                    public boolean canScrollVertically() {
-                                        return false;
-                                    }
+                            });
 
-                                    @Override
-                                    public boolean canScrollHorizontally() {
-                                        return false;
-                                    }
-
-                                };
-                                layoutManager.setFlexDirection(FlexDirection.ROW);
-                                layoutManager.setJustifyContent(JustifyContent.FLEX_START);
-                                recyclerView.setLayoutManager(layoutManager);
-                                if(!InforBooked.getInstance().isCitySelected || !InforBooked.getInstance().isDateSelected){
-                                    recyclerView.setAdapter(new TimeBookedAdapter(new ArrayList<String>(), null,null, item, itemView, null, null));
-                                }
-                                else recyclerView.setAdapter(new TimeBookedAdapter(listTime, null,null, item, itemView, null, null));
-                                cinemaName.setText(item.getName());
-                                addressCinema.setText(item.getAddress());
-                            }
-                        });
-
+                        }
                     }
-
                 locationLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -272,6 +283,8 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
                         }
                     }
                 });
+
+
             }
             catch (Exception e)
             {

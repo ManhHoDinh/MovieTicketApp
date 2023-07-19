@@ -4,6 +4,111 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_color"
     tools:context=".Activity.Notification.NotificationDetailActivity">
+    <ImageView
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/btnBack"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="36dp"
+        android:src="@drawable/ic_back" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+        >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Notification"
+                android:textColor="@color/white"
+                android:fontFamily="@font/montserrat600"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:layout_marginTop="50dp"
+                android:id="@+id/NotiPage"
+                android:layout_centerHorizontal="true"
+                />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/devider"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="25dp"
+            android:layout_width="match_parent"
+            android:layout_below="@id/NotiPage"
+            android:layout_height="2dp"
+            android:background="@color/grey_background_2"
+            />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_below="@id/devider"
+            android:layout_height="wrap_content"
+
+            android:scrollbars="none"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp">
+                <TextView
+                    android:id="@+id/titleText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Title: "
+                    android:textSize="18sp"
+                    android:fontFamily="@font/montserrat600"/>
+
+                <TextView
+                    android:id="@+id/titleContent"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_toRightOf="@id/titleText"
+                    android:fontFamily="@font/montserrat400"
+                    android:text="notification title"
+                    android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/descriptionText"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@id/titleContent"
+                    android:layout_height="wrap_content"
+                    android:text="Description: "
+                    android:textSize="18sp"
+                    android:fontFamily="@font/montserrat600"/>
+                <TextView
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/descriptionText"
+                    android:id="@+id/descriptionContent"
+                    android:lineSpacingExtra="4sp"
+                    android:textSize="16sp"
+                    android:text="Từng ngày từng tháng trôi qua thành năm anh vẫn mong chờ tình yêu, bước qua bao cảm xúc ôi nỗi đau em mang thật nhiều, giọt lệ buồn trên đôi mắt này , nỗi lòng này cây xơ xác thấy em buồn rầu chẳng mấy ai thương "
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/montserrat400"/>
+            </RelativeLayout>
+        </ScrollView>
+    </RelativeLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:background="@color/background_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="match_parent"
+        app:itemIconTint="@drawable/bottom_tem_selector"
+        app:itemTextColor="@drawable/bottom_tem_selector"
+        app:menu="@menu/bottom_bar_menu"
+        android:layout_height="60dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

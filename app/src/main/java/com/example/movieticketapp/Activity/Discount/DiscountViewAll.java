@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +27,7 @@ import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Discount;
 import com.example.movieticketapp.Model.UserAndDiscount;
 import com.example.movieticketapp.Model.Users;
+import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.example.movieticketapp.databinding.ActivityDiscountViewAllBinding;
 import com.example.movieticketapp.databinding.HomeScreenBinding;
@@ -44,6 +47,20 @@ import java.util.List;
 import java.util.Queue;
 
 public class DiscountViewAll extends AppCompatActivity {
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListener, filter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListener);
+        super.onStop();
+    }
+
     ActivityDiscountViewAllBinding binding;
     private ListView promotionView;
     List<Discount> Discounts = new ArrayList<>();
@@ -93,10 +110,9 @@ public class DiscountViewAll extends AppCompatActivity {
                                 List<Discount> listDiscounts = new ArrayList<Discount>();
                                 for(DocumentSnapshot doc : value){
                                     Discount f = doc.toObject(Discount.class);
-                                    listDiscounts.add(f);
-
+                                    Discounts.add(f);
                                 }
-                                DiscountAdapter discountAdapter = new DiscountAdapter(DiscountViewAll.this,R.layout.promo_item,listDiscounts);
+                                DiscountAdapter discountAdapter = new DiscountAdapter(DiscountViewAll.this,R.layout.promo_item,Discounts);
                                 promotionView.setAdapter(discountAdapter);
 
                             }
@@ -105,13 +121,11 @@ public class DiscountViewAll extends AppCompatActivity {
                     else{
                         CollectionReference PromoRef = db.collection(UserAndDiscount.collectionName);
                         Query query = PromoRef.whereEqualTo("userID", FirebaseRequest.mAuth.getUid());
-
-                        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                             @Override
-                            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                 List<String> listDiscountID = new ArrayList<>();
-                                for(DocumentSnapshot doc : value){
+                                for(DocumentSnapshot doc : queryDocumentSnapshots){
                                     listDiscountID.add(doc.get("discountID").toString());
                                     // DocumentReference document = FirebaseRequest.database.collection(Discount.CollectionName).document(doc.get("discountID").toString());
                                 }
@@ -146,9 +160,7 @@ public class DiscountViewAll extends AppCompatActivity {
                                             }
                                         }
                                     });
-                                }
-
-
+                                } else   promotionView.setAdapter(new DiscountAdapter(DiscountViewAll.this,R.layout.promo_item,new ArrayList<Discount>()));
                             }
                         });
                     }
@@ -190,25 +202,27 @@ public class DiscountViewAll extends AppCompatActivity {
     private void filter(String text) {
         // creating a new array list to filter our data.
         ArrayList<Discount> filteredlist = new ArrayList<Discount>();
-
-        FirebaseRequest.database.collection(Discount.CollectionName).addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                List<Discount> list = new ArrayList<Discount>();
-                for(DocumentSnapshot doc : value){
-                    list.add(doc.toObject(Discount.class));
-                }
-                for (Discount item : list) {
-                    // checking if the entered string matched with any item of our recycler view.
-                    if (item.getName().toLowerCase().contains(text.toLowerCase())) {
-                        // if the item is matched we are
-                        // adding it to our filtered list.
-                        filteredlist.add(item);
-                    }
-                }
-                promotionView.setAdapter(new DiscountAdapter(DiscountViewAll.this,R.layout.promo_item, filteredlist));
+        for (Discount item : Discounts) {
+            // checking if the entered string matched with any item of our recycler view.
+            if (item.getName().toLowerCase().contains(text.toLowerCase())) {
+                // if the item is matched we are
+                // adding it to our filtered list.
+                filteredlist.add(item);
             }
-        });
+        }
+        promotionView.setAdapter(new DiscountAdapter(DiscountViewAll.this,R.layout.promo_item, filteredlist));
+
+//        FirebaseRequest.database.collection(Discount.CollectionName).addSnapshotListener(new EventListener<QuerySnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+//                List<Discount> list = new ArrayList<Discount>();
+//                for(DocumentSnapshot doc : value){
+//                    list.add(doc.toObject(Discount.class));
+//                }
+//
+
+//            }
+//        });
         // running a for loop to compare elements.
 
 

@@ -34,4 +34,30 @@
     <color name="text_input">#CAE4FF</color>
     <color name="green">#7FFFD4</color>
     <color name="red">#FF0000</color>
+
+
+<!--    color in chart-->
+    <color name="color1">#ff800000</color>
+    <color name="color2">#ffc0c0c0</color>
+    <color name="color3">#ffff00ff</color>
+    <color name="color4">#ff008000</color>
+    <color name="color5">#ff00ff00</color>
+    <color name="color6">#ffffff00</color>
+    <color name="color7">#ff0000ff</color>
+    <color name="color8">#ff6a5acd</color>
+    <color name="color9">#ffd8bfd8</color>
+    <color name="color10">#ffee82ee</color>
+    <color name="color11">#ff9acd32</color>
+    <color name="color12">#fffff5ee</color>
+    <color name="color13">#ffa0522d</color>
+    <color name="color14">#ff663399</color>
+    <color name="color15">#fff5deb3</color>
+    <color name="color16">#ffffe4c4</color>
+    <color name="color17">#ff000080</color>
+    <color name="color18">#fff5f5dc</color>
+    <color name="color19">#ff808000</color>
+    <color name="color20">#ffFF0000</color>
+
+
+
 </resources>

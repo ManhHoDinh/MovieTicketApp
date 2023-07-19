@@ -20,10 +20,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.media.Image;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -50,12 +52,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.android.MediaManager;
+import com.cloudinary.android.callback.ErrorInfo;
+import com.cloudinary.android.callback.UploadCallback;
+import com.cloudinary.utils.ObjectUtils;
 import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
-import com.example.movieticketapp.Adapter.EditTrailerAdapter;
 import com.example.movieticketapp.Adapter.ServiceAdapter;
 import com.example.movieticketapp.Adapter.TrailerMovieApdapter;
 import com.example.movieticketapp.Model.FilmModel;
+import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -83,6 +90,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.squareup.picasso.Picasso;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -102,6 +111,20 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class AddMovieActivity extends AppCompatActivity{
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListener, filter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListener);
+        super.onStop();
+    }
+
     public static List<Uri> videoUris= new ArrayList<>();
     public static  Uri defaultUri;
     public  ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
@@ -122,18 +145,17 @@ public class AddMovieActivity extends AppCompatActivity{
     EditText movieName;
     TextView movieKind;
     EditText movieDurarion;
-    public static Context context;
     Button applyButton;
     Button cancleButton;
     Uri backgrounduri;
     Uri avataruri = null;
 
     String urlbackground;
-    Timestamp dateStart;
+    Timestamp BeginDate;
+    Timestamp EndDate;
     String urlavatar;
-    UploadTask uploadTask;
-    UploadTask uploadTask2;
-    Button calendarButton;
+    Button BeginDateCalendarButton;
+    Button EndDateCalendarButton;
     TrailerMovieApdapter adapter;
     List<String> InStorageVideoUris=new ArrayList<>();
     loadingAlert loadingDialog;
@@ -149,14 +171,23 @@ public class AddMovieActivity extends AppCompatActivity{
         InStorageVideoUris.clear();
         loadingDialog= new loadingAlert(AddMovieActivity.this);
         defaultUri=Uri.parse("https://example.com/default");;
-        calendarButton = findViewById(R.id.Calendar);
+        BeginDateCalendarButton = findViewById(R.id.BeginDateCalendar);
+        EndDateCalendarButton= findViewById(R.id.EndDateCalendar);
         document = databaseReference.collection("Movies").document();
 
-       calendarButton.setOnClickListener(new View.OnClickListener() {
+        BeginDateCalendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Show calendar dialog
-                showCalendarDialog();
+                showBeginDateCalendarDialog();
+                dismissKeyboard(v);
+            }
+        });
+        EndDateCalendarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Show calendar dialog
+                showEndDateCalendarDialog();
                 dismissKeyboard(v);
             }
         });
@@ -182,7 +213,6 @@ public class AddMovieActivity extends AppCompatActivity{
             public void onClick(View v) {
                 // Hide the keyboard
                 dismissKeyboard(v);
-
             }
         });
         movieKind.setOnClickListener(new View.OnClickListener() {
@@ -203,6 +233,7 @@ public class AddMovieActivity extends AppCompatActivity{
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dismissKeyboard(view);
                 if(videos.size()==0)
                 {
                     InStorageVideoUris.clear();
@@ -251,16 +282,19 @@ public class AddMovieActivity extends AppCompatActivity{
         moviebackground.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                clearFocus();
+                dismissKeyboard();
                 pickMedia.launch(new PickVisualMediaRequest.Builder()
                         .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
                         .build());
                 th = 0;
-                dismissKeyboard(view);
             }
         });
         movieavatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                clearFocus();
+                dismissKeyboard();
                 pickMedia.launch(new PickVisualMediaRequest.Builder()
                         .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
                         .build());
@@ -269,7 +303,7 @@ public class AddMovieActivity extends AppCompatActivity{
             }
         });
 
-       pickVideo =
+        pickVideo =
                 registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
                     if (uri != null) {
                         int position = adapter.getSelectedPosition();
@@ -286,7 +320,7 @@ public class AddMovieActivity extends AppCompatActivity{
             public void onClick(View view) {
                 dismissKeyboard(view);
                 boolean error = false;
-                int totalUploadTasks = 2 + AddMovieActivity.videoUris.size();
+                int totalUploadTasks = 2 + videos.size();
                 AtomicInteger completedUploadTasks = new AtomicInteger(0);
                 if (movieName.length() == 0) {
                     movieName.setError("Movie Name cannot be empty!!!");
@@ -306,126 +340,165 @@ public class AddMovieActivity extends AppCompatActivity{
                     movieDurarion.setError("Movie Duration cannot be empty!!!");
                     error = true;
                 }
-                if(dateStart==null)
+                if(BeginDate==null)
                 {
                     error=true;
                     Toast toast = Toast.makeText(getApplicationContext(), "Chose Start Date, Please!!!", Toast.LENGTH_SHORT);
                     toast.show();
                 }
+                if(EndDate==null)
+                {
+                    error=true;
+                    Toast toast = Toast.makeText(getApplicationContext(), "Chose End Date, Please!!!", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                if(EndDate!=null && BeginDate!=null)
+                {
+                    if(EndDate.toDate().before(BeginDate.toDate()))
+                    {
+                        error=true;
+                        Toast toast = Toast.makeText(getApplicationContext(), "Begin date must be earlier than end date!!!", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                }
                 if (!error)
                 {
                     loadingDialog.StartAlertDialog();
 
-                    String MovieName = movieName.getText().toString();
-                    storageReference = storageReference.child("Movies/"+MovieName+"/"+MovieName+"Poster.jpg");
-                    uploadTask = storageReference.putFile(backgrounduri);
-                    uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                        @Override
-                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                            if (!task.isSuccessful()) {
-                                throw task.getException();
-                            }
-
-                            // Continue with the task to get the download URL
-                            return storageReference.getDownloadUrl();
-                        }
-                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Uri> task) {
-                            if (task.isSuccessful()) {
-                                urlbackground = task.getResult().toString();
-                                SaveDatatoDatabase();
-                             } else {
-                                Toast.makeText(getApplicationContext(), "ERROR BACKGROUND UPLOAD!!!", Toast.LENGTH_SHORT).show();
-                                loadingDialog.closeLoadingAlert();
-                            }
-                            if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
-                                RefeshScreen();
-                                finish();
-                                Toast toast = Toast.makeText(getApplicationContext(),"Add movie success!!!", Toast.LENGTH_SHORT);
-                                toast.show();
-                            }
-                           }
-                    });
-                    storageReference2 = storageReference2.child("Movies/"+MovieName+"/"+MovieName+"Primary.jpg");
-                    uploadTask2 = storageReference2.putFile(avataruri);
-                    uploadTask2.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                        @Override
-                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                            if (!task.isSuccessful()) {
-                                throw task.getException();
-                            }
-
-                            // Continue with the task to get the download URL
-                            return storageReference2.getDownloadUrl();
-                        }
-                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Uri> task) {
-                            if (task.isSuccessful()) {
-                                urlavatar = task.getResult().toString();
-                                SaveDatatoDatabase();
-
-                            } else {
-                                Toast.makeText(getApplicationContext(), "ERROR AVATAR UPLOAD!!!", Toast.LENGTH_SHORT).show();
-                                loadingDialog.closeLoadingAlert();
-                            }
-                            if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
-                               RefeshScreen();
-                               finish();
-                                Toast toast = Toast.makeText(getApplicationContext(),"Add movie success!!!", Toast.LENGTH_SHORT);
-                                toast.show();
-                            }
-                        }
-                    });
-                     for(int i = 0; i < AddMovieActivity.videoUris.size();i++)
-                    {
-                        StorageReference VideoStorageReference= FirebaseStorage.getInstance().getReference().child("Movies/"+MovieName+"/"+MovieName+"Video"+String.valueOf(i)+".mp4");
-                        completedUploadTasks.incrementAndGet();
-                        if(AddMovieActivity.videoUris.get(i)== AddMovieActivity.defaultUri)
-                        {
-                            if(i==AddMovieActivity.videoUris.size()-1&& uploadTask.isComplete()&&uploadTask2.isComplete())
-                            {
-                                RefeshScreen();
-                                finish();
-                                Toast toast = Toast.makeText(getApplicationContext(),"Add movie success!!!", Toast.LENGTH_SHORT);
-                                toast.show();
-                            }
-                                continue;
-                        }
-
-                        VideoStorageReference.putFile(AddMovieActivity.videoUris.get(i)).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                            @Override
-                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                                if (!task.isSuccessful()) {
-                                    throw task.getException();
+                    String folder = "Movies/"+document.getId(); // Replace "your_folder_name" with the desired folder name
+                    String BackgroundName = folder + "/Background" ;
+                    MediaManager.get().upload(backgrounduri).option("public_id", BackgroundName)
+                            .callback(new UploadCallback() {
+                                @Override
+                                public void onStart(String requestId) {
+                                    // your code here
                                 }
-
-                                // Continue with the task to get the download URL
-                                return VideoStorageReference.getDownloadUrl();
-                            }
-                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Uri> task) {
-                                if (task.isSuccessful()) {
-                                    InStorageVideoUris.add(task.getResult().toString());
+                                @Override
+                                public void onProgress(String requestId, long bytes, long totalBytes) {
+                                    // example code starts here
+                                    Double progress = (double) bytes/totalBytes;
+                                    // post progress to app UI (e.g. progress bar, notification)
+                                    // example code ends here
+                                }
+                                @Override
+                                public void onSuccess(String requestId, Map resultData) {
+                                    // your code here
+                                    String url = (String) resultData.get("secure_url");
+                                    urlbackground = url;
                                     SaveDatatoDatabase();
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "ERROR VIDEO UPLOAD!!!", Toast.LENGTH_SHORT).show();
-                                    loadingDialog.closeLoadingAlert();
+                                    if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
+                                    RefeshScreen();
+                                    finish();
+                                    Toast toast = Toast.makeText(getApplicationContext(),"Add movie success!!!", Toast.LENGTH_SHORT);
+                                    toast.show();
+                                    }
                                 }
-                                if (completedUploadTasks.get() == totalUploadTasks) {
-                                  RefeshScreen();
-                                  finish();
-                                  Toast toast = Toast.makeText(getApplicationContext(),"Add movie success!!!", Toast.LENGTH_SHORT);
-                                  toast.show();
+                                @Override
+                                public void onError(String requestId, ErrorInfo error) {
+                                    // your code here
+                                    if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
+                                        RefeshScreen();
+                                        finish();
+                                        Toast toast = Toast.makeText(getApplicationContext(),"Add movie success!!!", Toast.LENGTH_SHORT);
+                                        toast.show();
+                                    }
                                 }
-                            }
-                        });
+                                @Override
+                                public void onReschedule(String requestId, ErrorInfo error) {
+                                    // your code here
+                                }})
+                            .dispatch();
+                    String PrimaryName = folder + "/Primary" ;
+                    MediaManager.get().upload(avataruri).option("public_id", PrimaryName)
+                            .callback(new UploadCallback() {
+                                @Override
+                                public void onStart(String requestId) {
+                                    // your code here
+                                }
+                                @Override
+                                public void onProgress(String requestId, long bytes, long totalBytes) {
+                                    // example code starts here
+                                    Double progress = (double) bytes/totalBytes;
+                                    // post progress to app UI (e.g. progress bar, notification)
+                                    // example code ends here
+                                }
+                                @Override
+                                public void onSuccess(String requestId, Map resultData) {
+                                    // your code here
+                                    String url = (String) resultData.get("secure_url");
+                                    urlavatar = url;
+                                    SaveDatatoDatabase();
+                                    if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
+                                        RefeshScreen();
+                                        finish();
+                                        Toast toast = Toast.makeText(getApplicationContext(),"Add movie success!!!", Toast.LENGTH_SHORT);
+                                        toast.show();
+                                    }
+                                }
+                                @Override
+                                public void onError(String requestId, ErrorInfo error) {
+                                    // your code here
+                                    if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
+                                        RefeshScreen();
+                                        finish();
+                                        Toast toast = Toast.makeText(getApplicationContext(),"Add movie success!!!", Toast.LENGTH_SHORT);
+                                        toast.show();
+                                    }
+                                }
+                                @Override
+                                public void onReschedule(String requestId, ErrorInfo error) {
+                                    // your code here
+                                }})
+                            .dispatch();
+
+                    for(int i = 0; i < AddMovieActivity.videoUris.size();i++)
+                    {
+                        Map<String, Object> options = new HashMap<>();
+                        options.put("public_id", folder + "/video"+String.valueOf(i));
+                        options.put("resource_type", "video");
+                        MediaManager.get().upload(AddMovieActivity.videoUris.get(i)).options(options).option("chunk_size", 10000000)
+                                .callback(new UploadCallback() {
+                                    @Override
+                                    public void onStart(String requestId) {
+                                        // your code here
+                                    }
+                                    @Override
+                                    public void onProgress(String requestId, long bytes, long totalBytes) {
+                                        // example code starts here
+                                        Double progress = (double) bytes/totalBytes;
+                                        // post progress to app UI (e.g. progress bar, notification)
+                                        // example code ends here
+                                    }
+                                    @Override
+                                    public void onSuccess(String requestId, Map resultData) {
+                                        // your code here
+                                        String url = (String) resultData.get("secure_url");
+                                        InStorageVideoUris.add(url);
+                                        SaveDatatoDatabase();
+                                        if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
+                                            RefeshScreen();
+                                            finish();
+                                            Toast toast = Toast.makeText(getApplicationContext(),"Add movie success!!!", Toast.LENGTH_SHORT);
+                                            toast.show();
+                                        }
+                                    }
+                                    @Override
+                                    public void onError(String requestId, ErrorInfo error) {
+                                        // your code here
+                                        if (completedUploadTasks.incrementAndGet() == totalUploadTasks) {
+                                            RefeshScreen();
+                                            finish();
+                                            Toast toast = Toast.makeText(getApplicationContext(),"Add movie success!!!", Toast.LENGTH_SHORT);
+                                            toast.show();
+                                        }
+                                    }
+                                    @Override
+                                    public void onReschedule(String requestId, ErrorInfo error) {
+                                        // your code here
+                                    }})
+                                .dispatch();
                     }
-                     }
-
-
+                }
                 else
                 {
                     Toast toast = Toast.makeText(getApplicationContext(), "Have some errors!!!", Toast.LENGTH_SHORT);
@@ -439,10 +512,16 @@ public class AddMovieActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 dismissKeyboard(view);
-                RefeshScreen();
                 finish();
+                RefeshScreen();
             }
         });
+    }
+    @Override
+    public void onBackPressed() {
+        AddMovieActivity.videos.clear();
+        AddMovieActivity.videoUris.clear();
+        super.onBackPressed();
     }
 
     void RefeshScreen()
@@ -467,17 +546,19 @@ public class AddMovieActivity extends AppCompatActivity{
         data.put("genre", movieKind.getText().toString());
         data.put("id", document.getId());
         data.put("name", movieName.getText().toString());
-        data.put("movieBeginDate", dateStart);
+        data.put("movieBeginDate", BeginDate);
+        data.put("movieEndDate",EndDate);
         data.put("vote", 0);
         data.put("trailer",InStorageVideoUris);
         document.set(data);
     }
-    LocalDate localDate;
-    private void showCalendarDialog() {
+    LocalDate localBeginDate;
+    LocalDate localEndDate;
+    private void showBeginDateCalendarDialog() {
         // Create a calendar instance and get the current date
         Calendar calendar = Calendar.getInstance();
-        if(localDate!=null)
-            calendar.set(localDate.getYear(),localDate.getMonthValue(),localDate.getDayOfMonth());
+        if(localBeginDate!=null)
+            calendar.set(localBeginDate.getYear(),localBeginDate.getMonthValue()-1,localBeginDate.getDayOfMonth());
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
@@ -490,7 +571,7 @@ public class AddMovieActivity extends AppCompatActivity{
                         // Handle the selected date
                         // You can update the button text or perform any other actions here
                         String date = String.valueOf(selectedDay) + "/" + String.valueOf(selectedMonth + 1) + "/" + String.valueOf(selectedYear);
-                        calendarButton.setText(date);
+                        BeginDateCalendarButton.setText(date);
                     }
                 }, year, month, dayOfMonth) {
             @Override
@@ -508,7 +589,7 @@ public class AddMovieActivity extends AppCompatActivity{
                         int month = datePicker.getMonth();
                         int dayOfMonth = datePicker.getDayOfMonth();
                         String date = String.valueOf(dayOfMonth) + "/" + String.valueOf(month + 1) + "/" + String.valueOf(year);
-                        localDate = LocalDate.of(year, month, dayOfMonth);
+                        localBeginDate = LocalDate.of(year, month+1, dayOfMonth);
                         Calendar calendar = Calendar.getInstance();
                         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                         calendar.set(Calendar.MONTH, month); // Note: Calendar.MONTH is zero-based
@@ -517,8 +598,68 @@ public class AddMovieActivity extends AppCompatActivity{
                         calendar.set(Calendar.MINUTE, 0);
                         calendar.set(Calendar.SECOND, 0);
 
-                        dateStart = new Timestamp(calendar.getTime());
-                        calendarButton.setText(date);dismiss();
+                        BeginDate = new Timestamp(calendar.getTime());
+                        BeginDateCalendarButton.setText(date);dismiss();
+                    }
+                });
+                // Set the desired background color for the button
+                positiveButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.green));
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
+                layoutParams.setMarginStart((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics()));
+                positiveButton.setLayoutParams(layoutParams);
+                negativeButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.grey_background_1));
+            }
+        };
+
+        // Show the dialog
+        datePickerDialog.show();
+    }
+    private void showEndDateCalendarDialog() {
+        // Create a calendar instance and get the current date
+        Calendar calendar = Calendar.getInstance();
+        if(localEndDate!=null)
+            calendar.set(localEndDate.getYear(),localEndDate.getMonthValue()-1,localEndDate.getDayOfMonth());
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        // Create a custom DatePickerDialog
+        DatePickerDialog datePickerDialog = new DatePickerDialog(AddMovieActivity.this,
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
+                        // Handle the selected date
+                        // You can update the button text or perform any other actions here
+                        String date = String.valueOf(selectedDay) + "/" + String.valueOf(selectedMonth + 1) + "/" + String.valueOf(selectedYear);
+                        EndDateCalendarButton.setText(date);
+                    }
+                }, year, month, dayOfMonth) {
+            @Override
+            public void onCreate(Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
+
+                // Get the "OK" button from the dialog's layout
+                Button positiveButton = getButton(DialogInterface.BUTTON_POSITIVE);
+                Button negativeButton = getButton(DialogInterface.BUTTON_NEGATIVE);
+                positiveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        DatePicker datePicker = getDatePicker();
+                        int year = datePicker.getYear();
+                        int month = datePicker.getMonth();
+                        int dayOfMonth = datePicker.getDayOfMonth();
+                        String date = String.valueOf(dayOfMonth) + "/" + String.valueOf(month + 1) + "/" + String.valueOf(year);
+                        localEndDate = LocalDate.of(year, month+1, dayOfMonth);
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        calendar.set(Calendar.MONTH, month); // Note: Calendar.MONTH is zero-based
+                        calendar.set(Calendar.YEAR, year);
+                        calendar.set(Calendar.HOUR, 0);
+                        calendar.set(Calendar.MINUTE, 0);
+                        calendar.set(Calendar.SECOND, 0);
+
+                        EndDate = new Timestamp(calendar.getTime());
+                        EndDateCalendarButton.setText(date);dismiss();
                     }
                 });
                 // Set the desired background color for the button
@@ -596,12 +737,24 @@ public class AddMovieActivity extends AppCompatActivity{
     }
     void dismissKeyboard(View v)
     {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
+    private void clearFocus() {
+        View currentFocus = getCurrentFocus();
+        if (currentFocus != null) {
+            currentFocus.clearFocus();
+        }
+    }
 
+    private void dismissKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        View view = getCurrentFocus();
+        if (view != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
 }
-
 
 
 
