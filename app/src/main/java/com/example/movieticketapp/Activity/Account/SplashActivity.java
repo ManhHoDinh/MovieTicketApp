@@ -16,6 +16,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.cloudinary.android.MediaManager;
 import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Users;
@@ -28,6 +29,8 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -56,6 +59,13 @@ public class SplashActivity extends AppCompatActivity {
         if (mAuth.getCurrentUser() != null) {
             getUser(mAuth.getCurrentUser().getUid());
         }
+        Map config = new HashMap();
+        config.put("cloud_name", "dqbrxq458");
+        config.put("secure", true);
+        config.put( "api_key", "493417362212592");
+        config.put( "api_secret", "4bJpe28tUtUA4BzhEIuXig3I6d8");
+        MediaManager.init(getApplicationContext(), config);
+
         new Handler().postDelayed(new Runnable() {
 
 // Using handler with postDelayed called runnable run method

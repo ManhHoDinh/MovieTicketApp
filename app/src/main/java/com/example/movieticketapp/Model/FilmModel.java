@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.example.movieticketapp.Adapter.TimeScheduleAdapter;
 import com.google.firebase.Timestamp;
+import com.google.type.DateTime;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,6 +18,8 @@ public class FilmModel implements Parcelable {
     private String PrimaryImage;
     private String name;
     private Timestamp movieBeginDate;
+
+    private Timestamp movieEndDate;
     private String id;
     private  String BackGroundImage;
     private float vote;
@@ -34,7 +37,7 @@ public class FilmModel implements Parcelable {
     {
         this.trailer = trailer;
     }
-    public FilmModel(String id, String PrimaryImage, String name, String BackGroundImage, String PosterImage, float vote, String genre, String description, String durationTime, Timestamp movieBeginDate, List<String> trailer) {
+    public FilmModel(String id, String PrimaryImage, String name, String BackGroundImage, String PosterImage, float vote, String genre, String description, String durationTime, Timestamp movieBeginDate, Timestamp movieEndDate, List<String> trailer) {
         this.PrimaryImage = PrimaryImage;
         this.name = name;
         this.BackGroundImage = BackGroundImage;
@@ -46,6 +49,7 @@ public class FilmModel implements Parcelable {
         this.id = id;
         this.movieBeginDate = movieBeginDate;
         this.trailer=trailer;
+        this.movieEndDate= movieEndDate;
     }
 
     protected FilmModel(Parcel in) {
@@ -58,8 +62,8 @@ public class FilmModel implements Parcelable {
         PosterImage=in.readString();
         durationTime=in.readString();
         id=in.readString();
-        Date date = (Date)in.readSerializable();
-        movieBeginDate = new Timestamp(date);
+        movieBeginDate = new Timestamp((Date)in.readSerializable());
+        movieEndDate= new Timestamp((Date)in.readSerializable());
 
     }
 
@@ -69,6 +73,13 @@ public class FilmModel implements Parcelable {
 
     public void setMovieBeginDate(Timestamp movieBeginDate) {
         this.movieBeginDate = movieBeginDate;
+    }
+    public Timestamp getMovieEndDate() {
+        return movieEndDate;
+    }
+
+    public void setMovieEndDate(Timestamp movieEndDate) {
+        this.movieEndDate = movieEndDate;
     }
 
     public static final Creator<FilmModel> CREATOR = new Creator<FilmModel>() {
@@ -132,6 +143,10 @@ public class FilmModel implements Parcelable {
         return 0;
     }
 
+    public void setVote(float vote) {
+        this.vote = vote;
+    }
+
     @Override
     public void writeToParcel(@NonNull Parcel parcel, int i) {
         parcel.writeString(PrimaryImage);
@@ -144,5 +159,6 @@ public class FilmModel implements Parcelable {
         parcel.writeString(durationTime);
         parcel.writeString(id);
         parcel.writeSerializable(movieBeginDate.toDate());
+        parcel.writeSerializable(movieEndDate.toDate());
         }
 }

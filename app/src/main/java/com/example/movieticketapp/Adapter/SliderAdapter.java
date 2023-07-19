@@ -54,6 +54,7 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.sliderView
         holder.rating.setRating(vote);
         holder.ratingPoint.setText(df.format(vote)+"");
         FilmModel f =listPosts.get(position);
+        Log.e("ddf", f.getBackGroundImage());
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

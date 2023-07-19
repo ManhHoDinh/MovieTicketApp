@@ -29,6 +29,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:id="@+id/amountEditText"
+
                 app:layout_constraintTop_toBottomOf="@+id/title"
                 android:layout_marginTop="56dp"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -48,6 +49,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/amountEt"
+                    android:inputType="number"
                     android:textColor="@color/white"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

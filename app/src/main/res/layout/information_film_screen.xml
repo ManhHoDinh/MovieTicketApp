@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/mainLayout"
     tools:context=".Activity.Movie.InformationFilmActivity">
 
     <ImageView
@@ -118,6 +119,7 @@
                 android:isIndicator="false"
                 android:numStars="5"
                 android:progressTint="#FFFFAF34"
+                android:progressBackgroundTint="@color/white"
                 android:rating="4.7" />
 
             <TextView
@@ -148,6 +150,7 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <com.google.android.material.tabs.TabLayout
+
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -183,6 +186,7 @@
     </com.google.android.material.tabs.TabLayout>
 
     <androidx.viewpager2.widget.ViewPager2
+
         android:id="@+id/pager"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

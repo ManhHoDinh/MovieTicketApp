@@ -76,6 +76,7 @@ public class BookedActivity extends AppCompatActivity {
         InforBooked.getInstance().isDateSelected = false;
         InforBooked.getInstance().isTimeSelected = false;
         InforBooked.getInstance().isCitySelected = false;
+        InforBooked.getInstance().timeBooked = "";
         InforBooked.getInstance().prevPosition = -1;
     }
     @Override
