@@ -98,6 +98,7 @@
             android:exported="false" />
         <activity
             android:name=".Activity.Movie.SearchActivity"
+            android:windowSoftInputMode="stateHidden"
             android:exported="false" />
         <activity
             android:name=".Activity.Movie.ViewAllActivity"
@@ -178,6 +179,8 @@
         <activity android:name=".Activity.Ticket.TicketDetailActivity" />
         <activity
             android:name=".Activity.HomeActivity"
+            android:windowSoftInputMode="stateHidden"
+
             android:exported="true" />
         <activity android:name=".Activity.Wallet.MyWalletActivity" />
         <activity android:name=".Activity.Ticket.MyTicketAllActivity" />

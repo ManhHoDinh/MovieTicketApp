@@ -73,10 +73,8 @@ public class AboutMovie extends Fragment {
         TextView description = getView().findViewById(R.id.descriptionTV);
         description.setText(film.getDescription());
         Button BookBt = getView().findViewById(R.id.BookBt);
-        List<String> videoList = new ArrayList<>();
 
-        if(film.getMovieBeginDate().toDate().after(Helper.getCurrentDate())) {
-
+        if(film.getMovieBeginDate().toDate().after(Helper.getCurrentDate()) ||film.getMovieEndDate().toDate().before(Helper.getCurrentDate()) ) {
             BookBt.setVisibility(View.GONE);
         }
         else BookBt.setVisibility(View.VISIBLE);

@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.view.ActionMode;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
@@ -61,7 +62,7 @@ private ListSearchAdapter adapter;
         listSearchResult.setHasFixedSize(true);
         listSearchResult.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         searchView.clearFocus();
-        adapter = new ListSearchAdapter(listFilm);
+        adapter = new ListSearchAdapter(listFilm, SearchActivity.this);
         listSearchResult.setAdapter(adapter);
         //addListFilm();
         searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
@@ -155,5 +156,15 @@ private ListSearchAdapter adapter;
     protected void onStop() {
         unregisterReceiver(networkChangeListener);
         super.onStop();
+    }
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        View focusedView = getCurrentFocus();
+        if (focusedView != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
+            focusedView.clearFocus();
+        }
     }
 }

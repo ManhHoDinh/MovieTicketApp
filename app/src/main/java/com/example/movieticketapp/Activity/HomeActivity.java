@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
@@ -19,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -94,6 +96,7 @@ public class HomeActivity extends AppCompatActivity {
     private ImageView addDiscount;
     private TextView viewAllPlayingBtn;
     private TextView viewAllComingBtn;
+    private TextView viewExpiredBtn;
     private ImageView addService;
     private RecyclerView serviceView;
     private TextView viewAllCity;
@@ -120,6 +123,7 @@ public class HomeActivity extends AppCompatActivity {
         addDiscount = findViewById(R.id.AddDiscount);
         viewAllPlayingBtn = findViewById(R.id.viewAllPlayingBtn);
         viewAllComingBtn = findViewById(R.id.viewAllComingBtn);
+        viewExpiredBtn=findViewById(R.id.viewAllExpiredBtn);
         promotionView = findViewById(R.id.promotionView);
         searchView=findViewById(R.id.searchField);
         serviceView = findViewById(R.id.ServiceView);
@@ -156,10 +160,13 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View view, boolean b) {
                 if (b) {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     startActivity(new Intent(HomeActivity.this, SearchActivity.class));
                 }
             }
         });
+
         FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -262,6 +269,14 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(HomeActivity.this, ViewAllActivity.class);
                 intent.putExtra("status", "coming");
+                startActivity(intent);
+            }
+        });
+        viewExpiredBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, ViewAllActivity.class);
+                intent.putExtra("status", "expired");
                 startActivity(intent);
             }
         });
@@ -554,9 +569,14 @@ public class HomeActivity extends AppCompatActivity {
         unregisterReceiver(networkChangeListener);
         super.onStop();
     }
-
-
-
-
-
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        View focusedView = getCurrentFocus();
+        if (focusedView != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
+            focusedView.clearFocus();
+        }
+    }
 }
