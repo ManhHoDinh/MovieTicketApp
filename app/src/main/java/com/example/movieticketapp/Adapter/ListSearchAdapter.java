@@ -17,6 +17,7 @@ import com.example.movieticketapp.Activity.Movie.InformationFilmActivity;
 import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.InforBooked;
+import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
 import com.google.firebase.Timestamp;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -73,7 +74,10 @@ public class ListSearchAdapter extends RecyclerView.Adapter<ListSearchAdapter.It
         if(filmModel.getMovieBeginDate().toDate().before(Helper.getCurrentDate())){
             holder.status.setBackgroundColor(Color.TRANSPARENT);
             holder.status.setBackground(ContextCompat.getDrawable(holder.status.getContext(), R.drawable.background_playing));
-            holder.inforBtn.setText("Book");
+            if(Users.currentUser.getAccountType().equals("admin")){
+                holder.inforBtn.setText("Schedule");
+            }
+           else holder.inforBtn.setText("Book");
 
         }
         else{

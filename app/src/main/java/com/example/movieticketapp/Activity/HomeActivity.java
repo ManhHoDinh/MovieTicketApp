@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.movieticketapp.Activity.Account.AccountActivity;
+import com.example.movieticketapp.Activity.Account.SignInActivity;
 import com.example.movieticketapp.Activity.City.AddCityActivity;
 import com.example.movieticketapp.Activity.City.CinemaOfCity;
 import com.example.movieticketapp.Activity.City.CityViewAllActivity;
@@ -128,6 +129,7 @@ public class HomeActivity extends AppCompatActivity {
         viewAllCity = findViewById(R.id.cityViewAll);
         cityHeader = findViewById(R.id.cityHeader);
         serviceHeader = findViewById(R.id.ServiceHeader);
+
         checkTypeUser();
 
         FirebaseMessaging.getInstance().getToken()
@@ -323,19 +325,6 @@ public class HomeActivity extends AppCompatActivity {
 
                     if(((currentUser.getAccountType().toString()).equals("admin"))){
 
-//                FirebaseFirestore.getInstance().collection(Discount.CollectionName).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                        List<Discount> listDiscounts = new ArrayList<Discount>();
-//                        for(DocumentSnapshot doc : queryDocumentSnapshots){
-//                            Discount f = doc.toObject(Discount.class);
-//                            listDiscounts.add(f);
-//
-//                        }
-//                        PromotionAdapter promotionAdapter = new PromotionAdapter(HomeActivity.this,R.layout.promo_item,listDiscounts);
-//                        promotionView.setAdapter(promotionAdapter);
-//                    }
-//                });
                     FirebaseFirestore.getInstance().collection(Discount.CollectionName).addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -382,26 +371,32 @@ public class HomeActivity extends AppCompatActivity {
                                         PromotionAdapter promotionAdapter = new PromotionAdapter(Discounts, null);
                                         promotionView.setLayoutManager(new LinearLayoutManager(HomeActivity.this, LinearLayoutManager.VERTICAL, false));
                                         promotionView.setAdapter(promotionAdapter);
-                                        if (Discounts.size() == 0) {
-                                            ViewGroup.LayoutParams params = promotionView.getLayoutParams();
-                                            params.height = 0;
-                                            promotionView.setLayoutParams(params);
-                                        }
-                                        if (Discounts.size() == 1) {
-                                            ViewGroup.LayoutParams params = promotionView.getLayoutParams();
-                                            params.height = 300;
-                                            promotionView.setLayoutParams(params);
-                                        }
-                                        if (Discounts.size() == 2) {
-                                            ViewGroup.LayoutParams params = promotionView.getLayoutParams();
-                                            params.height = 700;
-                                            promotionView.setLayoutParams(params);
-                                        }
+
+
                                     }
                                 });
 
                             } else
+                            {
                                 promotionView.setAdapter(new PromotionAdapter(new ArrayList<Discount>(), null));
+
+                                if (Discounts.size() == 0) {
+                                    ViewGroup.LayoutParams params = promotionView.getLayoutParams();
+                                    params.height = 0;
+
+                                    promotionView.setLayoutParams(params);
+                                }
+                                if (Discounts.size() == 1) {
+                                    ViewGroup.LayoutParams params = promotionView.getLayoutParams();
+                                    params.height = 300;
+                                    promotionView.setLayoutParams(params);
+                                }
+                                if (Discounts.size() == 2) {
+                                    ViewGroup.LayoutParams params = promotionView.getLayoutParams();
+                                    params.height = 700;
+                                    promotionView.setLayoutParams(params);
+                                }
+                            }
 
                         }
                     });
@@ -413,11 +408,12 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     void checkTypeUser() {
+
         FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Users currentUser = documentSnapshot.toObject(Users.class);
-                Log.e("fs",  currentUser.getAccountType());
+
                 if (((currentUser.getAccountType().toString()).equals("admin"))) {
                     GetServices();
                     GetCities();
@@ -511,7 +507,7 @@ public class HomeActivity extends AppCompatActivity {
                     for (DocumentSnapshot documentSnapshot : value) {
                         City newCity = documentSnapshot.toObject(City.class);
                         cities.add(newCity);
-                        Log.e("d", newCity.getName());
+
 
                     }
                     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(HomeActivity.this, LinearLayoutManager.VERTICAL, false);

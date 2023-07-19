@@ -7,13 +7,16 @@
     tools:context=".Activity.Booking.BookSeatActivity">
 
     <ScrollView
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_width="match_parent"
+        android:background="@color/background_color"
         android:layout_height="match_parent">
         <LinearLayout
             android:padding="24dp"
             android:orientation="vertical"
 
-            android:background="@color/background_color"
+
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <androidx.appcompat.widget.AppCompatButton

@@ -23,6 +23,7 @@ import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -91,10 +92,10 @@ private ListSearchAdapter adapter;
     private void filterList(String s) {
         listFilm = new ArrayList<>();
         List<FilmModel> listResult = new ArrayList<>();
-        FirebaseRequest.database.collection("Movies").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        FirebaseRequest.database.collection("Movies").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                List<DocumentSnapshot> listDocs = value.getDocuments();
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                List<DocumentSnapshot> listDocs = queryDocumentSnapshots.getDocuments();
                 for(DocumentSnapshot doc : listDocs){
                     FilmModel film = doc.toObject(FilmModel.class);
                     listFilm.add(film);
@@ -110,9 +111,7 @@ private ListSearchAdapter adapter;
                 if(listResult.isEmpty()){
                     Toast.makeText(SearchActivity.this, "No data found", Toast.LENGTH_SHORT).show();
                 }
-
-                    adapter.setFilterList(listResult);
-
+                adapter.setFilterList(listResult);
 
             }
         });

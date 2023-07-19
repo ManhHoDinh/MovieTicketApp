@@ -174,42 +174,43 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
 
                                     listTime.add(formatter.format(i)+":" + formatter.format(j));
                                 }
-                        }
-                        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext()){
-                            @Override
-                            public boolean canScrollVertically() {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean canScrollHorizontally() {
-                                return false;
-                            }
-
-                        };
-                        layoutManager.setFlexDirection(FlexDirection.ROW);
-                        layoutManager.setJustifyContent(JustifyContent.FLEX_START);
-                        recyclerView.setLayoutManager(layoutManager);
-
-
-                        FirebaseRequest.database.collection("Showtime").addSnapshotListener(new EventListener<QuerySnapshot>() {
-                            @Override
-                            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                                List<DocumentSnapshot> listDocs = value.getDocuments();
-                                List<ShowTime> listShowTime = new ArrayList<ShowTime>();
-                                for(DocumentSnapshot doc : listDocs){
-                                    ShowTime showTime = doc.toObject(ShowTime.class);
-                                    listShowTime.add(showTime);
+                            FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext()){
+                                @Override
+                                public boolean canScrollVertically() {
+                                    return false;
                                 }
 
-                                recyclerView.setAdapter(new TimeScheduleAdapter(listTime, null, film, item, itemView, null, null, listShowTime));
+                                @Override
+                                public boolean canScrollHorizontally() {
+                                    return false;
+                                }
+
+                            };
+                            layoutManager.setFlexDirection(FlexDirection.ROW);
+                            layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+                            recyclerView.setLayoutManager(layoutManager);
 
 
-                            }
-                        });
+                            FirebaseRequest.database.collection("Showtime").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                @Override
+                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                    List<DocumentSnapshot> listDocs = value.getDocuments();
+                                    List<ShowTime> listShowTime = new ArrayList<ShowTime>();
+                                    for(DocumentSnapshot doc : listDocs){
+                                        ShowTime showTime = doc.toObject(ShowTime.class);
+                                        listShowTime.add(showTime);
+                                    }
 
-                        cinemaName.setText(item.getName());
-                        addressCinema.setText(item.getAddress());
+                                    recyclerView.setAdapter(new TimeScheduleAdapter(listTime, null, film, item, itemView, null, null, listShowTime));
+
+
+                                }
+                            });
+
+                            cinemaName.setText(item.getName());
+                            addressCinema.setText(item.getAddress());
+                        }
+
 
                     }
                     else {
