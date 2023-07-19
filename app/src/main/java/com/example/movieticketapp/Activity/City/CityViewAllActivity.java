@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +27,7 @@ import com.example.movieticketapp.Model.City;
 import com.example.movieticketapp.Model.Discount;
 import com.example.movieticketapp.Model.UserAndDiscount;
 import com.example.movieticketapp.Model.Users;
+import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.example.movieticketapp.databinding.ActivityCityViewAllBinding;
 import com.example.movieticketapp.databinding.ActivityDiscountViewAllBinding;
@@ -46,6 +49,19 @@ public class CityViewAllActivity extends AppCompatActivity {
 
     ActivityCityViewAllBinding binding;
     private ListView cityView;
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListener, filter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListener);
+        super.onStop();
+    }
 
 
 

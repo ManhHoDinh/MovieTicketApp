@@ -18,6 +18,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,6 +44,7 @@ import com.example.movieticketapp.Adapter.EditTrailerAdapter;
 import com.example.movieticketapp.Adapter.TrailerMovieApdapter;
 import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.Model.FilmModel;
+import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -71,6 +74,20 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class EditMovieActivity extends AppCompatActivity{
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListener, filter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListener);
+        super.onStop();
+    }
+
     public static List<Uri> videoUris= new ArrayList<>();
     public static  Uri defaultUri;
     public ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
@@ -169,7 +186,6 @@ public class EditMovieActivity extends AppCompatActivity{
             localBeginDate = LocalDate.of(year, month, dayOfMonth);
             BeginDateCalendarButton.setText(dateString);
             BeginDate = new Timestamp(date);
-
             Date EDate= film.getMovieEndDate().toDate();
             LocalDate localEnd = EDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             int Eyear  = localEnd.getYear();
@@ -233,6 +249,7 @@ public class EditMovieActivity extends AppCompatActivity{
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dismissKeyboard(view);
                 if(videos.size()==0)
                 {
                     InStorageVideoUris.clear();
@@ -273,6 +290,8 @@ public class EditMovieActivity extends AppCompatActivity{
         moviebackground.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                clearFocus();
+                dismissKeyboard();
                 pickMedia.launch(new PickVisualMediaRequest.Builder()
                         .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
                         .build());
@@ -283,6 +302,8 @@ public class EditMovieActivity extends AppCompatActivity{
         movieavatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                clearFocus();
+                dismissKeyboard();
                 pickMedia.launch(new PickVisualMediaRequest.Builder()
                         .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
                         .build());
@@ -742,7 +763,20 @@ public class EditMovieActivity extends AppCompatActivity{
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
+    private void clearFocus() {
+        View currentFocus = getCurrentFocus();
+        if (currentFocus != null) {
+            currentFocus.clearFocus();
+        }
+    }
 
+    private void dismissKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        View view = getCurrentFocus();
+        if (view != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
 }
 
 

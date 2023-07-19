@@ -20,10 +20,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.media.Image;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -60,6 +62,7 @@ import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
 import com.example.movieticketapp.Adapter.ServiceAdapter;
 import com.example.movieticketapp.Adapter.TrailerMovieApdapter;
 import com.example.movieticketapp.Model.FilmModel;
+import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -108,6 +111,20 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class AddMovieActivity extends AppCompatActivity{
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListener, filter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListener);
+        super.onStop();
+    }
+
     public static List<Uri> videoUris= new ArrayList<>();
     public static  Uri defaultUri;
     public  ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
@@ -216,6 +233,7 @@ public class AddMovieActivity extends AppCompatActivity{
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dismissKeyboard(view);
                 if(videos.size()==0)
                 {
                     InStorageVideoUris.clear();
@@ -264,16 +282,19 @@ public class AddMovieActivity extends AppCompatActivity{
         moviebackground.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                clearFocus();
+                dismissKeyboard();
                 pickMedia.launch(new PickVisualMediaRequest.Builder()
                         .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
                         .build());
                 th = 0;
-                dismissKeyboard(view);
             }
         });
         movieavatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                clearFocus();
+                dismissKeyboard();
                 pickMedia.launch(new PickVisualMediaRequest.Builder()
                         .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
                         .build());
@@ -716,10 +737,23 @@ public class AddMovieActivity extends AppCompatActivity{
     }
     void dismissKeyboard(View v)
     {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
+    private void clearFocus() {
+        View currentFocus = getCurrentFocus();
+        if (currentFocus != null) {
+            currentFocus.clearFocus();
+        }
+    }
 
+    private void dismissKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        View view = getCurrentFocus();
+        if (view != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
 }
 
 

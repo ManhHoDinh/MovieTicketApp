@@ -3,6 +3,7 @@ package com.example.movieticketapp.Adapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
@@ -17,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.PopupMenu;
@@ -86,6 +88,7 @@ public class TrailerMovieApdapter extends RecyclerView.Adapter<TrailerMovieApdap
             holder.deleteTrailer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    dismissKeyboard(view);
                     AddMovieActivity.videos.remove(position);
                     AddMovieActivity.videoUris.remove(position);
                     Toast toast = Toast.makeText(holder.itemView.getContext(),"Delete trailer layout success!!!", Toast.LENGTH_SHORT);
@@ -97,6 +100,7 @@ public class TrailerMovieApdapter extends RecyclerView.Adapter<TrailerMovieApdap
             holder.movietrailer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    dismissKeyboard(view);
                     activity.pickVideo.launch(new PickVisualMediaRequest.Builder()
                             .setMediaType(ActivityResultContracts.PickVisualMedia.VideoOnly.INSTANCE)
                             .build());
@@ -119,6 +123,7 @@ public class TrailerMovieApdapter extends RecyclerView.Adapter<TrailerMovieApdap
                 holder.movietrailer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        dismissKeyboard(view);
                         holder.playButton.setVisibility(View.VISIBLE);
                         holder.videoSeekBar.setVisibility(View.VISIBLE);
                         holder.endTime.setVisibility(View.VISIBLE);
@@ -178,6 +183,7 @@ public class TrailerMovieApdapter extends RecyclerView.Adapter<TrailerMovieApdap
                 holder.playButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        dismissKeyboard(view);
                         if(holder.movietrailer.isPlaying())
                         {
                             holder.movietrailer.pause();
@@ -233,6 +239,7 @@ public class TrailerMovieApdapter extends RecyclerView.Adapter<TrailerMovieApdap
                 holder.movietrailer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        dismissKeyboard(view);
                         holder.playButton.setVisibility(View.VISIBLE);
                         holder.videoSeekBar.setVisibility(View.VISIBLE);
                         holder.endTime.setVisibility(View.VISIBLE);
@@ -289,6 +296,7 @@ public class TrailerMovieApdapter extends RecyclerView.Adapter<TrailerMovieApdap
                 holder.playButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        dismissKeyboard(view);
                         if(holder.movietrailer.isPlaying())
                         {
                             holder.movietrailer.pause();
@@ -332,6 +340,7 @@ public class TrailerMovieApdapter extends RecyclerView.Adapter<TrailerMovieApdap
         holder.EditTrailer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dismissKeyboard(view);
                 PopupMenu popup = new PopupMenu(view.getContext(), holder.EditTrailer);
                 //inflating menu from xml resource
                 popup.inflate(R.menu.promo_menu);
@@ -368,6 +377,7 @@ public class TrailerMovieApdapter extends RecyclerView.Adapter<TrailerMovieApdap
                                 Delete.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
+                                        dismissKeyboard(view);
                                         AddMovieActivity.videos.remove(position);
                                         AddMovieActivity.videoUris.remove(position);
                                         notifyDataSetChanged();
@@ -457,6 +467,12 @@ public int getSelectedPosition()
 //    public int getTotalPrice() {
 //        return TotalPrice;
 //    }
+void dismissKeyboard(View v)
+{
+    InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+}
+
 
 
 }

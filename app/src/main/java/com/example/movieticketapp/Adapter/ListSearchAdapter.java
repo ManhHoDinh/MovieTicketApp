@@ -6,10 +6,12 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,9 +29,11 @@ import java.util.List;
 
 public class ListSearchAdapter extends RecyclerView.Adapter<ListSearchAdapter.ItemViewHolder> {
     private List<FilmModel> listSearch;
+    private Context context;
 
-    public ListSearchAdapter(List<FilmModel> listSearch) {
+    public ListSearchAdapter(List<FilmModel> listSearch, Context context) {
         this.listSearch = listSearch;
+        this.context = context;
     }
     public void setFilterList(List<FilmModel> filterList){
         this.listSearch = filterList;
@@ -65,6 +69,16 @@ public class ListSearchAdapter extends RecyclerView.Adapter<ListSearchAdapter.It
         Picasso.get().load(filmModel.getPosterImage()).into(holder.imageFilm);
         holder.nameFilm.setText(filmModel.getName());
         Timestamp movieBeginDate = filmModel.getMovieBeginDate();
+        ConstraintLayout layoutElement = holder.itemView.findViewById(R.id.SearchFilmLayout); // Replace with your actual layout element ID
+
+        layoutElement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Hide the keyboard
+                InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
+        });
         if(movieBeginDate.toDate().before(Helper.getCurrentDate())
                 &&filmModel.getMovieEndDate().toDate().after(Helper.getCurrentDate()))
         {
@@ -95,6 +109,7 @@ public class ListSearchAdapter extends RecyclerView.Adapter<ListSearchAdapter.It
         holder.inforBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dismissKeyboard(view);
                 Intent i = new Intent(view.getContext(), InformationFilmActivity.class);
                 i.putExtra(ExtraIntent.film, filmModel);
                 i.putExtra("type", holder.inforBtn.getText().toString());
@@ -109,4 +124,11 @@ public class ListSearchAdapter extends RecyclerView.Adapter<ListSearchAdapter.It
     public int getItemCount() {
         return listSearch.size();
     }
+    void dismissKeyboard(View v)
+    {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+    }
+
+
 }

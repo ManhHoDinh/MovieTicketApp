@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +27,7 @@ import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Discount;
 import com.example.movieticketapp.Model.UserAndDiscount;
 import com.example.movieticketapp.Model.Users;
+import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.example.movieticketapp.databinding.ActivityDiscountViewAllBinding;
 import com.example.movieticketapp.databinding.HomeScreenBinding;
@@ -44,6 +47,20 @@ import java.util.List;
 import java.util.Queue;
 
 public class DiscountViewAll extends AppCompatActivity {
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListener, filter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListener);
+        super.onStop();
+    }
+
     ActivityDiscountViewAllBinding binding;
     private ListView promotionView;
     List<Discount> Discounts = new ArrayList<>();
