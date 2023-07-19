@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -45,6 +47,7 @@ import com.example.movieticketapp.Adapter.TicketListAdapter;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Comment;
 import com.example.movieticketapp.Model.FilmModel;
+import com.example.movieticketapp.Model.InforBooked;
 import com.example.movieticketapp.Model.Ticket;
 import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
@@ -114,6 +117,7 @@ public class ReviewFragment extends Fragment {
     public ReviewFragment(FilmModel f) {
         // Required empty public constructor
         film = f;
+
     }
 
     @Override
@@ -161,20 +165,8 @@ public class ReviewFragment extends Fragment {
                     comments.add(doc.toObject(Comment.class));
                 }
                 commentAdapter = new CommentAdapter(myActivity, R.layout.review_comment_view, comments, film);
-                int totalHeight= 0;
-                DisplayMetrics displayMetrics = new DisplayMetrics();
-                int height = displayMetrics.heightPixels;
-                int width = displayMetrics.widthPixels;
-                for (int size=0; size < commentAdapter.getCount(); size++) {
-                    View listItem = commentAdapter.getView(size, null, commentList);
-                    listItem.measure(0, 0);
-                    totalHeight += listItem.getMeasuredHeight();
-                }
                 ViewGroup.LayoutParams params=commentList.getLayoutParams();
-                DisplayMetrics display = new DisplayMetrics();
-                myActivity.getWindowManager().getDefaultDisplay().getMetrics(display);
-                int d = display.heightPixels;
-                params.height = d/2 - rateLayout.getMeasuredHeight() - 100;
+                params.height =InforBooked.getInstance().height - rateLayout.getMeasuredHeight();
                 commentList.setLayoutParams(params);
                 int index = commentList.getFirstVisiblePosition();
                 commentList.setAdapter(commentAdapter);
@@ -184,6 +176,7 @@ public class ReviewFragment extends Fragment {
             }
         });
     }
+
     void ratingFilm(){
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
