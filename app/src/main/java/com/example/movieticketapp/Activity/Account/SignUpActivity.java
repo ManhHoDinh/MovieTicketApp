@@ -31,6 +31,11 @@ import android.widget.MediaController;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.cloudinary.android.MediaManager;
+import com.cloudinary.android.callback.ErrorInfo;
+import com.cloudinary.android.callback.UploadCallback;
+import com.example.movieticketapp.Activity.Movie.AddMovieActivity;
+import com.example.movieticketapp.Activity.Movie.loadingAlert;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.NetworkChangeListener;
@@ -59,6 +64,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class SignUpActivity extends AppCompatActivity {
     NetworkChangeListener networkChangeListener = new NetworkChangeListener();
@@ -85,7 +91,7 @@ public class SignUpActivity extends AppCompatActivity {
     EditText confirmPasswordET;
     Uri avataUri = null;
     String avatarUrl;
-    String fullname;
+    loadingAlert loadingDialog;
 //    @Override
 //    public void onStart() {
 //        super.onStart();
@@ -105,12 +111,16 @@ public class SignUpActivity extends AppCompatActivity {
         emailET=findViewById(R.id.emailaddress);
         passwordET=findViewById(R.id.password);
         confirmPasswordET=findViewById(R.id.confirmpassword);
+        loadingDialog= new loadingAlert(SignUpActivity.this);
+        document = databaseReference.collection("Users").document();
+
 
         ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
                 registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
                     if (uri != null) {
                         imageAvatar.setImageURI(uri);
                         avataUri = uri;
+
                     } else {
                         Log.d("PhotoPicker", "No media selected");
                     }
@@ -170,44 +180,45 @@ public class SignUpActivity extends AppCompatActivity {
                     confirmPasswordET.setError("Password and confirmation passwords are not equals !!!");
                     error=true;
                 }
+                int totalUploadTasks = 1;
+                AtomicInteger completedUploadTasks = new AtomicInteger(0);
 
                 if(!error){
-                    fullname = fullNameET.getText().toString();
-                    Calendar calFordData = Calendar.getInstance();
-                    SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-yyyy");
-                    String saveCurrentData = currentDate.format(calFordData.getTime());
-
-                    Calendar calFordTime = Calendar.getInstance();
-                    SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm");
-                    String saveCurrentTime = currentTime.format(calFordData.getTime());
-
-                    String postRandomName = saveCurrentData + saveCurrentTime;
-                    if(avataUri != null){
-                        storageReference = storageReference.child(postRandomName+"as.jpg");
-                        uploadTask = storageReference.putFile(avataUri);
-                        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                            @Override
-                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                                if (!task.isSuccessful()) {
-                                    throw task.getException();
+                    loadingDialog.StartAlertDialog();
+                    String folder = "Human/"+document.getId(); // Replace "your_folder_name" with the desired folder name
+                    String AvatarName = folder + "/avt" ;
+                    MediaManager.get().upload(avataUri).option("public_id", AvatarName)
+                            .callback(new UploadCallback() {
+                                @Override
+                                public void onStart(String requestId) {
+                                    // your code here
                                 }
-
-                                // Continue with the task to get the download URL
-                                return storageReference.getDownloadUrl();
-                            }
-                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Uri> task) {
-                                if (task.isSuccessful()) {
-                                    avatarUrl = task.getResult().toString();
+                                @Override
+                                public void onProgress(String requestId, long bytes, long totalBytes) {
+                                    // example code starts here
+                                    Double progress = (double) bytes/totalBytes;
+                                    // post progress to app UI (e.g. progress bar, notification)
+                                    // example code ends here
+                                }
+                                @Override
+                                public void onSuccess(String requestId, Map resultData) {
+                                    // your code here
+                                    String url = (String) resultData.get("secure_url").toString();
+                                    avatarUrl = url;
                                     CreateUser(emailET.getText().toString(), passwordET.getText().toString(), fullNameET.getText().toString(), avatarUrl);
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
                                 }
-                            }
-                        });
-                    }
-                    else  CreateUser(emailET.getText().toString(), passwordET.getText().toString(), fullNameET.getText().toString(), null);
+                                @Override
+                                public void onError(String requestId, ErrorInfo error) {
+                                    // your code here
+                                    CreateUser(emailET.getText().toString(), passwordET.getText().toString(), fullNameET.getText().toString(), null);
+                                    Toast toast = Toast.makeText(getApplicationContext(),"Have some Errors!!!", Toast.LENGTH_SHORT);
+                                    toast.show();
+                                }
+                                @Override
+                                public void onReschedule(String requestId, ErrorInfo error) {
+                                    // your code here
+                                }})
+                            .dispatch();
 
                 }
             }
@@ -265,7 +276,7 @@ public class SignUpActivity extends AppCompatActivity {
     private void UpdatePhotho( String urlAvatar) {
 
             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                    .setPhotoUri(Uri.parse(urlAvatar)).setDisplayName(fullname)
+                    .setPhotoUri(Uri.parse(urlAvatar)).setDisplayName(fullNameET.getText().toString())
                     .build();
 
 

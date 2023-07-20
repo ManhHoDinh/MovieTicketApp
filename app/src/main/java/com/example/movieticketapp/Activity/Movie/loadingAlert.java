@@ -13,7 +13,7 @@ public class loadingAlert {
     {
         this.activity = activity;
     }
-    void StartAlertDialog()
+    public void StartAlertDialog()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         LayoutInflater inflater = activity.getLayoutInflater();
