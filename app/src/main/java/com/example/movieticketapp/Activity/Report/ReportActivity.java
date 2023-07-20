@@ -121,7 +121,7 @@ public class ReportActivity extends AppCompatActivity {
     ArrayList<BarEntry> listEntries = new ArrayList<>();
     ArrayList<String> listLabels = new ArrayList<>();
 
-
+    LinearLayout legendLayout;
 
 //    void setEntry(){
 //        ArrayList<BarEntry> listEntries = new ArrayList<>();
@@ -143,7 +143,7 @@ public class ReportActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.report_screen);
-
+        legendLayout = findViewById(R.id.legendLayout);
         firestore = FirebaseFirestore.getInstance();
         control = findViewById(R.id.controlBtn);
         MovieRef = firestore.collection("Movies");
@@ -288,6 +288,7 @@ public class ReportActivity extends AppCompatActivity {
 //                FilmReportAdapter filmReportAdapter = new FilmReportAdapter(films, selectedCinema,SelectedMonth, SelectedYear);
 //                filmReports.setAdapter(filmReportAdapter);
                // setTotalPrice();
+                legendLayout.removeAllViews();
                 setListRetry(films);
 
 //                filmReportAdapter.setOnDataChangedListener(new FilmReportAdapter.OnDataChangedListener() {
@@ -470,6 +471,7 @@ public class ReportActivity extends AppCompatActivity {
     void setListRetry(List<FilmModel> films){
         listEntries = new ArrayList<>();
         listLabels = new ArrayList<>();
+
 //        int[] listColor = {getResources().getColor(R.color.color1),getResources().getColor(R.color.color2),getResources().getColor(R.color.color3),getResources().getColor(R.color.color4), getResources().getColor(R.color.color5),getResources().getColor(R.color.color6),getResources().getColor(R.color.color7),getResources().getColor(R.color.color8),
 //                getResources().getColor(R.color.color9),getResources().getColor(R.color.color10),getResources().getColor(R.color.color11),getResources().getColor(R.color.color12), getResources().getColor(R.color.color13),getResources().getColor(R.color.color14),getResources().getColor(R.color.color15),getResources().getColor(R.color.color16),
 //                getResources().getColor(R.color.color17),getResources().getColor(R.color.color18),getResources().getColor(R.color.color19),getResources().getColor(R.color.color20)
@@ -496,6 +498,7 @@ public class ReportActivity extends AppCompatActivity {
         });
 
         int[] binh = randomColor(films.size());
+
         ArrayList<LegendEntry> listLegend = new ArrayList<>();
         for(FilmModel film : films){
             index = 0;
@@ -560,22 +563,47 @@ public class ReportActivity extends AppCompatActivity {
                     chart.setFitBars(true);
                     chart.setData(barData);
                     chart.invalidate();
+
                     YAxis yAxisRight = chart.getAxisRight();
                     YAxis yAxisLeft = chart.getAxisLeft();
                     XAxis xAxis = chart.getXAxis();
                     Legend l = chart.getLegend();
+                    l.setWordWrapEnabled(true);
                     yAxisLeft.setAxisMinimum(0);
-                    l.setEnabled(true);
+                    l.setEnabled(false  );
+
                     if(index < films.size()){
-                        LegendEntry legendEntry = new LegendEntry();
-                        legendEntry.label = film.getName();
-                        legendEntry.formColor = binh[index];
-                        listLegend.add(legendEntry);
+//                        LegendEntry legendEntry = new LegendEntry();
+//                        legendEntry.label = film.getName();
+//                        legendEntry.formColor = binh[index];
+//                        listLegend.add(legendEntry);
+                        LinearLayout.LayoutParams parms_left_layout = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        parms_left_layout.setMargins(0, 0, 0, 20);
+                        LinearLayout left_layout = new LinearLayout(ReportActivity.this);
+                        left_layout.setOrientation(LinearLayout.HORIZONTAL);
+                        left_layout.setGravity(Gravity.LEFT);
+                        left_layout.setLayoutParams(parms_left_layout);
+
+                        LinearLayout.LayoutParams parms_legen_layout = new LinearLayout.LayoutParams(
+                                40, 40);
+                        parms_legen_layout.setMargins(0, 0, 20, 0);
+                        LinearLayout legend_layout = new LinearLayout(ReportActivity.this);
+                        legend_layout.setLayoutParams(parms_legen_layout);
+                        legend_layout.setOrientation(LinearLayout.HORIZONTAL);
+                        legend_layout.setBackgroundColor(binh[index]);
+                        left_layout.addView(legend_layout);
+                        TextView txt_unit = new TextView(ReportActivity.this);
+                        txt_unit.setText(film.getName());
+                        left_layout.addView(txt_unit);
+
+                        legendLayout.addView(left_layout);
                     }
                     l.setCustom(listLegend);
                     yAxisRight.setEnabled(false);
                     yAxisLeft.setTextColor(Color.WHITE);
                     xAxis.setTextColor(Color.WHITE);
+
                     yAxisLeft.setValueFormatter(new Formater());
                     l.setTextColor(Color.WHITE);
                     l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
@@ -583,10 +611,16 @@ public class ReportActivity extends AppCompatActivity {
                     l.setOrientation(Legend.LegendOrientation.VERTICAL);
                      l.setDrawInside(false);
                     index++;
-                    NumberFormat numberFormat = new DecimalFormat("#,###");
+
+
+                    //test
+
+
                 }
             });
+
         }
+
 
     }
     int[] randomColor(int count){

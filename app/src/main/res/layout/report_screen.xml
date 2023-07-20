@@ -211,10 +211,30 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/chart"
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp" />
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:id="@+id/legendLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+
+
+
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:visibility="gone"
