@@ -13,10 +13,12 @@ import com.example.movieticketapp.Model.FilmModel;
 
 public class FilmDetailPagerAdapter extends FragmentStateAdapter {
     FilmModel film;
+    int tabIndex;
 
-    public FilmDetailPagerAdapter(@NonNull FragmentActivity fragmentActivity, FilmModel f) {
+    public FilmDetailPagerAdapter(@NonNull FragmentActivity fragmentActivity, FilmModel f, int tabIndex) {
         super(fragmentActivity);
         film = f;
+        this.tabIndex = tabIndex;
 
     }
 

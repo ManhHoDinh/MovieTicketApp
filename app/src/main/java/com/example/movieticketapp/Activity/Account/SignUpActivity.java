@@ -2,7 +2,10 @@ package com.example.movieticketapp.Activity.Account;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.provider.MediaStore;
 
@@ -10,21 +13,27 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Users;
+import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -46,11 +55,25 @@ import com.google.firebase.storage.UploadTask;
 import java.net.URI;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListener, filter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListener);
+        super.onStop();
+    }
 
     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     FirebaseFirestore databaseReference = FirebaseFirestore.getInstance();
@@ -104,9 +127,18 @@ public class SignUpActivity extends AppCompatActivity {
         backBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(SignUpActivity.this, SignInActivity.class);
-                startActivity(i);
+                finish();
             }
+        });
+        LinearLayout layoutElement = findViewById(R.id.SignUpLayout); // Replace with your actual layout element ID
+
+        layoutElement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Hide the keyboard
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                 }
         });
         Button signUpBt =  findViewById(R.id.SignUpBtn);
         signUpBt.setOnClickListener(new View.OnClickListener() {
@@ -138,11 +170,7 @@ public class SignUpActivity extends AppCompatActivity {
                     confirmPasswordET.setError("Password and confirmation passwords are not equals !!!");
                     error=true;
                 }
-                if(avataUri ==  null)
-                {
-                    error = true;
-                    Toast.makeText(getApplicationContext(), "Please choose your avatar!", Toast.LENGTH_SHORT).show();
-                }
+
                 if(!error){
                     fullname = fullNameET.getText().toString();
                     Calendar calFordData = Calendar.getInstance();
@@ -154,36 +182,45 @@ public class SignUpActivity extends AppCompatActivity {
                     String saveCurrentTime = currentTime.format(calFordData.getTime());
 
                     String postRandomName = saveCurrentData + saveCurrentTime;
+                    if(avataUri != null){
+                        storageReference = storageReference.child(postRandomName+"as.jpg");
+                        uploadTask = storageReference.putFile(avataUri);
+                        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                            @Override
+                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                if (!task.isSuccessful()) {
+                                    throw task.getException();
+                                }
 
-                    storageReference = storageReference.child(postRandomName+"as.jpg");
-                    uploadTask = storageReference.putFile(avataUri);
-                    Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                        @Override
-                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                            if (!task.isSuccessful()) {
-                                throw task.getException();
+                                // Continue with the task to get the download URL
+                                return storageReference.getDownloadUrl();
                             }
+                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                if (task.isSuccessful()) {
+                                    avatarUrl = task.getResult().toString();
+                                    CreateUser(emailET.getText().toString(), passwordET.getText().toString(), fullNameET.getText().toString(), avatarUrl);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                    else  CreateUser(emailET.getText().toString(), passwordET.getText().toString(), fullNameET.getText().toString(), null);
 
-                            // Continue with the task to get the download URL
-                            return storageReference.getDownloadUrl();
-                        }
-                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Uri> task) {
-                            if (task.isSuccessful()) {
-                                avatarUrl = task.getResult().toString();
-                                CreateUser(emailET.getText().toString(), passwordET.getText().toString(), fullNameET.getText().toString());
-                            } else {
-                                Toast.makeText(getApplicationContext(), "ERRROR!!!", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
                 }
             }
         });
     }
-    void CreateUser(String email, String password,String Name )
+    void CreateUser(String email, String password,String Name, @Nullable String url)
     {
+        String urlAvatar;
+        if(url == null){
+            urlAvatar = "https://firebasestorage.googleapis.com/v0/b/movie-ticket-app-0.appspot.com/o/avatar.png?alt=media&token=23a1d250-ca27-414b-a46b-bbef69dac7da";
+
+        }
+        else urlAvatar = url;
        FirebaseRequest.mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -192,9 +229,9 @@ public class SignUpActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = FirebaseRequest.mAuth.getCurrentUser();
-                            UpdatePhotho();
+                            UpdatePhotho(urlAvatar);
                             user.getUid();
-                            Users u = new Users(user.getUid(), Name, email,0, "user", avatarUrl);
+                            Users u = new Users(user.getUid(), Name, email,0, "user", urlAvatar, new ArrayList<>(), new ArrayList<>());
                             FirebaseRequest.database.collection("Users").document(user.getUid())
                                     .set(u.toJson())
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -225,10 +262,14 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-    private void UpdatePhotho() {
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setPhotoUri(Uri.parse(avatarUrl)).setDisplayName(fullname)
-                .build();
+    private void UpdatePhotho( String urlAvatar) {
+
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setPhotoUri(Uri.parse(urlAvatar)).setDisplayName(fullname)
+                    .build();
+
+
+
         FirebaseRequest.mAuth.getCurrentUser().updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -240,5 +281,6 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
     }
+
 
 }

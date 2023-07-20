@@ -4,6 +4,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,11 +15,13 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.movieticketapp.Adapter.Helper;
 import com.example.movieticketapp.Adapter.ViewAllAdapter;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.InforBooked;
 import com.example.movieticketapp.Model.Users;
+import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -33,6 +37,19 @@ public class ViewAllActivity extends AppCompatActivity {
     GridView filmGridview;
     Button backBtn;
     TextView title;
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListener, filter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListener);
+        super.onStop();
+    }
 
 
 
@@ -49,8 +66,14 @@ public class ViewAllActivity extends AppCompatActivity {
        if(status.equals("playing")){
            title.setText("Now Playing");
        }
-       else {
+       else if(status.equals("coming")) {
            title.setText("Coming Soon");
+       }
+       else
+       {
+           title.setText("Expired");
+           ImageView addMovie= findViewById(R.id.AddMovie);
+           addMovie.setVisibility(View.GONE);
        }
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,31 +93,46 @@ public class ViewAllActivity extends AppCompatActivity {
                 Date currentDate = calendar.getTime();
                 for (QueryDocumentSnapshot documentSnapshot : value) {
                     FilmModel f = documentSnapshot.toObject(FilmModel.class);
-                    if(status.equals("playing")){
-                        if(f.getMovieBeginDate().toDate().before(currentDate)){
-                            if(InforBooked.getInstance().typeFilm.equals("All")){
-                                listFilm.add(f);
+                    try {
+                        if(status.equals("playing")){
+                            if(f.getMovieBeginDate().toDate().before(Helper.getCurrentDate())
+                                    &&f.getMovieEndDate().toDate().after(Helper.getCurrentDate()))
+                            {
+                                if(InforBooked.getInstance().typeFilm.equals("All")){
+                                    listFilm.add(f);
+                                }
+                                else if (f.getGenre().contains(InforBooked.getInstance().typeFilm)) {
+                                    listFilm.add(f);
+                                } else {
+                                }
                             }
-                            else if (f.getGenre().contains(InforBooked.getInstance().typeFilm)) {
-                                listFilm.add(f);
-                            } else {
+                        }
+                        else  if(status.equals("coming")){
+                            if(f.getMovieBeginDate().toDate().after(currentDate)){
+                                if(InforBooked.getInstance().typeFilm.equals("All")){
+                                    listFilm.add(f);
+                                }
+                                else if (f.getGenre().contains(InforBooked.getInstance().typeFilm)) {
+                                    listFilm.add(f);
+                                } else {
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if(f.getMovieEndDate().toDate().before(currentDate)){
+                                if(InforBooked.getInstance().typeFilm.equals("All")){
+                                    listFilm.add(f);
+                                }
+                                else if (f.getGenre().contains(InforBooked.getInstance().typeFilm)) {
+                                    listFilm.add(f);
+                                } else {
+                                }
                             }
                         }
                     }
-                    else {
-                        if(f.getMovieBeginDate().toDate().after(currentDate)){
-                            if(InforBooked.getInstance().typeFilm.equals("All")){
-                                listFilm.add(f);
-                            }
-                            else if (f.getGenre().contains(InforBooked.getInstance().typeFilm)) {
-                                listFilm.add(f);
-                            } else {
-                            }
-                        }
-
-                    }
-
-
+                    catch (Exception e)
+                    {}
                 }
                 filmGridview.setAdapter(new ViewAllAdapter(listFilm, ViewAllActivity.this));
             }

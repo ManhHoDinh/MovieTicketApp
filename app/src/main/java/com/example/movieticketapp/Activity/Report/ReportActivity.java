@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ import android.widget.TextView;
 
 import com.example.movieticketapp.Activity.Booking.ShowTimeScheduleActivity;
 import com.example.movieticketapp.Activity.Discount.DiscountViewAll;
+import com.example.movieticketapp.Activity.Helper.Formater;
 import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Activity.Notification.NotificationActivity;
 import com.example.movieticketapp.Activity.Ticket.MyTicketAllActivity;
@@ -56,6 +58,23 @@ import com.example.movieticketapp.Model.ShowTime;
 import com.example.movieticketapp.Model.Ticket;
 import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LegendEntry;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textfield.TextInputLayout;
@@ -71,10 +90,12 @@ import java.sql.Array;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Random;
 
 public class ReportActivity extends AppCompatActivity {
     private  BottomNavigationView bottomNavigationView;
@@ -83,6 +104,7 @@ public class ReportActivity extends AppCompatActivity {
     private AutoCompleteTextView YearAutoTv;
     private FirebaseFirestore firestore;
     private CollectionReference MovieRef;
+    List<Cinema> cinemas = new ArrayList<>();
     private List<FilmModel> films= new ArrayList<>();
     ImageButton control;
     TextView TotalPrice;
@@ -91,16 +113,43 @@ public class ReportActivity extends AppCompatActivity {
     int SelectedMonth = 0;
     int SelectedYear = 0;
     int total = 0;
+    int total_price = 0;
+    int index = 0;
+    int temp = 0;
 
+    BarChart chart;
+    ArrayList<BarEntry> listEntries = new ArrayList<>();
+    ArrayList<String> listLabels = new ArrayList<>();
+
+
+
+//    void setEntry(){
+//        ArrayList<BarEntry> listEntries = new ArrayList<>();
+//        listEntries.add(new BarEntry(0,10));
+//        listEntries.add(new Entry(1,40));
+//        listEntries.add(new Entry(2,20));
+//        listEntries.add(new Entry(3,10));
+//        listEntries.add(new Entry(4,50));
+//        LineDataSet lineDataSet = new LineDataSet(listEntries, "vo cong binh");
+//        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+//        dataSets.add(lineDataSet);
+//        LineData data = new LineData(dataSets);
+//        chart.setData(data);
+//        chart.invalidate();
+//
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.report_screen);
+
         firestore = FirebaseFirestore.getInstance();
         control = findViewById(R.id.controlBtn);
         MovieRef = firestore.collection("Movies");
         TotalPrice=findViewById(R.id.totalPrice);
+        chart = (BarChart) findViewById(R.id.chart);
+       // setEntry();
         ControlButton();
         LoadCinema();
         LoadFilms();
@@ -149,6 +198,7 @@ public class ReportActivity extends AppCompatActivity {
                 for(DocumentSnapshot doc : listDocs){
                     Cinema cinema = doc.toObject(Cinema.class);
                     cinemaNames.add(cinema.getName());
+
                    }
                 CinemaAutoTv.setAdapter(new ArrayAdapter<String>(ReportActivity.this, R.layout.dropdown_item, cinemaNames));
                 CinemaAutoTv.setDropDownBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.background_color)));
@@ -189,6 +239,7 @@ public class ReportActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectMonth = parent.getItemAtPosition(position).toString();
                 SelectedMonth= months.indexOf(selectMonth);
+
                 LoadFilms();
             }
         });
@@ -232,11 +283,12 @@ public class ReportActivity extends AppCompatActivity {
                     FilmModel f = documentSnapshot.toObject(FilmModel.class);
                     films.add(f);
                 }
-                LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-                filmReports.setLayoutManager(VerLayoutManager);
-                FilmReportAdapter filmReportAdapter = new FilmReportAdapter(films, selectedCinema,SelectedMonth, SelectedYear);
-                filmReports.setAdapter(filmReportAdapter);
-                setTotalPrice();
+//                LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+//                filmReports.setLayoutManager(VerLayoutManager);
+//                FilmReportAdapter filmReportAdapter = new FilmReportAdapter(films, selectedCinema,SelectedMonth, SelectedYear);
+//                filmReports.setAdapter(filmReportAdapter);
+               // setTotalPrice();
+                setListRetry(films);
 
 //                filmReportAdapter.setOnDataChangedListener(new FilmReportAdapter.OnDataChangedListener() {
 //                    @Override
@@ -248,7 +300,7 @@ public class ReportActivity extends AppCompatActivity {
         });
     }
     void setTotalPrice(){
-        List<Cinema> cinemas = new ArrayList<>();
+
         total = 0;
         firestore.collection("Cinema").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -259,8 +311,12 @@ public class ReportActivity extends AppCompatActivity {
 
                 for (QueryDocumentSnapshot documentSnapshot : value) {
                     Cinema c = documentSnapshot.toObject(Cinema.class);
-                    if(selectedCinema.equals("All Cinema"))
+                    if(selectedCinema.equals("All Cinema")){
                         cinemas.add(c);
+
+
+                    }
+
                     else if(c.getName().equals(selectedCinema))
                         cinemas.add(c);
                 }
@@ -400,13 +456,165 @@ public class ReportActivity extends AppCompatActivity {
                     FilmModel f = documentSnapshot.toObject(FilmModel.class);
                     if (f.getName().toLowerCase().contains(text.toLowerCase()))
                         films.add(f);
+
                 }
-                LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-                filmReports.setLayoutManager(VerLayoutManager);
-                filmReports.setAdapter(new FilmReportAdapter(films, selectedCinema,SelectedMonth, SelectedYear));
+
+//                LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+//                filmReports.setLayoutManager(VerLayoutManager);
+//                filmReports.setAdapter(new FilmReportAdapter(films, selectedCinema,SelectedMonth, SelectedYear));
                 setTotalPrice();
             }
         });
 
+    }
+    void setListRetry(List<FilmModel> films){
+        listEntries = new ArrayList<>();
+        listLabels = new ArrayList<>();
+//        int[] listColor = {getResources().getColor(R.color.color1),getResources().getColor(R.color.color2),getResources().getColor(R.color.color3),getResources().getColor(R.color.color4), getResources().getColor(R.color.color5),getResources().getColor(R.color.color6),getResources().getColor(R.color.color7),getResources().getColor(R.color.color8),
+//                getResources().getColor(R.color.color9),getResources().getColor(R.color.color10),getResources().getColor(R.color.color11),getResources().getColor(R.color.color12), getResources().getColor(R.color.color13),getResources().getColor(R.color.color14),getResources().getColor(R.color.color15),getResources().getColor(R.color.color16),
+//                getResources().getColor(R.color.color17),getResources().getColor(R.color.color18),getResources().getColor(R.color.color19),getResources().getColor(R.color.color20)
+//        };
+        cinemas = new ArrayList<>();
+
+        firestore.collection("Cinema").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    return;
+                }
+                for (QueryDocumentSnapshot documentSnapshot : value) {
+                    Cinema c = documentSnapshot.toObject(Cinema.class);
+                    if(selectedCinema.equals("All Cinema"))
+                        cinemas.add(c);
+                    else if(c.getName().equals(selectedCinema)){
+                        cinemas.add(c);
+                    }
+
+                }
+
+            }
+        });
+
+        int[] binh = randomColor(films.size());
+        ArrayList<LegendEntry> listLegend = new ArrayList<>();
+        for(FilmModel film : films){
+            index = 0;
+
+            firestore.collection("Ticket").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                    if (error != null) {
+                        return;
+                    }
+                    int id = 0;
+                    total_price = 0;
+                    for (QueryDocumentSnapshot documentSnapshot : value) {
+                        Ticket s = documentSnapshot.toObject(Ticket.class);
+                        if ((s.getFilmID()).equals(film.getId())) {
+                            String seat = s.getSeat();
+                            int count = 1;
+                            count += seat.length() - s.getSeat().replace(",", "").length();
+                            //Initialize your Date however you like it.
+                            Date date = s.getTime().toDate();
+                            Calendar calendar = new GregorianCalendar();
+                            calendar.setTime(date);
+                            int TicketYear = calendar.get(Calendar.YEAR);
+                            int TicketMonth = calendar.get(Calendar.MONTH) + 1;
+                            for (int i = 0; i < cinemas.size(); i++)
+                                if (cinemas.get(i).getCinemaID().equals(s.getCinemaID())) {
+                                    if(SelectedMonth==0)
+                                    {
+                                        if(SelectedYear == 0)
+                                        {
+                                            total_price += cinemas.get(i).getPrice() * count;
+                                        }
+                                        else if(TicketYear==SelectedYear)
+                                        {
+                                            total_price += cinemas.get(i).getPrice() * count;
+                                        }
+                                    }
+                                    else if(TicketMonth==SelectedMonth)
+                                    {
+                                        if(SelectedYear == 0)
+                                        {
+                                            total_price += cinemas.get(i).getPrice() * count;
+                                        }
+                                        else if(TicketYear==SelectedYear)
+                                        {
+                                            total_price += cinemas.get(i).getPrice() * count;
+                                        }
+                                    }
+                                }
+                        }
+                    }
+                    BarEntry barEntry = new BarEntry(index, total_price);
+                    listEntries.add(barEntry);
+                    BarDataSet barDataSet = new BarDataSet(listEntries, "");
+                    barDataSet.setColors(binh);
+                    barDataSet.setDrawValues(false);
+                    barDataSet.setValueTextSize(20f);
+                    BarData barData = new BarData();
+                    barData.addDataSet(barDataSet);
+                    chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(listLabels));
+                    chart.animateY(2000);
+                    chart.setFitBars(true);
+                    chart.setData(barData);
+                    chart.invalidate();
+                    YAxis yAxisRight = chart.getAxisRight();
+                    YAxis yAxisLeft = chart.getAxisLeft();
+                    XAxis xAxis = chart.getXAxis();
+                    Legend l = chart.getLegend();
+                    yAxisLeft.setAxisMinimum(0);
+                    l.setEnabled(true);
+                    if(index < films.size()){
+                        LegendEntry legendEntry = new LegendEntry();
+                        legendEntry.label = film.getName();
+                        legendEntry.formColor = binh[index];
+                        listLegend.add(legendEntry);
+                    }
+                    l.setCustom(listLegend);
+                    yAxisRight.setEnabled(false);
+                    yAxisLeft.setTextColor(Color.WHITE);
+                    xAxis.setTextColor(Color.WHITE);
+                    yAxisLeft.setValueFormatter(new Formater());
+                    l.setTextColor(Color.WHITE);
+                    l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+                    l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+                    l.setOrientation(Legend.LegendOrientation.VERTICAL);
+                     l.setDrawInside(false);
+                    index++;
+                    NumberFormat numberFormat = new DecimalFormat("#,###");
+                }
+            });
+        }
+
+    }
+    int[] randomColor(int count){
+        int[] listColor = new int[count];
+        int color = 0;
+        for(int i = 0; i < count; i++){
+            Random rnd = new Random();
+            if(i == 0){
+                color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+
+                listColor[i] = color;
+            }
+            else{
+                for(int j = 0; j < listColor.length; j++){
+                    do{
+                        color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+                    }
+                    while (
+                            color == listColor[j]
+                    );
+                }
+                listColor[i] = color;
+            }
+
+
+
+
+        }
+        return listColor;
     }
 }

@@ -18,6 +18,7 @@ public class InforBooked {
     public Cinema cinema;
     public String dateBooked;
     public FilmModel film;
+    public int height = 0;
     public List<Cinema> listCinema = new ArrayList<Cinema>();
     public boolean isDateSelected;
     public boolean isCitySelected;

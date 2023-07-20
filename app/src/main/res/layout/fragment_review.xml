@@ -24,13 +24,14 @@
                 android:orientation="vertical"
 
                 android:layout_height="wrap_content">
+
                 <TextView
-                    android:gravity="center"
-                    android:fontFamily="@font/montserrat500"
-                    android:textSize="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Review a movie just watched"/>
+                    android:fontFamily="@font/montserrat500"
+                    android:gravity="center"
+                    android:text="Review a movie just watched"
+                    android:textSize="16dp" />
 
                 <RatingBar
                     android:layout_marginTop="20dp"
