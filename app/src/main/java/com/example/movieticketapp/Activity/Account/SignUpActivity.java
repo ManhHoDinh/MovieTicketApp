@@ -2,7 +2,10 @@ package com.example.movieticketapp.Activity.Account;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.provider.MediaStore;
 
@@ -12,20 +15,25 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Users;
+import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -53,6 +61,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListener, filter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListener);
+        super.onStop();
+    }
 
     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     FirebaseFirestore databaseReference = FirebaseFirestore.getInstance();
@@ -106,9 +127,18 @@ public class SignUpActivity extends AppCompatActivity {
         backBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(SignUpActivity.this, SignInActivity.class);
-                startActivity(i);
+                finish();
             }
+        });
+        LinearLayout layoutElement = findViewById(R.id.SignUpLayout); // Replace with your actual layout element ID
+
+        layoutElement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Hide the keyboard
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                 }
         });
         Button signUpBt =  findViewById(R.id.SignUpBtn);
         signUpBt.setOnClickListener(new View.OnClickListener() {
@@ -251,5 +281,6 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
     }
+
 
 }

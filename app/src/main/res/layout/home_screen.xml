@@ -159,6 +159,33 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="30dp" />
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="25dp">
+
+                        <TextView
+                            style="@style/titleStyle"
+                            android:text="Expired Movie"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                        <TextView
+                            style="@style/titleStyle"
+                            android:gravity="center"
+
+                            android:id="@+id/viewAllExpiredBtn"
+                            android:text="View all"
+                            android:textColor="@color/sub_text_color"
+                            android:textSize="14dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/ExpiredMovieView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/PromotionHeader"

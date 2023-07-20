@@ -10,6 +10,8 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +26,7 @@ import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.InforBooked;
 import com.example.movieticketapp.Model.Users;
+import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
@@ -41,6 +44,20 @@ import java.util.ArrayList;
 
 public class InformationFilmActivity extends FragmentActivity {
     int height = 0;
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListener, filter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(networkChangeListener);
+        super.onStop();
+    }
+
     ImageView backgroundImage;
     TextView nameTV;
     ImageView PosterImage;

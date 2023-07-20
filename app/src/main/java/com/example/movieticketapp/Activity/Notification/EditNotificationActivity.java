@@ -7,9 +7,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.example.movieticketapp.Model.ExtraIntent;
 import com.example.movieticketapp.Model.NotificationModel;
@@ -28,12 +30,21 @@ public class EditNotificationActivity extends AppCompatActivity {
     TextInputEditText Description;
     TextInputEditText Heading;
     NotificationModel notification;
+
+    ImageView backBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_notification);
         Intent intent = getIntent();
         notification = intent.getParcelableExtra(ExtraIntent.notification);
+        backBtn = findViewById(R.id.btnBack);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         AddNotification();
     }
     void AddNotification(){
@@ -62,6 +73,7 @@ public class EditNotificationActivity extends AppCompatActivity {
                 if(!error)
                 {
                     AddNotificationToFirebase();
+                    finish();
                 }
 
             }
