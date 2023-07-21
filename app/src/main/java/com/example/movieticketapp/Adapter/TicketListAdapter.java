@@ -51,6 +51,7 @@ public class TicketListAdapter extends ArrayAdapter<Ticket> {
             v = vi.inflate(this.resource, null);
         }
         Ticket ve = getItem(position);
+
         if (ve!=null) {
             TextView nameTextView = (TextView) v.findViewById(R.id.tvName);
             TextView timeTextView = (TextView) v.findViewById(R.id.tvTime);
@@ -60,6 +61,7 @@ public class TicketListAdapter extends ArrayAdapter<Ticket> {
             film.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
                 public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+
                     if (nameTextView != null)
                         nameTextView.setText(value.get("name").toString());
                     if (timeTextView != null){

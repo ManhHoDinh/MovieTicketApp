@@ -209,7 +209,7 @@ public class AddCinemaActivity extends AppCompatActivity {
         String phoneNo = hotline.getText().toString();
         String price = priceCinema.getText().toString();
         String address = addressCinema.getText().toString();
-        if(name == null ||phoneNo == null ||price == null || address == null){
+        if(name.equals("")||phoneNo.equals("")||price.equals("") || address.equals("") ||filePath == null ){
             Toast.makeText(this, "Please type full information!", Toast.LENGTH_SHORT).show();
         }
         else {

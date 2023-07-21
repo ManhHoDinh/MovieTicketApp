@@ -6,6 +6,7 @@ import static com.example.movieticketapp.Firebase.FirebaseRequest.mAuth;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 
@@ -16,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 
 import android.content.IntentFilter;
 import android.content.IntentSender;
@@ -106,6 +108,9 @@ public class SignInActivity extends AppCompatActivity {
     private TextView forgotPasswordTv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (getIntent().getBooleanExtra("EXIT", false)) {
+            finish();
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_in_screen);
         TextView signUp = findViewById(R.id.SignUp);
@@ -452,5 +457,11 @@ public class SignInActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
             focusedView.clearFocus();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        super.onBackPressed();
     }
 }
