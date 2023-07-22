@@ -5,9 +5,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,6 +20,7 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,17 +33,21 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.movieticketapp.Activity.Booking.ShowTimeScheduleActivity;
 import com.example.movieticketapp.Activity.Discount.DiscountViewAll;
 import com.example.movieticketapp.Activity.Helper.Formater;
 import com.example.movieticketapp.Activity.HomeActivity;
+import com.example.movieticketapp.Activity.Movie.EditMovieActivity;
 import com.example.movieticketapp.Activity.Notification.NotificationActivity;
 import com.example.movieticketapp.Activity.Ticket.MyTicketAllActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
@@ -78,6 +85,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -89,6 +97,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.sql.Array;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -102,6 +111,11 @@ public class ReportActivity extends AppCompatActivity {
     private AutoCompleteTextView CinemaAutoTv;
     private AutoCompleteTextView MonthAutoTv;
     private AutoCompleteTextView YearAutoTv;
+    Button BeginDateCalendarButton;
+    Button EndDateCalendarButton;
+    Button viewChartBtn;
+    Timestamp BeginDate;
+    Timestamp EndDate;
     private FirebaseFirestore firestore;
     private CollectionReference MovieRef;
     List<Cinema> cinemas = new ArrayList<>();
@@ -116,6 +130,8 @@ public class ReportActivity extends AppCompatActivity {
     int total_price = 0;
     int index = 0;
     int temp = 0;
+    LocalDate localBeginDate;
+    LocalDate localEndDate;
 
     BarChart chart;
     ArrayList<BarEntry> listEntries = new ArrayList<>();
@@ -149,14 +165,168 @@ public class ReportActivity extends AppCompatActivity {
         MovieRef = firestore.collection("Movies");
         TotalPrice=findViewById(R.id.totalPrice);
         chart = (BarChart) findViewById(R.id.chart);
+        viewChartBtn = findViewById(R.id.viewChartBtn);
+        BeginDateCalendarButton = findViewById(R.id.BeginDateCalendar);
+        EndDateCalendarButton = findViewById(R.id.EndDateCalendar);
+        BeginDateCalendarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Show calendar dialog
+                showBeginDateCalendarDialog();
+                dismissKeyboard(v);
+            }
+        });
+        EndDateCalendarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Show calendar dialog
+                showEndDateCalendarDialog();
+                dismissKeyboard(v);
+            }
+        });
+        viewChartBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(BeginDate == null || EndDate == null){
+                    Toast.makeText(ReportActivity.this, "Please choose begin date and end date!", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    LoadFilms();
+                }
+            }
+        });
        // setEntry();
         ControlButton();
         LoadCinema();
-        LoadFilms();
-        LoadMonth();
-        LoadYear();
+//        LoadMonth();
+//        LoadYear();
+      //  LoadFilms();
         BottomNavigation();
         Search();
+    }
+    void dismissKeyboard(View v)
+    {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+    }
+    private void showBeginDateCalendarDialog() {
+        // Create a calendar instance and get the current date
+        Calendar calendar = Calendar.getInstance();
+        if(localBeginDate!=null)
+            calendar.set(localBeginDate.getYear(),localBeginDate.getMonthValue()-1,localBeginDate.getDayOfMonth());
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        // Create a custom DatePickerDialog
+        DatePickerDialog datePickerDialog = new DatePickerDialog(ReportActivity.this,
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
+                        // Handle the selected date
+                        // You can update the button text or perform any other actions here
+                        String date = String.valueOf(selectedDay) + "/" + String.valueOf(selectedMonth + 1) + "/" + String.valueOf(selectedYear);
+                        BeginDateCalendarButton.setText(date);
+                    }
+                }, year, month, dayOfMonth) {
+            @Override
+            public void onCreate(Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
+
+                // Get the "OK" button from the dialog's layout
+                Button positiveButton = getButton(DialogInterface.BUTTON_POSITIVE);
+                Button negativeButton = getButton(DialogInterface.BUTTON_NEGATIVE);
+                positiveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        DatePicker datePicker = getDatePicker();
+                        int year = datePicker.getYear();
+                        int month = datePicker.getMonth();
+                        int dayOfMonth = datePicker.getDayOfMonth();
+                        String date = String.valueOf(dayOfMonth) + "/" + String.valueOf(month + 1) + "/" + String.valueOf(year);
+                        localBeginDate = LocalDate.of(year, month+1, dayOfMonth);
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        calendar.set(Calendar.MONTH, month); // Note: Calendar.MONTH is zero-based
+                        calendar.set(Calendar.YEAR, year);
+                        calendar.set(Calendar.HOUR, 0);
+                        calendar.set(Calendar.MINUTE, 0);
+                        calendar.set(Calendar.SECOND, 0);
+                        BeginDate = new Timestamp(calendar.getTime());
+                        BeginDateCalendarButton.setText(date);dismiss();
+                    }
+                });
+                // Set the desired background color for the button
+                positiveButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.green));
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
+                layoutParams.setMarginStart((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics()));
+                positiveButton.setLayoutParams(layoutParams);
+                negativeButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.grey_background_1));
+            }
+        };
+
+        // Show the dialog
+        datePickerDialog.show();
+    }
+    private void showEndDateCalendarDialog() {
+        // Create a calendar instance and get the current date
+        Calendar calendar = Calendar.getInstance();
+        if(localEndDate!=null)
+            calendar.set(localEndDate.getYear(),localEndDate.getMonthValue()-1,localEndDate.getDayOfMonth());
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        // Create a custom DatePickerDialog
+        DatePickerDialog datePickerDialog = new DatePickerDialog(ReportActivity.this,
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
+                        // Handle the selected date
+                        // You can update the button text or perform any other actions here
+                        String date = String.valueOf(selectedDay) + "/" + String.valueOf(selectedMonth + 1) + "/" + String.valueOf(selectedYear);
+                        EndDateCalendarButton.setText(date);
+                    }
+                }, year, month, dayOfMonth) {
+            @Override
+            public void onCreate(Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
+
+                // Get the "OK" button from the dialog's layout
+                Button positiveButton = getButton(DialogInterface.BUTTON_POSITIVE);
+                Button negativeButton = getButton(DialogInterface.BUTTON_NEGATIVE);
+                positiveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        DatePicker datePicker = getDatePicker();
+                        int year = datePicker.getYear();
+                        int month = datePicker.getMonth();
+                        int dayOfMonth = datePicker.getDayOfMonth();
+                        String date = String.valueOf(dayOfMonth) + "/" + String.valueOf(month + 1) + "/" + String.valueOf(year);
+                        localEndDate = LocalDate.of(year, month+1, dayOfMonth);
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        calendar.set(Calendar.MONTH, month); // Note: Calendar.MONTH is zero-based
+                        calendar.set(Calendar.YEAR, year);
+                        calendar.set(Calendar.HOUR, 0);
+                        calendar.set(Calendar.MINUTE, 0);
+                        calendar.set(Calendar.SECOND, 0);
+
+                        EndDate = new Timestamp(calendar.getTime());
+                        EndDateCalendarButton.setText(date);dismiss();
+                    }
+                });
+                // Set the desired background color for the button
+                positiveButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.green));
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
+                layoutParams.setMarginStart((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics()));
+                positiveButton.setLayoutParams(layoutParams);
+                negativeButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.grey_background_1));
+            }
+        };
+
+        // Show the dialog
+        datePickerDialog.show();
     }
 
     private void ControlButton() {
@@ -168,6 +338,7 @@ public class ReportActivity extends AppCompatActivity {
         control.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.e("fd", BeginDate.toDate().toString());
                 if(fliter.getVisibility()==View.VISIBLE) {
                     fliter.setVisibility(View.INVISIBLE);
                     ViewGroup.LayoutParams params = fliter.getLayoutParams();
@@ -209,8 +380,6 @@ public class ReportActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectedCinema = parent.getItemAtPosition(position).toString();
-
-                LoadFilms();
             }
         });
     }
@@ -525,28 +694,31 @@ public class ReportActivity extends AppCompatActivity {
                             int TicketMonth = calendar.get(Calendar.MONTH) + 1;
                             for (int i = 0; i < cinemas.size(); i++)
                                 if (cinemas.get(i).getCinemaID().equals(s.getCinemaID())) {
-                                    if(SelectedMonth==0)
-                                    {
-                                        if(SelectedYear == 0)
-                                        {
-                                            total_price += cinemas.get(i).getPrice() * count;
-                                        }
-                                        else if(TicketYear==SelectedYear)
-                                        {
-                                            total_price += cinemas.get(i).getPrice() * count;
-                                        }
+                                    if(date.after(BeginDate.toDate()) && date.before(EndDate.toDate())){
+                                        total_price += cinemas.get(i).getPrice() * count;
                                     }
-                                    else if(TicketMonth==SelectedMonth)
-                                    {
-                                        if(SelectedYear == 0)
-                                        {
-                                            total_price += cinemas.get(i).getPrice() * count;
-                                        }
-                                        else if(TicketYear==SelectedYear)
-                                        {
-                                            total_price += cinemas.get(i).getPrice() * count;
-                                        }
-                                    }
+//                                    if(SelectedMonth==0)
+//                                    {
+//                                        if(SelectedYear == 0)
+//                                        {
+//                                            total_price += cinemas.get(i).getPrice() * count;
+//                                        }
+//                                        else if(TicketYear==SelectedYear)
+//                                        {
+//                                            total_price += cinemas.get(i).getPrice() * count;
+//                                        }
+//                                    }
+//                                    else if(TicketMonth==SelectedMonth)
+//                                    {
+//                                        if(SelectedYear == 0)
+//                                        {
+//                                            total_price += cinemas.get(i).getPrice() * count;
+//                                        }
+//                                        else if(TicketYear==SelectedYear)
+//                                        {
+//                                            total_price += cinemas.get(i).getPrice() * count;
+//                                        }
+//                                    }
                                 }
                         }
                     }

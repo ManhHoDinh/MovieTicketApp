@@ -100,6 +100,9 @@ public class ListSearchAdapter extends RecyclerView.Adapter<ListSearchAdapter.It
                 holder.inforBtn.setText("Schedule");
             }
            else holder.inforBtn.setText("Book");
+            holder.inforBtn.setBackgroundColor(Color.TRANSPARENT);
+            holder.inforBtn.setTextColor(Color.WHITE);
+            holder.inforBtn.setBackground(ContextCompat.getDrawable(holder.status.getContext(), R.drawable.background_button));
 
         }
         else{

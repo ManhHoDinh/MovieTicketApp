@@ -44,12 +44,14 @@ public class TicketListAdapter extends ArrayAdapter<Ticket> {
     @Override
     public View getView(int position, @Nullable View converView, @Nullable ViewGroup parent)
     {
-        View v = converView;
-        if(v == null) {
-            LayoutInflater vi;
-            vi = LayoutInflater.from(this.getContext());
-            v = vi.inflate(this.resource, null);
-        }
+        View v;
+        v = LayoutInflater.from(this.getContext()).inflate(R.layout.list_ticket_view, null);
+//        View v = converView;
+//        if(v == null) {
+//            LayoutInflater vi;
+//            vi = LayoutInflater.from(this.getContext());
+//            v = vi.inflate(this.resource, null);
+//        }
         Ticket ve = getItem(position);
 
         if (ve!=null) {

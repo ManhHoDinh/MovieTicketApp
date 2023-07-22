@@ -93,7 +93,7 @@ public class MyTicketAllActivity extends AppCompatActivity {
                 newTicket.setSelected(true);
                 expiredTicket.setSelected(false);
                 allTicket.setText(null);
-                newTicket.setText("News");
+                newTicket.setText("New");
                 expiredTicket.setText(null);
                 arrayList.clear();
 
@@ -217,7 +217,6 @@ public class MyTicketAllActivity extends AppCompatActivity {
                         case "expire":
                             for (DocumentSnapshot doc : listDoc){
                                 if(doc.get("userID").equals(FirebaseRequest.mAuth.getUid())) {
-
                                     if (currentTime.after(doc.getTimestamp("time").toDate()) || currentTime.equals(doc.getTimestamp("time").toDate())) {
                                         Ticket _ticket = doc.toObject(Ticket.class);
                                         arrayList.add(_ticket);
