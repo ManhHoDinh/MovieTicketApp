@@ -188,7 +188,11 @@ public class ReportActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(BeginDate == null || EndDate == null){
-                    Toast.makeText(ReportActivity.this, "Please choose begin date and end date!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ReportActivity.this, "Please choose begin date and end date!", Toast.LENGTH_LONG).show();
+                }
+                else if(BeginDate.toDate().after(EndDate.toDate())){
+
+                    Toast.makeText(ReportActivity.this, "End date is before begin date!", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     LoadFilms();
