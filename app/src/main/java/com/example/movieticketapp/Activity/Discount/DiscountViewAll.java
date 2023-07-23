@@ -5,9 +5,11 @@ import static android.content.ContentValues.TAG;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
@@ -15,8 +17,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -73,6 +77,17 @@ public class DiscountViewAll extends AppCompatActivity {
         binding = ActivityDiscountViewAllBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         promotionView =(ListView) findViewById(R.id.promotionView);
+        ConstraintLayout layoutElement = findViewById(R.id.SearchLayout); // Replace with your actual layout element ID
+
+        layoutElement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Hide the keyboard
+                InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
+        });
+
         // below line is to call set on query text listener method.
         binding.searchField.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -227,4 +242,5 @@ public class DiscountViewAll extends AppCompatActivity {
 
 
     }
+
 }

@@ -255,13 +255,11 @@ public class EditProfileActivity extends AppCompatActivity {
                         FirebaseStorage.getInstance().getReferenceFromUrl(cinemaImg).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                Log.e("fd", uri.toString());
                                 UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder()
                                         .setPhotoUri(uri)
                                         .build();
                                 FirebaseAuth.getInstance().getCurrentUser().updateProfile(userProfileChangeRequest);
 
-                                Log.e("fdd", currentUser.getPhotoUrl().toString());
                             }
                         });
                     }
