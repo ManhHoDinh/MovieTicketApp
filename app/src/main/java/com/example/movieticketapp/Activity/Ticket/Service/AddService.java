@@ -6,12 +6,16 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +65,17 @@ public class AddService extends AppCompatActivity {
         titleFoodDrink = findViewById(R.id.titleFoodDrink);
         Intent intent = getIntent();
         service = intent.getParcelableExtra("service");
+        LinearLayoutCompat layoutElement = findViewById(R.id.LinerLayout); // Replace with your actual layout element ID
+
+        layoutElement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Hide the keyboard
+                InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
+        });
+
         if (service != null)
         {
             Name.setText(service.getName());
@@ -140,6 +155,14 @@ public class AddService extends AppCompatActivity {
         if(ImageSet == false)
         {
             Toast.makeText(getApplicationContext(), "Image must not be Empty", Toast.LENGTH_LONG).show();
+            error=true;
+        }
+        try{
+            int num = Integer.parseInt(Price.getText().toString());
+            // is an integer!
+        } catch (NumberFormatException e) {
+            // not an integer!
+            Price.setError("Service Price must is integer!!!");
             error=true;
         }
         if (!error)

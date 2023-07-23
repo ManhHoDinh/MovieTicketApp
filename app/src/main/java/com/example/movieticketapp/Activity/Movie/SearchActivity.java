@@ -55,6 +55,7 @@ private ListSearchAdapter adapter;
         closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dismissKeyboardShortcutsHelper();
                 finish();
             }
         });

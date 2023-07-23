@@ -223,7 +223,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="15dp"
-                        android:layout_marginBottom="70dp"
+                        android:layout_marginBottom="15dp"
                         android:src="@drawable/add_promo" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -261,7 +261,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="15dp"
-                        android:layout_marginBottom="70dp"
+                        android:layout_marginBottom="15dp"
                         android:src="@drawable/add_promo" />
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/cityHeader"
