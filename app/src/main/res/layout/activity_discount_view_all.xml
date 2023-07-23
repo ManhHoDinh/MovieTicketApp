@@ -5,13 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
+    android:id="@+id/SearchLayout"
     tools:context=".Activity.Discount.DiscountViewAll">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:paddingStart="24dp"
-                    android:paddingEnd="24dp">
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="20dp"
+                    >
                     <androidx.constraintlayout.widget.ConstraintLayout
 
                         android:layout_width="match_parent"
@@ -91,6 +94,7 @@
                         android:id="@+id/promotionView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:scrollbars="none"
                         android:layout_marginTop="50dp"
                         android:dividerHeight="20dp"/>
                 </LinearLayout>

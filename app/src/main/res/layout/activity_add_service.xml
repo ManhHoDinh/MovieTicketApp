@@ -55,11 +55,13 @@
         app:layout_constraintTop_toBottomOf="@+id/headerLine"
         android:layout_marginLeft="44dp"
         android:layout_marginRight="44dp"
+        android:scrollbars="none"
         >
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:id="@+id/LinerLayout"
             >
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"

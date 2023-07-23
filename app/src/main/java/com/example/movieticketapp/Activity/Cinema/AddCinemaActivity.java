@@ -7,9 +7,11 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.ColorDrawable;
@@ -20,6 +22,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -144,6 +147,17 @@ public class AddCinemaActivity extends AppCompatActivity {
         cityID = intent.getStringExtra("cityID");
         cinemaEdit = intent.getParcelableExtra("cinema");
         backBtn = findViewById(R.id.backbutton);
+        LinearLayoutCompat layoutElement = findViewById(R.id.LinerLayout); // Replace with your actual layout element ID
+
+        layoutElement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Hide the keyboard
+                InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
+        });
+
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -209,10 +223,37 @@ public class AddCinemaActivity extends AppCompatActivity {
         String phoneNo = hotline.getText().toString();
         String price = priceCinema.getText().toString();
         String address = addressCinema.getText().toString();
-        if(name == null ||phoneNo == null ||price == null || address == null){
-            Toast.makeText(this, "Please type full information!", Toast.LENGTH_SHORT).show();
+        boolean error = false;
+        if(nameCinema.length()==0)
+        {
+            nameCinema.setError("Cinema Name must not be empty!!!");
+            error=true;
         }
-        else {
+        if(hotline.length()==0)
+        {
+            hotline.setError("Cinema HotLine must not be empty!!!");
+            error=true;
+        }
+        if(addressCinema.length()==0)
+        {
+            addressCinema.setError("Cinema Address must not be empty!!!");
+            error=true;
+        }
+        if(priceCinema.length()==0)
+        {
+            priceCinema.setError("Cinema Price must not be empty!!!");
+            error=true;
+        }
+        try{
+            int num = Integer.parseInt(priceCinema.getText().toString());
+            // is an integer!
+        } catch (NumberFormatException e) {
+            // not an integer!
+            priceCinema.setError("Service Price must is integer!!!");
+            error=true;
+        }
+        if (!error)
+        {
             if(filePath != null){
                 StorageReference ref = storageReference.child(img);
                 uploadTask = ref.putFile(filePath);
@@ -266,7 +307,6 @@ public class AddCinemaActivity extends AppCompatActivity {
                 });
 
             }
-
         }
     }
 }

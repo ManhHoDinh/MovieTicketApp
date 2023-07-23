@@ -247,7 +247,7 @@ public class SignUpActivity extends AppCompatActivity {
                                         }
                                     });
                             Users.currentUser = u;
-                            Intent i = new Intent(getApplicationContext(), UserProflingActivity.class);
+                            Intent i = new Intent(getApplicationContext(), ConfirmationProfileActivity.class);
                             startActivity(i);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -281,6 +281,4 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
     }
-
-
 }

@@ -90,39 +90,48 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
         Comment comment = getItem(position);
         if (comment != null)
         {
-            userRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                @Override
-                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                    Users user = value.toObject(Users.class);
-                    likeComments = user.getLikeComments();
-                    dislikeComments = user.getDislikeComments();
+            try {
+                userRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                        Users user = value.toObject(Users.class);
+                        likeComments = user.getLikeComments();
+                        dislikeComments = user.getDislikeComments();
 
-                    for(String id : likeComments){
-                        if(id.equals(comment.getID())){
-                            likeBtn.setImageResource(R.drawable.heart_fill_icon);
-                            likeBtn.setTag(R.drawable.heart_fill_icon);
-                            break;
+                        try{
+                            for(String id : likeComments){
+                                if(id.equals(comment.getID())){
+                                    likeBtn.setImageResource(R.drawable.heart_fill_icon);
+                                    likeBtn.setTag(R.drawable.heart_fill_icon);
+                                    break;
+                                }
+                                else{
+                                    likeBtn.setImageResource(R.drawable.heart_icon);
+                                    likeBtn.setTag("bg");
+                                }
+                            }
+                            for(String id: dislikeComments){
+                                if(id.equals(comment.getID())){
+                                    Log.e("dfd", comment.getID());
+                                    dislikeBtn.setImageResource(R.drawable.dislike_fill_icon);
+                                    dislikeBtn.setTag(R.drawable.dislike_fill_icon);
+                                    break;
+                                }
+                                else{
+                                    Log.e("false", comment.getID());
+                                    dislikeBtn.setImageResource(R.drawable.dislike_icon);
+                                    dislikeBtn.setTag("cg");
+                                }
+                            }
                         }
-                        else{
-                            likeBtn.setImageResource(R.drawable.heart_icon);
-                            likeBtn.setTag("bg");
-                        }
+                        catch (Exception e){}
                     }
-                    for(String id: dislikeComments){
-                        if(id.equals(comment.getID())){
-                            Log.e("dfd", comment.getID());
-                            dislikeBtn.setImageResource(R.drawable.dislike_fill_icon);
-                            dislikeBtn.setTag(R.drawable.dislike_fill_icon);
-                            break;
-                        }
-                        else{
-                            Log.e("false", comment.getID());
-                            dislikeBtn.setImageResource(R.drawable.dislike_icon);
-                            dislikeBtn.setTag("cg");
-                        }
-                    }
-                }
-            });
+                });
+            }
+            catch (Exception e)
+            {
+
+            }
 //            userRef.collection("LikeComment").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
 //                @Override
 //                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activity.Discount.AddDiscount"
+    android:id="@+id/AddDiscountLayout"
     android:background="@color/dark_background_1"
     >
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -59,11 +60,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:id="@+id/AddDiscountLayout2"
             >
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
+
                 >
                 <TextView
                     android:id="@+id/couponTitle"
