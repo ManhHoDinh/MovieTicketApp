@@ -204,7 +204,7 @@ public class ReviewFragment extends Fragment {
         Button submitBtn = dialog.findViewById(R.id.submitComment);
         TextView reviewTv = dialog.findViewById(R.id.reviewTv);
         rateBar.setRating(rating);
-        LinearLayoutCompat layoutElement = dialog.findViewById(R.id.LinerLayout); // Replace with your actual layout element ID
+        LinearLayout layoutElement = dialog.findViewById(R.id.LinerLayout); // Replace with your actual layout element ID
 
         layoutElement.setOnClickListener(new View.OnClickListener() {
             @Override
