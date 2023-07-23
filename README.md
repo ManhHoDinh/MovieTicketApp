@@ -141,7 +141,7 @@ Quản lí bắp nước
 
 * [Phạm Thanh Tường](https://github.com/TuongPhamCT)
 
-* [Lí Thanh Tú Anh](https://github.com/anhtu193)
+* [Lý Thanh Tú Anh](https://github.com/anhtu193)
 
 * [Phạm Nguyễn Nhật Duy](https://github.com/heluDuyne)
 
