@@ -3,6 +3,7 @@ package com.example.movieticketapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +18,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
+
+import java.net.Inet4Address;
 
 public class ChangePasswordActivity extends AppCompatActivity {
     Button backBtn;
@@ -73,7 +76,8 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     } else {
                         // An error occurred while re-authenticating the user
                         // Handle the error
-                        UpdateError("Update");
+                        Toast.makeText(ChangePasswordActivity.this, "Current password is not correct!", Toast.LENGTH_SHORT).show();
+
                     }
                 }
             });
@@ -95,11 +99,11 @@ public class ChangePasswordActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     FirebaseRequest.mAuth.signOut();
-                    startActivity(new Intent(ChangePasswordActivity.this, SignInActivity.class));
+                    Intent loginIntent = new Intent(ChangePasswordActivity.this, SignInActivity.class);
+                    TaskStackBuilder.create(ChangePasswordActivity.this).addNextIntentWithParentStack(loginIntent).startActivities();
                 } else {
                     // An error occurred while updating the user password
                     // Handle the error
-                    UpdateError("Password");
                 }
             }
         });
@@ -109,4 +113,5 @@ public class ChangePasswordActivity extends AppCompatActivity {
         Toast.makeText(ChangePasswordActivity.this, "Edit Profile failed : " + error,
                 Toast.LENGTH_SHORT).show();
     }
+
 }

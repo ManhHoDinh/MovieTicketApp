@@ -44,13 +44,16 @@ public class TicketListAdapter extends ArrayAdapter<Ticket> {
     @Override
     public View getView(int position, @Nullable View converView, @Nullable ViewGroup parent)
     {
-        View v = converView;
-        if(v == null) {
-            LayoutInflater vi;
-            vi = LayoutInflater.from(this.getContext());
-            v = vi.inflate(this.resource, null);
-        }
+        View v;
+        v = LayoutInflater.from(this.getContext()).inflate(R.layout.list_ticket_view, null);
+//        View v = converView;
+//        if(v == null) {
+//            LayoutInflater vi;
+//            vi = LayoutInflater.from(this.getContext());
+//            v = vi.inflate(this.resource, null);
+//        }
         Ticket ve = getItem(position);
+
         if (ve!=null) {
             TextView nameTextView = (TextView) v.findViewById(R.id.tvName);
             TextView timeTextView = (TextView) v.findViewById(R.id.tvTime);
@@ -60,6 +63,7 @@ public class TicketListAdapter extends ArrayAdapter<Ticket> {
             film.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
                 public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+
                     if (nameTextView != null)
                         nameTextView.setText(value.get("name").toString());
                     if (timeTextView != null){

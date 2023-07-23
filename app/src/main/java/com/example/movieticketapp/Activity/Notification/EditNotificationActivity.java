@@ -5,12 +5,15 @@ import static android.content.ContentValues.TAG;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.LinearLayoutCompat;
 
+import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
 import com.example.movieticketapp.Model.ExtraIntent;
@@ -50,6 +53,17 @@ public class EditNotificationActivity extends AppCompatActivity {
     void AddNotification(){
         Description= findViewById(R.id.DescriptionET);
         Heading=findViewById(R.id.HeadingET);
+        LinearLayoutCompat layoutElement = findViewById(R.id.AddNotificationLayout); // Replace with your actual layout element ID
+
+        layoutElement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Hide the keyboard
+                InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
+        });
+
         if(notification!=null)
         {
             Heading.setText(notification.getHeading());
@@ -62,12 +76,12 @@ public class EditNotificationActivity extends AppCompatActivity {
                 boolean error = false;
                 if(Description.length()==0)
                 {
-                    Description.setError("Full Name is not empty!!!");
+                    Description.setError("Description is not empty!!!");
                     error=true;
                 }
                 if(Heading.length()==0)
                 {
-                    Heading.setError("Email is not empty!!!");
+                    Heading.setError("Heading is not empty!!!");
                     error=true;
                 }
                 if(!error)

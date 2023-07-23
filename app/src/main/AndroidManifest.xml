@@ -179,9 +179,8 @@
         <activity android:name=".Activity.Ticket.TicketDetailActivity" />
         <activity
             android:name=".Activity.HomeActivity"
-            android:windowSoftInputMode="stateHidden"
-
-            android:exported="true" />
+            android:windowSoftInputMode="stateAlwaysHidden"
+           />
         <activity android:name=".Activity.Wallet.MyWalletActivity" />
         <activity android:name=".Activity.Ticket.MyTicketAllActivity" />
     </application>

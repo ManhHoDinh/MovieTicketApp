@@ -115,6 +115,11 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = HomeScreenBinding.inflate(getLayoutInflater());
+        View focusedView = getCurrentFocus();
+        if (focusedView != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
+        }
         setContentView(binding.getRoot());
         String[] listType = {"All", "Horror", "Action", "Drama", "War", "Comedy", "Crime"};
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -479,7 +484,6 @@ public class HomeActivity extends AppCompatActivity {
                     for (DocumentSnapshot documentSnapshot : value) {
                         Service newService = documentSnapshot.toObject(Service.class);
                         services.add(newService);
-                        Log.d(TAG, "data: " + newService.getName());
                     }
                     LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
                     serviceView.setAdapter(new ServiceAdapter(services));
@@ -572,11 +576,21 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        View focusedView = getCurrentFocus();
-        if (focusedView != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
-            focusedView.clearFocus();
+        dismissKeyboard();
+        clearFocus();
+    }
+    private void clearFocus() {
+        View currentFocus = getCurrentFocus();
+        if (currentFocus != null) {
+            currentFocus.clearFocus();
+        }
+    }
+
+    private void dismissKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        View view = getCurrentFocus();
+        if (view != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 }

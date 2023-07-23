@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
+import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
@@ -62,6 +63,10 @@ public class AccountActivity extends AppCompatActivity {
         Name=findViewById(R.id.name);
         Email=findViewById(R.id.email);
         BackBtn=findViewById(R.id.Back);
+        if(Users.currentUser.getAccountType().equals("admin")){
+            MyWallet.setVisibility(View.GONE);
+        }
+        else  MyWallet.setVisibility(View.VISIBLE);
         FirebaseUser currentUser= FirebaseAuth.getInstance().getCurrentUser();
         FirebaseRequest.database.collection("Users").document(currentUser.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -105,8 +110,8 @@ public class AccountActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
-                Intent i = new Intent(AccountActivity.this, SignInActivity.class);
-                startActivity(i);
+                Intent loginIntent = new Intent(AccountActivity.this, SignInActivity.class);
+                TaskStackBuilder.create(AccountActivity.this).addNextIntentWithParentStack(loginIntent).startActivities();
             }
         });
     }

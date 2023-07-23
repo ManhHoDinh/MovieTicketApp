@@ -40,6 +40,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +91,8 @@ public class TicketDetailActivity extends AppCompatActivity {
                 Picasso.get().load(film.getPosterImage()).into(filmPoster);
                 filmName.setText(film.getName());
                 filmRating.setRating(film.getVote());
-                filmRatingText.setText("(" + film.getVote() + ")");
+                DecimalFormat df = new DecimalFormat("0.0");
+                filmRatingText.setText("(" + df.format(film.getVote())  + ")");
                 filmKind.setText(film.getGenre());
                 filmDuration.setText(film.getDurationTime());
             }

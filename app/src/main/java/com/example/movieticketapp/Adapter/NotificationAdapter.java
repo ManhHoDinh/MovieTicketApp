@@ -100,6 +100,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(holder.itemView.getContext(), R.style.CustomAlertDialog);
                                     LayoutInflater factory = LayoutInflater.from(holder.itemView.getContext());
                                     final View deleteDialogView = factory.inflate(R.layout.yes_no_dialog, null);
+                                    TextView message = deleteDialogView.findViewById(R.id.message);
+                                    message.setText("Do you sure to delete the notification ?");
                                     alertDialog.setView(deleteDialogView);
                                     AlertDialog OptionDialog = alertDialog.create();
                                     OptionDialog.show();

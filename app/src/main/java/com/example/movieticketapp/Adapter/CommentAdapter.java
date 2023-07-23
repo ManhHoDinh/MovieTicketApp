@@ -96,31 +96,37 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
                     Users user = value.toObject(Users.class);
                     likeComments = user.getLikeComments();
                     dislikeComments = user.getDislikeComments();
+                    if(likeComments != null){
+                        for(String id : likeComments){
+                            if(id.equals(comment.getID())){
+                                likeBtn.setImageResource(R.drawable.heart_fill_icon);
+                                likeBtn.setTag(R.drawable.heart_fill_icon);
+                                break;
+                            }
+                            else{
+                                likeBtn.setImageResource(R.drawable.heart_icon);
+                                likeBtn.setTag("bg");
+                            }
+                        }
+                    }
+                    if(dislikeComments != null){
+                        for(String id: dislikeComments){
+                            if(id.equals(comment.getID())){
+                                Log.e("dfd", comment.getID());
+                                dislikeBtn.setImageResource(R.drawable.dislike_fill_icon);
+                                dislikeBtn.setTag(R.drawable.dislike_fill_icon);
+                                break;
+                            }
+                            else{
+                                Log.e("false", comment.getID());
+                                dislikeBtn.setImageResource(R.drawable.dislike_icon);
+                                dislikeBtn.setTag("cg");
+                            }
+                        }
+                    }
 
-                    for(String id : likeComments){
-                        if(id.equals(comment.getID())){
-                            likeBtn.setImageResource(R.drawable.heart_fill_icon);
-                            likeBtn.setTag(R.drawable.heart_fill_icon);
-                            break;
-                        }
-                        else{
-                            likeBtn.setImageResource(R.drawable.heart_icon);
-                            likeBtn.setTag("bg");
-                        }
-                    }
-                    for(String id: dislikeComments){
-                        if(id.equals(comment.getID())){
-                            Log.e("dfd", comment.getID());
-                            dislikeBtn.setImageResource(R.drawable.dislike_fill_icon);
-                            dislikeBtn.setTag(R.drawable.dislike_fill_icon);
-                            break;
-                        }
-                        else{
-                            Log.e("false", comment.getID());
-                            dislikeBtn.setImageResource(R.drawable.dislike_icon);
-                            dislikeBtn.setTag("cg");
-                        }
-                    }
+
+
                 }
             });
 //            userRef.collection("LikeComment").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -189,6 +195,9 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
                         likeBtn.setImageResource(R.drawable.heart_fill_icon);
                         likeBtn.setTag(R.drawable.heart_fill_icon);
                         HashMap<String, String> likeComment = new HashMap<>();
+                        if(likeComments == null){
+                            likeComments = new ArrayList<>();
+                        }
                         likeComments.add(comment.getID());
                         userRef.update("likeComments", likeComments);
 //                        DocumentReference doc = userRef.collection("LikeComment").document(comment.getID());
@@ -247,6 +256,9 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
 //                        DocumentReference doc = userRef.collection("DisLikeComment").document(comment.getID());
 //                        disLikeComment.put("commentID", comment.getID());
 //                        doc.set(disLikeComment);
+                        if(dislikeComments == null){
+                            dislikeComments = new ArrayList<>();
+                        }
                         dislikeComments.add(comment.getID());
                         userRef.update("dislikeComments",dislikeComments);
                         commentDoc.update("dislike", comment.getDislike() + 1);

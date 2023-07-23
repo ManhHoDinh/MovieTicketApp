@@ -4,14 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
+    android:scrollbars="none"
     android:paddingHorizontal="24dp"
     android:background="@color/background_color"
     tools:context=".Activity.Cinema.AddCinemaActivity">
     <androidx.appcompat.widget.LinearLayoutCompat
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/LinerLayout"
+        >
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_marginTop="60dp"
@@ -130,6 +132,7 @@
             style="@style/hintStyle"
             android:id="@+id/hotLineEt"
             android:hint="Hotline"
+            android:inputType="number"
             android:textColor="@color/main_color"
             android:textColorHint="@color/main_color"
             android:paddingVertical="16dp"
@@ -154,12 +157,14 @@
             android:paddingVertical="16dp"
             android:paddingHorizontal="12dp"
             android:background="@drawable/bg_edit_text"
+            android:inputType="number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_marginTop="24dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
             >
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/confirmBtn"
