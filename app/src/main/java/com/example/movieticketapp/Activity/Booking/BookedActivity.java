@@ -34,6 +34,7 @@ import com.example.movieticketapp.Model.Cinema;
 import com.example.movieticketapp.Model.City;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.InforBooked;
+import com.example.movieticketapp.Model.ShowTime;
 import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,8 +44,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.core.Query;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Queue;
 
@@ -87,6 +90,7 @@ public class BookedActivity extends AppCompatActivity {
         firestore = FirebaseFirestore.getInstance();
         countryAutoTv = (AutoCompleteTextView) findViewById(R.id.countryAutoTv);
         listCity = new ArrayList<String>();
+        updateShowtimeValid();
         loadListCity();
         try {
             if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
@@ -226,7 +230,22 @@ public class BookedActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    void loadListCinema(){
+    void updateShowtimeValid(){
+        Calendar calendar = Calendar.getInstance();
+        Date date = calendar.getTime();
+
+        FirebaseRequest.database.collection("Showtime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for(DocumentSnapshot doc : queryDocumentSnapshots){
+                    ShowTime showTime = doc.toObject(ShowTime.class);
+                    Timestamp timeBook = showTime.getTimeBooked();
+                    if(timeBook.toDate().before(date)){
+                        FirebaseRequest.database.collection("Showtime").document(doc.getId()).delete();
+                    }
+                }
+            }
+        });
 
 
     }
