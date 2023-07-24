@@ -78,6 +78,7 @@
                 android:layout_height="match_parent"/>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
+
     <ImageButton
         android:id="@+id/btnNext"
         android:layout_width="64.22923636363636dp"

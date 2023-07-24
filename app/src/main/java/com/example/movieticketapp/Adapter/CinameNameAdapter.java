@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -113,6 +114,7 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
         distance = itemView.findViewById(R.id.distance);
         ImageView showHideBtn = itemView.findViewById(R.id.showHideBtn);
         LinearLayout showHideLayout = itemView.findViewById(R.id.showHideLayout);
+        ConstraintLayout cinemaCl = itemView.findViewById(R.id.cinemaCl);
         List<String> listTime = new ArrayList<String>();
 
         InforBooked.getInstance().listCinema = listCinema;
@@ -168,13 +170,14 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
                     if(((Users.currentUser.getAccountType().toString()).equals("admin")))
                     {
                         if(ScheduleFilm.getInstance().isDateSelected && ScheduleFilm.getInstance().isCitySelected){
-                            for (int i = 10; i <= 20;i++)
+                            for (int i = 10; i <= 20;i++){
                                 for (int j = 0; j <60; j=j+15)
                                 {
                                     NumberFormat formatter = new DecimalFormat("00");
 
                                     listTime.add(formatter.format(i)+":" + formatter.format(j));
                                 }
+                            }
                             FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext()){
                                 @Override
                                 public boolean canScrollVertically() {
@@ -232,7 +235,8 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
                                             listTime.add(timeFormat.format(time.toDate()));
                                         }
                                     }
-                                    FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext()){
+                                    FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext())
+                                    {
                                         @Override
                                         public boolean canScrollVertically() {
                                             return false;
@@ -253,6 +257,11 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
                                     else recyclerView.setAdapter(new TimeBookedAdapter(listTime, null,null, item, itemView, null, null));
                                     cinemaName.setText(item.getName());
                                     addressCinema.setText(item.getAddress());
+                                    if(position == 0){
+                                        showHideBtn.setImageResource(R.drawable.arrow_up);
+                                        showHideBtn.setTag("show");
+                                        showHideLayout.setVisibility(View.VISIBLE);
+                                    }
                                 }
                             });
 
@@ -267,7 +276,7 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
                         context.startActivity(intent);
                     }
                 });
-                showHideBtn.setOnClickListener(new View.OnClickListener() {
+                cinemaCl.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if(showHideBtn.getTag().equals("hide")){

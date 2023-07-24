@@ -160,7 +160,7 @@ public class SignUpActivity extends AppCompatActivity {
                     passwordET.setError("Password is not empty!!!");
                     error=true;
                 }
-                else if(passwordET.length()<=6)
+                else if(passwordET.length()< 6)
                 {
                     passwordET.setError("Password should be at least 6 characters!!!");
                     error=true;

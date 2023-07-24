@@ -360,7 +360,7 @@ public class SignInActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), "Lỗi khi truy vấn database!!!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Error when access database!!!", Toast.LENGTH_SHORT).show();
                     }
                 });
 
