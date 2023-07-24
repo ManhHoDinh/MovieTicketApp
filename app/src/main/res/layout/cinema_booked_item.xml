@@ -9,33 +9,36 @@
       android:orientation="vertical"
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="match_parent">
+
       <TextView
-          app:layout_constraintStart_toStartOf="parent"
-          style="@style/titleStyle"
           android:id="@+id/cinemaName"
+          style="@style/titleStyle"
           android:layout_width="wrap_content"
-          android:layout_height="wrap_content"/>
+          android:layout_height="wrap_content"
+          app:layout_constraintStart_toStartOf="parent" />
+
       <TextView
+          android:id="@+id/distance"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:fontFamily="@font/montserrat500"
+          android:text="Navigate"
           android:textSize="12dp"
           app:layout_constraintEnd_toEndOf="parent"
-          android:id="@+id/distance"
-          app:layout_constraintTop_toBottomOf="@+id/showHideBtn"
-          android:fontFamily="@font/montserrat500"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="Navigate"/>
+          app:layout_constraintTop_toBottomOf="@+id/showHideBtn" />
+
       <ImageView
-          android:tag="hide"
           android:id="@+id/showHideBtn"
-          app:layout_constraintTop_toTopOf="parent"
-          app:layout_constraintEnd_toEndOf="parent"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:src="@drawable/arrow_down"/>
+          android:src="@drawable/arrow_down"
+          android:tag="hide"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

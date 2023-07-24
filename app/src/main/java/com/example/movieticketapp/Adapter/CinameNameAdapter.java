@@ -118,6 +118,7 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
         InforBooked.getInstance().listCinema = listCinema;
         Cinema item = getItem(position);
         client = LocationServices.getFusedLocationProviderClient(context);
+
         if((InforBooked.getInstance().isCitySelected && InforBooked.getInstance().isDateSelected) || (ScheduleFilm.getInstance().isCitySelected && ScheduleFilm.getInstance().isDateSelected)) {
             distance.setVisibility(View.VISIBLE);
             showHideBtn.setVisibility(View.VISIBLE);

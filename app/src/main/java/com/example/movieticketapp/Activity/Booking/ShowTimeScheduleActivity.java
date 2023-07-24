@@ -76,9 +76,9 @@ public class ShowTimeScheduleActivity extends AppCompatActivity {
     protected void onStop() {
         unregisterReceiver(networkChangeListener);
         super.onStop();
-        ScheduleFilm.getInstance().listShowTime = new ArrayList<ShowTime>();
-        ScheduleFilm.getInstance().isDateSelected = false;
-        ScheduleFilm.getInstance().isCitySelected = false;
+//        ScheduleFilm.getInstance().listShowTime = new ArrayList<ShowTime>();
+//        ScheduleFilm.getInstance().isDateSelected = false;
+//        ScheduleFilm.getInstance().isCitySelected = false;
 
     }
     @Override
@@ -149,6 +149,7 @@ public class ShowTimeScheduleActivity extends AppCompatActivity {
                     confirmDialog.show();
                     TextView confirmTv = confirmDialog.findViewById(R.id.confirmTv);
                     TextView cancelTv = confirmDialog.findViewById(R.id.cancelTv);
+                    Log.e("te", ScheduleFilm.getInstance().listShowTime.size()+"");
                     confirmTv.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -159,8 +160,8 @@ public class ShowTimeScheduleActivity extends AppCompatActivity {
 
                             ScheduleFilm.getInstance().listShowTime = new ArrayList<ShowTime>();
                             loadListCity();
-                            ScheduleFilm.getInstance().isCitySelected = false;
-                            ScheduleFilm.getInstance().isDateSelected = false;
+//                            ScheduleFilm.getInstance().isCitySelected = false;
+//                            ScheduleFilm.getInstance().isDateSelected = false;
                             Toast.makeText(ShowTimeScheduleActivity.this, "Schedule show time successfully!", Toast.LENGTH_SHORT).show();
                             confirmDialog.dismiss();
 
@@ -186,6 +187,9 @@ public class ShowTimeScheduleActivity extends AppCompatActivity {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ScheduleFilm.getInstance().listShowTime = new ArrayList<ShowTime>();
+                ScheduleFilm.getInstance().isDateSelected = false;
+                ScheduleFilm.getInstance().isCitySelected = false;
                 finish();
             }
         });
@@ -238,6 +242,14 @@ public class ShowTimeScheduleActivity extends AppCompatActivity {
             }
         }
     );
+    }
+
+    @Override
+    public void onBackPressed() {
+        ScheduleFilm.getInstance().listShowTime = new ArrayList<ShowTime>();
+        ScheduleFilm.getInstance().isDateSelected = false;
+        ScheduleFilm.getInstance().isCitySelected = false;
+        super.onBackPressed();
     }
 
     void loadListCinema(){

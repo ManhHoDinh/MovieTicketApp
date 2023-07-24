@@ -73,11 +73,11 @@ public class BookedActivity extends AppCompatActivity {
     protected void onStop() {
         unregisterReceiver(networkChangeListener);
         super.onStop();
-        InforBooked.getInstance().isDateSelected = false;
-        InforBooked.getInstance().isTimeSelected = false;
-        InforBooked.getInstance().isCitySelected = false;
-        InforBooked.getInstance().timeBooked = "";
-        InforBooked.getInstance().prevPosition = -1;
+//        InforBooked.getInstance().isDateSelected = false;
+//        InforBooked.getInstance().isTimeSelected = false;
+//        InforBooked.getInstance().isCitySelected = false;
+//        InforBooked.getInstance().timeBooked = "";
+//        InforBooked.getInstance().prevPosition = -1;
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,6 +154,11 @@ public class BookedActivity extends AppCompatActivity {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                InforBooked.getInstance().isDateSelected = false;
+                InforBooked.getInstance().isTimeSelected = false;
+                InforBooked.getInstance().isCitySelected = false;
+                InforBooked.getInstance().timeBooked = "";
+                InforBooked.getInstance().prevPosition = -1;
                 finish();
             }
         });
@@ -209,6 +214,16 @@ public class BookedActivity extends AppCompatActivity {
             }
         }
         );
+    }
+
+    @Override
+    public void onBackPressed() {
+        InforBooked.getInstance().isDateSelected = false;
+        InforBooked.getInstance().isTimeSelected = false;
+        InforBooked.getInstance().isCitySelected = false;
+        InforBooked.getInstance().timeBooked = "";
+        InforBooked.getInstance().prevPosition = -1;
+        super.onBackPressed();
     }
 
     void loadListCinema(){
