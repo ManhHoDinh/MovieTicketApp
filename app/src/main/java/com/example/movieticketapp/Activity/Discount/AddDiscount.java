@@ -5,14 +5,19 @@ import static android.content.ContentValues.TAG;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.movieticketapp.Model.Discount;
@@ -71,6 +76,27 @@ public class AddDiscount extends AppCompatActivity {
         DecreasingDiscountPercent = findViewById(R.id.DecreasingDiscountPercent);
         ConfirmButton = findViewById(R.id.ConfirmButton);
         CancelButton = findViewById(R.id.CancelButton);
+        ConstraintLayout layoutElement = findViewById(R.id.AddDiscountLayout); // Replace with your actual layout element ID
+
+        layoutElement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Hide the keyboard
+                InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
+        });
+        LinearLayoutCompat layoutElement2 = findViewById(R.id.AddDiscountLayout2); // Replace with your actual layout element ID
+
+        layoutElement2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Hide the keyboard
+                InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
+        });
+
         Intent intent = getIntent();
         discount = intent.getParcelableExtra(ExtraIntent.discount);
         if(discount!=null) {

@@ -501,8 +501,8 @@ public class AddMovieActivity extends AppCompatActivity{
                 }
                 else
                 {
-                    Toast toast = Toast.makeText(getApplicationContext(), "Have some errors!!!", Toast.LENGTH_SHORT);
-                    toast.show();
+//                    Toast toast = Toast.makeText(getApplicationContext(), "Have some errors!!!", Toast.LENGTH_SHORT);
+//                    toast.show();
                 }
 
             }

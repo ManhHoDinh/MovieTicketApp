@@ -23,6 +23,7 @@
         android:id="@+id/AddNotificationLayout"
         android:orientation="vertical"
         android:paddingHorizontal="24dp"
+
         >
         <androidx.constraintlayout.widget.ConstraintLayout
 
