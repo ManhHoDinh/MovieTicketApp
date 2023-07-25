@@ -36,6 +36,7 @@
                             app:layout_constraintBottom_toBottomOf="parent"/>
 
                         <TextView
+                            android:textAlignment="center"
                             android:layout_width="180dp"
                             android:layout_height="wrap_content"
                             android:text="Promotions"
@@ -69,24 +70,14 @@
                             android:id="@+id/searchField"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="12dp"
+                            app:layout_constraintEnd_toEndOf="parent"
                             android:background="@drawable/bg_tabview_button"
                             app:closeIcon="@drawable/close_btn"
                             app:iconifiedByDefault="false"
-                            app:layout_constraintEnd_toStartOf="@+id/controlBtn"
                             app:layout_constraintStart_toStartOf="parent"
                             app:queryBackground="@android:color/transparent"
                             app:queryHint="Search your voucher"
                             app:searchIcon="@drawable/search_icon" />
-
-                        <ImageButton
-                            android:id="@+id/controlBtn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/background_button"
-                            android:padding="10dp"
-                            android:src="@drawable/control"
-                            app:layout_constraintEnd_toEndOf="parent" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

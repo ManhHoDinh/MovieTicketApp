@@ -15,40 +15,28 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <LinearLayout
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
             <TextView
-
+                android:layout_marginTop="20dp"
                 android:textSize="16dp"
                 android:fontFamily="@font/montserrat600"
                 android:textColor="@color/black"
                 android:id="@+id/nameService"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-            <TextView
-                android:text=" - "
-                android:textSize="16dp"
-                android:fontFamily="@font/montserrat600"
-                android:textColor="@color/black"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:textSize="16dp"
-                android:fontFamily="@font/montserrat600"
-                android:textColor="@color/black"
-                android:id="@+id/priceService"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
         <TextView
             android:layout_marginTop="4dp"
             android:fontFamily="@font/montserrat400"
             android:textColor="@color/black"
             android:id="@+id/detailService"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_marginTop="4dp"
+            android:textSize="16dp"
+            android:fontFamily="@font/montserrat600"
+            android:textColor="@color/black"
+            android:id="@+id/priceService"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <LinearLayout
             android:orientation="horizontal"

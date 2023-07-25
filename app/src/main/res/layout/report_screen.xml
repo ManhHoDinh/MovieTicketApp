@@ -51,13 +51,6 @@
                     app:layout_constraintBottom_toBottomOf="parent"
 
                     >
-
-                    <ImageView
-                        android:id="@+id/accountImage"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_gravity="end"
-                        android:src="@drawable/avatar" />
                 </androidx.cardview.widget.CardView>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

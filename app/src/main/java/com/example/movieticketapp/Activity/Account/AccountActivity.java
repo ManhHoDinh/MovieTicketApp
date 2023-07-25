@@ -75,9 +75,8 @@ public class AccountActivity extends AppCompatActivity {
                 Name.setText(user.getName());
                 Email.setText(user.getEmail());
                 Avatar= findViewById(R.id.avatar);
-                if (currentUser.getPhotoUrl()!=null)
-                    Picasso.get().load(user.getAvatar()).into(Avatar);
-                else Avatar.setImageResource(R.drawable.avatar);
+                Picasso.get().load(user.getAvatar()).into(Avatar);
+
             }
         });
 
