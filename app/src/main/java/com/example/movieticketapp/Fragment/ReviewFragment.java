@@ -254,14 +254,15 @@ public class ReviewFragment extends Fragment {
                 Date current = calendar.getTime();
                 Timestamp timestamp = new Timestamp(current);
                 DocumentReference doc =  FirebaseRequest.database.collection("Movies").document(film.getId()).collection("Comment").document();
-                FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        Users user = documentSnapshot.toObject(Users.class);
-                        Comment comment = new Comment(user.getAvatar(), yourComment.getText().toString(), 0, 0, timestamp,(int) rateBar.getRating(), listReact, doc.getId(), user.getUserID());
-                        doc.set(comment);
-                    }
-                });
+                try {
+                    FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            Users user = documentSnapshot.toObject(Users.class);
+                            Comment comment = new Comment(user.getAvatar(), yourComment.getText().toString(), 0, 0, timestamp,(int) rateBar.getRating(), listReact, doc.getId(), user.getUserID());
+                            doc.set(comment);
+                        }
+                    });
                     CommentRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -269,6 +270,8 @@ public class ReviewFragment extends Fragment {
                             updateRateFilm(count, rateBar.getRating());
                         }
                     });
+                }
+                catch (Exception e){}
                 ratingBar.setRating(0);
                 dialog.dismiss();
                 Toast.makeText(getContext(), "thanks for your comment!", Toast.LENGTH_SHORT).show();
