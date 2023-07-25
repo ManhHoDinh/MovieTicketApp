@@ -79,8 +79,10 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -731,7 +733,7 @@ public class ReportActivity extends AppCompatActivity {
                     BarDataSet barDataSet = new BarDataSet(listEntries, "");
                     barDataSet.setColors(binh);
                     barDataSet.setDrawValues(false);
-                    barDataSet.setValueTextSize(20f);
+
                     BarData barData = new BarData();
                     barData.addDataSet(barDataSet);
                     chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(listLabels));
@@ -739,6 +741,31 @@ public class ReportActivity extends AppCompatActivity {
                     chart.setFitBars(true);
                     chart.setData(barData);
                     chart.invalidate();
+                    chart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+                        @Override
+                        public void onValueSelected(Entry e, Highlight h) {
+                            String message = "Revenue: " +Math.round(e.getY());
+                            AlertDialog dialog = new AlertDialog.Builder(ReportActivity.this).setTitle("Revenue of film").setMessage(message)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialogInterface.dismiss();
+                                        }
+                                    }).create();
+                            dialog.setOnShowListener( new DialogInterface.OnShowListener() {
+                                @Override
+                                public void onShow(DialogInterface arg0) {
+                                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
+                                }
+                            });
+                            dialog.show();
+                        }
+
+                        @Override
+                        public void onNothingSelected() {
+
+                        }
+                    });
 
                     YAxis yAxisRight = chart.getAxisRight();
                     YAxis yAxisLeft = chart.getAxisLeft();

@@ -1,4 +1,4 @@
-package com.example.movieticketapp;
+package com.example.movieticketapp.Activity.Account;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,15 +11,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.movieticketapp.Activity.Account.EditProfileActivity;
-import com.example.movieticketapp.Activity.Account.SignInActivity;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
+import com.example.movieticketapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
-
-import java.net.Inet4Address;
 
 public class ChangePasswordActivity extends AppCompatActivity {
     Button backBtn;
@@ -58,6 +55,9 @@ public class ChangePasswordActivity extends AppCompatActivity {
         else if(passwordET.length()==0)
         {
             passwordET.setError("Password is not empty!!!");
+        }
+        else if(passwordET.length() < 6){
+            passwordET.setError("Password should be at least 6 characters!!!");
         }
         else if(!confirmPasswordET.getText().toString().equals(passwordET.getText().toString()))
         {

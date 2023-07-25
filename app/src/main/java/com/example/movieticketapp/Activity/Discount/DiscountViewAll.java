@@ -164,7 +164,7 @@ public class DiscountViewAll extends AppCompatActivity {
                                                 promotionView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                                     @Override
                                                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                        double finalTotal = totalBook * Discounts.get(i).getDiscountRate() /100;
+                                                        double finalTotal = totalBook * (1 - Discounts.get(i).getDiscountRate() /100);
                                                         intent.putExtra("total", finalTotal);
                                                         intent.putExtra("nameDiscount", Discounts.get(i).getName());
                                                         intent.putExtra("idDiscount", Discounts.get(i).getID());

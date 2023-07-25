@@ -103,12 +103,12 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
             if(result != null && result.getResultCode() == RESULT_OK){
                 if(result.getData() != null){
 
-                    total = result.getData().getDoubleExtra("total", 0);
+                    double newTotal = result.getData().getDoubleExtra("total", 0);
                     String name = result.getData().getStringExtra("nameDiscount");
                     idDiscount = result.getData().getStringExtra("idDiscount");
                     selectTv.setVisibility(View.GONE);
                     selectVoucherBtn.setText(name);
-                    totalTv.setText(String.valueOf(Math.round(total)) + " VNĐ");
+                    totalTv.setText(String.valueOf(Math.round(newTotal)) + " VNĐ");
 
 //                    String title = result.getData().getStringExtra("title") ;
 //                    String date = result.getData().getStringExtra("date") ;

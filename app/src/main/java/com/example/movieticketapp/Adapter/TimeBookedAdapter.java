@@ -126,7 +126,7 @@ public class TimeBookedAdapter extends RecyclerView.Adapter<TimeBookedAdapter.Vi
 
                                     CinameNameAdapter cinameNameAdapter = new CinameNameAdapter(activity, R.layout.cinema_booked_item,InforBooked.getInstance().listCinema, InforBooked.getInstance().film);
                                     timelistView.setAdapter(cinameNameAdapter);
-                                    timelistView.setEnabled(false);
+
 
                                    // Helper.getListViewSize(timelistView, activity);
                                 }
