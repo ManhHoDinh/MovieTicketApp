@@ -437,7 +437,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     void checkTypeUser() {
-
      try {
          FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
              @Override
