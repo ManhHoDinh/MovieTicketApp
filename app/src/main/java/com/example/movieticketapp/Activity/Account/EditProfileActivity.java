@@ -256,16 +256,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
                         doc.update("avatar", cinemaImg);
 
-                        FirebaseStorage.getInstance().getReferenceFromUrl(cinemaImg).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder()
-                                        .setPhotoUri(uri)
-                                        .build();
-                                FirebaseAuth.getInstance().getCurrentUser().updateProfile(userProfileChangeRequest);
 
-                            }
-                        });
                     }
                 }
             });
