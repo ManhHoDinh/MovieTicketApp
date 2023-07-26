@@ -565,6 +565,8 @@ public class ReportActivity extends AppCompatActivity {
                 Menu menu = bottomNavigationView.getMenu();
                 MenuItem ReportPage = menu.findItem(R.id.ReportPage);
                 MenuItem WalletPage = menu.findItem(R.id.walletPage);
+                MenuItem TicketPage = menu.findItem(R.id.ticketPage);
+                TicketPage.setVisible(false);
                 WalletPage.setVisible(false);
                 ReportPage.setVisible(true);
             }
