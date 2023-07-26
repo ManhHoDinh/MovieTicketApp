@@ -135,7 +135,7 @@ public class SignInActivity extends AppCompatActivity {
         emailET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                emailLayout.setError(null);
             }
 
             @Override
@@ -152,7 +152,7 @@ public class SignInActivity extends AppCompatActivity {
         passwordET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                passwordLayout.setError(null);
             }
 
             @Override

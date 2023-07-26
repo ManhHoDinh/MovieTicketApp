@@ -18,6 +18,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -40,6 +42,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -83,6 +86,10 @@ public class SignUpActivity extends AppCompatActivity {
     EditText emailET;
     EditText passwordET;
     EditText confirmPasswordET;
+    TextInputLayout nameLayout;
+    TextInputLayout emailLayout;
+    TextInputLayout passwordLayout;
+    TextInputLayout confirmPasswordLayout;
     Uri avataUri = null;
     String avatarUrl;
     String fullname;
@@ -105,7 +112,10 @@ public class SignUpActivity extends AppCompatActivity {
         emailET=findViewById(R.id.emailaddress);
         passwordET=findViewById(R.id.password);
         confirmPasswordET=findViewById(R.id.confirmpassword);
-
+        nameLayout = findViewById(R.id.nameLayout);
+        emailLayout = findViewById(R.id.emailLayout);
+        passwordLayout = findViewById(R.id.layoutPassword);
+        confirmPasswordLayout = findViewById(R.id.layoutConfirmPassword);
         ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
                 registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
                     if (uri != null) {
@@ -140,6 +150,70 @@ public class SignUpActivity extends AppCompatActivity {
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                  }
         });
+        fullNameET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                nameLayout.setError(null);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        emailET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                emailLayout.setError(null);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        passwordET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                passwordLayout.setError(null);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        confirmPasswordET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                confirmPasswordLayout.setError(null);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         Button signUpBt =  findViewById(R.id.SignUpBtn);
         signUpBt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,29 +221,32 @@ public class SignUpActivity extends AppCompatActivity {
                 boolean error = false;
                 if(fullNameET.length()==0)
                 {
-                    fullNameET.setError("Full Name is not empty!!!");
+                    nameLayout.setError("Full Name is not empty!!!");
                     error=true;
                 }
+                else nameLayout.setError(null);
                 if(emailET.length()==0)
                 {
-                    emailET.setError("Email is not empty!!!");
+                    emailLayout.setError("Email is not empty!!!");
                     error=true;
-                }
+                }  else emailLayout.setError(null);
                 if(passwordET.length()==0)
                 {
-                    passwordET.setError("Password is not empty!!!");
+                    passwordLayout.setError("Password is not empty!!!");
                     error=true;
                 }
                 else if(passwordET.length()< 6)
                 {
-                    passwordET.setError("Password should be at least 6 characters!!!");
+                    passwordLayout.setError("Password should be at least 6 characters!!!");
                     error=true;
                 }
+                else passwordLayout.setError(null);
                 if(!confirmPasswordET.getText().toString().equals(passwordET.getText().toString()))
                 {
-                    confirmPasswordET.setError("Password and confirmation passwords are not equals !!!");
+                    confirmPasswordLayout.setError("Password and confirmation passwords are not equals !!!");
                     error=true;
                 }
+                else confirmPasswordLayout.setError(null);
 
                 if(!error){
                     fullname = fullNameET.getText().toString();
