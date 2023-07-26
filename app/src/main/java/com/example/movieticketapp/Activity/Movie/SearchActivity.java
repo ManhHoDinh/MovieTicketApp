@@ -110,9 +110,6 @@ private ListSearchAdapter adapter;
                     }
                 }
 
-                if(listResult.isEmpty()){
-                    Toast.makeText(SearchActivity.this, "No data found", Toast.LENGTH_SHORT).show();
-                }
                 adapter.setFilterList(listResult);
 
             }
