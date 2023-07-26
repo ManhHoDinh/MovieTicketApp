@@ -55,7 +55,7 @@ public class MovieCheckoutAdapter extends ArrayAdapter<CheckoutFilmModel> {
             if (ratingPoint != null)
             {
                 ratingPoint.setText("("+movie.getVote()+")");
-                rating.setRating(Float.parseFloat(movie.getVote()));
+                rating.setRating(movie.getVote());
             }
             if (genre != null)
                 genre.setText(movie.getGenre());
