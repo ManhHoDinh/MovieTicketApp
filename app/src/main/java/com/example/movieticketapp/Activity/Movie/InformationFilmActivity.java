@@ -168,7 +168,6 @@ public class InformationFilmActivity extends FragmentActivity {
                     genreTV.setText(f.getGenre());
                     refreshScreen();
                     durationTime.setText(f.getDurationTime());
-
                 }
             }
         });

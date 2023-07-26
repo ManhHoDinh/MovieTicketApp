@@ -77,7 +77,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
-    //private ViewPager2 viewPager;
     NetworkChangeListener networkChangeListener = new NetworkChangeListener();
 
     SupportMapFragment smf;
@@ -374,33 +373,37 @@ public class HomeActivity extends AppCompatActivity {
                              public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                  List<String> listDiscountID = new ArrayList<>();
                                  for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                                     Log.d( "onSuccess: ", doc.getId().toString());
                                      listDiscountID.add(doc.get("discountID").toString());
                                      //DocumentReference document = FirebaseRequest.database.collection(Discount.CollectionName).document(doc.get("discountID").toString());
                                  }
 
 
                                  if (listDiscountID.size() > 0) {
-                                     Query query2 = db.collection(Discount.CollectionName).whereIn("ID", listDiscountID);
-                                     query2.addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                         @Override
-                                         public void onEvent(@Nullable QuerySnapshot discountvalue, @Nullable FirebaseFirestoreException error) {
+                                    try {
+                                        Query query2 = db.collection(Discount.CollectionName);
+                                        query2.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onEvent(@Nullable QuerySnapshot discountvalue, @Nullable FirebaseFirestoreException error) {
 
-                                             for (DocumentSnapshot doc : discountvalue) {
-                                                 Discount f = doc.toObject(Discount.class);
-                                                 Discounts.add(f);
-                                             }
+                                                for (DocumentSnapshot doc : discountvalue) {
+                                                    Discount f = doc.toObject(Discount.class);
+                                                    if(listDiscountID.contains(f.getID()))
+                                                    Discounts.add(f);
+                                                }
 
-                                             //   LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-                                             // promotionView.setLayoutManager(VerLayoutManager);
-                                             Intent intent = getIntent();
-                                             PromotionAdapter promotionAdapter = new PromotionAdapter(Discounts, null);
-                                             promotionView.setLayoutManager(new LinearLayoutManager(HomeActivity.this, LinearLayoutManager.VERTICAL, false));
-                                             promotionView.setAdapter(promotionAdapter);
+                                                //   LinearLayoutManager VerLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+                                                // promotionView.setLayoutManager(VerLayoutManager);
+                                                Intent intent = getIntent();
+                                                PromotionAdapter promotionAdapter = new PromotionAdapter(Discounts, null);
+                                                promotionView.setLayoutManager(new LinearLayoutManager(HomeActivity.this, LinearLayoutManager.VERTICAL, false));
+                                                promotionView.setAdapter(promotionAdapter);
 
 
-                                         }
-                                     });
-
+                                            }
+                                        });
+                                    }
+                                    catch (Exception e){}
                                  } else
                                  {
                                      promotionView.setAdapter(new PromotionAdapter(new ArrayList<Discount>(), null));

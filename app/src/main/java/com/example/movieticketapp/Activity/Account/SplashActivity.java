@@ -61,7 +61,7 @@ public class SplashActivity extends AppCompatActivity {
         }
         try {
             Map config = new HashMap();
-            config.put("cloud_name", "dqbrxq458");
+             config.put("cloud_name", "dqbrxq458");
             config.put("secure", true);
             config.put( "api_key", "493417362212592");
             config.put( "api_secret", "4bJpe28tUtUA4BzhEIuXig3I6d8");
