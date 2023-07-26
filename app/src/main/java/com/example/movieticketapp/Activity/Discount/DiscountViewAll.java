@@ -123,6 +123,7 @@ public class DiscountViewAll extends AppCompatActivity {
                             @Override
                             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                                 List<Discount> listDiscounts = new ArrayList<Discount>();
+                                Discounts = new ArrayList<>();
                                 for(DocumentSnapshot doc : value){
                                     Discount f = doc.toObject(Discount.class);
                                     Discounts.add(f);
