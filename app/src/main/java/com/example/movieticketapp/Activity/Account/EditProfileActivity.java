@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
@@ -210,6 +211,9 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
+                    FirebaseRequest.mAuth.signOut();
+                    Intent loginIntent = new Intent(EditProfileActivity.this, SignInActivity.class);
+                    TaskStackBuilder.create(EditProfileActivity.this).addNextIntentWithParentStack(loginIntent).startActivities();
                 } else {
                     UpdateError("Email");
                 }

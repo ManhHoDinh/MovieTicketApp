@@ -110,6 +110,8 @@ public class UseServiceAdapter extends ArrayAdapter<Service> {
     void updateServiceInticket(Service service, int count){
         boolean isExisted = false;
 
+
+
         ServiceInTicket deletedService = null;
         for(ServiceInTicket serviceInTicket : listServiceInTicket){
             if(serviceInTicket.getServiceID().equals(service.getID())){
