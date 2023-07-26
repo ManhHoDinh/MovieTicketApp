@@ -311,8 +311,7 @@ public class SignInActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         DocumentSnapshot document = task.getResult();
                                         if (document.exists()) {
-
-
+                                            Log.d(document.getId(), "onComplete: ");
                                         } else {
                                             CreateUser(user);
                                         }
@@ -343,28 +342,7 @@ public class SignInActivity extends AppCompatActivity {
 
     void CreateUser(FirebaseUser user){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("User").document(user.getUid())
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            if (documentSnapshot.contains("accountType")) {
-                                acType = documentSnapshot.getString("accountType");
-                            }
-                        } else {
-
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), "Error when access database!!!", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        Users u = new Users(user.getUid(),   user.getDisplayName(),user.getEmail(),0, acType, user.getPhotoUrl().toString(), new ArrayList<>(), new ArrayList<>());
+        Users u = new Users(user.getUid(),   user.getDisplayName(),user.getEmail(),0, "User", user.getPhotoUrl().toString(), new ArrayList<>(), new ArrayList<>());
         FirebaseRequest.database.collection("Users").document(user.getUid())
                 .set(u.toJson())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

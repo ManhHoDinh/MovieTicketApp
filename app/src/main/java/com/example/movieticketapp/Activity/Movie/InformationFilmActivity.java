@@ -166,7 +166,7 @@ public class InformationFilmActivity extends FragmentActivity {
                     DecimalFormat df = new DecimalFormat("0.0");
                     voteTV.setText("(" + df.format(f.getVote()) +")");
                     genreTV.setText(f.getGenre());
-
+                    refreshScreen();
                     durationTime.setText(f.getDurationTime());
 
                 }
@@ -187,15 +187,16 @@ public class InformationFilmActivity extends FragmentActivity {
         voteTV.setText("(" + df.format(f.getVote()) +")");
         genreTV.setText(f.getGenre());
         durationTime.setText(f.getDurationTime());
+        filmDetailPagerAdapter = new FilmDetailPagerAdapter(this, f, tabLayout.getSelectedTabPosition());
+        pager.setAdapter(filmDetailPagerAdapter);
+        pager.setOffscreenPageLimit(3);
+
         tabLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 InforBooked.getInstance().height = mainLayout.getMeasuredHeight() - topView.getMeasuredHeight() - tabLayout.getMeasuredHeight();
             }
         });
-        filmDetailPagerAdapter = new FilmDetailPagerAdapter(this, f, tabLayout.getSelectedTabPosition());
-        pager.setAdapter(filmDetailPagerAdapter);
-        pager.setOffscreenPageLimit(3);
 
     }
 }

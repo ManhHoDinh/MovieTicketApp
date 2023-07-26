@@ -343,11 +343,6 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
 
             }
         });
-
-
-
-
-
     }
 
 }
