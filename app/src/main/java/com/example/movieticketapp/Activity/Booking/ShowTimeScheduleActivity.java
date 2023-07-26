@@ -132,52 +132,50 @@ public class ShowTimeScheduleActivity extends AppCompatActivity {
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(ScheduleFilm.getInstance().listShowTime.size() == 0){
+                    Toast.makeText(ShowTimeScheduleActivity.this, "Please choose showtime!", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Dialog confirmDialog = new Dialog(ShowTimeScheduleActivity.this);
+                    confirmDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    confirmDialog.setContentView(R.layout.activity_confirm_dialog);
+                    Window window = confirmDialog.getWindow();
+                    if(window != null){
+                        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+                        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        WindowManager.LayoutParams windowAttribute = window.getAttributes();
+                        windowAttribute.gravity = Gravity.CENTER;
+                        window.setAttributes(windowAttribute);
+                        confirmDialog.show();
+                        TextView confirmTv = confirmDialog.findViewById(R.id.confirmTv);
+                        TextView cancelTv = confirmDialog.findViewById(R.id.cancelTv);
+                        Log.e("te", ScheduleFilm.getInstance().listShowTime.size()+"");
+                        confirmTv.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                for(ShowTime showTime : ScheduleFilm.getInstance().listShowTime){
+                                    FirebaseRequest.database.collection("Showtime").document().set(showTime);
 
-                Dialog confirmDialog = new Dialog(ShowTimeScheduleActivity.this);
-                confirmDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                confirmDialog.setContentView(R.layout.activity_confirm_dialog);
-                Window window = confirmDialog.getWindow();
-                if(window != null){
-                    window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-                    window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    WindowManager.LayoutParams windowAttribute = window.getAttributes();
-                    windowAttribute.gravity = Gravity.CENTER;
-                    window.setAttributes(windowAttribute);
-                    confirmDialog.show();
-                    TextView confirmTv = confirmDialog.findViewById(R.id.confirmTv);
-                    TextView cancelTv = confirmDialog.findViewById(R.id.cancelTv);
-                    Log.e("te", ScheduleFilm.getInstance().listShowTime.size()+"");
-                    confirmTv.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            for(ShowTime showTime : ScheduleFilm.getInstance().listShowTime){
-                                FirebaseRequest.database.collection("Showtime").document().set(showTime);
+                                }
 
-                            }
-
-                            ScheduleFilm.getInstance().listShowTime = new ArrayList<ShowTime>();
-                            loadListCity();
+                                ScheduleFilm.getInstance().listShowTime = new ArrayList<ShowTime>();
+                                loadListCity();
 //                            ScheduleFilm.getInstance().isCitySelected = false;
 //                            ScheduleFilm.getInstance().isDateSelected = false;
-                            Toast.makeText(ShowTimeScheduleActivity.this, "Schedule show time successfully!", Toast.LENGTH_SHORT).show();
-                            confirmDialog.dismiss();
+                                Toast.makeText(ShowTimeScheduleActivity.this, "Schedule show time successfully!", Toast.LENGTH_SHORT).show();
+                                confirmDialog.dismiss();
 
 
-                        }
-                    });
-                    cancelTv.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            confirmDialog.dismiss();
-                        }
-                    });
-
-
-
+                            }
+                        });
+                        cancelTv.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                confirmDialog.dismiss();
+                            }
+                        });
+                    }
                 }
-
-
-
             }
         });
 
