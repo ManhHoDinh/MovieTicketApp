@@ -257,7 +257,7 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
                                     else recyclerView.setAdapter(new TimeBookedAdapter(listTime, null,null, item, itemView, null, null));
                                     cinemaName.setText(item.getName());
                                     addressCinema.setText(item.getAddress());
-                                    if(position == 0){
+                                    if(listTime.size() > 0){
                                         showHideBtn.setImageResource(R.drawable.arrow_up);
                                         showHideBtn.setTag("show");
                                         showHideLayout.setVisibility(View.VISIBLE);
