@@ -196,6 +196,7 @@ public class MyTicketAllActivity extends AppCompatActivity {
                     Date currentTime= calendar.getTime();
                     switch(type){
                         case "all":
+                            arrayList.clear();
                             for (DocumentSnapshot doc : listDoc){
                                 if(doc.get("userID").equals(FirebaseRequest.mAuth.getUid())){
                                     Ticket _ticket = doc.toObject(Ticket.class);
@@ -205,6 +206,7 @@ public class MyTicketAllActivity extends AppCompatActivity {
                             }
                             break;
                         case "new":
+                            arrayList.clear();
                             for (DocumentSnapshot doc : listDoc){
                                 if(doc.get("userID").equals(FirebaseRequest.mAuth.getUid())) {
 
@@ -217,6 +219,7 @@ public class MyTicketAllActivity extends AppCompatActivity {
 
                             break;
                         case "expire":
+                            arrayList.clear();
                             for (DocumentSnapshot doc : listDoc){
                                 if(doc.get("userID").equals(FirebaseRequest.mAuth.getUid())) {
                                     if (currentTime.after(doc.getTimestamp("time").toDate()) || currentTime.equals(doc.getTimestamp("time").toDate())) {
