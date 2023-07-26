@@ -3,6 +3,7 @@ package com.example.movieticketapp.Activity.Booking;
 import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Activity.Ticket.MyTicketAllActivity;
 import com.example.movieticketapp.Model.FilmModel;
+import com.example.movieticketapp.Model.InforBooked;
 import com.example.movieticketapp.NetworkChangeListener;
 import com.example.movieticketapp.R;
 
@@ -39,6 +40,11 @@ public class SuccessCheckoutActivity extends AppCompatActivity {
         setContentView(R.layout.success_checkout_screen);
         backHome= findViewById(R.id.txtToHome);
         myTicketBtn = (Button) findViewById(R.id.btnToMyTicket);
+        InforBooked.getInstance().isDateSelected = false;
+        InforBooked.getInstance().isTimeSelected = false;
+        InforBooked.getInstance().isCitySelected = false;
+        InforBooked.getInstance().timeBooked = "";
+        InforBooked.getInstance().prevPosition = -1;
         myTicketBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
