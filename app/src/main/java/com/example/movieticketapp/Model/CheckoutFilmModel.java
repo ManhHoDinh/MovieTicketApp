@@ -4,7 +4,7 @@ import kotlin.text.UStringsKt;
 
 public class CheckoutFilmModel {
     private String name;
-    private String vote;
+    private Float vote;
     private String genre;
 
     private String duration;
@@ -19,11 +19,11 @@ public class CheckoutFilmModel {
         this.name = name;
     }
 
-    public String getVote() {
+    public Float getVote() {
         return vote;
     }
 
-    public void setVote(String vote) {
+    public void setVote(Float vote) {
         this.vote = vote;
     }
 
@@ -53,7 +53,7 @@ public class CheckoutFilmModel {
 
 
 
-    public CheckoutFilmModel(String name, String vote, String genre, String duration, String poster) {
+    public CheckoutFilmModel(String name, Float vote, String genre, String duration, String poster) {
         this.name = name;
         this.vote = vote;
         this.genre = genre;

@@ -219,7 +219,7 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
         seatTv.setText(listSeat);
         totalTv.setText(String.valueOf(Math.round(total)) + " VNĐ");
         DecimalFormat df = new DecimalFormat("0.0");
-        movie.add(new CheckoutFilmModel(film.getName(), df.format(film.getVote()), film.getGenre(),film.getDurationTime(), film.getPosterImage()));
+        movie.add(new CheckoutFilmModel(film.getName(), film.getVote(), film.getGenre(),film.getDurationTime(), film.getPosterImage()));
         adapter = new MovieCheckoutAdapter(getApplicationContext(), R.layout.checkout_movie_view, movie);
         movieInfoView.setAdapter(adapter);
         BtnBack.setOnClickListener(new View.OnClickListener() {

@@ -93,12 +93,12 @@ public class NotificationActivity extends AppCompatActivity {
                 boolean error = false;
                 if(Description.length()==0)
                 {
-                    Description.setError("Full Name is not empty!!!");
+                    Description.setError("Full Description is not empty!!!");
                     error=true;
                 }
                 if(Heading.length()==0)
                 {
-                    Heading.setError("Email is not empty!!!");
+                    Heading.setError("Heading is not empty!!!");
                     error=true;
                 }
                 if(!error)
