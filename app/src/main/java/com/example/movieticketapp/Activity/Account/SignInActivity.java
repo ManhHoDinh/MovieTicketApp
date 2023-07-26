@@ -312,17 +312,19 @@ public class SignInActivity extends AppCompatActivity {
                                         DocumentSnapshot document = task.getResult();
                                         if (document.exists()) {
                                             Log.d(document.getId(), "onComplete: ");
+                                            getUser(user.getUid());
+                                            updateUI(user);
                                         } else {
                                             CreateUser(user);
+                                            getUser(user.getUid());
+                                            updateUI(user);
                                         }
                                     } else {
                                         Log.d(TAG, "Failed with: ", task.getException());
                                     }
                                 }
                             });
-                            getUser(user.getUid());
-                            updateUI(user);
-                        } else {
+                           } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                         }
@@ -343,6 +345,7 @@ public class SignInActivity extends AppCompatActivity {
     void CreateUser(FirebaseUser user){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Users u = new Users(user.getUid(),   user.getDisplayName(),user.getEmail(),0, "User", user.getPhotoUrl().toString(), new ArrayList<>(), new ArrayList<>());
+
         FirebaseRequest.database.collection("Users").document(user.getUid())
                 .set(u.toJson())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

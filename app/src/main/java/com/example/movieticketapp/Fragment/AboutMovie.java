@@ -58,6 +58,9 @@ public class AboutMovie extends Fragment {
         film = f;
 
     }
+    public AboutMovie() {
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

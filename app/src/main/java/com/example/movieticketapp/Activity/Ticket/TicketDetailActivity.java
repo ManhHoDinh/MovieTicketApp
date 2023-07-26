@@ -97,6 +97,7 @@ public class TicketDetailActivity extends AppCompatActivity {
                 filmDuration.setText(film.getDurationTime());
             }
         });
+
         String cinemaID = ticket.getCinemaID();
 
         FirebaseRequest.database.collection("Cinema").document(cinemaID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {

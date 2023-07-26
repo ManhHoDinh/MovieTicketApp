@@ -159,7 +159,6 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
                         }
                     }).check();
         } catch (Exception e){
-            Toast.makeText(context, "Don't find the location!", Toast.LENGTH_SHORT).show();
             distance.setVisibility(View.GONE);
             locationLayout.setVisibility(View.GONE);
 
@@ -327,20 +326,22 @@ public class CinameNameAdapter extends ArrayAdapter<Cinema> {
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
+            Log.d("Hello", "Hello");
 
             return;
         }
-        Task<Location> task = client.getLastLocation();
+        Log.d("Hello", "Hello");
 
+        Task<Location> task = client.getLastLocation();
         task.addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
                         float[] results = new float[10];
                         LatLng source = new LatLng(location.getLatitude(), location.getLongitude());
+                Log.e( String.valueOf(location.getLatitude()), location.getLongitude()+"LocationA");
                         LatLng destination = new LatLng(address.getLatitude(), address.getLongitude());
                         Location.distanceBetween(source.latitude, source.longitude, destination.latitude, destination.longitude, results);
                         distance.setText(String.format("%.1f", results[0]/1000) + " km");
-
             }
         });
     }

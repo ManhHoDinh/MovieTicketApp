@@ -19,6 +19,7 @@ import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class MovieCheckoutAdapter extends ArrayAdapter<CheckoutFilmModel> {
@@ -54,7 +55,8 @@ public class MovieCheckoutAdapter extends ArrayAdapter<CheckoutFilmModel> {
                 title.setText(movie.getName());
             if (ratingPoint != null)
             {
-                ratingPoint.setText("("+movie.getVote()+")");
+                DecimalFormat vote = new DecimalFormat("0.0");
+                ratingPoint.setText("("+vote.format(movie.getVote())+")");
                 rating.setRating(movie.getVote());
             }
             if (genre != null)
