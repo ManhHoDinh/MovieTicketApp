@@ -29,9 +29,10 @@
             android:layout_height="wrap_content"
             android:numStars="5"
             android:isIndicator="false"
+            android:layout_below="@id/movieTitle"
             style="?android:attr/ratingBarStyleSmall"
             android:progressTint="#FFFFAF34"
-            android:layout_marginTop="52dp"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="108dp"
             />
         <TextView
@@ -44,7 +45,8 @@
             android:textColor="#FFFFFF"
             android:layout_toRightOf="@id/rating"
             android:layout_marginLeft="4dp"
-            android:layout_marginTop="54dp"/>
+            android:layout_below="@id/movieTitle"
+            android:layout_marginTop="11dp"/>
 
         <TextView
             android:id="@+id/genre"
