@@ -20,11 +20,12 @@
 <!--       />-->
 
     <LinearLayout
-
         android:orientation="vertical"
         android:layout_marginHorizontal="24dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigation"
+        android:layout_height="0dp">
 
         <TextView
             android:textColor="@color/white"
