@@ -119,6 +119,8 @@ public class SignInActivity extends AppCompatActivity {
         LoginBtn = findViewById(R.id.LoginBtn);
         GoogleLogin = findViewById(R.id.GoogleLogin);
         FacebookLogin = findViewById(R.id.FacebookLogin);
+        GoogleLogin.setVisibility(View.GONE);
+        FacebookLogin.setVisibility(View.GONE);
         forgotPasswordTv = findViewById(R.id.ForgotPassword);
         passwordLayout = findViewById(R.id.layoutPassword);
         emailLayout = findViewById(R.id.emailLayout);
