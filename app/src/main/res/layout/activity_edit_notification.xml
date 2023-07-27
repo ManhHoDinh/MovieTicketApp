@@ -6,15 +6,16 @@
     android:layout_height="match_parent"
     android:background="@color/background_color"
     tools:context=".Activity.Notification.EditNotificationActivity">
-    <ImageView
+
+    <androidx.appcompat.widget.AppCompatButton
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:id="@+id/btnBack"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:id="@+id/backbutton"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_marginLeft="24dp"
-        android:layout_marginTop="36dp"
-        android:src="@drawable/ic_back" />
+        android:layout_marginTop="50dp"
+        android:background="@drawable/back_icon" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"

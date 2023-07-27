@@ -87,6 +87,7 @@ public class AddCinemaActivity extends AppCompatActivity {
     private LinearLayout addCinemaLayout;
     private EditText priceCinema;
     private EditText addressCinema;
+    boolean isSetImage = false;
     private Button backBtn;
 
     private final int PICK_IMAGE_REQUEST = 22;
@@ -111,8 +112,8 @@ public class AddCinemaActivity extends AppCompatActivity {
                         Intent data = result.getData();
                         if(data.getData() != null){
                             filePath = data.getData();
-
                             imageCinema.setImageURI(filePath);
+                            isSetImage = true;
                             img = UUID.randomUUID().toString();
                             addCinemaLayout.setVisibility(View.GONE);
                             StorageReference ref
@@ -173,6 +174,7 @@ public class AddCinemaActivity extends AppCompatActivity {
         if(cinemaEdit != null){
             nameCinema.setText(cinemaEdit.getName());
             Picasso.get().load(cinemaEdit.getImage()).into(imageCinema);
+            isSetImage = true;
             hotline.setText(cinemaEdit.getHotline());
             priceCinema.setText(String.valueOf(cinemaEdit.getPrice()));
             addressCinema.setText(cinemaEdit.getAddress());
@@ -223,7 +225,7 @@ public class AddCinemaActivity extends AppCompatActivity {
         String phoneNo = hotline.getText().toString();
         String price = priceCinema.getText().toString();
         String address = addressCinema.getText().toString();
-        if(name.equals("")||phoneNo.equals("")||price.equals("") || address.equals("") ||filePath == null ){
+        if(name.equals("")||phoneNo.equals("")||price.equals("") || address.equals("") || isSetImage == false ){
             Toast.makeText(this, "Please type full information!", Toast.LENGTH_SHORT).show();
         }
         else {

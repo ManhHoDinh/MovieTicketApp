@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.movieticketapp.Model.ExtraIntent;
@@ -34,17 +35,18 @@ public class EditNotificationActivity extends AppCompatActivity {
     TextInputEditText Heading;
     NotificationModel notification;
 
-    ImageView backBtn;
+    Button backBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_notification);
         Intent intent = getIntent();
         notification = intent.getParcelableExtra(ExtraIntent.notification);
-        backBtn = findViewById(R.id.btnBack);
+        backBtn = findViewById(R.id.backbutton);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.e("dss", "fd");
                 finish();
             }
         });
