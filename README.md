@@ -48,6 +48,12 @@ Với sự xuất hiện của ứng dụng quản lí rạp phim, tất cả nh
 ## II. Mô tả
 
 <!-- Ý TƯỞNG -->
+<a href="https://www.youtube.com/watch?v=kdKI1uDDsek">
+   <h4>App Demo Video</h4>
+   </a>
+<a href="https://www.youtube.com/watch?v=kdKI1uDDsek">
+   <h4>https://www.youtube.com/watch?v=kdKI1uDDsek</h4>
+   </a>
 <div id="Ytuong"></div>
 
 ### 1. Ý tưởng
